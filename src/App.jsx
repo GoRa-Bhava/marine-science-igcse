@@ -313,15 +313,17 @@ const ITEMS = [
     why: "The Caribbean and Mediterranean are seas, not oceans.",
   },
   {
-    id: "oc5", topic: "oceans", type: "chain",
-    q: "Build the comparison of seas and oceans in order.",
-    chunks: [
-      "oceans are the largest and deepest bodies of salt water",
-      "seas are smaller than oceans",
-      "seas are normally partially enclosed by land",
-      "and a sea can be a region of an ocean",
+    id: "oc5", topic: "oceans", type: "multi",
+    q: "Select every statement that is true about a sea.",
+    options: [
+      "It is usually smaller than an ocean",
+      "It is normally partially enclosed by land",
+      "It can be a region of an ocean",
+      "It is always deeper than an ocean",
+      "It contains fresh water rather than salt water",
     ],
-    why: "Size first, then enclosure, then the relationship between the two.",
+    a: [0, 1, 2],
+    why: "Seas are smaller, usually partly enclosed, and can sit within an ocean. They are still salt water.",
   },
 
   /* ------------------------------------------------------- Ocean floor */
@@ -361,14 +363,14 @@ const ITEMS = [
   },
   {
     id: "fl5", topic: "floor", type: "chain",
-    q: "Build the full description of an abyssal plain.",
+    q: "Put these in order by depth, shallowest first.",
     chunks: [
-      "an abyssal plain is the flat region of the ocean floor",
-      "it lies on oceanic crust",
-      "it normally occurs 10,000 to 20,000 ft below sea level",
-      "making it one of the deepest flat areas on Earth",
+      "sea level, at 0 ft",
+      "the top of the abyssal plain, around 10,000 ft down",
+      "the deepest parts of the abyssal plain, around 20,000 ft down",
+      "the floor of the Mariana Trench, around 36,000 ft down",
     ],
-    why: "Definition, then location, then depth. A description is stronger when it carries a figure.",
+    why: "The abyssal plain sits between roughly 10,000 and 20,000 ft. The Mariana Trench goes far deeper still.",
   },
 
   /* -------------------------------------------------- Lat & long */
@@ -532,7 +534,26 @@ const CREATURES = [
 ];
 
 /* ------------------------------------------------------ creature art */
+/* Prefers public/creatures/<id>.png when the file exists, and falls back to the
+   drawn version below if it doesn't — so artwork can be added a few at a time. */
 function CreatureArt({ id, size = 132 }) {
+  const [useDrawn, setUseDrawn] = useState(false);
+  if (!useDrawn) {
+    return (
+      <img
+        src={`creatures/${id}.png`}
+        alt=""
+        width={size}
+        height={size}
+        onError={() => setUseDrawn(true)}
+        style={{ width: size, height: size, objectFit: "contain", display: "block" }}
+      />
+    );
+  }
+  return <DrawnCreature id={id} size={size} />;
+}
+
+function DrawnCreature({ id, size = 132 }) {
   const s = { width: size, height: size };
   const g = C.glow, d = C.glowDim, co = C.coral, sa = C.sand;
   const art = {
@@ -795,6 +816,31 @@ const shuffle = (arr) => {
   }
   return a;
 };
+
+/* A plain shuffle can land back on the original order, which hands the answer
+   to the student. This one keeps trying until the order actually changed. */
+const reorder = (arr, key = (x) => x) => {
+  if (arr.length < 2) return [...arr];
+  for (let t = 0; t < 40; t++) {
+    const s = shuffle(arr);
+    if (s.some((v, i) => key(v) !== key(arr[i]))) return s;
+  }
+  return [...arr.slice(1), arr[0]];
+};
+
+/* For matching: shuffle both columns, but never leave a term sitting directly
+   opposite its own description. */
+const matchColumns = (pairs) => {
+  const L = reorder(pairs.map((p, i) => ({ t: p[0], i })), (x) => x.i);
+  const rights = pairs.map((p, i) => ({ t: p[1], i }));
+  for (let t = 0; t < 60; t++) {
+    const R = shuffle(rights);
+    if (R.every((r, idx) => r.i !== L[idx].i)) return { L, R };
+  }
+  const R = L.map((_, idx) => rights[L[(idx + 1) % L.length].i]);
+  return { L, R };
+};
+
 const sameSet = (a, b) => a.length === b.length && [...a].sort().every((v, i) => v === [...b].sort()[i]);
 
 /* ====================================================== 2. QUESTIONS */
@@ -816,10 +862,12 @@ const btnBase = {
 };
 
 function ChoiceQ({ item, locked, picked, setPicked }) {
+  // Options are authored with the answer first; never show them that way.
+  const order = useMemo(() => reorder(item.options.map((_, i) => i)), [item.id]);
   return (
     <>
       <Prompt>{item.q}</Prompt>
-      {item.options.map((o, i) => {
+      {order.map((i) => {
         let bg = C.shelf, bd = C.line, col = C.foam;
         if (locked) {
           if (i === item.a) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
@@ -829,7 +877,7 @@ function ChoiceQ({ item, locked, picked, setPicked }) {
         return (
           <button key={i} onClick={() => !locked && setPicked(i)} disabled={locked}
             style={{ ...btnBase, background: bg, borderColor: bd, color: col, cursor: locked ? "default" : "pointer" }}>
-            {o}
+            {item.options[i]}
           </button>
         );
       })}
@@ -838,11 +886,12 @@ function ChoiceQ({ item, locked, picked, setPicked }) {
 }
 
 function MultiQ({ item, locked, picked, setPicked }) {
+  const order = useMemo(() => reorder(item.options.map((_, i) => i)), [item.id]);
   const toggle = (i) => setPicked(picked.includes(i) ? picked.filter((x) => x !== i) : [...picked, i]);
   return (
     <>
       <Prompt>{item.q}</Prompt>
-      {item.options.map((o, i) => {
+      {order.map((i) => {
         const on = picked.includes(i);
         const right = item.a.includes(i);
         let bg = C.shelf, bd = C.line, col = C.foam;
@@ -859,7 +908,7 @@ function MultiQ({ item, locked, picked, setPicked }) {
               border: `2px solid ${on || (locked && right) ? bd : C.line}`,
               background: on || (locked && right) ? bd : "transparent",
             }} />
-            <span>{o}</span>
+            <span>{item.options[i]}</span>
           </button>
         );
       })}
@@ -868,7 +917,7 @@ function MultiQ({ item, locked, picked, setPicked }) {
 }
 
 function GapQ({ item, locked, filled, setFilled }) {
-  const bank = useMemo(() => shuffle(item.bank), [item.id]);
+  const bank = useMemo(() => reorder(item.bank), [item.id]);
   const place = (w) => {
     const idx = filled.findIndex((f) => f === null);
     if (idx === -1) return;
@@ -931,51 +980,128 @@ function GapQ({ item, locked, filled, setFilled }) {
 }
 
 function MatchQ({ item, locked, state, setState }) {
-  const lefts = useMemo(() => shuffle(item.pairs.map((p, i) => ({ t: p[0], i }))), [item.id]);
-  const rights = useMemo(() => shuffle(item.pairs.map((p, i) => ({ t: p[1], i }))), [item.id]);
-  const { done, sel, wrong } = state;
+  const { L, R } = useMemo(() => matchColumns(item.pairs), [item.id]);
+  const { links, order, sel } = state;
 
-  const tapLeft = (i) => { if (!locked && !done.includes(i)) setState({ ...state, sel: i }); };
-  const tapRight = (i) => {
-    if (locked || sel === null || done.includes(i)) return;
-    if (sel === i) setState({ ...state, done: [...done, i], sel: null });
-    else setState({ ...state, sel: null, wrong: wrong + 1, flash: i });
+  const rightOwner = {};
+  Object.entries(links).forEach(([l, r]) => { rightOwner[r] = Number(l); });
+  const numberOf = (l) => order.indexOf(l) + 1;
+
+  const unlink = (l) => {
+    const next = { ...links };
+    delete next[l];
+    setState({ links: next, order: order.filter((x) => x !== l), sel: null });
   };
 
-  const cell = (active, ok) => ({
-    fontFamily: FONT_UI, fontSize: 14, lineHeight: 1.35, padding: "12px 12px",
-    borderRadius: 12, marginBottom: 8, cursor: locked ? "default" : "pointer",
-    border: `1px solid ${ok ? C.ok : active ? C.glow : C.line}`,
-    background: ok ? "rgba(79,216,196,.14)" : active ? C.raise : C.shelf,
-    color: ok ? C.ok : C.foam, minHeight: 52, display: "flex", alignItems: "center",
-  });
+  const tapLeft = (l) => {
+    if (locked) return;
+    if (links[l] !== undefined) return unlink(l);
+    setState({ ...state, sel: sel === l ? null : l });
+  };
+
+  const tapRight = (r) => {
+    if (locked) return;
+    const owner = rightOwner[r];
+    if (owner !== undefined) return unlink(owner);
+    if (sel === null) return;
+    setState({
+      links: { ...links, [sel]: r },
+      order: [...order.filter((x) => x !== sel), sel],
+      sel: null,
+    });
+  };
+
+  /* Nothing is judged until Check. Before that a link is just teal. */
+  const look = (linked, selected, verdict) => {
+    const bad = verdict === "wrong";
+    const good = verdict === "right";
+    return {
+      position: "relative", fontFamily: FONT_UI, fontSize: 14, lineHeight: 1.35,
+      padding: "12px 26px 12px 12px", borderRadius: 12,
+      cursor: locked ? "default" : "pointer",
+      border: `1px solid ${bad ? C.no : good ? C.ok : linked || selected ? C.glow : C.line}`,
+      background: bad ? "rgba(255,158,125,.14)" : good ? "rgba(79,216,196,.14)"
+        : selected ? C.raise : linked ? "rgba(79,216,196,.08)" : C.shelf,
+      color: bad ? C.no : good ? C.ok : C.foam,
+      display: "flex", alignItems: "center", height: "100%",
+      transition: "background .12s, border-color .12s",
+    };
+  };
+
+  const badge = (n, verdict) => (
+    <span style={{
+      position: "absolute", top: 6, right: 6, width: 17, height: 17, borderRadius: 9,
+      fontSize: 10.5, lineHeight: "17px", textAlign: "center", fontWeight: 600,
+      background: verdict === "wrong" ? C.no : verdict === "right" ? C.ok : C.glow,
+      color: C.abyss,
+    }}>{n}</span>
+  );
+
+  const verdictFor = (l) => {
+    if (!locked || links[l] === undefined) return null;
+    return links[l] === l ? "right" : "wrong";
+  };
+
+  const linkedCount = Object.keys(links).length;
+  const allWrong = locked && Object.keys(links).some((l) => links[l] !== Number(l));
 
   return (
     <>
       <Prompt>{item.q}</Prompt>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.35fr", gap: 8 }}>
-        <div>
-          {lefts.map(({ t, i }) => (
-            <div key={i} onClick={() => tapLeft(i)} style={cell(sel === i, done.includes(i))}>{t}</div>
-          ))}
-        </div>
-        <div>
-          {rights.map(({ t, i }) => (
-            <div key={i} onClick={() => tapRight(i)} style={cell(false, done.includes(i))}>{t}</div>
-          ))}
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 8 }}>
+        {L.map((left, row) => {
+          const right = R[row];
+          const lv = verdictFor(left.i);
+          const owner = rightOwner[right.i];
+          const rv = owner !== undefined ? verdictFor(owner) : null;
+          return (
+            <React.Fragment key={row}>
+              <div onClick={() => tapLeft(left.i)}
+                style={look(links[left.i] !== undefined, sel === left.i, lv)}>
+                {left.t}
+                {links[left.i] !== undefined && badge(numberOf(left.i), lv)}
+              </div>
+              <div onClick={() => tapRight(right.i)}
+                style={look(owner !== undefined, false, rv)}>
+                {right.t}
+                {owner !== undefined && badge(numberOf(owner), rv)}
+              </div>
+            </React.Fragment>
+          );
+        })}
       </div>
-      <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, marginTop: 12 }}>
-        {done.length === item.pairs.length
-          ? wrong === 0 ? "All matched, no mispairs." : `All matched, with ${wrong} mispair${wrong > 1 ? "s" : ""}.`
-          : "Tap a term, then tap its description."}
+
+      <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, marginTop: 12, minHeight: 20 }}>
+        {locked
+          ? "Matching numbers show what you paired."
+          : sel !== null
+          ? "Now tap its description."
+          : linkedCount === item.pairs.length
+          ? "All paired. Change any of them, or press Check."
+          : `Tap a term, then its description. ${linkedCount} of ${item.pairs.length} paired — tap a pair again to undo it.`}
       </p>
+
+      {allWrong && (
+        <div style={{ marginTop: 4 }}>
+          <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>
+            The correct pairs
+          </p>
+          {item.pairs.map(([a, b], i) => (
+            <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px", lineHeight: 1.4 }}>
+              <span style={{ color: C.glow }}>{a}</span> — {b}
+            </p>
+          ))}
+        </div>
+      )}
     </>
   );
 }
 
 function ChainQ({ item, locked, order, setOrder }) {
-  const pool = useMemo(() => shuffle(item.chunks.map((c, i) => ({ c, i }))), [item.id]);
+  const pool = useMemo(
+    () => reorder(item.chunks.map((c, i) => ({ c, i })), (x) => x.i),
+    [item.id]
+  );
   const add = (k) => !locked && !order.includes(k) && setOrder([...order, k]);
   const remove = (k) => !locked && setOrder(order.filter((x) => x !== k));
   return (
@@ -1122,7 +1248,7 @@ export default function App() {
     if (it.type === "choice") return null;
     if (it.type === "multi") return [];
     if (it.type === "gap") return it.answers.map(() => null);
-    if (it.type === "match") return { done: [], sel: null, wrong: 0 };
+    if (it.type === "match") return { links: {}, order: [], sel: null };
     if (it.type === "chain") return [];
     return null;
   }
@@ -1132,7 +1258,7 @@ export default function App() {
     if (item.type === "choice") return answer !== null;
     if (item.type === "multi") return answer.length > 0;
     if (item.type === "gap") return answer.every((a) => a !== null);
-    if (item.type === "match") return answer.done.length === item.pairs.length;
+    if (item.type === "match") return Object.keys(answer.links).length === item.pairs.length;
     if (item.type === "chain") return answer.length === item.chunks.length;
     return false;
   };
@@ -1141,7 +1267,7 @@ export default function App() {
     if (item.type === "choice") return answer === item.a;
     if (item.type === "multi") return sameSet(answer, item.a);
     if (item.type === "gap") return answer.every((a, i) => a === item.answers[i]);
-    if (item.type === "match") return answer.wrong === 0;
+    if (item.type === "match") return item.pairs.every((_, i) => answer.links[i] === i);
     if (item.type === "chain") return answer.every((k, i) => k === i);
     return false;
   };
