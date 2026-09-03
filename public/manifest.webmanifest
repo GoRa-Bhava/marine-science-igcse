@@ -1,7 +1,7 @@
 {
-  "name": "Earth and Oceans — Marine Science",
-  "short_name": "Earth & Oceans",
-  "description": "Marine Science IGCSE Unit 1. Retrieval practice with spaced repetition.",
+  "name": "Marine Science IGCSE",
+  "short_name": "Marine Science",
+  "description": "Marine Science IGCSE Units 1 and 2. Retrieval practice with spaced repetition.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

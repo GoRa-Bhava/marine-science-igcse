@@ -31,14 +31,28 @@ const FONT_DISPLAY = "'Fraunces', Georgia, serif";
 
 /* ------------------------------------------------------------- content */
 const TOPICS = [
-  { id: "space", name: "Earth in space", depth: "Surface" },
-  { id: "inside", name: "Inside the Earth", depth: "10 m" },
-  { id: "plates", name: "Plate boundaries", depth: "60 m" },
-  { id: "quakes", name: "Earthquakes and tsunamis", depth: "200 m" },
-  { id: "oceans", name: "Seas and oceans", depth: "800 m" },
-  { id: "floor", name: "The ocean floor", depth: "2,400 m" },
-  { id: "coords", name: "Latitude and longitude", depth: "5,000 m" },
-  { id: "tides", name: "Tides and currents", depth: "10,900 m" },
+  { id: "space",    unit: 1, name: "Earth in space",           depth: "Surface" },
+  { id: "inside",   unit: 1, name: "Inside the Earth",         depth: "10 m" },
+  { id: "plates",   unit: 1, name: "Plate boundaries",         depth: "60 m" },
+  { id: "quakes",   unit: 1, name: "Earthquakes and tsunamis", depth: "200 m" },
+  { id: "oceans",   unit: 1, name: "Seas and oceans",          depth: "800 m" },
+  { id: "floor",    unit: 1, name: "The ocean floor",          depth: "2,400 m" },
+  { id: "coords",   unit: 1, name: "Latitude and longitude",   depth: "5,000 m" },
+  { id: "tides",    unit: 1, name: "Tides and currents",       depth: "10,900 m" },
+
+  { id: "matter",   unit: 2, name: "Matter and particles",     depth: "States" },
+  { id: "cycle",    unit: 2, name: "The water cycle and ice",  depth: "Surface" },
+  { id: "salinity", unit: 2, name: "Salinity",                 depth: "35 ppt" },
+  { id: "density",  unit: 2, name: "Density",                  depth: "1.03 g/cm³" },
+  { id: "ph",       unit: 2, name: "pH of seawater",           depth: "pH 8.1" },
+  { id: "depth",    unit: 2, name: "What changes with depth",  depth: "Down the column" },
+  { id: "zones",    unit: 2, name: "Ocean zones and light",    depth: "200–4,000 m" },
+  { id: "upwell",   unit: 2, name: "Upwelling and El Niño",    depth: "Eastern Pacific" },
+];
+
+const UNITS = [
+  { n: 1, name: "Earth and oceans" },
+  { n: 2, name: "Seawater" },
 ];
 
 const RANK = { choice: 1, gap: 2, match: 3, multi: 3, chain: 4 };
@@ -514,6 +528,500 @@ const ITEMS = [
     ],
     why: "The danger is the speed and the direction, not the depth. Swimming sideways out of the narrow stream is the escape.",
   },
+
+  /* ============================================ UNIT 2 — SEAWATER ==== */
+
+  /* ------------------------------------------------ Matter & particles */
+  {
+    id: "ma1", topic: "matter", type: "choice",
+    q: "What are the three states of matter?",
+    options: [
+      "Solids, liquids and gases",
+      "Solids, liquids and plasmas",
+      "Solids, gases and compounds",
+      "Liquids, gases and elements",
+    ],
+    a: 0,
+    why: "Solid, liquid, gas. Water is the one substance you meet in all three in this course: ice, seawater, water vapour.",
+  },
+  {
+    id: "ma2", topic: "matter", type: "choice",
+    q: "What is a compound?",
+    options: [
+      "A substance made of two or more different elements chemically combined",
+      "A mixture of substances that are not chemically joined",
+      "A substance made of only one type of atom",
+      "Any substance that will dissolve in water",
+    ],
+    a: 0,
+    why: "Chemically combined is the key phrase. H₂O is a compound; seawater is a mixture.",
+  },
+  {
+    id: "ma3", topic: "matter", type: "choice",
+    q: "Define the term 'diffusion'.",
+    options: [
+      "The movement of particles from a region of higher concentration to a region of lower concentration",
+      "The movement of particles from a region of lower concentration to a region of higher concentration",
+      "The movement of water across a partially permeable membrane",
+      "Particles sinking and settling at the bottom of a liquid",
+    ],
+    a: 0,
+    why: "High to low. The third option describes osmosis, which is a different process.",
+  },
+  {
+    id: "ma4", topic: "matter", type: "gap",
+    q: "Complete the definition of diffusion.",
+    segments: ["Diffusion is the movement of ", " from a region of ", " concentration to a region of ", " concentration."],
+    answers: ["particles", "higher", "lower"],
+    bank: ["particles", "higher", "lower", "salts", "equal", "greater"],
+    why: "Say particles rather than salts — diffusion applies to gases and dissolved substances alike.",
+  },
+  {
+    id: "ma5", topic: "matter", type: "match",
+    q: "Match each term to its description.",
+    pairs: [
+      ["Solid", "Particles packed closely in a fixed shape"],
+      ["Liquid", "Particles that flow and take the container's shape"],
+      ["Gas", "Particles spread far apart, filling the space"],
+      ["Compound", "Two or more elements chemically combined"],
+    ],
+    why: "The states differ in how the particles are arranged, not in what they are made of.",
+  },
+  {
+    id: "ma6", topic: "matter", type: "chain",
+    q: "Build the explanation: why does a drop of food colouring spread through still water?",
+    chunks: [
+      "the colouring starts in one small region",
+      "so its particles are at a much higher concentration there",
+      "particles move randomly in all directions",
+      "giving a net movement from high to low concentration",
+      "until the colour is spread evenly through the water",
+    ],
+    why: "Random movement plus a concentration difference gives a net flow. No stirring is needed.",
+  },
+
+  /* -------------------------------------------- Water cycle and ice */
+  {
+    id: "wc1", topic: "cycle", type: "choice",
+    q: "What are the stages of the water cycle?",
+    options: [
+      "Evaporation, condensation, precipitation, surface run-off",
+      "Condensation, evaporation, precipitation, surface run-off",
+      "Evaporation, precipitation, condensation, surface run-off",
+      "Precipitation, evaporation, surface run-off, condensation",
+    ],
+    a: 0,
+    why: "Water leaves the sea as vapour, cools into cloud, falls as rain, then flows back to the sea.",
+  },
+  {
+    id: "wc2", topic: "cycle", type: "multi",
+    q: "Select every factor that affects the rate of evaporation.",
+    options: [
+      "Air temperature",
+      "Wind or air movement",
+      "Humidity",
+      "Pressure",
+      "Salinity",
+      "The pH of the water",
+      "The depth of the seabed",
+    ],
+    a: [0, 1, 2, 3, 4],
+    why: "Five factors: air temperature, wind, humidity, pressure and salinity.",
+  },
+  {
+    id: "wc3", topic: "cycle", type: "choice",
+    q: "Which raises sea level more when it melts — land ice or sea ice?",
+    options: ["Land ice", "Sea ice", "Both raise it equally", "Neither raises sea level"],
+    a: 0,
+    why: "Sea ice is already floating and displacing water, so melting it adds very little. Land ice adds water that wasn't in the sea before.",
+  },
+  {
+    id: "wc4", topic: "cycle", type: "gap",
+    q: "Complete the water cycle.",
+    segments: ["Water evaporates, then ", " into clouds, falls as ", ", and returns to the sea as surface ", "."],
+    answers: ["condenses", "precipitation", "run-off"],
+    bank: ["condenses", "precipitation", "run-off", "diffuses", "upwelling", "filtration"],
+    why: "Evaporation, condensation, precipitation, surface run-off.",
+  },
+  {
+    id: "wc5", topic: "cycle", type: "chain",
+    q: "Put the water cycle in order, starting at the ocean surface.",
+    chunks: [
+      "water at the sea surface evaporates into the air",
+      "the water vapour rises and cools",
+      "it condenses into clouds",
+      "water falls back to Earth as precipitation",
+      "and flows over land as surface run-off, returning to the sea",
+    ],
+    why: "The cycle closes: run-off returns the water to the sea, ready to evaporate again.",
+  },
+
+  /* ------------------------------------------------------- Salinity */
+  {
+    id: "sa1", topic: "salinity", type: "choice",
+    q: "Define the term 'salinity'.",
+    options: [
+      "The concentration of dissolved salts in water",
+      "The total mass of water in an ocean",
+      "How acidic or alkaline the water is",
+      "The amount of oxygen dissolved in water",
+    ],
+    a: 0,
+    why: "Concentration of dissolved salts. Acidity is pH, which is a separate measurement.",
+  },
+  {
+    id: "sa2", topic: "salinity", type: "choice",
+    q: "What effect does increasing salinity have on the density of seawater?",
+    options: [
+      "Density increases",
+      "Density decreases",
+      "Density is unaffected",
+      "Density increases then decreases",
+    ],
+    a: 0,
+    why: "More dissolved salt means more mass in the same volume, so the water is denser.",
+  },
+  {
+    id: "sa3", topic: "salinity", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["Salinity is the concentration of dissolved ", " in water. The more saline the water is, the ", " its density will be."],
+    answers: ["salts", "greater"],
+    bank: ["salts", "greater", "lower", "gases", "acids", "equal"],
+    why: "Higher salinity, greater density. This is what drives dense water to sink.",
+  },
+  {
+    id: "sa4", topic: "salinity", type: "multi",
+    q: "Select every statement that is true about salinity.",
+    options: [
+      "It measures the dissolved salts in water",
+      "Higher salinity gives water a greater density",
+      "Salinity affects the rate of evaporation",
+      "It measures how acidic the water is",
+      "Higher salinity gives water a lower density",
+    ],
+    a: [0, 1, 2],
+    why: "Salinity appears twice in this unit: it changes density, and it is one of the factors affecting evaporation.",
+  },
+  {
+    id: "sa5", topic: "salinity", type: "chain",
+    q: "Build the explanation: why does very salty water sink beneath less salty water?",
+    chunks: [
+      "salt dissolves into the water",
+      "the dissolved salt adds mass without adding much volume",
+      "so that water becomes more dense",
+      "and denser water sinks below less dense water",
+    ],
+    why: "Mass up, volume roughly the same, so density up. Density decides what floats and what sinks.",
+  },
+
+  /* -------------------------------------------------------- Density */
+  {
+    id: "de1", topic: "density", type: "choice",
+    q: "What is density?",
+    options: [
+      "A measure of how much mass a substance has for its volume",
+      "The total mass of a substance",
+      "The total volume a substance takes up",
+      "The force a substance exerts on the seabed",
+    ],
+    a: 0,
+    why: "Density relates the two: mass and volume together, not either one alone.",
+  },
+  {
+    id: "de2", topic: "density", type: "choice",
+    q: "How do you calculate density?",
+    options: [
+      "Density = mass ÷ volume",
+      "Density = volume ÷ mass",
+      "Density = mass × volume",
+      "Density = mass + volume",
+    ],
+    a: 0,
+    why: "Divide the mass of a substance by its volume.",
+  },
+  {
+    id: "de3", topic: "density", type: "gap",
+    q: "Complete the method.",
+    segments: ["To find density, divide the ", " of a substance by its ", "."],
+    answers: ["mass", "volume"],
+    bank: ["mass", "volume", "salinity", "pressure", "weight", "depth"],
+    why: "Mass ÷ volume. Watch the units — g and cm³ give g/cm³.",
+  },
+  {
+    id: "de4", topic: "density", type: "choice",
+    q: "A sample of seawater has a mass of 206 g and a volume of 200 cm³. What is its density?",
+    options: ["1.03 g/cm³", "0.97 g/cm³", "41,200 g/cm³", "6 g/cm³"],
+    a: 0,
+    why: "206 ÷ 200 = 1.03 g/cm³. Seawater sits a little above 1.00 because of its dissolved salts.",
+  },
+  {
+    id: "de5", topic: "density", type: "match",
+    q: "Match each term to its description.",
+    pairs: [
+      ["Density", "Mass divided by volume"],
+      ["Higher salinity", "Gives water a greater density"],
+      ["Colder water", "Denser than warmer water"],
+      ["Less dense water", "Floats above denser water"],
+    ],
+    why: "Temperature and salinity both change density, which is why the ocean forms layers.",
+  },
+
+  /* ------------------------------------------------- pH of seawater */
+  {
+    id: "ph1", topic: "ph", type: "choice",
+    q: "What impact does dissolved CO₂ have on the pH of seawater?",
+    options: [
+      "It lowers the pH, making the water more acidic",
+      "It raises the pH, making the water more alkaline",
+      "It has no effect on pH",
+      "It makes the water exactly neutral",
+    ],
+    a: 0,
+    why: "Dissolved CO₂ lowers pH. This is what ocean acidification means.",
+  },
+  {
+    id: "ph2", topic: "ph", type: "multi",
+    q: "Select every way you could measure the pH of water.",
+    options: [
+      "pH paper",
+      "Universal Indicator solution",
+      "A digital pH meter",
+      "A Secchi disc",
+      "A thermometer",
+    ],
+    a: [0, 1, 2],
+    why: "A Secchi disc measures light penetration and a thermometer measures temperature — neither tells you pH.",
+  },
+  {
+    id: "ph3", topic: "ph", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["When CO₂ dissolves in seawater it ", " the pH, making the water more ", "."],
+    answers: ["lowers", "acidic"],
+    bank: ["lowers", "acidic", "raises", "alkaline", "neutral", "saltier"],
+    why: "Lower pH means more acidic. The numbers go down as acidity goes up.",
+  },
+  {
+    id: "ph4", topic: "ph", type: "match",
+    q: "Match each piece of equipment to what it does.",
+    pairs: [
+      ["pH paper", "Strip that changes colour with pH"],
+      ["Universal Indicator", "Solution that changes colour with pH"],
+      ["Digital pH meter", "Probe giving a numerical pH reading"],
+      ["Secchi disc", "Measures light penetration, not pH"],
+    ],
+    why: "The meter gives a number; the other two give a colour you compare against a chart.",
+  },
+  {
+    id: "ph5", topic: "ph", type: "chain",
+    q: "Build the explanation: how does burning fossil fuels make the ocean more acidic?",
+    chunks: [
+      "burning fossil fuels releases CO₂ into the atmosphere",
+      "some of that CO₂ dissolves into the ocean surface",
+      "the dissolved CO₂ reacts with the seawater",
+      "which lowers the pH of the water",
+      "making the ocean more acidic",
+    ],
+    why: "Release, dissolve, react, lower pH. The link most answers miss is that the CO₂ has to dissolve first.",
+  },
+
+  /* ------------------------------------------ What changes with depth */
+  {
+    id: "dp1", topic: "depth", type: "multi",
+    q: "Select every factor that varies with ocean depth.",
+    options: [
+      "Light penetration",
+      "Pressure",
+      "Density",
+      "Temperature",
+      "Salinity",
+      "Dissolved oxygen",
+      "The shape of the coastline",
+    ],
+    a: [0, 1, 2, 3, 4, 5],
+    why: "Six factors change with depth. The coastline is a surface feature and doesn't vary with depth.",
+  },
+  {
+    id: "dp2", topic: "depth", type: "choice",
+    q: "What happens to pressure as you go deeper in the ocean?",
+    options: [
+      "It increases steadily",
+      "It decreases steadily",
+      "It stays the same",
+      "It rises then falls",
+    ],
+    a: 0,
+    why: "More water above you means more weight pressing down, so pressure climbs the whole way.",
+  },
+  {
+    id: "dp3", topic: "depth", type: "choice",
+    q: "What happens to light penetration as depth increases?",
+    options: [
+      "It decreases until no light reaches at all",
+      "It increases with depth",
+      "It stays constant to the sea floor",
+      "It decreases then increases again",
+    ],
+    a: 0,
+    why: "Light fades with depth, which is exactly what defines the ocean zones.",
+  },
+  {
+    id: "dp4", topic: "depth", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["As you go deeper in the ocean, pressure ", " and light penetration ", "."],
+    answers: ["increases", "decreases"],
+    bank: ["increases", "decreases", "stays the same", "doubles", "stops", "reverses"],
+    why: "Pressure up, light down. These two changes shape what can survive at each depth.",
+  },
+  {
+    id: "dp5", topic: "depth", type: "match",
+    q: "Match each factor to how it behaves with depth.",
+    pairs: [
+      ["Light penetration", "Falls to nothing below about 1,000 m"],
+      ["Pressure", "Rises steadily the deeper you go"],
+      ["Temperature", "Generally falls as you descend"],
+      ["Density", "Rises as water gets colder and saltier"],
+    ],
+    why: "Pressure and density rise; light and temperature fall.",
+  },
+
+  /* --------------------------------------------- Ocean zones and light */
+  {
+    id: "zo1", topic: "zones", type: "choice",
+    q: "What is the twilight zone?",
+    options: [
+      "Around 200–1,000 m down, where some light reaches but not enough for photosynthesis",
+      "The top 200 m, where photosynthesis takes place",
+      "1,000–4,000 m down, where no light reaches at all",
+      "The flat region of the ocean floor",
+    ],
+    a: 0,
+    why: "Some light, but too little for photosynthesis. That's the distinction that matters.",
+  },
+  {
+    id: "zo2", topic: "zones", type: "choice",
+    q: "What is the midnight zone?",
+    options: [
+      "The zone beneath the twilight zone, 1,000–4,000 m down, where no light penetrates",
+      "The zone 200–1,000 m down, where a little light reaches",
+      "The sunlit surface layer of the ocean",
+      "The deepest trench in the Pacific Ocean",
+    ],
+    a: 0,
+    why: "No light at all below 1,000 m — any light down there is made by the animals themselves.",
+  },
+  {
+    id: "zo3", topic: "zones", type: "choice",
+    q: "What is a Secchi disc used for?",
+    options: [
+      "Measuring light penetration and turbidity at different depths",
+      "Measuring the salinity of seawater",
+      "Measuring pressure on the sea floor",
+      "Collecting plankton samples from the surface",
+    ],
+    a: 0,
+    why: "You lower it until it disappears — that depth of disappearance tells you how transparent the water is.",
+  },
+  {
+    id: "zo4", topic: "zones", type: "gap",
+    q: "Complete the depths.",
+    segments: ["The twilight zone runs from about ", " m down to about ", " m. Below it the midnight zone reaches about ", " m."],
+    answers: ["200", "1,000", "4,000"],
+    bank: ["200", "1,000", "4,000", "50", "10,000", "36,000"],
+    why: "200 to 1,000 for twilight, 1,000 to 4,000 for midnight.",
+  },
+  {
+    id: "zo5", topic: "zones", type: "chain",
+    q: "Order these from the surface downwards.",
+    chunks: [
+      "sunlit surface water, where photosynthesis happens",
+      "the twilight zone, beginning around 200 m",
+      "the midnight zone, beginning around 1,000 m",
+      "the sea floor, around 4,000 m down",
+    ],
+    why: "Each boundary is set by how much light is left.",
+  },
+  {
+    id: "zo6", topic: "zones", type: "match",
+    q: "Match each term to its description.",
+    pairs: [
+      ["Twilight zone", "Some light, but no photosynthesis"],
+      ["Midnight zone", "No light penetrates at all"],
+      ["Secchi disc", "Measures the depth of disappearance"],
+    ],
+    why: "The zones are defined by light, and the Secchi disc is how you measure it.",
+  },
+
+  /* ----------------------------------------- Upwelling and El Niño */
+  {
+    id: "up1", topic: "upwell", type: "choice",
+    q: "Define the term 'upwelling'.",
+    options: [
+      "Cold, nutrient-rich water from the deep ocean rising to the surface",
+      "Warm surface water sinking down into the deep ocean",
+      "The regular rise and fall of the tide",
+      "A narrow current flowing rapidly away from the shore",
+    ],
+    a: 0,
+    why: "Cold, nutrient-rich, and rising. Those nutrients are what make upwelling zones so productive.",
+  },
+  {
+    id: "up2", topic: "upwell", type: "choice",
+    q: "What is El Niño?",
+    options: [
+      "A climate event when sea surface temperature is much warmer than normal in the eastern Pacific",
+      "A climate event when sea surface temperature is much colder than normal in the eastern Pacific",
+      "A seasonal wind that reverses across the Indian Ocean",
+      "A period of unusually high tides worldwide",
+    ],
+    a: 0,
+    why: "Warmer than normal, eastern Pacific. Name the ocean as well as the change.",
+  },
+  {
+    id: "up3", topic: "upwell", type: "choice",
+    q: "How could you model an upwelling at home?",
+    options: [
+      "Blow a fan across a tub of water with food colouring added",
+      "Freeze salt water and watch how it melts",
+      "Pour oil onto water and stir it",
+      "Lower a Secchi disc into a bucket of water",
+    ],
+    a: 0,
+    why: "The fan moves the surface water aside, and you can watch the colouring show water rising to replace it.",
+  },
+  {
+    id: "up4", topic: "upwell", type: "gap",
+    q: "Complete the definition of upwelling.",
+    segments: ["Upwelling is the process where ", ", nutrient-rich water from the ", " ocean rises to the ", "."],
+    answers: ["cold", "deep", "surface"],
+    bank: ["cold", "deep", "surface", "warm", "shallow", "seabed"],
+    why: "Cold, deep, rising to the surface — all three parts are needed for full marks.",
+  },
+  {
+    id: "up5", topic: "upwell", type: "multi",
+    q: "Select every effect of El Niño.",
+    options: [
+      "A rise in water temperatures",
+      "A decrease in nutrients",
+      "Changes in rainfall",
+      "Food chain problems, as producers grow less",
+      "A fall in animal population numbers",
+      "An increase in upwelling",
+    ],
+    a: [0, 1, 2, 3, 4],
+    why: "El Niño reduces upwelling rather than increasing it, which is why nutrients fall.",
+  },
+  {
+    id: "up6", topic: "upwell", type: "chain",
+    q: "Build the explanation: why does El Niño reduce fish populations?",
+    chunks: [
+      "sea surface temperature rises in the eastern Pacific",
+      "the warm surface layer reduces upwelling",
+      "so fewer nutrients reach the surface water",
+      "producers such as phytoplankton grow less",
+      "and the consumers that feed on them decline",
+    ],
+    why: "Warm water sits on top and blocks the cold nutrient-rich water from rising. Producers first, consumers after.",
+  },
 ];
 
 /* ------------------------------------------------------------ creatures */
@@ -531,6 +1039,13 @@ const CREATURES = [
   { id: "squid", name: "Giant squid", rarity: "rare", fact: "It has the largest eye of any animal — about the size of a dinner plate — for spotting sperm whales in the dark." },
   { id: "snailfish", name: "Mariana snailfish", rarity: "rare", fact: "It lives 8,000 m down in the Mariana Trench under pressure equal to 1,600 elephants standing on a car." },
   { id: "yeticrab", name: "Yeti crab", rarity: "rare", fact: "It farms bacteria on its hairy claws at hydrothermal vents, waving them over the water to feed the crop." },
+  { id: "krill", name: "Antarctic krill", rarity: "common", fact: "Their swarms can be seen from space, and together they outweigh every human on Earth." },
+  { id: "copepod", name: "Copepod", rarity: "common", fact: "Barely a millimetre long, it is probably the most numerous animal on the planet." },
+  { id: "lanternfish", name: "Lanternfish", rarity: "uncommon", fact: "It rises from the twilight zone to feed each night and sinks again by dawn — the largest migration on Earth, made daily." },
+  { id: "anchoveta", name: "Peruvian anchoveta", rarity: "uncommon", fact: "It thrives on upwelling off Peru, and El Niño years can collapse the entire fishery." },
+  { id: "spermwhale", name: "Sperm whale", rarity: "uncommon", fact: "It dives past 2,000 m into the midnight zone and holds its breath for over an hour." },
+  { id: "barreleye", name: "Barreleye fish", rarity: "rare", fact: "Its head is a transparent dome, and its tubular eyes rotate inside it to look straight up through its own forehead." },
+  { id: "vampiresquid", name: "Vampire squid", rarity: "rare", fact: "Living where there is almost no oxygen, it escapes by ejecting a cloud of glowing mucus instead of ink." },
 ];
 
 /* ------------------------------------------------------ creature art */
@@ -693,9 +1208,16 @@ function DrawnCreature({ id, size = 132 }) {
       </>
     ),
   };
+  const fallback = (
+    <>
+      <ellipse cx="48" cy="52" rx="26" ry="15" fill={C.mist} opacity="0.7" />
+      <path d="M72 52 L88 40 L88 64 Z" fill={C.mist} opacity="0.7" />
+      <circle cx="34" cy="48" r="3" fill={C.abyss} />
+    </>
+  );
   return (
     <svg viewBox="0 0 100 100" style={s} aria-hidden="true">
-      {art[id]}
+      {art[id] || fallback}
     </svg>
   );
 }
@@ -1361,13 +1883,13 @@ export default function App() {
         <style>{keyframes}</style>
         <div style={{ padding: "34px 22px 12px" }}>
           <p style={{ fontSize: 13, color: C.glow, margin: "0 0 6px", letterSpacing: ".04em" }}>
-            Marine Science IGCSE · Unit 1
+            Marine Science IGCSE
           </p>
           <h1 style={{
             fontFamily: FONT_DISPLAY, fontSize: 34, lineHeight: 1.08, fontWeight: 600,
             margin: "0 0 10px", letterSpacing: "-0.02em",
           }}>
-            Earth and oceans
+            Earth, oceans and seawater
           </h1>
           <p style={{ fontSize: 15, color: C.mist, margin: 0, lineHeight: 1.5 }}>
             {masteredCount} of {TOPICS.length} topics mastered · {progress.creatures.length} of {CREATURES.length} creatures found
@@ -1392,36 +1914,52 @@ export default function App() {
         )}
 
         <div style={{ padding: "18px 22px 8px" }}>
-          {TOPICS.map((t, idx) => {
-            const s = stats[t.id];
+          {UNITS.map((u) => {
+            const list = TOPICS.filter((t) => t.unit === u.n);
+            const done = list.filter((t) => stats[t.id].state === "mastered").length;
             return (
-              <div key={t.id} style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 34 }}>
-                  <DepthNode strength={s.strength} state={s.state} />
-                  {idx < TOPICS.length - 1 && (
-                    <div style={{ flex: 1, width: 2, background: C.line, opacity: 0.6, minHeight: 26 }} />
-                  )}
-                </div>
-                <button onClick={() => start(t.id)} style={{
-                  flex: 1, textAlign: "left", background: "transparent", border: "none",
-                  padding: "2px 0 24px", cursor: "pointer", color: C.foam, fontFamily: FONT_UI,
+              <div key={u.n}>
+                <div style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "baseline",
+                  margin: "6px 0 16px", paddingBottom: 8, borderBottom: `1px solid ${C.shelf}`,
                 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-                    <span style={{ fontFamily: FONT_DISPLAY, fontSize: 19, fontWeight: 600, lineHeight: 1.2 }}>
-                      {t.name}
-                    </span>
-                    <span style={{ fontSize: 12, color: C.line, flexShrink: 0 }}>{t.depth}</span>
-                  </div>
-                  <div style={{ fontSize: 13.5, color: C.mist, marginTop: 4 }}>
-                    {s.state === "new" && "Not started"}
-                    {s.state === "learning" && `Learning · ${s.seen} of ${s.total} met`}
-                    {s.state === "growing" && `Getting solid · ${Math.round(s.strength * 100)}%`}
-                    {s.state === "mastered" && "Mastered"}
-                    {s.due > 0 && (
-                      <span style={{ color: C.coral }}> · {s.due} due</span>
-                    )}
-                  </div>
-                </button>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 15, fontWeight: 600, color: C.glow }}>
+                    Unit {u.n} · {u.name}
+                  </span>
+                  <span style={{ fontSize: 12, color: C.line }}>{done}/{list.length}</span>
+                </div>
+                {list.map((t, idx) => {
+                  const s = stats[t.id];
+                  return (
+                    <div key={t.id} style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 34 }}>
+                        <DepthNode strength={s.strength} state={s.state} />
+                        {idx < list.length - 1 && (
+                          <div style={{ flex: 1, width: 2, background: C.line, opacity: 0.6, minHeight: 26 }} />
+                        )}
+                      </div>
+                      <button onClick={() => start(t.id)} style={{
+                        flex: 1, textAlign: "left", background: "transparent", border: "none",
+                        padding: "2px 0 24px", cursor: "pointer", color: C.foam, fontFamily: FONT_UI,
+                      }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 19, fontWeight: 600, lineHeight: 1.2 }}>
+                            {t.name}
+                          </span>
+                          <span style={{ fontSize: 12, color: C.line, flexShrink: 0 }}>{t.depth}</span>
+                        </div>
+                        <div style={{ fontSize: 13.5, color: C.mist, marginTop: 4 }}>
+                          {s.state === "new" && "Not started"}
+                          {s.state === "learning" && `Learning · ${s.seen} of ${s.total} met`}
+                          {s.state === "growing" && `Getting solid · ${Math.round(s.strength * 100)}%`}
+                          {s.state === "mastered" && "Mastered"}
+                          {s.due > 0 && <span style={{ color: C.coral }}> · {s.due} due</span>}
+                        </div>
+                      </button>
+                    </div>
+                  );
+                })}
+                <div style={{ height: 14 }} />
               </div>
             );
           })}
