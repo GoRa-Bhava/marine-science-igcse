@@ -1545,7 +1545,8 @@ function MatchQ({ item, locked, state, setState }) {
       background: bad ? "rgba(255,158,125,.14)" : good ? "rgba(79,216,196,.14)"
         : selected ? C.raise : linked ? "rgba(79,216,196,.08)" : C.shelf,
       color: bad ? C.no : good ? C.ok : C.foam,
-      display: "flex", alignItems: "center", height: "100%",
+      display: "flex", alignItems: "center",
+      boxSizing: "border-box", minHeight: 58,
       transition: "background .12s, border-color .12s",
     };
   };
