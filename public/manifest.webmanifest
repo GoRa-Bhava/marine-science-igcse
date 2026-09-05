@@ -1,7 +1,7 @@
 {
   "name": "Marine Science IGCSE",
   "short_name": "Marine Science",
-  "description": "Marine Science IGCSE Units 1 and 2. Retrieval practice with spaced repetition.",
+  "description": "Marine Science IGCSE Units 1 to 3. Retrieval practice with spaced repetition.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
