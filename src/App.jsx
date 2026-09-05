@@ -239,6 +239,7 @@ const ITEMS = [
       "building a ridge along the ocean floor",
     ],
     why: "The ridge is new crust. That's the link most answers miss.",
+    bridge: true,
   },
 
   /* --------------------------------------------- Earthquakes & tsunamis */
@@ -246,10 +247,10 @@ const ITEMS = [
     id: "eq1", topic: "quakes", type: "choice",
     q: "What causes an earthquake?",
     options: [
-      "Plates get stuck, pressure builds, then releases suddenly",
-      "Magma exploding out through the crust",
-      "Large ocean waves striking the coastline",
-      "The mantle cooling down and shrinking",
+      "Plates get stuck, pressure builds up, then they suddenly slip free",
+      "Magma rises through the crust and forces the plates to move apart",
+      "Convection currents in the mantle suddenly reverse their direction",
+      "Ocean water floods into cracks in the crust and pushes the rock apart",
     ],
     a: 0,
     why: "Stuck → pressure builds → sudden slip → energy released as shaking.",
@@ -258,10 +259,10 @@ const ITEMS = [
     id: "eq2", topic: "quakes", type: "choice",
     q: "What is a tsunami?",
     options: [
-      "Huge tall waves caused by earthquakes or volcanoes beneath the sea",
-      "A strong current that pulls swimmers away from the shore",
-      "The highest tide of the month",
-      "A large wave built up by very strong wind",
+      "Huge, tall waves caused by earthquakes or volcanoes beneath the sea",
+      "Huge, tall waves caused by very strong winds blowing over the sea surface",
+      "A narrow current that pulls swimmers rapidly away from the shore",
+      "The highest tide of the month, when high water is higher than normal",
     ],
     a: 0,
     why: "Tsunamis come from the seabed moving, not from wind. They can reach 100ft on land.",
@@ -306,10 +307,10 @@ const ITEMS = [
     id: "oc1", topic: "oceans", type: "choice",
     q: "What is the main difference between a sea and an ocean?",
     options: [
-      "Seas are smaller and usually partly enclosed by land",
-      "Seas contain more salt than oceans",
-      "Seas are freshwater and oceans are saltwater",
-      "Oceans are always fully enclosed by land",
+      "Seas are smaller than oceans and are usually partly enclosed by land",
+      "Seas contain salt water while oceans contain mostly fresh water",
+      "Seas are deeper than oceans and are never enclosed by land",
+      "Seas are found near the poles while oceans lie nearer the Equator",
     ],
     a: 0,
     why: "Oceans are larger and deeper. A sea can also be a region within an ocean.",
@@ -395,6 +396,7 @@ const ITEMS = [
       "the floor of the Mariana Trench, around 36,000 ft down",
     ],
     why: "The abyssal plain sits between roughly 10,000 and 20,000 ft. The Mariana Trench goes far deeper still.",
+    bridge: true,
   },
 
   /* -------------------------------------------------- Lat & long */
@@ -416,8 +418,8 @@ const ITEMS = [
     options: [
       "Distance east or west of the prime meridian",
       "Distance north or south of the Equator",
-      "The tilt of Earth's axis",
-      "Distance from the nearest pole",
+      "Height of the land above the level of the sea",
+      "Distance from the nearest of the two poles",
     ],
     a: 0,
     why: "Longitude lines run vertically, pole to pole, and measure east–west distance.",
@@ -440,6 +442,7 @@ const ITEMS = [
       ["Prime meridian", "The 0° line of longitude"],
     ],
     why: "Every coordinate is a latitude paired with a longitude — one north–south, one east–west.",
+    bridge: true,
   },
   {
     id: "co5", topic: "coords", type: "multi",
@@ -460,10 +463,10 @@ const ITEMS = [
     id: "ti1", topic: "tides", type: "choice",
     q: "What is a spring tide?",
     options: [
-      "The greatest difference between low and high water in a tidal cycle",
-      "The smallest difference between low and high water in a tidal cycle",
-      "A tide that only happens during the spring months",
-      "A narrow current flowing away from the shore",
+      "The greatest difference between high and low water in a tidal cycle",
+      "The smallest difference between high and low water in a tidal cycle",
+      "The tide that occurs only during the spring months of the year",
+      "A tide caused by an earthquake or volcano beneath the sea",
     ],
     a: 0,
     why: "High tides are higher than normal and low tides are lower than normal. Nothing to do with the season.",
@@ -472,10 +475,10 @@ const ITEMS = [
     id: "ti2", topic: "tides", type: "choice",
     q: "What is a neap tide?",
     options: [
-      "The least height difference between low and high water in a tidal cycle",
-      "The greatest height difference between low and high water",
-      "A tide caused by an undersea earthquake",
-      "A tide that only occurs at the Equator",
+      "The least difference between high and low water in a tidal cycle",
+      "The greatest difference between high and low water in a tidal cycle",
+      "A narrow stream of water flowing quickly away from the shore",
+      "A tide that only occurs in the Southern Ocean around Antarctica",
     ],
     a: 0,
     why: "Neap is the flat one, spring is the extreme one. They are opposites.",
@@ -485,9 +488,9 @@ const ITEMS = [
     q: "What is a rip current?",
     options: [
       "A narrow stream of water flowing rapidly away from the shore",
-      "A wave caused by an undersea volcano",
-      "A large circular system of ocean currents",
-      "The inward flow of water at high tide",
+      "A large circular system of currents in the middle of an ocean",
+      "A wide, slow current that carries warm water towards the poles",
+      "A huge wave caused by an earthquake or volcano beneath the sea",
     ],
     a: 0,
     why: "They form near sandbars and flow strongly out to sea.",
@@ -525,6 +528,7 @@ const ITEMS = [
       ["Gyre", "Large circular system of currents"],
     ],
     why: "Tides are vertical changes in water height; currents are horizontal movements of water.",
+    bridge: true,
   },
   {
     id: "ti7", topic: "tides", type: "chain",
@@ -537,6 +541,7 @@ const ITEMS = [
       "which carries a swimmer away from the beach faster than they can swim back",
     ],
     why: "The danger is the speed and the direction, not the depth. Swimming sideways out of the narrow stream is the escape.",
+    bridge: true,
   },
 
   /* ============================================ UNIT 2 — SEAWATER ==== */
@@ -559,9 +564,9 @@ const ITEMS = [
     q: "What is a compound?",
     options: [
       "A substance made of two or more different elements chemically combined",
-      "A mixture of substances that are not chemically joined",
-      "A substance made of only one type of atom",
-      "Any substance that will dissolve in water",
+      "A substance made of two or more elements mixed but not chemically joined",
+      "A substance made of only one type of atom that cannot be broken down",
+      "A substance that has dissolved completely into a liquid such as water",
     ],
     a: 0,
     why: "Chemically combined is the key phrase. H₂O is a compound; seawater is a mixture.",
@@ -572,8 +577,8 @@ const ITEMS = [
     options: [
       "The movement of particles from a region of higher concentration to a region of lower concentration",
       "The movement of particles from a region of lower concentration to a region of higher concentration",
-      "The movement of water across a partially permeable membrane",
-      "Particles sinking and settling at the bottom of a liquid",
+      "The movement of water across a membrane from a dilute solution to a concentrated solution",
+      "The movement of particles from the surface of a liquid into the air above it as it warms",
     ],
     a: 0,
     why: "High to low. The third option describes osmosis, which is a different process.",
@@ -608,6 +613,7 @@ const ITEMS = [
       "until the colour is spread evenly through the water",
     ],
     why: "Random movement plus a concentration difference gives a net flow. No stirring is needed.",
+    bridge: true,
   },
 
   /* -------------------------------------------- Water cycle and ice */
@@ -644,6 +650,7 @@ const ITEMS = [
     options: ["Land ice", "Sea ice", "Both raise it equally", "Neither raises sea level"],
     a: 0,
     why: "Sea ice is already floating and displacing water, so melting it adds very little. Land ice adds water that wasn't in the sea before.",
+    bridge: true,
   },
   {
     id: "wc4", topic: "cycle", type: "gap",
@@ -722,6 +729,7 @@ const ITEMS = [
       "and denser water sinks below less dense water",
     ],
     why: "Mass up, volume roughly the same, so density up. Density decides what floats and what sinks.",
+    bridge: true,
   },
 
   /* -------------------------------------------------------- Density */
@@ -730,9 +738,9 @@ const ITEMS = [
     q: "What is density?",
     options: [
       "A measure of how much mass a substance has for its volume",
-      "The total mass of a substance",
-      "The total volume a substance takes up",
-      "The force a substance exerts on the seabed",
+      "A measure of how much space a substance takes up in total",
+      "A measure of how much a substance weighs on a set of scales",
+      "A measure of how hard a substance presses down on the seabed",
     ],
     a: 0,
     why: "Density relates the two: mass and volume together, not either one alone.",
@@ -769,11 +777,11 @@ const ITEMS = [
     q: "Match each term to its description.",
     pairs: [
       ["Density", "Mass divided by volume"],
-      ["Higher salinity", "Gives water a greater density"],
-      ["Colder water", "Denser than warmer water"],
-      ["Less dense water", "Floats above denser water"],
+      ["Mass", "The top line of the density formula"],
+      ["Volume", "The bottom line of the density formula"],
+      ["Higher salinity", "Makes seawater more dense"],
     ],
-    why: "Temperature and salinity both change density, which is why the ocean forms layers.",
+    why: "Mass over volume, and more salt means more mass in the same volume.",
   },
 
   /* ------------------------------------------------- pH of seawater */
@@ -832,6 +840,7 @@ const ITEMS = [
       "making the ocean more acidic",
     ],
     why: "Release, dissolve, react, lower pH. The link most answers miss is that the CO₂ has to dissolve first.",
+    bridge: true,
   },
 
   /* ------------------------------------------ What changes with depth */
@@ -861,15 +870,16 @@ const ITEMS = [
     ],
     a: 0,
     why: "More water above you means more weight pressing down, so pressure climbs the whole way.",
+    bridge: true,
   },
   {
     id: "dp3", topic: "depth", type: "choice",
     q: "What happens to light penetration as depth increases?",
     options: [
-      "It decreases until no light reaches at all",
-      "It increases with depth",
-      "It stays constant to the sea floor",
-      "It decreases then increases again",
+      "It decreases until eventually no light reaches at all",
+      "It increases steadily the deeper into the ocean you go",
+      "It stays the same all the way down to the sea floor",
+      "It decreases at first and then increases again near the seabed",
     ],
     a: 0,
     why: "Light fades with depth, which is exactly what defines the ocean zones.",
@@ -892,6 +902,7 @@ const ITEMS = [
       ["Density", "Rises as water gets colder and saltier"],
     ],
     why: "Pressure and density rise; light and temperature fall.",
+    bridge: true,
   },
 
   /* --------------------------------------------- Ocean zones and light */
@@ -900,9 +911,9 @@ const ITEMS = [
     q: "What is the twilight zone?",
     options: [
       "Around 200–1,000 m down, where some light reaches but not enough for photosynthesis",
-      "The top 200 m, where photosynthesis takes place",
-      "1,000–4,000 m down, where no light reaches at all",
-      "The flat region of the ocean floor",
+      "Around 0–200 m down, where plenty of light reaches and photosynthesis can take place",
+      "Around 1,000–4,000 m down, where no light reaches and it is completely dark",
+      "Around 4,000 m down, on the flat region of the ocean floor where pressure is greatest",
     ],
     a: 0,
     why: "Some light, but too little for photosynthesis. That's the distinction that matters.",
@@ -911,10 +922,10 @@ const ITEMS = [
     id: "zo2", topic: "zones", type: "choice",
     q: "What is the midnight zone?",
     options: [
-      "The zone beneath the twilight zone, 1,000–4,000 m down, where no light penetrates",
-      "The zone 200–1,000 m down, where a little light reaches",
-      "The sunlit surface layer of the ocean",
-      "The deepest trench in the Pacific Ocean",
+      "Around 1,000–4,000 m down, beneath the twilight zone, where no light penetrates",
+      "Around 200–1,000 m down, above the twilight zone, where a little light penetrates",
+      "The surface layer of the ocean at night, when there is no sunlight to penetrate",
+      "The deepest part of the Mariana Trench, around 11,000 m below the sea surface",
     ],
     a: 0,
     why: "No light at all below 1,000 m — any light down there is made by the animals themselves.",
@@ -923,10 +934,10 @@ const ITEMS = [
     id: "zo3", topic: "zones", type: "choice",
     q: "What is a Secchi disc used for?",
     options: [
-      "Measuring light penetration and turbidity at different depths",
-      "Measuring the salinity of seawater",
-      "Measuring pressure on the sea floor",
-      "Collecting plankton samples from the surface",
+      "Measuring light penetration and turbidity at different depths of water",
+      "Measuring the salinity of seawater at different depths of water",
+      "Measuring the pressure of seawater pressing down on the sea floor",
+      "Collecting samples of plankton from the surface layer of the ocean",
     ],
     a: 0,
     why: "You lower it until it disappears — that depth of disappearance tells you how transparent the water is.",
@@ -967,9 +978,9 @@ const ITEMS = [
     q: "Define the term 'upwelling'.",
     options: [
       "Cold, nutrient-rich water from the deep ocean rising to the surface",
-      "Warm surface water sinking down into the deep ocean",
-      "The regular rise and fall of the tide",
-      "A narrow current flowing rapidly away from the shore",
+      "Warm, nutrient-poor water from the surface sinking to the deep ocean",
+      "A narrow stream of water flowing rapidly away from the shore",
+      "The regular rise and fall of sea level twice a day at the coast",
     ],
     a: 0,
     why: "Cold, nutrient-rich, and rising. Those nutrients are what make upwelling zones so productive.",
@@ -978,10 +989,10 @@ const ITEMS = [
     id: "up2", topic: "upwell", type: "choice",
     q: "What is El Niño?",
     options: [
-      "A climate event when sea surface temperature is much warmer than normal in the eastern Pacific",
-      "A climate event when sea surface temperature is much colder than normal in the eastern Pacific",
-      "A seasonal wind that reverses across the Indian Ocean",
-      "A period of unusually high tides worldwide",
+      "A climate event when the sea surface temperature is much warmer than normal in the eastern Pacific",
+      "A climate event when the sea surface temperature is much colder than normal in the eastern Pacific",
+      "A climate event when strong winds push warm surface water from the Atlantic into the Pacific",
+      "A climate event when unusually heavy rainfall lowers the salinity of the eastern Pacific",
     ],
     a: 0,
     why: "Warmer than normal, eastern Pacific. Name the ocean as well as the change.",
@@ -991,9 +1002,9 @@ const ITEMS = [
     q: "How could you model an upwelling at home?",
     options: [
       "Blow a fan across a tub of water with food colouring added",
-      "Freeze salt water and watch how it melts",
-      "Pour oil onto water and stir it",
-      "Lower a Secchi disc into a bucket of water",
+      "Freeze a tub of salt water and watch how the ice slowly melts",
+      "Pour a layer of oil onto a tub of water and stir it with a spoon",
+      "Lower a Secchi disc into a tub of water and note when it disappears",
     ],
     a: 0,
     why: "The fan moves the surface water aside, and you can watch the colouring show water rising to replace it.",
@@ -1031,6 +1042,7 @@ const ITEMS = [
       "and the consumers that feed on them decline",
     ],
     why: "Warm water sits on top and blocks the cold nutrient-rich water from rising. Producers first, consumers after.",
+    bridge: true,
   },
 
   /* ===================================== UNIT 3 — MARINE ORGANISMS ==== */
@@ -1041,9 +1053,9 @@ const ITEMS = [
     q: "State the function of mitochondria.",
     options: [
       "The site of respiration, releasing energy from glucose",
-      "The site of photosynthesis",
-      "Where the cell's DNA is stored",
-      "Controlling what enters and leaves the cell",
+      "The site of photosynthesis, making glucose from light",
+      "The site where the cell's DNA and genetic material is stored",
+      "The site that controls what enters and leaves the cell",
     ],
     a: 0,
     why: "Respiration happens in the mitochondria. It is a chemical reaction that releases energy from glucose.",
@@ -1067,9 +1079,9 @@ const ITEMS = [
     q: "Define 'eukaryotic'.",
     options: [
       "Cells that contain membrane-bound organelles such as a nucleus",
-      "Cells that have no nucleus",
-      "Cells that are able to photosynthesise",
-      "Cells found only in animals",
+      "Cells that have no nucleus and no membrane-bound organelles",
+      "Cells that contain chloroplasts and can carry out photosynthesis",
+      "Cells that are found only in animals and never in plants",
     ],
     a: 0,
     why: "Animals, plants, protoctists and fungi all have eukaryotic cells.",
@@ -1106,6 +1118,7 @@ const ITEMS = [
     options: ["Animals", "Plants", "Protoctists", "Fungi", "Bacteria"],
     a: [0, 1, 2, 3],
     why: "Bacteria have no nucleus, so they are prokaryotic.",
+    bridge: true,
   },
 
   /* ---------------------------------------------------- Magnification */
@@ -1154,6 +1167,7 @@ const ITEMS = [
       "divide to get the actual size",
     ],
     why: "Measure, convert, rearrange, divide. Skipping the unit conversion is where most marks go missing.",
+    bridge: true,
   },
 
   /* ------------------------------------------------------ Reproduction */
@@ -1169,9 +1183,9 @@ const ITEMS = [
     q: "Define the term 'gametes'.",
     options: [
       "The sex cells used in reproduction, such as eggs and sperm",
-      "The immature forms of an animal",
-      "The cells that make up an embryo",
-      "The cells where respiration happens",
+      "The immature forms of an animal before metamorphosis",
+      "The cells that divide to form the body of a growing embryo",
+      "The cells where respiration takes place inside an organism",
     ],
     a: 0,
     why: "Eggs (ova) and sperm are the examples to give.",
@@ -1181,9 +1195,9 @@ const ITEMS = [
     q: "Define the term 'larva'.",
     options: [
       "An immature form of an animal that undergoes metamorphosis",
-      "A sex cell used in reproduction",
-      "A fertilised egg",
-      "A fully grown adult that cannot reproduce",
+      "A sex cell such as an egg or sperm that is used in reproduction",
+      "A fertilised egg that has not yet started to develop",
+      "A fully grown adult that is no longer able to reproduce",
     ],
     a: 0,
     why: "Immature, and it changes form — metamorphosis is the word to use.",
@@ -1206,6 +1220,7 @@ const ITEMS = [
       ["Larva", "Immature stage before metamorphosis"],
     ],
     why: "Only sexual reproduction involves gametes.",
+    bridge: true,
   },
   {
     id: "rp6", topic: "repro", type: "chain",
@@ -1218,6 +1233,7 @@ const ITEMS = [
       "and becomes the adult form",
     ],
     why: "Gametes → fertilisation → larva → metamorphosis → adult.",
+    bridge: true,
   },
 
   /* ------------------------------------------ Fish fins and movement */
@@ -1278,6 +1294,7 @@ const ITEMS = [
       ["Anal", "Underneath, near the tail"],
     ],
     why: "Worth knowing for diagram-labelling questions, which come up often.",
+    bridge: true,
   },
 
   /* ------------------------------------------------- Gills and senses */
@@ -1286,9 +1303,9 @@ const ITEMS = [
     q: "Describe the function of the operculum.",
     options: [
       "A bony cover that protects the gills and stops water flowing backwards through them",
-      "A sensory organ that detects vibrations in the water",
-      "A fin used for steering side to side",
-      "A gas-filled sac that controls buoyancy",
+      "A sensory organ along the side of a fish that senses vibrations in the water",
+      "A pair of fins just behind the head that control side to side movement",
+      "A gas-filled sac inside the body that controls how a fish floats",
     ],
     a: 0,
     why: "Two functions: protection, and keeping water flowing one way across the gills.",
@@ -1348,6 +1365,7 @@ const ITEMS = [
       "and swims away before it has even seen the predator",
     ],
     why: "Movement → vibrations → detection → direction → escape. It works in the dark, which is the point.",
+    bridge: true,
   },
 
   /* ----------------------------------------------------- Body symmetry */
@@ -1356,9 +1374,9 @@ const ITEMS = [
     q: "Define the term 'bilateral symmetry'.",
     options: [
       "The body can be divided along one line into left and right halves that are nearly identical",
-      "The body is divided equally around a central point",
-      "The body has no line of symmetry",
-      "The body can be divided into five equal parts",
+      "The body can be divided equally around a central point into several matching parts",
+      "The body can be divided into a front half and a back half that are nearly identical",
+      "The body can be divided into five matching parts arranged around a central point",
     ],
     a: 0,
     why: "One line, two mirror-image halves. Equal on both sides.",
@@ -1407,9 +1425,9 @@ const ITEMS = [
     q: "State the main characteristics of Cnidaria.",
     options: [
       "Marine invertebrates with radial symmetry and tentacles with stinging cells",
-      "Marine invertebrates with spiny skin and tube feet",
-      "Marine invertebrates with an exoskeleton and jointed legs",
-      "Invertebrates with a segmented body and setae",
+      "Marine invertebrates with pentaradial symmetry, spiny skin and tube feet",
+      "Marine invertebrates with an exoskeleton, compound eyes and jointed legs",
+      "Marine invertebrates with a segmented soft body and bristles called setae",
     ],
     a: 0,
     why: "Radial symmetry and stinging tentacles. Jellyfish and sea anemones are cnidarians.",
@@ -1419,9 +1437,9 @@ const ITEMS = [
     q: "State the main characteristics of Echinoderms.",
     options: [
       "Marine invertebrates with pentaradial symmetry, spiny skin and tube feet",
-      "Marine invertebrates with tentacles and stinging cells",
-      "Marine invertebrates with an internal or external shell",
-      "Marine invertebrates with compound eyes and antennae",
+      "Marine invertebrates with radial symmetry and tentacles with stinging cells",
+      "Marine invertebrates with an unsegmented body and an internal or external shell",
+      "Marine invertebrates with compound eyes and two pairs of antennae",
     ],
     a: 0,
     why: "Five-way symmetry, spiny skin, tube feet. Starfish and sea urchins.",
@@ -1465,10 +1483,10 @@ const ITEMS = [
     id: "cr1", topic: "bilat", type: "choice",
     q: "State the main characteristics of Crustaceans.",
     options: [
-      "Exoskeleton, compound eyes, two pairs of antennae and jointed legs on a segmented abdomen",
-      "Unsegmented body with an internal or external shell",
-      "Segmented soft body with setae",
-      "Radial symmetry with stinging cells",
+      "Exoskeleton, compound eyes, two pairs of antennae and jointed legs",
+      "Unsegmented body with an internal or external shell and no legs",
+      "Segmented soft body with bristles called setae and no exoskeleton",
+      "Radial symmetry with tentacles carrying stinging cells and no legs",
     ],
     a: 0,
     why: "Crabs, lobsters and shrimp — hard outside, jointed legs, two pairs of antennae.",
@@ -1477,10 +1495,10 @@ const ITEMS = [
     id: "cr2", topic: "bilat", type: "choice",
     q: "State the main characteristics of Molluscs.",
     options: [
-      "Bilateral symmetry, unsegmented body, internal or external shell",
-      "Exoskeleton and two pairs of antennae",
-      "Segmented soft body with setae",
-      "Spiny skin and tube feet",
+      "Bilateral symmetry, an unsegmented body and an internal or external shell",
+      "Bilateral symmetry, an exoskeleton and two pairs of antennae",
+      "Bilateral symmetry, a segmented soft body and bristles called setae",
+      "Pentaradial symmetry, spiny skin covering the body and tube feet",
     ],
     a: 0,
     why: "Unsegmented is the key word. The shell can be inside (squid) or outside (snail).",
@@ -1489,10 +1507,10 @@ const ITEMS = [
     id: "cr3", topic: "bilat", type: "choice",
     q: "State the main characteristics of Annelids.",
     options: [
-      "Bilateral symmetry, segmented soft body, have setae",
-      "Unsegmented body with a shell",
-      "Exoskeleton and compound eyes",
-      "Pentaradial symmetry and spiny skin",
+      "Bilateral symmetry, a segmented soft body and setae",
+      "Bilateral symmetry, an unsegmented body and a shell",
+      "Bilateral symmetry, an exoskeleton and jointed legs",
+      "Pentaradial symmetry, spiny skin and tube feet",
     ],
     a: 0,
     why: "Segmented worms with bristles called setae.",
