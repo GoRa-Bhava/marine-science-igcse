@@ -893,7 +893,7 @@ export default function App() {
                           <span style={{ fontFamily: FONT_DISPLAY, fontSize: 19, fontWeight: 600, lineHeight: 1.2 }}>
                             {t.name}
                           </span>
-                          <span style={{ fontSize: 12, color: C.line, flexShrink: 0 }}>{t.depth}</span>
+                          <span style={{ fontSize: 12, color: C.line, maxWidth: "42%", textAlign: "right", lineHeight: 1.3 }}>{t.depth}</span>
                         </div>
                         <div style={{ fontSize: 13.5, color: C.mist, marginTop: 4 }}>
                           {s.state === "new" && "Not started"}

@@ -1,4 +1,4 @@
-# Earth and Oceans — Marine Science IGCSE Unit 1
+# Earth and Oceans — Marine Science IGCSE, Units 1 to 6
 
 An installable web app (PWA). On Android it gets a real icon, opens full screen
 with no browser bars, and works with no signal.
