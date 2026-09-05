@@ -2257,18 +2257,33 @@ function Confetti({ on }) {
   );
 }
 
-function DepthNode({ strength, state }) {
+/* Ring = how much of the topic has been met (fills completely after one pass).
+   Colour = how well it is holding over the schedule: dim → bright → solid dot. */
+const lerpHex = (a, b, t) => {
+  const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [x, y] = [p(a), p(b)];
+  return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
+};
+
+function DepthNode({ coverage, strength, state }) {
   const r = 15;
-  const fill = state === "new" ? "transparent" : state === "mastered" ? C.glow : C.glowDim;
+  const t = Math.min(1, strength / 0.75);          // 0.75 is the mastered threshold
+  const ringColor = state === "new" ? "transparent"
+    : t < 0.5 ? lerpHex(C.line, C.glowDim, t * 2)
+    : lerpHex(C.glowDim, C.glow, (t - 0.5) * 2);
   return (
     <svg width="34" height="34" viewBox="0 0 34 34" style={{ flexShrink: 0 }}>
       <circle cx="17" cy="17" r={r} fill="none" stroke={C.line} strokeWidth="2" />
       <circle
-        cx="17" cy="17" r={r} fill="none" stroke={fill} strokeWidth="3"
-        strokeDasharray={`${2 * Math.PI * r * strength} ${2 * Math.PI * r}`}
+        cx="17" cy="17" r={r} fill="none" stroke={ringColor} strokeWidth="3"
+        strokeDasharray={`${2 * Math.PI * r * coverage} ${2 * Math.PI * r}`}
         strokeLinecap="round" transform="rotate(-90 17 17)"
+        style={{ transition: "stroke .3s" }}
       />
-      {state === "mastered" && <circle cx="17" cy="17" r="6" fill={C.glow} />}
+      {state !== "new" && (
+        <circle cx="17" cy="17" r={state === "mastered" ? 6 : 2.5 + 3.5 * t}
+          fill={ringColor} opacity={state === "mastered" ? 1 : 0.35 + 0.65 * t} />
+      )}
     </svg>
   );
 }
@@ -2558,7 +2573,7 @@ export default function App() {
                   return (
                     <div key={t.id} style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 34 }}>
-                        <DepthNode strength={s.strength} state={s.state} />
+                        <DepthNode coverage={s.total ? s.seen / s.total : 0} strength={s.strength} state={s.state} />
                         {idx < list.length - 1 && (
                           <div style={{ flex: 1, width: 2, background: C.line, opacity: 0.6, minHeight: 26 }} />
                         )}
@@ -2575,8 +2590,8 @@ export default function App() {
                         </div>
                         <div style={{ fontSize: 13.5, color: C.mist, marginTop: 4 }}>
                           {s.state === "new" && "Not started"}
-                          {s.state === "learning" && `Learning · ${s.seen} of ${s.total} questions met`}
-                          {s.state === "growing" && `Holding · ${Math.round(s.strength * 100)}% through the schedule`}
+                          {s.state === "learning" && (s.seen < s.total ? `Learning · ${s.seen} of ${s.total} met` : `All ${s.total} met · settling in`)}
+                          {s.state === "growing" && `Holding · ${Math.round(s.strength / 0.75 * 100)}% of the way to mastered`}
                           {s.state === "mastered" && "Mastered"}
                           {s.due > 0 && <span style={{ color: C.coral }}> · {s.due} due</span>}
                         </div>
@@ -2599,9 +2614,9 @@ export default function App() {
           </button>
           <p style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 18, textAlign: "center" }}>
             No timers, no lives, no streaks. Questions you miss come back tomorrow,
-            then in three days, then in a week. The percentage tracks how far a topic
-            has travelled through that schedule, not how many you got right today —
-            so it only climbs once the gap has actually passed.
+            then in three days, then in a week. A ring fills once you've met every
+            question in a topic; it brightens as answers hold across those gaps, and
+            gets a solid centre at mastered.
           </p>
           {IS_NATIVE && <UpdateCheck />}
         </div>
