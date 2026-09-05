@@ -1,0 +1,11 @@
+{
+  "appId": "uk.co.marinescience.igcse",
+  "appName": "Marine Science",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#04141F"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
