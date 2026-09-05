@@ -2255,6 +2255,77 @@ function DepthNode({ strength, state }) {
   );
 }
 
+/* ------------------------------------------------------------- updates */
+/* Inside the Android app every file is baked into the APK, so new content
+   only arrives with a new APK. The build workflow publishes each APK as a
+   GitHub release tagged build-N and stamps N into the app as VITE_BUILD_NUMBER.
+   "Check for updates" compares the two and hands the download to the phone's
+   browser, which then offers to install it over the old copy. The web build
+   never shows this: its service worker already refreshes itself. */
+const REPO = "GoRa-Bhava/marine-science-igcse";
+const APK_URL = `https://github.com/${REPO}/releases/latest/download/marine-science.apk`;
+const BUILD = Number(import.meta.env.VITE_BUILD_NUMBER) || 0;
+const IS_NATIVE = typeof window !== "undefined" && !!window.Capacitor?.isNativePlatform?.();
+
+async function fetchLatestBuild() {
+  const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
+    headers: { Accept: "application/vnd.github+json" },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`GitHub answered ${res.status}`);
+  const m = /build-(\d+)/.exec((await res.json()).tag_name || "");
+  if (!m) throw new Error("latest release has no build number");
+  return Number(m[1]);
+}
+
+function UpdateCheck() {
+  const [state, setState] = useState({ kind: "idle" });
+
+  const check = async () => {
+    setState({ kind: "checking" });
+    try {
+      const latest = await fetchLatestBuild();
+      setState(latest > BUILD ? { kind: "available", latest } : { kind: "current" });
+    } catch (e) {
+      setState({ kind: "error" });
+    }
+  };
+
+  const link = {
+    background: "none", border: "none", padding: 0, color: C.glow, cursor: "pointer",
+    fontFamily: FONT_UI, fontSize: 12.5, textDecoration: "underline",
+  };
+
+  return (
+    <div style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 14, textAlign: "center" }}>
+      <div>
+        App build {BUILD || "dev"}
+        {state.kind === "idle" && <> · <button onClick={check} style={link}>Check for updates</button></>}
+      </div>
+      {state.kind === "checking" && <div>Checking…</div>}
+      {state.kind === "current" && <div>You have the latest version.</div>}
+      {state.kind === "error" && (
+        <div>Couldn't reach GitHub. Are you online? <button onClick={check} style={link}>Try again</button></div>
+      )}
+      {state.kind === "available" && (
+        <>
+          <button onClick={() => { window.location.href = APK_URL; }} style={{
+            display: "block", width: "100%", marginTop: 10, padding: 14, borderRadius: 14,
+            border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)", color: C.foam,
+            fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
+          }}>
+            Download build {state.latest}
+          </button>
+          <div style={{ marginTop: 8 }}>
+            It downloads in your browser. Open the file when it finishes and tap Install.
+            Your progress stays.
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- app */
 export default function App() {
   const [progress, setProgress] = useState(blankProgress);
@@ -2514,6 +2585,7 @@ export default function App() {
             has travelled through that schedule, not how many you got right today —
             so it only climbs once the gap has actually passed.
           </p>
+          {IS_NATIVE && <UpdateCheck />}
         </div>
       </div>
     );

@@ -5,8 +5,16 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Publishing a release needs write access to the repo.
+permissions:
+  contents: write
+
 env:
   CAPACITOR_TELEMETRY: "false"   # stops the CLI prompting on a first run
+  # Every run gets a new number. It becomes the Android versionCode (so the
+  # phone accepts the new APK as an upgrade), the release tag, and the number
+  # the in-app "Check for updates" button compares itself against.
+  BUILD_NUMBER: ${{ github.run_number }}
 
 jobs:
   apk:
@@ -25,6 +33,8 @@ jobs:
           java-version: 21
 
       - name: Build the web app
+        env:
+          VITE_BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
         run: |
           npm ci
           npm run build
@@ -41,7 +51,13 @@ jobs:
           echo "--- web build present? ---"
           ls dist/index.html 2>&1 || echo "NO dist/ - the build step produced nothing"
           echo "--- running cap add ---"
-          npx cap add android
+          npx cap add android --verbose
+
+      - name: Stamp the version number
+        run: |
+          sed -i "s/versionCode 1$/versionCode ${BUILD_NUMBER}/; s/versionName \"1.0\"/versionName \"1.0.${BUILD_NUMBER}\"/" android/app/build.gradle
+          grep -n 'versionCode\|versionName' android/app/build.gradle
+          grep -q "versionCode ${BUILD_NUMBER}" android/app/build.gradle
 
       - name: Apply the app icons
         run: |
@@ -51,15 +67,71 @@ jobs:
       - name: Copy the web build in
         run: npx cap sync android
 
+      # Android only installs an update over an existing app when both were
+      # signed with the same key. The key lives in the ANDROID_KEYSTORE_B64 and
+      # ANDROID_KEYSTORE_PASSWORD repo secrets (see README). Without them we
+      # fall back to a debug build, which installs fresh but will not upgrade.
+      - name: Set up signing
+        id: signing
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ]; then
+            echo "::warning::ANDROID_KEYSTORE_B64 secret is not set. Building a debug APK, which will NOT install over an existing copy of the app."
+            echo "variant=debug" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "$KEYSTORE_B64" | base64 -d > android/app/marine-release.keystore
+          cat >> android/app/build.gradle <<'EOF'
+
+          android {
+              signingConfigs {
+                  release {
+                      storeFile file("marine-release.keystore")
+                      storeType "PKCS12"
+                      storePassword System.getenv("KEYSTORE_PASSWORD")
+                      keyAlias "marine"
+                      keyPassword System.getenv("KEYSTORE_PASSWORD")
+                  }
+              }
+              buildTypes {
+                  release { signingConfig signingConfigs.release }
+              }
+          }
+          EOF
+          echo "variant=release" >> "$GITHUB_OUTPUT"
+
       - name: Assemble the APK
         working-directory: android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          if [ "${{ steps.signing.outputs.variant }}" = "release" ]; then
+            ./gradlew assembleRelease --no-daemon --stacktrace
+            cp app/build/outputs/apk/release/app-release.apk ../marine-science.apk
+          else
+            ./gradlew assembleDebug --no-daemon --stacktrace
+            cp app/build/outputs/apk/debug/app-debug.apk ../marine-science.apk
+          fi
 
       - name: Upload the APK
         uses: actions/upload-artifact@v4
         with:
           name: marine-science-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: marine-science.apk
           if-no-files-found: error
+
+      # The in-app "Check for updates" button downloads from
+      # https://github.com/<owner>/<repo>/releases/latest/download/marine-science.apk
+      - name: Publish as a GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ env.BUILD_NUMBER }}
+          name: Build ${{ env.BUILD_NUMBER }}
+          body: |
+            ${{ github.event.head_commit.message }}
+
+            Commit ${{ github.sha }} · signed with the release key: ${{ steps.signing.outputs.variant == 'release' }}
+          files: marine-science.apk
+          make_latest: true

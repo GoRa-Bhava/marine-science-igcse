@@ -107,16 +107,34 @@ APK on GitHub's servers.
 
 1. Push the project to your repo. **There is no `android/` folder to commit** —
    the workflow generates it during the build. Only `android-res/` (16 icon
-   files) and `capacitor.config.ts` need to be in the repo.
-2. Go to the **Actions** tab and open the **Build Android APK** run.
-3. When it finishes, download the **marine-science-apk** artifact from the
-   bottom of that page. It's a zip containing `app-debug.apk`.
-4. Unzip it, put the `.apk` on the phone (email, cable, or a cloud folder).
-5. Tap it. Android will ask you to allow installing from that source — this is
-   the normal warning for any app not from the Play Store.
+   files) and `capacitor.config.json` need to be in the repo.
+2. Every push to `main` builds an APK and publishes it as a **GitHub release**
+   called *Build N* (see the Releases page). The newest one is always at
+   `https://github.com/GoRa-Bhava/marine-science-igcse/releases/latest/download/marine-science.apk`.
+3. First install: open that link in the phone's browser, then tap the
+   downloaded file. Android will ask you to allow installing from that source —
+   this is the normal warning for any app not from the Play Store.
+4. Every install after that happens on the phone itself: scroll to the bottom
+   of the map, tap **Check for updates**, then **Download build N**. Open the
+   file when it finishes and tap Install. Progress is kept.
 
-Every push to `main` builds a fresh APK, so updating means push, download,
-install over the top. Progress is kept.
+### One-time setup: the signing key
+
+Android only installs an update over an existing app when both APKs were
+signed with the same key, so the build needs one fixed key. It is a small
+PKCS12 file kept **outside the repo** (`C:\marine_science\marine-signing-key`
+on the laptop — back it up; if it is lost, phones will refuse every future
+update until the app is uninstalled). The workflow reads it from two repo
+secrets (**Settings → Secrets and variables → Actions**):
+
+| Secret | Value |
+| --- | --- |
+| `ANDROID_KEYSTORE_B64` | the keystore file, base64-encoded, one line |
+| `ANDROID_KEYSTORE_PASSWORD` | its password |
+
+Without the secrets the workflow still succeeds but builds a debug APK and
+prints a warning. A debug APK installs on a clean phone but will not upgrade
+an existing copy.
 
 ### Why there is no android/ folder
 
@@ -145,19 +163,18 @@ the GUI.
 
 ### Notes on the Android build
 
-- **It is genuinely offline.** Fonts are bundled into the app rather than
-  fetched from Google, and there are no other remote requests. Verified: no
-  `http` URLs appear anywhere in the packaged assets.
+- **It works fully offline.** Fonts are bundled into the app rather than
+  fetched from Google. The only network requests are the ones **Check for
+  updates** makes when you tap it: one call to the GitHub API, and the APK
+  download itself.
 - **The `INTERNET` permission** is still declared in
   `android/app/src/main/AndroidManifest.xml`, because Capacitor's local file
-  server uses the `https://localhost` scheme. The app makes no network requests.
-  If you want the hard guarantee that it *cannot*, delete that
-  `<uses-permission>` line — but test the APK afterwards, because on some
-  Android versions the WebView needs it even for purely local content.
+  server uses the `https://localhost` scheme, and the update check needs it.
 - **The service worker is skipped** inside the app. It exists only for the web
   version; in the APK every file is already on the device.
-- **A debug APK is unsigned for the Play Store** but installs fine by hand. You
-  only need a signing keystore if you want to publish it.
+- **The APK is signed with your own key**, not a Play Store one, so it installs
+  by hand and updates over itself. Publishing to the Play Store would need a
+  separate upload key and listing.
 
 ### Which build should you use?
 
