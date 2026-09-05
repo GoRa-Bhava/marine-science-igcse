@@ -48,11 +48,21 @@ const TOPICS = [
   { id: "depth",    unit: 2, name: "What changes with depth",  depth: "Down the column" },
   { id: "zones",    unit: 2, name: "Ocean zones and light",    depth: "200–4,000 m" },
   { id: "upwell",   unit: 2, name: "Upwelling and El Niño",    depth: "Eastern Pacific" },
+
+  { id: "cells",    unit: 3, name: "Inside the cell",            depth: "Organelles" },
+  { id: "magnif",   unit: 3, name: "Magnification",              depth: "×10 to ×400" },
+  { id: "repro",    unit: 3, name: "Reproduction",               depth: "Gametes" },
+  { id: "fins",     unit: 3, name: "Fish fins and movement",     depth: "Five fins" },
+  { id: "gills",    unit: 3, name: "Gills and senses",           depth: "Gill cover" },
+  { id: "symmetry", unit: 3, name: "Body symmetry",              depth: "Left and right" },
+  { id: "radial",   unit: 3, name: "Cnidarians and echinoderms", depth: "Radial" },
+  { id: "bilat",    unit: 3, name: "Crustaceans, molluscs, annelids", depth: "Bilateral" },
 ];
 
 const UNITS = [
   { n: 1, name: "Earth and oceans" },
   { n: 2, name: "Seawater" },
+  { n: 3, name: "Marine organisms" },
 ];
 
 const RANK = { choice: 1, gap: 2, match: 3, multi: 3, chain: 4 };
@@ -1022,6 +1032,517 @@ const ITEMS = [
     ],
     why: "Warm water sits on top and blocks the cold nutrient-rich water from rising. Producers first, consumers after.",
   },
+
+  /* ===================================== UNIT 3 — MARINE ORGANISMS ==== */
+
+  /* ------------------------------------------------- Inside the cell */
+  {
+    id: "ce1", topic: "cells", type: "choice",
+    q: "State the function of mitochondria.",
+    options: [
+      "The site of respiration, releasing energy from glucose",
+      "The site of photosynthesis",
+      "Where the cell's DNA is stored",
+      "Controlling what enters and leaves the cell",
+    ],
+    a: 0,
+    why: "Respiration happens in the mitochondria. It is a chemical reaction that releases energy from glucose.",
+  },
+  {
+    id: "ce2", topic: "cells", type: "choice",
+    q: "Where is DNA found in a cell?",
+    options: ["In the nucleus", "In the mitochondria", "In the chloroplasts", "In the cell membrane"],
+    a: 0,
+    why: "The nucleus holds the DNA and other genetic material.",
+  },
+  {
+    id: "ce3", topic: "cells", type: "choice",
+    q: "Where does photosynthesis take place inside a plant cell?",
+    options: ["In the chloroplasts", "In the mitochondria", "In the nucleus", "In the cell wall"],
+    a: 0,
+    why: "Chloroplasts for photosynthesis, mitochondria for respiration. Keep the two apart.",
+  },
+  {
+    id: "ce4", topic: "cells", type: "choice",
+    q: "Define 'eukaryotic'.",
+    options: [
+      "Cells that contain membrane-bound organelles such as a nucleus",
+      "Cells that have no nucleus",
+      "Cells that are able to photosynthesise",
+      "Cells found only in animals",
+    ],
+    a: 0,
+    why: "Animals, plants, protoctists and fungi all have eukaryotic cells.",
+  },
+  {
+    id: "ce5", topic: "cells", type: "choice",
+    q: "Which kingdom do dinoflagellates, diatoms and algae belong to?",
+    options: ["Protoctist", "Plant", "Fungi", "Animal"],
+    a: 0,
+    why: "All three are protoctists, even though algae can look plant-like.",
+  },
+  {
+    id: "ce6", topic: "cells", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["Respiration is a chemical reaction that releases ", " from ", ". It happens in the ", "."],
+    answers: ["energy", "glucose", "mitochondria"],
+    bank: ["energy", "glucose", "mitochondria", "oxygen", "chloroplasts", "nucleus"],
+    why: "Energy from glucose, in the mitochondria — three things to name for full marks.",
+  },
+  {
+    id: "ce7", topic: "cells", type: "match",
+    q: "Match each part of the cell to its role.",
+    pairs: [
+      ["Mitochondria", "Site of respiration"],
+      ["Nucleus", "Contains the DNA"],
+      ["Chloroplast", "Site of photosynthesis"],
+      ["Eukaryotic cell", "Has membrane-bound organelles"],
+    ],
+    why: "Each organelle has one job to name. Mixing up mitochondria and chloroplasts is the classic slip.",
+  },
+  {
+    id: "ce8", topic: "cells", type: "multi",
+    q: "Select every group whose cells are eukaryotic.",
+    options: ["Animals", "Plants", "Protoctists", "Fungi", "Bacteria"],
+    a: [0, 1, 2, 3],
+    why: "Bacteria have no nucleus, so they are prokaryotic.",
+  },
+
+  /* ---------------------------------------------------- Magnification */
+  {
+    id: "mg1", topic: "magnif", type: "choice",
+    q: "Write down the formula for magnification.",
+    options: [
+      "Magnification = image size ÷ actual size",
+      "Magnification = actual size ÷ image size",
+      "Magnification = image size × actual size",
+      "Magnification = image size − actual size",
+    ],
+    a: 0,
+    why: "Image over actual. If the image is bigger than the real thing, the answer is bigger than one.",
+  },
+  {
+    id: "mg2", topic: "magnif", type: "choice",
+    q: "A diatom appears 40 mm wide in a photo. The real diatom is 0.1 mm wide. What is the magnification?",
+    options: ["×400", "×40", "×4", "×0.0025"],
+    a: 0,
+    why: "40 ÷ 0.1 = 400. Both measurements must be in the same units before you divide.",
+  },
+  {
+    id: "mg3", topic: "magnif", type: "choice",
+    q: "A cell viewed at ×100 appears 5 mm across. What is its actual size?",
+    options: ["0.05 mm", "500 mm", "20 mm", "0.5 mm"],
+    a: 0,
+    why: "Rearrange: actual size = image size ÷ magnification, so 5 ÷ 100 = 0.05 mm.",
+  },
+  {
+    id: "mg4", topic: "magnif", type: "gap",
+    q: "Complete the formula.",
+    segments: ["Magnification = ", " size ÷ ", " size."],
+    answers: ["image", "actual"],
+    bank: ["image", "actual", "cell", "lens", "total", "field"],
+    why: "Image size on top, actual size underneath.",
+  },
+  {
+    id: "mg5", topic: "magnif", type: "chain",
+    q: "Order the steps to find the actual size of a cell from a drawing.",
+    chunks: [
+      "measure the image with a ruler",
+      "convert the measurement into the units you want the answer in",
+      "note the magnification stated on the drawing",
+      "rearrange the formula to actual size = image size ÷ magnification",
+      "divide to get the actual size",
+    ],
+    why: "Measure, convert, rearrange, divide. Skipping the unit conversion is where most marks go missing.",
+  },
+
+  /* ------------------------------------------------------ Reproduction */
+  {
+    id: "rp1", topic: "repro", type: "choice",
+    q: "Name the two main types of reproduction.",
+    options: ["Sexual and asexual", "Internal and external", "Larval and adult", "Simple and complex"],
+    a: 0,
+    why: "Sexual reproduction uses gametes from two parents; asexual reproduction needs only one.",
+  },
+  {
+    id: "rp2", topic: "repro", type: "choice",
+    q: "Define the term 'gametes'.",
+    options: [
+      "The sex cells used in reproduction, such as eggs and sperm",
+      "The immature forms of an animal",
+      "The cells that make up an embryo",
+      "The cells where respiration happens",
+    ],
+    a: 0,
+    why: "Eggs (ova) and sperm are the examples to give.",
+  },
+  {
+    id: "rp3", topic: "repro", type: "choice",
+    q: "Define the term 'larva'.",
+    options: [
+      "An immature form of an animal that undergoes metamorphosis",
+      "A sex cell used in reproduction",
+      "A fertilised egg",
+      "A fully grown adult that cannot reproduce",
+    ],
+    a: 0,
+    why: "Immature, and it changes form — metamorphosis is the word to use.",
+  },
+  {
+    id: "rp4", topic: "repro", type: "gap",
+    q: "Complete the definition.",
+    segments: ["Gametes are the ", " cells used in reproduction, for example ", " (ova) and ", " cells."],
+    answers: ["sex", "eggs", "sperm"],
+    bank: ["sex", "eggs", "sperm", "body", "larva", "nerve"],
+    why: "Sex cells: eggs and sperm.",
+  },
+  {
+    id: "rp5", topic: "repro", type: "match",
+    q: "Match each term to its description.",
+    pairs: [
+      ["Sexual reproduction", "Two parents, gametes join"],
+      ["Asexual reproduction", "One parent, offspring identical to it"],
+      ["Gamete", "A sex cell such as an egg or sperm"],
+      ["Larva", "Immature stage before metamorphosis"],
+    ],
+    why: "Only sexual reproduction involves gametes.",
+  },
+  {
+    id: "rp6", topic: "repro", type: "chain",
+    q: "Order the life stages of a marine animal that has a larval stage.",
+    chunks: [
+      "gametes — eggs and sperm — are released",
+      "an egg is fertilised by a sperm",
+      "the fertilised egg develops into a larva",
+      "the larva undergoes metamorphosis",
+      "and becomes the adult form",
+    ],
+    why: "Gametes → fertilisation → larva → metamorphosis → adult.",
+  },
+
+  /* ------------------------------------------ Fish fins and movement */
+  {
+    id: "fn1", topic: "fins", type: "choice",
+    q: "Name the five main fish fin types.",
+    options: [
+      "Dorsal, pectoral, caudal, anal, pelvic",
+      "Dorsal, pectoral, caudal, lateral, ventral",
+      "Dorsal, gill, tail, anal, pelvic",
+      "Pectoral, caudal, anal, pelvic, operculum",
+    ],
+    a: 0,
+    why: "Dorsal on the back, caudal at the tail, pectoral and pelvic in pairs, anal underneath near the tail.",
+  },
+  {
+    id: "fn2", topic: "fins", type: "choice",
+    q: "What type of movement does 'yaw' describe in a fish?",
+    options: [
+      "A side to side swimming movement",
+      "An up and down movement",
+      "A rolling movement around the body's axis",
+      "Moving straight forward",
+    ],
+    a: 0,
+    why: "Yaw is side to side. It is controlled by the pectoral and pelvic fins.",
+  },
+  {
+    id: "fn3", topic: "fins", type: "choice",
+    q: "Which fins control yaw?",
+    options: ["Pectoral and pelvic fins", "Dorsal and anal fins", "The caudal fin only", "The dorsal fin only"],
+    a: 0,
+    why: "The paired fins — pectoral and pelvic — steer side to side.",
+  },
+  {
+    id: "fn4", topic: "fins", type: "multi",
+    q: "Select the five main fin types.",
+    options: ["Dorsal", "Pectoral", "Caudal", "Anal", "Pelvic", "Lateral", "Ventral"],
+    a: [0, 1, 2, 3, 4],
+    why: "Lateral and ventral describe positions, not fins.",
+  },
+  {
+    id: "fn5", topic: "fins", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["Yaw is a side to side movement controlled by the ", " and ", " fins."],
+    answers: ["pectoral", "pelvic"],
+    bank: ["pectoral", "pelvic", "dorsal", "caudal", "anal", "tail"],
+    why: "Pectoral and pelvic — the two paired fins.",
+  },
+  {
+    id: "fn6", topic: "fins", type: "match",
+    q: "Match each fin to where it sits on the fish.",
+    pairs: [
+      ["Dorsal", "Along the back"],
+      ["Caudal", "The tail fin"],
+      ["Pectoral", "A pair just behind the gills"],
+      ["Pelvic", "A pair on the underside"],
+      ["Anal", "Underneath, near the tail"],
+    ],
+    why: "Worth knowing for diagram-labelling questions, which come up often.",
+  },
+
+  /* ------------------------------------------------- Gills and senses */
+  {
+    id: "gl1", topic: "gills", type: "choice",
+    q: "Describe the function of the operculum.",
+    options: [
+      "A bony cover that protects the gills and stops water flowing backwards through them",
+      "A sensory organ that detects vibrations in the water",
+      "A fin used for steering side to side",
+      "A gas-filled sac that controls buoyancy",
+    ],
+    a: 0,
+    why: "Two functions: protection, and keeping water flowing one way across the gills.",
+  },
+  {
+    id: "gl2", topic: "gills", type: "choice",
+    q: "Describe the function of the lateral line.",
+    options: [
+      "A sensory organ that senses vibrations in the water",
+      "A bony cover that protects the gills",
+      "A line of muscle that drives side to side movement",
+      "A membrane that absorbs oxygen from the water",
+    ],
+    a: 0,
+    why: "It's a sense organ. Vibrations in the water tell the fish what is moving nearby.",
+  },
+  {
+    id: "gl3", topic: "gills", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["The operculum is a ", " cover over the ", " of bony fish. The lateral line senses ", " in the water."],
+    answers: ["bony", "gills", "vibrations"],
+    bank: ["bony", "gills", "vibrations", "soft", "fins", "temperature"],
+    why: "Bony, gills, vibrations.",
+  },
+  {
+    id: "gl4", topic: "gills", type: "multi",
+    q: "Select every function of the operculum.",
+    options: [
+      "Protects the gills",
+      "Stops water flowing backwards through the gills",
+      "Senses vibrations in the water",
+      "Controls the fish's buoyancy",
+      "Steers the fish side to side",
+    ],
+    a: [0, 1],
+    why: "Protection and one-way water flow. Sensing vibrations is the lateral line.",
+  },
+  {
+    id: "gl5", topic: "gills", type: "match",
+    q: "Match each structure to its role.",
+    pairs: [
+      ["Operculum", "Bony gill cover"],
+      ["Lateral line", "Senses vibrations"],
+      ["Gills", "Take oxygen from the water"],
+      ["Pectoral fins", "Help control yaw"],
+    ],
+    why: "Four structures, four jobs.",
+  },
+  {
+    id: "gl6", topic: "gills", type: "chain",
+    q: "Build the explanation: how does the lateral line help a fish avoid a predator?",
+    chunks: [
+      "a predator moving nearby pushes water out of its way",
+      "this creates vibrations that travel through the water",
+      "the lateral line detects those vibrations",
+      "the fish senses which direction they came from",
+      "and swims away before it has even seen the predator",
+    ],
+    why: "Movement → vibrations → detection → direction → escape. It works in the dark, which is the point.",
+  },
+
+  /* ----------------------------------------------------- Body symmetry */
+  {
+    id: "sy1", topic: "symmetry", type: "choice",
+    q: "Define the term 'bilateral symmetry'.",
+    options: [
+      "The body can be divided along one line into left and right halves that are nearly identical",
+      "The body is divided equally around a central point",
+      "The body has no line of symmetry",
+      "The body can be divided into five equal parts",
+    ],
+    a: 0,
+    why: "One line, two mirror-image halves. Equal on both sides.",
+  },
+  {
+    id: "sy2", topic: "symmetry", type: "choice",
+    q: "Define the term 'radial symmetry'.",
+    options: [
+      "The body is divided equally around a central point",
+      "The body has left and right halves that mirror each other",
+      "Only the front and back of the body are identical",
+      "The body is made of repeating segments",
+    ],
+    a: 0,
+    why: "Seen in starfish, jellyfish and flowering plants — parts arranged around a centre.",
+  },
+  {
+    id: "sy3", topic: "symmetry", type: "choice",
+    q: "Which organisms show radial symmetry?",
+    options: ["Jellyfish and starfish", "Crabs and lobsters", "Fish and worms", "Octopuses and squid"],
+    a: 0,
+    why: "Jellyfish are cnidarians and starfish are echinoderms — the two radial groups.",
+  },
+  {
+    id: "sy4", topic: "symmetry", type: "multi",
+    q: "Select every group that has bilateral symmetry.",
+    options: ["Crustaceans", "Molluscs", "Annelids", "Fish", "Cnidarians", "Echinoderms"],
+    a: [0, 1, 2, 3],
+    why: "Cnidarians and echinoderms are the radial groups. Everything else here is bilateral.",
+  },
+  {
+    id: "sy5", topic: "symmetry", type: "match",
+    q: "Match each term to its meaning.",
+    pairs: [
+      ["Bilateral symmetry", "Left and right halves mirror each other"],
+      ["Radial symmetry", "Equal all the way around a central point"],
+      ["Pentaradial symmetry", "Five-way radial symmetry, as in starfish"],
+      ["Cnidarian", "Radially symmetric, with stinging tentacles"],
+    ],
+    why: "Pentaradial is a special case of radial — five arms around the centre.",
+  },
+
+  /* ------------------------------------- Cnidarians and echinoderms */
+  {
+    id: "cn1", topic: "radial", type: "choice",
+    q: "State the main characteristics of Cnidaria.",
+    options: [
+      "Marine invertebrates with radial symmetry and tentacles with stinging cells",
+      "Marine invertebrates with spiny skin and tube feet",
+      "Marine invertebrates with an exoskeleton and jointed legs",
+      "Invertebrates with a segmented body and setae",
+    ],
+    a: 0,
+    why: "Radial symmetry and stinging tentacles. Jellyfish and sea anemones are cnidarians.",
+  },
+  {
+    id: "cn2", topic: "radial", type: "choice",
+    q: "State the main characteristics of Echinoderms.",
+    options: [
+      "Marine invertebrates with pentaradial symmetry, spiny skin and tube feet",
+      "Marine invertebrates with tentacles and stinging cells",
+      "Marine invertebrates with an internal or external shell",
+      "Marine invertebrates with compound eyes and antennae",
+    ],
+    a: 0,
+    why: "Five-way symmetry, spiny skin, tube feet. Starfish and sea urchins.",
+  },
+  {
+    id: "cn3", topic: "radial", type: "multi",
+    q: "Select the characteristics of Cnidaria.",
+    options: ["Marine invertebrate", "Radial symmetry", "Tentacles with stinging cells", "Tube feet", "Exoskeleton"],
+    a: [0, 1, 2],
+    why: "Tube feet belong to echinoderms; exoskeletons to crustaceans.",
+  },
+  {
+    id: "cn4", topic: "radial", type: "multi",
+    q: "Select the characteristics of Echinoderms.",
+    options: ["Marine invertebrate", "Pentaradial symmetry", "Spiny skin", "Tube feet", "Stinging cells", "Bilateral symmetry"],
+    a: [0, 1, 2, 3],
+    why: "Four characteristics. Stinging cells are cnidarian; echinoderms are not bilateral.",
+  },
+  {
+    id: "cn5", topic: "radial", type: "gap",
+    q: "Complete the description.",
+    segments: ["Echinoderms have ", " symmetry, ", " skin and ", " feet."],
+    answers: ["pentaradial", "spiny", "tube"],
+    bank: ["pentaradial", "spiny", "tube", "bilateral", "smooth", "jointed"],
+    why: "Pentaradial, spiny, tube.",
+  },
+  {
+    id: "cn6", topic: "radial", type: "match",
+    q: "Match each term to the right group or feature.",
+    pairs: [
+      ["Cnidaria", "Stinging tentacles — jellyfish, anemones"],
+      ["Echinoderm", "Spiny skin and tube feet — starfish"],
+      ["Radial symmetry", "Found in cnidarians"],
+      ["Pentaradial symmetry", "Found in echinoderms"],
+    ],
+    why: "Both groups are radial, but only echinoderms are five-way.",
+  },
+
+  /* ------------------------------ Crustaceans, molluscs and annelids */
+  {
+    id: "cr1", topic: "bilat", type: "choice",
+    q: "State the main characteristics of Crustaceans.",
+    options: [
+      "Exoskeleton, compound eyes, two pairs of antennae and jointed legs on a segmented abdomen",
+      "Unsegmented body with an internal or external shell",
+      "Segmented soft body with setae",
+      "Radial symmetry with stinging cells",
+    ],
+    a: 0,
+    why: "Crabs, lobsters and shrimp — hard outside, jointed legs, two pairs of antennae.",
+  },
+  {
+    id: "cr2", topic: "bilat", type: "choice",
+    q: "State the main characteristics of Molluscs.",
+    options: [
+      "Bilateral symmetry, unsegmented body, internal or external shell",
+      "Exoskeleton and two pairs of antennae",
+      "Segmented soft body with setae",
+      "Spiny skin and tube feet",
+    ],
+    a: 0,
+    why: "Unsegmented is the key word. The shell can be inside (squid) or outside (snail).",
+  },
+  {
+    id: "cr3", topic: "bilat", type: "choice",
+    q: "State the main characteristics of Annelids.",
+    options: [
+      "Bilateral symmetry, segmented soft body, have setae",
+      "Unsegmented body with a shell",
+      "Exoskeleton and compound eyes",
+      "Pentaradial symmetry and spiny skin",
+    ],
+    a: 0,
+    why: "Segmented worms with bristles called setae.",
+  },
+  {
+    id: "cr4", topic: "bilat", type: "multi",
+    q: "Select the characteristics of Crustaceans.",
+    options: [
+      "Bilateral symmetry",
+      "Exoskeleton",
+      "Compound eyes",
+      "Two pairs of antennae",
+      "Jointed legs on a segmented abdomen",
+      "Internal or external shell",
+      "Setae",
+    ],
+    a: [0, 1, 2, 3, 4],
+    why: "The shell is a mollusc feature; setae are annelid.",
+  },
+  {
+    id: "cr5", topic: "bilat", type: "match",
+    q: "Match each group or term to its description.",
+    pairs: [
+      ["Crustacean", "Exoskeleton and two pairs of antennae"],
+      ["Mollusc", "Unsegmented body, shell inside or outside"],
+      ["Annelid", "Segmented soft body with setae"],
+      ["Setae", "Bristles along an annelid's body"],
+    ],
+    why: "Segmented or not, hard or soft, shell or bristles — three ways to tell them apart.",
+  },
+  {
+    id: "cr6", topic: "bilat", type: "gap",
+    q: "Complete the sentence.",
+    segments: ["Molluscs have an ", " body and an internal or external ", ". Annelids have a ", " body with setae."],
+    answers: ["unsegmented", "shell", "segmented"],
+    bank: ["unsegmented", "shell", "segmented", "jointed", "exoskeleton", "spiny"],
+    why: "Unsegmented with a shell versus segmented with setae.",
+  },
+  {
+    id: "cr7", topic: "bilat", type: "chain",
+    q: "Identify a crab step by step, ruling out groups as you go.",
+    chunks: [
+      "it has bilateral symmetry — so it is not a cnidarian or an echinoderm",
+      "its body is segmented — so it is not a mollusc",
+      "it has a hard exoskeleton — so it is not a soft-bodied annelid",
+      "it has jointed legs and two pairs of antennae",
+      "so it is a crustacean",
+    ],
+    why: "Classification is a series of yes/no questions. Symmetry first, then segmentation, then body covering.",
+  },
 ];
 
 /* ------------------------------------------------------------ creatures */
@@ -1046,6 +1567,13 @@ const CREATURES = [
   { id: "spermwhale", name: "Sperm whale", rarity: "uncommon", fact: "It dives past 2,000 m into the midnight zone and holds its breath for over an hour." },
   { id: "barreleye", name: "Barreleye fish", rarity: "rare", fact: "Its head is a transparent dome, and its tubular eyes rotate inside it to look straight up through its own forehead." },
   { id: "vampiresquid", name: "Vampire squid", rarity: "rare", fact: "Living where there is almost no oxygen, it escapes by ejecting a cloud of glowing mucus instead of ink." },
+  { id: "starfish", name: "Common starfish", rarity: "common", fact: "It pushes its stomach out through its mouth to digest prey outside its body, then pulls it back in." },
+  { id: "hermitcrab", name: "Hermit crab", rarity: "common", fact: "When it outgrows its shell, hermit crabs sometimes queue up by size and swap shells one after another." },
+  { id: "anemone", name: "Sea anemone", rarity: "uncommon", fact: "It looks like a flower but is an animal, and some can live for over a century." },
+  { id: "featherduster", name: "Feather duster worm", rarity: "uncommon", fact: "The feathery crown is its gills and its food-catching net at once, and it snaps into its tube in a fraction of a second." },
+  { id: "nudibranch", name: "Nudibranch", rarity: "uncommon", fact: "Some eat stinging jellyfish relatives and store the unfired stinging cells in their own skin to reuse." },
+  { id: "nautilus", name: "Nautilus", rarity: "rare", fact: "It has been nearly unchanged for 500 million years and rises and sinks by adjusting gas in its shell chambers." },
+  { id: "diatom", name: "Diatom", rarity: "rare", fact: "A single-celled protoctist in a glass shell that produces around a fifth of the oxygen you breathe." },
 ];
 
 /* ------------------------------------------------------ creature art */
@@ -1891,13 +2419,13 @@ export default function App() {
         <style>{keyframes}</style>
         <div style={{ padding: "34px 22px 12px" }}>
           <p style={{ fontSize: 13, color: C.glow, margin: "0 0 6px", letterSpacing: ".04em" }}>
-            Marine Science IGCSE
+            Marine Science IGCSE · Units 1 to 3
           </p>
           <h1 style={{
             fontFamily: FONT_DISPLAY, fontSize: 34, lineHeight: 1.08, fontWeight: 600,
             margin: "0 0 10px", letterSpacing: "-0.02em",
           }}>
-            Earth, oceans and seawater
+            Earth, water and life
           </h1>
           <p style={{ fontSize: 15, color: C.mist, margin: 0, lineHeight: 1.5 }}>
             {masteredCount} of {TOPICS.length} topics mastered · {progress.creatures.length} of {CREATURES.length} creatures found
