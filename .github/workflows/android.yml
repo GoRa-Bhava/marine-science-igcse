@@ -2,7 +2,9 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main]
+    # task/* branches get a build (the APK artifact) so a change can be checked
+    # before it merges; only main publishes a release the update button sees.
+    branches: [main, "task/**"]
   workflow_dispatch:
 
 # Publishing a release needs write access to the repo.
@@ -125,6 +127,7 @@ jobs:
       # The in-app "Check for updates" button downloads from
       # https://github.com/<owner>/<repo>/releases/latest/download/marine-science.apk
       - name: Publish as a GitHub release
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ env.BUILD_NUMBER }}
