@@ -207,11 +207,24 @@ The creature cards are in `CREATURES`, with drawings in `CreatureArt`.
 
 ## How the scheduling works
 
-Every question carries a box (0–4) and a due date, saved in the browser.
+Every question carries its own FSRS card (the open-source spaced-repetition
+algorithm, via the `ts-fsrs` package) and a due date, saved in the browser.
+The code is in `src/engine/scheduler.js`; `REQUEST_RETENTION` (0.9) is the
+only tuning constant.
 
-- Answered correctly → moves up a box, next due in 1, 3, 7 then 21 days.
-- Missed → drops to box 0, due tomorrow, and reappears at the end of that lesson.
-- A topic reads as mastered once its questions average box 3 or better.
+- Answered correctly when due → FSRS "Good". The next gap is set for that
+  question from how well it has held so far, and grows each time.
+- Missed → FSRS "Again": due tomorrow, and it reappears at the end of that
+  lesson. The retry within the lesson does not touch the schedule.
+- Answered correctly before it was due → nothing changes. Same-day practice
+  is welcome but is not spacing.
+- A topic reads as mastered once its questions are holding for about a week
+  or better on average (the same threshold the old fixed boxes used).
+- Progress saved by the earlier fixed-box scheduler is converted once on
+  first load, keeping every due date; nothing is lost.
+
+No ratings are shown and there is nothing to self-grade: right or wrong comes
+from the tap.
 
 There are no timers, no lives and no streaks anywhere in the app, by design.
 

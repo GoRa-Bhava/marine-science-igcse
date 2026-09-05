@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import {
+  answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION,
+} from "./engine/scheduler.js";
 
 /* ========================================================================
    RETRIEVAL PRACTICE ENGINE — subject content lives in src/content/
@@ -83,30 +86,14 @@ function DrawnCreature({ id, size = 132 }) {
 }
 
 /* ============================================================ 1. ENGINE */
-const INTERVALS = [1, 3, 7, 21]; // days, for boxes 1..4
+/* Scheduling lives in src/engine/scheduler.js (FSRS). The engine here asks it
+   three things: is this item due, what happens after an answer, and how
+   strongly an item is held. */
 const STORE_KEY = content.storeKey; // names the saved progress; never changes once shipped
 
-const todayISO = () => new Date().toISOString().slice(0, 10);
-const addDays = (n) => {
-  const d = new Date();
-  d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
-};
-
 function blankProgress() {
-  return { items: {}, creatures: [], mastered: [] };
+  return { items: {}, creatures: [], mastered: [], version: PROGRESS_VERSION };
 }
-
-function scheduleAfter(rec, correct) {
-  const box = rec ? rec.box : 0;
-  if (correct) {
-    const nextBox = Math.min(box + 1, 4);
-    return { box: nextBox, due: addDays(INTERVALS[nextBox - 1]), seen: true };
-  }
-  return { box: 0, due: addDays(1), seen: true };
-}
-
-const isDue = (rec) => rec && rec.seen && rec.due <= todayISO();
 
 function topicStats(topicId, progress) {
   const items = ITEMS.filter((i) => i.topic === topicId);
@@ -115,11 +102,11 @@ function topicStats(topicId, progress) {
     const r = progress.items[i.id];
     if (r && r.seen) {
       seen++;
-      sum += Math.min(r.box, 4);
+      sum += itemStrength(r);
       if (isDue(r)) due++;
     }
   });
-  const strength = items.length ? sum / (items.length * 4) : 0;
+  const strength = items.length ? sum / items.length : 0;
   let state = "new";
   if (seen > 0) state = strength >= 0.75 ? "mastered" : strength >= 0.3 ? "growing" : "learning";
   return { total: items.length, seen, due, strength, state };
@@ -135,7 +122,7 @@ function buildLesson(progress, topicId = null, size = 7) {
   if (chosen.length === 0) {
     // everything is scheduled ahead — offer the least-recently-strong items
     const extra = [...pool].sort(
-      (a, b) => (progress.items[a.id]?.box || 0) - (progress.items[b.id]?.box || 0)
+      (a, b) => itemStrength(progress.items[a.id]) - itemStrength(progress.items[b.id])
     );
     chosen.push(...extra.slice(0, size));
   }
@@ -170,7 +157,16 @@ function buildLesson(progress, topicId = null, size = 7) {
 async function loadProgress() {
   try {
     const raw = window.localStorage.getItem(STORE_KEY);
-    if (raw) return { ...blankProgress(), ...JSON.parse(raw) };
+    if (raw) {
+      const saved = JSON.parse(raw);
+      /* Progress saved by the fixed-box scheduler (no version field) is
+         converted to FSRS once and written back. Nothing is lost. */
+      const { progress, migrated } = migrateProgress({
+        ...blankProgress(), ...saved, version: saved.version || 1,
+      });
+      if (migrated) await saveProgress(progress);
+      return progress;
+    }
   } catch (e) {
     /* first run, or storage blocked in private browsing */
   }
@@ -752,13 +748,10 @@ export default function App() {
       const next = { ...p, items: { ...p.items } };
       const isRetry = requeued.includes(item.id);
       const rec = p.items[item.id];
-      /* An item only climbs the ladder when the gap has actually elapsed.
-         Extra practice on the same day is welcome, but it isn't spacing. */
-      const gapElapsed = !rec || !rec.seen || rec.due <= todayISO();
-      if (!isRetry) {
-        if (gapElapsed) next.items[item.id] = scheduleAfter(rec, right);
-        else if (!right) next.items[item.id] = scheduleAfter(rec, false);
-      }
+      /* The scheduler decides what an answer means: a due or new item is
+         reviewed either way, an early wrong answer is a lapse, and an early
+         right answer changes nothing (same-day practice is not spacing). */
+      if (!isRetry) next.items[item.id] = scheduleAnswer(rec, right);
 
       /* ocean discoveries: weighted by correctness, never guaranteed */
       if (right) {
@@ -927,9 +920,9 @@ export default function App() {
             {content.collection.title} · {progress.creatures.length}/{CREATURES.length}
           </button>
           <p style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 18, textAlign: "center" }}>
-            No timers, no lives, no streaks. Questions you miss come back tomorrow,
-            then in three days, then in a week. A ring fills once you've met every
-            question in a topic; it brightens as answers hold across those gaps, and
+            No timers, no lives, no streaks. Questions you miss come back tomorrow;
+            ones you know come back at a longer gap each time, set question by
+            question. A ring fills once you have met every question in a topic; it brightens as answers hold across those gaps, and
             gets a solid centre at mastered.
           </p>
           {IS_NATIVE && <UpdateCheck />}
