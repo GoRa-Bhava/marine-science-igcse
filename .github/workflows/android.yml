@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  CAPACITOR_TELEMETRY: "false"   # stops the CLI prompting on a first run
+
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -13,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22        # matches the version this was verified on
           cache: npm
 
       - uses: actions/setup-java@v4
@@ -26,11 +29,24 @@ jobs:
           npm ci
           npm run build
 
+      # If this step ever fails, the diagnostics below show exactly why
+      # instead of just an exit code.
       - name: Generate the Android project
-        run: npx cap add android
+        run: |
+          echo "node $(node -v) / npm $(npm -v)"
+          echo "--- capacitor packages installed ---"
+          ls node_modules/@capacitor 2>&1 || echo "NONE - npm ci did not install Capacitor"
+          echo "--- config file present? ---"
+          ls -la capacitor.config.* 2>&1 || echo "NO CONFIG FILE"
+          echo "--- web build present? ---"
+          ls dist/index.html 2>&1 || echo "NO dist/ - the build step produced nothing"
+          echo "--- running cap add ---"
+          npx cap add android --verbose
 
       - name: Apply the app icons
-        run: cp -r android-res/. android/app/src/main/res/
+        run: |
+          ls -R android-res | head -20
+          cp -r android-res/. android/app/src/main/res/
 
       - name: Copy the web build in
         run: npx cap sync android
@@ -39,7 +55,7 @@ jobs:
         working-directory: android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload the APK
         uses: actions/upload-artifact@v4
