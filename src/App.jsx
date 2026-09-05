@@ -27,7 +27,7 @@ const C = {
 };
 
 const FONT_UI = "'Karla', ui-sans-serif, system-ui, sans-serif";
-const FONT_DISPLAY = "'Fraunces', Georgia, serif";
+const FONT_DISPLAY = "'Fraunces Variable', Georgia, serif";
 
 /* ------------------------------------------------------------- content */
 const TOPICS = [
@@ -1805,7 +1805,14 @@ export default function App() {
     setProgress((p) => {
       const next = { ...p, items: { ...p.items } };
       const isRetry = requeued.includes(item.id);
-      if (!isRetry) next.items[item.id] = scheduleAfter(p.items[item.id], right);
+      const rec = p.items[item.id];
+      /* An item only climbs the ladder when the gap has actually elapsed.
+         Extra practice on the same day is welcome, but it isn't spacing. */
+      const gapElapsed = !rec || !rec.seen || rec.due <= todayISO();
+      if (!isRetry) {
+        if (gapElapsed) next.items[item.id] = scheduleAfter(rec, right);
+        else if (!right) next.items[item.id] = scheduleAfter(rec, false);
+      }
 
       /* ocean discoveries: weighted by correctness, never guaranteed */
       if (right) {
@@ -1951,8 +1958,8 @@ export default function App() {
                         </div>
                         <div style={{ fontSize: 13.5, color: C.mist, marginTop: 4 }}>
                           {s.state === "new" && "Not started"}
-                          {s.state === "learning" && `Learning · ${s.seen} of ${s.total} met`}
-                          {s.state === "growing" && `Getting solid · ${Math.round(s.strength * 100)}%`}
+                          {s.state === "learning" && `Learning · ${s.seen} of ${s.total} questions met`}
+                          {s.state === "growing" && `Holding · ${Math.round(s.strength * 100)}% through the schedule`}
                           {s.state === "mastered" && "Mastered"}
                           {s.due > 0 && <span style={{ color: C.coral }}> · {s.due} due</span>}
                         </div>
@@ -1975,7 +1982,9 @@ export default function App() {
           </button>
           <p style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 18, textAlign: "center" }}>
             No timers, no lives, no streaks. Questions you miss come back tomorrow,
-            then in three days, then in a week.
+            then in three days, then in a week. The percentage tracks how far a topic
+            has travelled through that schedule, not how many you got right today —
+            so it only climbs once the gap has actually passed.
           </p>
         </div>
       </div>

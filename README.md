@@ -92,6 +92,86 @@ Install prompts need https, so the phone won't offer to install from
 
 ---
 
+---
+
+## Building the Android app (APK) — no Chrome needed
+
+The web version renders through Chrome. This one doesn't: Capacitor packages
+every file inside the APK and loads them through Android's System WebView, which
+is a separate component from the Chrome browser app. It installs as a normal
+app, works with no network at any point, and doesn't need Chrome installed or
+enabled.
+
+**You don't need Android Studio.** `.github/workflows/android.yml` builds the
+APK on GitHub's servers.
+
+1. Push the project to your repo. **There is no `android/` folder to commit** —
+   the workflow generates it during the build. Only `android-res/` (16 icon
+   files) and `capacitor.config.ts` need to be in the repo.
+2. Go to the **Actions** tab and open the **Build Android APK** run.
+3. When it finishes, download the **marine-science-apk** artifact from the
+   bottom of that page. It's a zip containing `app-debug.apk`.
+4. Unzip it, put the `.apk` on the phone (email, cable, or a cloud folder).
+5. Tap it. Android will ask you to allow installing from that source — this is
+   the normal warning for any app not from the Play Store.
+
+Every push to `main` builds a fresh APK, so updating means push, download,
+install over the top. Progress is kept.
+
+### Why there is no android/ folder
+
+Capacitor's Android project is several hundred boilerplate files, and it is
+regenerated identically from `capacitor.config.ts` every time. Committing it
+would blow past GitHub's 100-file web-upload limit and bury your real changes.
+
+The only genuinely custom native files are the launcher icons, which live in
+`android-res/` and get copied over the generated project during the build.
+
+### Building it locally instead
+
+Needs Android Studio, or the Android SDK plus Java 21.
+
+```bash
+npm run build
+npx cap add android            # first time only
+cp -r android-res/. android/app/src/main/res/
+npx cap sync android
+cd android && ./gradlew assembleDebug
+# APK lands in android/app/build/outputs/apk/debug/
+```
+
+`npx cap open android` opens the project in Android Studio if you'd rather use
+the GUI.
+
+### Notes on the Android build
+
+- **It is genuinely offline.** Fonts are bundled into the app rather than
+  fetched from Google, and there are no other remote requests. Verified: no
+  `http` URLs appear anywhere in the packaged assets.
+- **The `INTERNET` permission** is still declared in
+  `android/app/src/main/AndroidManifest.xml`, because Capacitor's local file
+  server uses the `https://localhost` scheme. The app makes no network requests.
+  If you want the hard guarantee that it *cannot*, delete that
+  `<uses-permission>` line — but test the APK afterwards, because on some
+  Android versions the WebView needs it even for purely local content.
+- **The service worker is skipped** inside the app. It exists only for the web
+  version; in the APK every file is already on the device.
+- **A debug APK is unsigned for the Play Store** but installs fine by hand. You
+  only need a signing keystore if you want to publish it.
+
+### Which build should you use?
+
+| | Web (GitHub Pages) | Android APK |
+| --- | --- | --- |
+| Needs Chrome | yes | no |
+| Needs internet | first visit only | never |
+| Install | Add to Home screen | sideload the APK |
+| Updating | automatic | download and reinstall |
+
+Both come from the same `src/App.jsx`, so a content change updates both.
+
+---
+
 ## Where the content lives
 
 All 42 questions are in `src/App.jsx` in the `ITEMS` array, near the top. Each
