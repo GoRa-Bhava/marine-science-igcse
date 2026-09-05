@@ -51,7 +51,7 @@ jobs:
           echo "--- web build present? ---"
           ls dist/index.html 2>&1 || echo "NO dist/ - the build step produced nothing"
           echo "--- running cap add ---"
-          npx cap add android --verbose
+          npx cap add android
 
       - name: Stamp the version number
         run: |
