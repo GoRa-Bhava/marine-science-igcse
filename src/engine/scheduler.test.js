@@ -111,6 +111,48 @@ test("progress migrates once and fresh progress is left alone", () => {
   assert.strictEqual(migrateProgress(fresh, T0).progress, fresh);
 });
 
+test("gold days count once per distinct day of scheduled correct answers, capped and never lost", () => {
+  let rec = answer(undefined, true, T0);
+  assert.equal(rec.goldDays, 1);
+  assert.equal(rec.lastGoldDay, todayISO(T0));
+
+  // same day again would not count, but the early-correct path never reviews anyway
+  assert.strictEqual(answer(rec, true, at("2026-09-05T18:00:00Z")), rec);
+
+  // a lapse on a later day adds nothing and takes nothing away
+  const lapsed = answer(rec, false, whenDue(rec));
+  assert.equal(lapsed.goldDays, 1);
+  assert.equal(lapsed.lastGoldDay, rec.lastGoldDay);
+
+  // each later correct day adds one, up to the cap
+  let r = answer(lapsed, true, whenDue(lapsed));
+  assert.equal(r.goldDays, 2);
+  r = answer(r, true, whenDue(r));
+  assert.equal(r.goldDays, 3);
+  r = answer(r, true, whenDue(r));
+  assert.equal(r.goldDays, 3);
+  r = answer(r, false, whenDue(r));
+  assert.equal(r.goldDays, 3);
+});
+
+test("migration seeds gold days from the FSRS review count", () => {
+  const v1 = { items: { a: { box: 3, due: "2026-09-01", seen: true }, b: { box: 0, due: "2026-09-01", seen: true } } };
+  const m1 = migrateProgress(v1, T0).progress;
+  assert.equal(m1.version, PROGRESS_VERSION);
+  assert.equal(m1.items.a.goldDays, 3);       // box 3 -> reps 3
+  assert.equal(m1.items.b.goldDays, 1);       // a lapse still counts as met once
+  assert.equal(typeof m1.items.a.lastGoldDay, "string");
+
+  let rec = answer(undefined, true, T0);
+  rec = answer(rec, true, whenDue(rec));
+  const { goldDays, lastGoldDay, ...v2rec } = rec;   // a v2 record has no gold fields
+  const v2 = { version: 2, items: { x: v2rec }, creatures: [], mastered: [] };
+  const m2 = migrateProgress(v2, T0);
+  assert.equal(m2.migrated, true);
+  assert.equal(m2.progress.items.x.goldDays, Math.min(3, v2rec.fsrs.reps));
+  assert.equal(migrateProgress(m2.progress, T0).migrated, false);
+});
+
 test("records survive a JSON round trip", () => {
   const rec = answer(undefined, true, T0);
   const back = JSON.parse(JSON.stringify(rec));

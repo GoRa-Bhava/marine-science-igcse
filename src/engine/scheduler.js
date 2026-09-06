@@ -18,8 +18,11 @@ import { fsrs, generatorParameters, createEmptyCard, Rating, State } from "ts-fs
 export const REQUEST_RETENTION = 0.9;
 
 /* Bumped when the saved progress shape changes. 1 (implicit, no field) was
-   the fixed boxes; 2 is FSRS. */
-export const PROGRESS_VERSION = 2;
+   the fixed boxes; 2 is FSRS; 3 adds the gold-day count on each record. */
+export const PROGRESS_VERSION = 3;
+
+/* Gold days needed for a topic's items to count as mastered. */
+export const GOLD_DAYS = 3;
 
 const params = generatorParameters({
   request_retention: REQUEST_RETENTION,
@@ -71,7 +74,18 @@ export function review(rec, correct, now = new Date()) {
   const tomorrow = addDays(1, now);
   const fsrsDay = dayOf(next.due);
   const due = correct && fsrsDay > tomorrow ? fsrsDay : tomorrow;
-  return { seen: true, due, fsrs: fromCard(next) };
+  /* Gold: one credit per distinct calendar day the item is got right on a
+     scheduled review. This function is only reached for due or new items and
+     for lapses; an early correct answer never gets here. Capped at GOLD_DAYS
+     and never reduced, so mastery cannot be lost. */
+  const today = todayISO(now);
+  let goldDays = rec?.goldDays || 0;
+  let lastGoldDay = rec?.lastGoldDay;
+  if (correct && lastGoldDay !== today) {
+    goldDays = Math.min(GOLD_DAYS, goldDays + 1);
+    lastGoldDay = today;
+  }
+  return { seen: true, due, fsrs: fromCard(next), goldDays, lastGoldDay };
 }
 
 /* The rule the lesson applies to a first attempt (retries within a lesson
@@ -134,12 +148,20 @@ export function migrateRecord(old, now = new Date()) {
   return { seen: !!old.seen, due: old.due || dayOf(due), fsrs: fromCard(card) };
 }
 
+/* Version 3 adds goldDays. Records saved before it (v1 boxes or v2 FSRS)
+   have no count, so it is seeded from the FSRS review count: a topic the
+   learner has already reviewed a few times keeps that credit. */
 export function migrateProgress(progress, now = new Date()) {
   if ((progress.version || 1) >= PROGRESS_VERSION) return { progress, migrated: false };
   const items = {};
   let changed = false;
   for (const [id, rec] of Object.entries(progress.items || {})) {
-    const m = migrateRecord(rec, now);
+    let m = migrateRecord(rec, now); // v1 box -> fsrs; no-op for v2
+    if (m && m.seen && m.goldDays === undefined) {
+      const reps = m.fsrs?.reps || 1;
+      const last = m.fsrs?.last_review ? new Date(m.fsrs.last_review) : now;
+      m = { ...m, goldDays: Math.min(GOLD_DAYS, reps), lastGoldDay: dayOf(last) };
+    }
     if (m !== rec) changed = true;
     items[id] = m;
   }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
-  answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION,
+  answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION, GOLD_DAYS,
 } from "./engine/scheduler.js";
 
 /* ========================================================================
@@ -25,6 +25,7 @@ const C = {
   glowDim: "#2A9C90",
   coral: "#FF7A5C",
   sand: "#F2D9A8",
+  gold: "#F3C34E",
   ok: "#4FD8C4",
   no: "#FF9E7D",
 };
@@ -95,22 +96,34 @@ function blankProgress() {
   return { items: {}, creatures: [], mastered: [], version: PROGRESS_VERSION };
 }
 
+/* Two measures from one pass over a topic's items:
+     teal  — completion: the share of questions answered correctly at least
+             once (goldDays >= 1). Full = "done".
+     gold  — mastery: each item's gold days (distinct days it was got right on
+             a scheduled review, capped at GOLD_DAYS) summed over the topic.
+             Full = "mastered", which cannot be lost.
+   `due` still feeds the "Ready to come back" button. */
 function topicStats(topicId, progress) {
   const items = ITEMS.filter((i) => i.topic === topicId);
-  let sum = 0, seen = 0, due = 0;
+  const total = items.length;
+  let correctOnce = 0, goldSum = 0, seen = 0, due = 0;
   items.forEach((i) => {
     const r = progress.items[i.id];
-    if (r && r.seen) {
-      seen++;
-      sum += itemStrength(r);
-      if (isDue(r)) due++;
-    }
+    if (r && r.seen) { seen++; if (isDue(r)) due++; }
+    const gd = r?.goldDays || 0;
+    if (gd >= 1) correctOnce++;
+    goldSum += Math.min(gd, GOLD_DAYS);
   });
-  const strength = items.length ? sum / items.length : 0;
-  let state = "new";
-  if (seen > 0) state = strength >= 0.75 ? "mastered" : strength >= 0.3 ? "growing" : "learning";
-  return { total: items.length, seen, due, strength, state };
+  const blueFrac = total ? correctOnce / total : 0;
+  const goldFrac = total ? goldSum / (total * GOLD_DAYS) : 0;
+  let state;
+  if (seen === 0) state = "unexplored";
+  else if (correctOnce < total) state = "inprogress";
+  else if (goldFrac < 1) state = "done";
+  else state = "mastered";
+  return { total, correctOnce, blueFrac, goldFrac, due, seen, state };
 }
+
 
 /* Builds a lesson: due reviews first, then unseen items, ordered up the
    ladder (recognise → retrieve → connect → explain), topics interleaved. */
@@ -567,42 +580,53 @@ function Confetti({ on }) {
   );
 }
 
-/* The ring carries the topic's status: hollow = not started, an arc that
-   grows toward mastered = in progress, a larger solid disc with a tick = done. */
-function DepthNode({ strength, state }) {
-  const box = 44;                 // bigger than before (was 34) so it reads at a glance
-  const cx = box / 2, cy = box / 2;
-
-  // Done: a solid, larger disc with a tick — unmistakably complete.
-  if (state === "mastered") {
+/* Two rings. Teal (inner) fills as questions are answered correctly and locks
+   into a solid disc at "done". Gold (outer) then grows by thirds, one for each
+   separate day the topic is got right on a scheduled review, and completes
+   with a tick at "mastered". Only one ring is ever active, so it stays legible
+   at phone size. `size` scales the whole thing (the key uses a small one). */
+function DepthNode({ state, blueFrac, goldFrac, size = 56 }) {
+  const box = 56, cx = 28, cy = 28, rBlue = 15, rGold = 21;
+  const cBlue = 2 * Math.PI * rBlue, cGold = 2 * Math.PI * rGold;
+  const svg = { width: size, height: size, viewBox: `0 0 ${box} ${box}`, style: { flexShrink: 0 } };
+  if (state === "unexplored") {
     return (
-      <svg width={box} height={box} viewBox={`0 0 ${box} ${box}`} style={{ flexShrink: 0 }}>
-        <circle cx={cx} cy={cy} r="18" fill={C.glow} />
-        <path d={`M${cx - 7.5} ${cy + 0.5} l5 5 l10 -11`} fill="none"
-          stroke={C.abyss} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
+      <svg {...svg}>
+        <circle cx={cx} cy={cy} r={rBlue} fill="none" stroke={C.glowDim} strokeWidth="2.5" opacity="0.42" />
       </svg>
     );
   }
-
-  const started = state !== "new";
-  const r = 15;
-  const circ = 2 * Math.PI * r;
-  // How far toward mastered, with a visible minimum once started so an
-  // in-progress topic never looks empty.
-  const sweep = started ? Math.max(0.12, Math.min(1, strength / 0.75)) : 0;
-
-  return (
-    <svg width={box} height={box} viewBox={`0 0 ${box} ${box}`} style={{ flexShrink: 0 }}>
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.glowDim}
-        strokeWidth="2.5" opacity={started ? 0.3 : 0.45} />
-      {started && (
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.glow} strokeWidth="3.5"
-          strokeDasharray={`${circ * sweep} ${circ}`} strokeLinecap="round"
+  if (state === "inprogress") {
+    const sweep = Math.max(0.06, blueFrac);   // always show at least a sliver once started
+    return (
+      <svg {...svg}>
+        <circle cx={cx} cy={cy} r={rBlue} fill="none" stroke={C.glowDim} strokeWidth="2.5" opacity="0.30" />
+        <circle cx={cx} cy={cy} r={rBlue} fill="none" stroke={C.glow} strokeWidth="3.6"
+          strokeLinecap="round" strokeDasharray={`${cBlue * sweep} ${cBlue}`}
           transform={`rotate(-90 ${cx} ${cy})`} style={{ transition: "stroke-dasharray .3s" }} />
+      </svg>
+    );
+  }
+  // "done" or "mastered": solid teal disc with the gold ring around it
+  const mastered = state === "mastered";
+  return (
+    <svg {...svg}>
+      <circle cx={cx} cy={cy} r={rGold} fill="none" stroke={C.gold}
+        strokeWidth={mastered ? 3.6 : 3.2} opacity={mastered ? 1 : 0.22} />
+      {!mastered && goldFrac > 0 && (
+        <circle cx={cx} cy={cy} r={rGold} fill="none" stroke={C.gold} strokeWidth="3.6"
+          strokeLinecap="round" strokeDasharray={`${cGold * Math.min(1, goldFrac)} ${cGold}`}
+          transform={`rotate(-90 ${cx} ${cy})`} style={{ transition: "stroke-dasharray .3s" }} />
+      )}
+      <circle cx={cx} cy={cy} r="16" fill={C.glow} />
+      {mastered && (
+        <path d={`M${cx - 7.5} ${cy + 0.5} l5 5 l10 -11`} fill="none" stroke={C.abyss}
+          strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
       )}
     </svg>
   );
 }
+
 
 /* ------------------------------------------------------------- updates */
 /* Inside the Android app every file is baked into the APK, so new content
@@ -885,8 +909,8 @@ export default function App() {
                   const s = stats[t.id];
                   return (
                     <div key={t.id} style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 44 }}>
-                        <DepthNode strength={s.strength} state={s.state} />
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 56 }}>
+                        <DepthNode state={s.state} blueFrac={s.blueFrac} goldFrac={s.goldFrac} />
                         {idx < list.length - 1 && (
                           <div style={{ flex: 1, width: 2, background: C.line, opacity: 0.6, minHeight: 26 }} />
                         )}
@@ -901,8 +925,11 @@ export default function App() {
                           </span>
                           <span style={{ fontSize: 12, color: C.line, maxWidth: "42%", textAlign: "right", lineHeight: 1.3 }}>{t.depth}</span>
                         </div>
-                        <div style={{ fontSize: 13.5, color: s.state === "mastered" ? C.glow : C.mist, marginTop: 4 }}>
-                          {s.state === "new" ? "Not started" : s.state === "mastered" ? "Done" : "In progress"}
+                        <div style={{ fontSize: 13.5, color: s.state === "mastered" ? C.gold : C.mist, marginTop: 4 }}>
+                          {s.state === "unexplored" ? "Unexplored"
+                            : s.state === "inprogress" ? `In progress · ${s.correctOnce} of ${s.total}`
+                            : s.state === "done" ? "Done · not yet mastered"
+                            : "Mastered"}
                         </div>
                       </button>
                     </div>
@@ -921,11 +948,28 @@ export default function App() {
           }}>
             {content.collection.title} · {progress.creatures.length}/{CREATURES.length}
           </button>
-          <p style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 18, textAlign: "center" }}>
-            No timers, no lives, no streaks. Each topic's circle fills in as you learn it,
-            and turns solid with a tick once you've mastered it. Questions you miss come
-            back tomorrow; ones you know come back at a longer gap each time.
-          </p>
+          <div style={{
+            marginTop: 18, padding: "12px 14px 6px", borderRadius: 14,
+            border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)",
+          }}>
+            <p style={{ fontSize: 12.5, color: C.line, margin: "0 0 10px", textAlign: "center" }}>
+              No timers, no lives, no streaks.
+            </p>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
+              <DepthNode state="inprogress" blueFrac={0.6} goldFrac={0} size={34} />
+              <p style={{ fontSize: 12.5, color: C.mist, margin: 0, lineHeight: 1.45 }}>
+                <span style={{ color: C.glow }}>Teal ring</span> fills with every question you get right.
+                Full once you have answered them all: <span style={{ color: C.foam }}>Done</span>.
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
+              <DepthNode state="done" blueFrac={1} goldFrac={0.67} size={34} />
+              <p style={{ fontSize: 12.5, color: C.mist, margin: 0, lineHeight: 1.45 }}>
+                <span style={{ color: C.gold }}>Gold ring</span> grows each day you get a done topic right again.
+                Full after three correct days: <span style={{ color: C.gold }}>Mastered</span>, and once earned it stays.
+              </p>
+            </div>
+          </div>
           {IS_NATIVE && <UpdateCheck />}
         </div>
       </div>
