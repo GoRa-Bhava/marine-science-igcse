@@ -293,10 +293,10 @@ const ITEMS = [
   {
     id: "eq3", topic: "quakes", type: "gap",
     q: "Complete the sentence.",
-    segments: ["Tsunamis form because of ", " or ", " beneath the sea, and can reach 100ft when they hit ", "."],
-    answers: ["earthquakes", "volcanoes", "land"],
-    bank: ["earthquakes", "volcanoes", "land", "tides", "gyres", "reefs"],
-    why: "Both causes involve the seabed suddenly shifting and displacing a huge volume of water.",
+    segments: ["Tsunamis form when an ", " or eruption makes the seabed move, displacing a huge volume of ", ". The wave grows very tall — up to 30 m — when it reaches ", "."],
+    answers: ["earthquake", "water", "land"],
+    bank: ["earthquake", "water", "land", "tide", "gyre", "reef"],
+    why: "An earthquake or eruption suddenly shifts the seabed, which displaces a huge volume of water. In the open sea the wave is low, but it piles up tall as it reaches shallow water near land.",
   },
   {
     id: "eq4", topic: "quakes", type: "multi",
