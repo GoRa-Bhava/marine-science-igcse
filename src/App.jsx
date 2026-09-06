@@ -676,7 +676,9 @@ function UpdateCheck() {
         {state.kind === "idle" && <> · <button onClick={check} style={link}>Check for updates</button></>}
       </div>
       {state.kind === "checking" && <div>Checking…</div>}
-      {state.kind === "current" && <div>You have the latest version.</div>}
+      {state.kind === "current" && (
+        <div>You have the latest version. <button onClick={check} style={link}>Check again</button></div>
+      )}
       {state.kind === "error" && (
         <div>Couldn't reach GitHub. Are you online? <button onClick={check} style={link}>Try again</button></div>
       )}
