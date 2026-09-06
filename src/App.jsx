@@ -871,7 +871,7 @@ export default function App() {
                   margin: "6px 0 16px", paddingBottom: 8, borderBottom: `1px solid ${C.shelf}`,
                 }}>
                   <span style={{ fontFamily: FONT_DISPLAY, fontSize: 15, fontWeight: 600, color: C.glow }}>
-                    Unit {u.n} · {u.name}
+                    {u.title || `Unit ${u.n} · ${u.name}`}
                   </span>
                   <span style={{ fontSize: 12, color: C.line }}>{done}/{list.length}</span>
                 </div>
