@@ -2426,6 +2426,16 @@ const CREATURES = [
   { id: "nudibranch", name: "Nudibranch", rarity: "uncommon", fact: "Some eat stinging jellyfish relatives and store the unfired stinging cells in their own skin to reuse." },
   { id: "nautilus", name: "Nautilus", rarity: "rare", fact: "It has been nearly unchanged for 500 million years and rises and sinks by adjusting gas in its shell chambers." },
   { id: "diatom", name: "Diatom", rarity: "rare", fact: "A single-celled protoctist in a glass shell that produces around a fifth of the oxygen you breathe." },
+  { id: "kelp", name: "Giant kelp", rarity: "common", fact: "One of the fastest-growing organisms on Earth, it can add up to 60 cm a day to build entire underwater forests." },
+  { id: "herring", name: "Atlantic herring", rarity: "common", fact: "Swimming in schools of billions, they keep together in the dark by releasing bursts of bubbles — effectively talking through their behinds." },
+  { id: "limpet", name: "Common limpet", rarity: "common", fact: "It has some of the strongest teeth in nature, and returns to the very same spot on its rock after every feeding trip." },
+  { id: "lugworm", name: "Lugworm", rarity: "common", fact: "The squiggly casts on a beach are its droppings — it eats its way through the sand, recycling it like an earthworm of the sea." },
+  { id: "mudskipper", name: "Mudskipper", rarity: "uncommon", fact: "This fish spends much of its life out of water, breathing through its skin and 'walking' over the mud on its front fins." },
+  { id: "archerfish", name: "Banded archerfish", rarity: "uncommon", fact: "It shoots a precise jet of water to knock insects off overhanging branches, allowing for the way water bends light." },
+  { id: "flounder", name: "Flounder", rarity: "uncommon", fact: "It is born with an eye on each side; as it grows, one eye slowly migrates round so both end up on its upward-facing side." },
+  { id: "seacucumber", name: "Sea cucumber", rarity: "uncommon", fact: "When threatened it can shoot out its own sticky guts to entangle a predator — then simply grow them back." },
+  { id: "tuna", name: "Bluefin tuna", rarity: "rare", fact: "Warm-blooded and built for speed, it can reach around 70 km/h and cross entire oceans in a matter of weeks." },
+  { id: "orca", name: "Orca", rarity: "rare", fact: "The ocean's top predator hunts in tight family pods, and each pod has its own dialect of calls passed down the generations." },
 ];
 
 /* Fallback art, used only when public/creatures/<id>.png is missing so
