@@ -2429,6 +2429,10 @@ const CREATURES = [
   { id: "seacucumber", name: "Sea cucumber", rarity: "uncommon", fact: "When threatened it can shoot out its own sticky guts to entangle a predator — then simply grow them back." },
   { id: "tuna", name: "Bluefin tuna", rarity: "rare", fact: "Warm-blooded and built for speed, it can reach around 70 km/h and cross entire oceans in a matter of weeks." },
   { id: "orca", name: "Orca", rarity: "rare", fact: "The ocean's top predator hunts in tight family pods, and each pod has its own dialect of calls passed down the generations." },
+  { id: "atlanticcod", name: "Atlantic cod", rarity: "common", fact: "A large female can release up to nine million eggs in a single spawning, yet overfishing still emptied the once-inexhaustible Grand Banks." },
+  { id: "salmon", name: "Atlantic salmon", rarity: "common", fact: "After years out at sea it finds the exact river where it hatched by smell alone, then leaps up waterfalls to spawn in it." },
+  { id: "pteropod", name: "Sea butterfly", rarity: "uncommon", fact: "This tiny sea snail 'flies' through the water on two wing-like feet, and its glassy shell slowly dissolves as the ocean turns more acidic." },
+  { id: "albatross", name: "Wandering albatross", rarity: "uncommon", fact: "It has the longest wingspan of any bird — up to 3.5 m — and can glide for hours, even dozing on the wing, without a single flap." },
 ];
 
 /* Fallback art, used only when public/creatures/<id>.png is missing so
