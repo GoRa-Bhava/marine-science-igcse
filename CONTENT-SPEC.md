@@ -47,6 +47,8 @@ Every field is required except `drawnArt`.
 ```
 
 `n` is the unit number topics refer to. Units are shown in array order.
+An optional `title` replaces the default "Unit n · name" heading, for a group
+that is not a syllabus unit (for example `{ n: 7, name: "Practical skills", title: "Practical skills" }`).
 
 ## `topics[]`
 
