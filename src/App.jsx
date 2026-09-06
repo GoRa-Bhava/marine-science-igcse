@@ -96,32 +96,32 @@ function blankProgress() {
   return { items: {}, creatures: [], mastered: [], version: PROGRESS_VERSION };
 }
 
-/* Two measures from one pass over a topic's items:
+/* Two measures from one pass over a topic's items, using two different
+   ideas of "correct":
      teal  — completion: the share of questions answered correctly at least
-             once (goldDays >= 1). Full = "done".
+             once, ever, retries included (everCorrect). Full = "done".
      gold  — mastery: each item's gold days (distinct days it was got right on
-             a scheduled review, capped at GOLD_DAYS) summed over the topic.
-             Full = "mastered", which cannot be lost.
+             a scheduled review, first attempt only, capped at GOLD_DAYS)
+             summed over the topic. Full = "mastered", which cannot be lost.
    `due` still feeds the "Ready to come back" button. */
 function topicStats(topicId, progress) {
   const items = ITEMS.filter((i) => i.topic === topicId);
   const total = items.length;
-  let correctOnce = 0, goldSum = 0, seen = 0, due = 0;
+  let correctEver = 0, goldSum = 0, seen = 0, due = 0;
   items.forEach((i) => {
     const r = progress.items[i.id];
     if (r && r.seen) { seen++; if (isDue(r)) due++; }
-    const gd = r?.goldDays || 0;
-    if (gd >= 1) correctOnce++;
-    goldSum += Math.min(gd, GOLD_DAYS);
+    if (r?.everCorrect) correctEver++;
+    goldSum += Math.min(r?.goldDays || 0, GOLD_DAYS);
   });
-  const blueFrac = total ? correctOnce / total : 0;
+  const blueFrac = total ? correctEver / total : 0;
   const goldFrac = total ? goldSum / (total * GOLD_DAYS) : 0;
   let state;
   if (seen === 0) state = "unexplored";
-  else if (correctOnce < total) state = "inprogress";
+  else if (correctEver < total) state = "inprogress";
   else if (goldFrac < 1) state = "done";
   else state = "mastered";
-  return { total, correctOnce, blueFrac, goldFrac, due, seen, state };
+  return { total, correctEver, blueFrac, goldFrac, due, seen, state };
 }
 
 
@@ -784,6 +784,12 @@ export default function App() {
          reviewed either way, an early wrong answer is a lapse, and an early
          right answer changes nothing (same-day practice is not spacing). */
       if (!isRetry) next.items[item.id] = scheduleAnswer(rec, right);
+      /* Any correct answer, retry included, marks the question as met once
+         for the teal ring. The schedule and gold count are untouched. */
+      if (right) {
+        const cur = next.items[item.id] || p.items[item.id] || { seen: true };
+        next.items[item.id] = { ...cur, seen: true, everCorrect: true };
+      }
 
       /* ocean discoveries: weighted by correctness, never guaranteed */
       if (right) {
@@ -929,7 +935,7 @@ export default function App() {
                         </div>
                         <div style={{ fontSize: 13.5, color: s.state === "mastered" ? C.gold : C.mist, marginTop: 4 }}>
                           {s.state === "unexplored" ? "Unexplored"
-                            : s.state === "inprogress" ? `In progress · ${s.correctOnce} of ${s.total}`
+                            : s.state === "inprogress" ? `In progress · ${s.correctEver} of ${s.total}`
                             : s.state === "done" ? "Done · not yet mastered"
                             : "Mastered"}
                         </div>

@@ -145,12 +145,29 @@ test("migration seeds gold days from the FSRS review count", () => {
 
   let rec = answer(undefined, true, T0);
   rec = answer(rec, true, whenDue(rec));
-  const { goldDays, lastGoldDay, ...v2rec } = rec;   // a v2 record has no gold fields
+  const { goldDays, lastGoldDay, everCorrect, ...v2rec } = rec;   // a v2 record has none of these
   const v2 = { version: 2, items: { x: v2rec }, creatures: [], mastered: [] };
   const m2 = migrateProgress(v2, T0);
   assert.equal(m2.migrated, true);
   assert.equal(m2.progress.items.x.goldDays, Math.min(3, v2rec.fsrs.reps));
+  assert.equal(m2.progress.items.x.everCorrect, true);
   assert.equal(migrateProgress(m2.progress, T0).migrated, false);
+
+  // a v3 record (gold but no everCorrect) is seeded from its gold days
+  const v3 = { version: 3, items: { y: { ...v2rec, goldDays: 0, lastGoldDay: undefined }, z: { ...v2rec, goldDays: 2, lastGoldDay: "2026-09-05" } } };
+  const m3 = migrateProgress(v3, T0).progress;
+  assert.equal(m3.items.y.everCorrect, false);
+  assert.equal(m3.items.z.everCorrect, true);
+  assert.equal(m3.items.z.goldDays, 2);
+});
+
+test("everCorrect is set by a correct scheduled answer and never by a wrong one", () => {
+  const wrong = answer(undefined, false, T0);
+  assert.equal(wrong.everCorrect, false);
+  const right = answer(wrong, true, whenDue(wrong));
+  assert.equal(right.everCorrect, true);
+  const lapsed = answer(right, false, whenDue(right));
+  assert.equal(lapsed.everCorrect, true);
 });
 
 test("records survive a JSON round trip", () => {
