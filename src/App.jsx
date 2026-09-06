@@ -567,32 +567,38 @@ function Confetti({ on }) {
   );
 }
 
-/* Ring = how much of the topic has been met (fills completely after one pass).
-   Colour = how well it is holding over the schedule: dim → bright → solid dot. */
-const lerpHex = (a, b, t) => {
-  const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-  const [x, y] = [p(a), p(b)];
-  return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
-};
+/* The ring carries the topic's status: hollow = not started, an arc that
+   grows toward mastered = in progress, a larger solid disc with a tick = done. */
+function DepthNode({ strength, state }) {
+  const box = 44;                 // bigger than before (was 34) so it reads at a glance
+  const cx = box / 2, cy = box / 2;
 
-function DepthNode({ coverage, strength, state }) {
+  // Done: a solid, larger disc with a tick — unmistakably complete.
+  if (state === "mastered") {
+    return (
+      <svg width={box} height={box} viewBox={`0 0 ${box} ${box}`} style={{ flexShrink: 0 }}>
+        <circle cx={cx} cy={cy} r="18" fill={C.glow} />
+        <path d={`M${cx - 7.5} ${cy + 0.5} l5 5 l10 -11`} fill="none"
+          stroke={C.abyss} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  const started = state !== "new";
   const r = 15;
-  const t = Math.min(1, strength / 0.75);          // 0.75 is the mastered threshold
-  const ringColor = state === "new" ? "transparent"
-    : t < 0.5 ? lerpHex(C.line, C.glowDim, t * 2)
-    : lerpHex(C.glowDim, C.glow, (t - 0.5) * 2);
+  const circ = 2 * Math.PI * r;
+  // How far toward mastered, with a visible minimum once started so an
+  // in-progress topic never looks empty.
+  const sweep = started ? Math.max(0.12, Math.min(1, strength / 0.75)) : 0;
+
   return (
-    <svg width="34" height="34" viewBox="0 0 34 34" style={{ flexShrink: 0 }}>
-      <circle cx="17" cy="17" r={r} fill="none" stroke={C.line} strokeWidth="2" />
-      <circle
-        cx="17" cy="17" r={r} fill="none" stroke={ringColor} strokeWidth="3"
-        strokeDasharray={`${2 * Math.PI * r * coverage} ${2 * Math.PI * r}`}
-        strokeLinecap="round" transform="rotate(-90 17 17)"
-        style={{ transition: "stroke .3s" }}
-      />
-      {state !== "new" && (
-        <circle cx="17" cy="17" r={state === "mastered" ? 6 : 2.5 + 3.5 * t}
-          fill={ringColor} opacity={state === "mastered" ? 1 : 0.35 + 0.65 * t} />
+    <svg width={box} height={box} viewBox={`0 0 ${box} ${box}`} style={{ flexShrink: 0 }}>
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.glowDim}
+        strokeWidth="2.5" opacity={started ? 0.3 : 0.45} />
+      {started && (
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.glow} strokeWidth="3.5"
+          strokeDasharray={`${circ * sweep} ${circ}`} strokeLinecap="round"
+          transform={`rotate(-90 ${cx} ${cy})`} style={{ transition: "stroke-dasharray .3s" }} />
       )}
     </svg>
   );
@@ -879,8 +885,8 @@ export default function App() {
                   const s = stats[t.id];
                   return (
                     <div key={t.id} style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 34 }}>
-                        <DepthNode coverage={s.total ? s.seen / s.total : 0} strength={s.strength} state={s.state} />
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 44 }}>
+                        <DepthNode strength={s.strength} state={s.state} />
                         {idx < list.length - 1 && (
                           <div style={{ flex: 1, width: 2, background: C.line, opacity: 0.6, minHeight: 26 }} />
                         )}
@@ -895,12 +901,8 @@ export default function App() {
                           </span>
                           <span style={{ fontSize: 12, color: C.line, maxWidth: "42%", textAlign: "right", lineHeight: 1.3 }}>{t.depth}</span>
                         </div>
-                        <div style={{ fontSize: 13.5, color: C.mist, marginTop: 4 }}>
-                          {s.state === "new" && "Not started"}
-                          {s.state === "learning" && (s.seen < s.total ? `Learning · ${s.seen} of ${s.total} met` : `All ${s.total} met · settling in`)}
-                          {s.state === "growing" && `Holding · ${Math.round(s.strength / 0.75 * 100)}% of the way to mastered`}
-                          {s.state === "mastered" && "Mastered"}
-                          {s.due > 0 && <span style={{ color: C.coral }}> · {s.due} due</span>}
+                        <div style={{ fontSize: 13.5, color: s.state === "mastered" ? C.glow : C.mist, marginTop: 4 }}>
+                          {s.state === "new" ? "Not started" : s.state === "mastered" ? "Done" : "In progress"}
                         </div>
                       </button>
                     </div>
@@ -920,10 +922,9 @@ export default function App() {
             {content.collection.title} · {progress.creatures.length}/{CREATURES.length}
           </button>
           <p style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 18, textAlign: "center" }}>
-            No timers, no lives, no streaks. Questions you miss come back tomorrow;
-            ones you know come back at a longer gap each time, set question by
-            question. A ring fills once you have met every question in a topic; it brightens as answers hold across those gaps, and
-            gets a solid centre at mastered.
+            No timers, no lives, no streaks. Each topic's circle fills in as you learn it,
+            and turns solid with a tick once you've mastered it. Questions you miss come
+            back tomorrow; ones you know come back at a longer gap each time.
           </p>
           {IS_NATIVE && <UpdateCheck />}
         </div>
