@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION, GOLD_DAYS,
 } from "./engine/scheduler.js";
+import { selectForLesson } from "./engine/select.js";
 
 /* ========================================================================
    RETRIEVAL PRACTICE ENGINE — subject content lives in src/content/
@@ -134,19 +135,21 @@ function topicStats(topicId, progress) {
 }
 
 
-/* Builds a lesson: due reviews first, then unseen items, ordered up the
-   ladder (recognise → retrieve → connect → explain), topics interleaved. */
+/* Builds a lesson: due reviews first, then unseen items, at most one item per
+   exclusion family (selectForLesson), ordered up the ladder
+   (recognise → retrieve → connect → explain), topics interleaved. */
 function buildLesson(progress, topicId = null, size = 7) {
   const pool = ITEMS.filter((i) => (topicId ? i.topic === topicId : true));
   const dueItems = pool.filter((i) => isDue(progress.items[i.id]));
   const fresh = pool.filter((i) => !progress.items[i.id]?.seen);
-  const chosen = [...dueItems, ...fresh].slice(0, size);
+  let chosen = selectForLesson([...dueItems, ...fresh], size, progress);
   if (chosen.length === 0) {
-    // everything is scheduled ahead — offer the least-recently-strong items
+    // everything is scheduled ahead — offer the least-strong items, still one
+    // per family
     const extra = [...pool].sort(
       (a, b) => itemStrength(progress.items[a.id]) - itemStrength(progress.items[b.id])
     );
-    chosen.push(...extra.slice(0, size));
+    chosen = selectForLesson(extra, size, progress);
   }
   const byRank = {};
   chosen.forEach((i) => {
