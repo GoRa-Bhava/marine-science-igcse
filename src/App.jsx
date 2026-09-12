@@ -38,7 +38,14 @@ const FONT_DISPLAY = "'Fraunces Variable', Georgia, serif";
    creatures, labels — arrives as data from the active content module.
    See src/content/index.js to switch subject and CONTENT-SPEC.md for the shape. */
 import { content } from "./content/index.js";
-const { topics: TOPICS, units: UNITS, items: ITEMS, creatures: CREATURES } = content;
+const { topics: TOPICS, units: UNITS, creatures: CREATURES } = content;
+/* Exam items ("Build an exam answer", type "exam") stay in the content data
+   and the trial pages but are not served in the app yet: the two-step
+   interaction still needs per-step feedback and a clearer title before it
+   goes live. Filtering them out here keeps them out of every lesson AND out
+   of the mastery counts, so a topic that owns exam items can still reach
+   mastered on its served questions. Re-enable by dropping this filter. */
+const ITEMS = content.items.filter((i) => i.type !== "exam");
 
 /* The shape ladder a lesson climbs. Exam is the summit, so it lands last. */
 const RANK = { choice: 1, gap: 2, match: 3, multi: 3, chain: 4, exam: 5 };
