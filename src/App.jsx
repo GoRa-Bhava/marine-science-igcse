@@ -976,7 +976,11 @@ export default function App() {
       return next;
     });
 
-    if (!right && !requeued.includes(item.id)) {
+    /* A wrong answer comes back at the end of the same lesson — except an
+       exam item, which is graded once and then only rescheduled for a later
+       day. Re-serving a two-step exam in the same session is confusing and
+       could trap the learner on it, so it advances like a graded item. */
+    if (!right && !requeued.includes(item.id) && item.type !== "exam") {
       setRequeued((r) => [...r, item.id]);
       setQueue((q) => [...q, item]);
     }
