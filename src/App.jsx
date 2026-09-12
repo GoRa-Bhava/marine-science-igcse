@@ -854,6 +854,149 @@ function UpdateCheck() {
   );
 }
 
+/* ------------------------------------------------------------ settings */
+/* Back up, restore, and a guarded full reset. All saved state is the single
+   record under STORE_KEY, so a reset is just blankProgress() written back. */
+function SettingsView({ onRestore, onReset, onBack }) {
+  const [backupMsg, setBackupMsg] = useState("");
+  const [showText, setShowText] = useState(false);
+  const [restoreText, setRestoreText] = useState("");
+  const [restoreMsg, setRestoreMsg] = useState("");
+  const [restoreErr, setRestoreErr] = useState("");
+  const [confirmReset, setConfirmReset] = useState(false);
+
+  const json = () => exportProgress();
+
+  const backUp = () => {
+    setBackupMsg("");
+    const filename = `marine-progress-${todayISO()}.json`;
+    if (!IS_NATIVE) {
+      try {
+        const blob = new Blob([json()], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setBackupMsg(`Saved ${filename} to your downloads.`);
+        return;
+      } catch (e) { /* fall through to clipboard */ }
+    }
+    // native, or download blocked: copy to clipboard
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(json()).then(
+        () => setBackupMsg("Copied your progress to the clipboard. Paste it somewhere safe."),
+        () => { setBackupMsg("Couldn't copy automatically — copy the text below by hand."); setShowText(true); }
+      );
+    } else {
+      setBackupMsg("Copy the text below by hand and keep it somewhere safe.");
+      setShowText(true);
+    }
+  };
+
+  const readFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { setRestoreText(String(reader.result || "")); setRestoreErr(""); setRestoreMsg(""); };
+    reader.readAsText(file);
+  };
+
+  const restore = () => {
+    setRestoreMsg(""); setRestoreErr("");
+    let parsed;
+    try { parsed = JSON.parse(restoreText); }
+    catch (e) { setRestoreErr("That doesn't look like a valid backup. Nothing was changed."); return; }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      setRestoreErr("That doesn't look like a valid backup. Nothing was changed."); return;
+    }
+    /* Merge onto a blank slate and migrate, exactly as first load does, so an
+       older-shaped backup upgrades cleanly. */
+    const { progress } = migrateProgress({ ...blankProgress(), ...parsed, version: parsed.version || 1 });
+    onRestore(progress);
+    setRestoreText("");
+    setRestoreMsg("Progress restored.");
+  };
+
+  const shell = {
+    fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
+    background: `linear-gradient(${C.deep} 0%, ${C.abyss} 60%)`, color: C.foam,
+  };
+  const section = { padding: "18px 20px", borderRadius: 16, border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)", marginBottom: 16 };
+  const h = { fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, margin: "0 0 6px" };
+  const p = { fontSize: 13.5, color: C.mist, lineHeight: 1.5, margin: "0 0 14px" };
+  const btn = { width: "100%", padding: "13px 16px", borderRadius: 12, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer" };
+  const note = { fontSize: 12.5, color: C.glow, marginTop: 10, lineHeight: 1.5 };
+
+  return (
+    <div style={shell}>
+      <div style={{ padding: "30px 22px 40px" }}>
+        <button onClick={onBack} style={{
+          background: "none", border: "none", color: C.glow, fontFamily: FONT_UI,
+          fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
+        }}>← Back</button>
+        <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 20px" }}>Settings</h1>
+
+        {/* 1. Back up */}
+        <div style={section}>
+          <h2 style={h}>Back up my progress</h2>
+          <p style={p}>Save a copy of your study history and Ocean discoveries. Do this before resetting or moving to a new phone.</p>
+          <button onClick={backUp} style={{ ...btn, borderColor: C.glow, background: "rgba(79,216,196,.1)" }}>
+            {IS_NATIVE ? "Copy my progress" : "Back up my progress"}
+          </button>
+          {backupMsg && <p style={note}>{backupMsg}</p>}
+          {(showText || false) && (
+            <textarea readOnly value={json()} onFocus={(e) => e.target.select()} rows={5}
+              style={{ width: "100%", marginTop: 10, fontFamily: "monospace", fontSize: 11, padding: 8,
+                borderRadius: 8, border: `1px solid ${C.line}`, background: C.abyss, color: C.mist, resize: "vertical" }} />
+          )}
+        </div>
+
+        {/* 2. Restore */}
+        <div style={section}>
+          <h2 style={h}>Restore from a backup</h2>
+          <p style={p}>Paste a backup, or choose a saved file, then restore. This replaces your current progress.</p>
+          <input type="file" accept="application/json,.json" onChange={readFile}
+            style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, display: "block" }} />
+          <textarea value={restoreText} onChange={(e) => { setRestoreText(e.target.value); setRestoreErr(""); }}
+            placeholder="…or paste your backup JSON here" rows={4}
+            style={{ width: "100%", fontFamily: "monospace", fontSize: 11, padding: 8, borderRadius: 8,
+              border: `1px solid ${restoreErr ? C.no : C.line}`, background: C.abyss, color: C.foam, resize: "vertical", boxSizing: "border-box" }} />
+          <button onClick={restore} disabled={!restoreText.trim()} style={{
+            ...btn, marginTop: 10, cursor: restoreText.trim() ? "pointer" : "default",
+            opacity: restoreText.trim() ? 1 : 0.5,
+          }}>Restore this backup</button>
+          {restoreErr && <p style={{ ...note, color: C.no }}>{restoreErr}</p>}
+          {restoreMsg && <p style={note}>{restoreMsg}</p>}
+        </div>
+
+        {/* 3. Reset — guarded two-step */}
+        <div style={{ ...section, borderColor: "rgba(255,122,92,.4)" }}>
+          <h2 style={h}>Start from scratch</h2>
+          <p style={p}>Erase everything and begin at day one. Back up first if you might want your progress again.</p>
+          {!confirmReset ? (
+            <button onClick={() => setConfirmReset(true)} style={{ ...btn, borderColor: C.coral, color: C.coral }}>
+              Reset everything
+            </button>
+          ) : (
+            <div>
+              <p style={{ fontSize: 14, color: C.foam, lineHeight: 1.5, margin: "0 0 14px" }}>
+                This erases all your progress <b>and your whole Ocean discoveries collection</b>. It can't be undone.
+              </p>
+              <button onClick={onReset} style={{
+                width: "100%", padding: "14px 16px", borderRadius: 12, border: "none",
+                background: C.coral, color: C.abyss, fontFamily: FONT_UI, fontSize: 15, fontWeight: 600,
+                cursor: "pointer", marginBottom: 8,
+              }}>Erase everything</button>
+              <button onClick={() => setConfirmReset(false)} style={{ ...btn, background: "transparent" }}>Cancel</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- app */
 export default function App() {
   const [progress, setProgress] = useState(blankProgress);
@@ -994,6 +1137,15 @@ export default function App() {
       setRequeued((r) => [...r, item.id]);
       setQueue((q) => [...q, item]);
     }
+  };
+
+  /* ------------------------------------------------------ settings ops */
+  const restoreProgress = (p) => { saveProgress(p); setProgress(p); };
+  const resetProgress = () => {
+    const blank = blankProgress();
+    saveProgress(blank);          // persist the versioned clean slate
+    setProgress(blank);
+    setView("map");
   };
 
   const next = () => {
@@ -1143,8 +1295,25 @@ export default function App() {
             </div>
           </div>
           {IS_NATIVE && <UpdateCheck />}
+          <div style={{ textAlign: "center", marginTop: 16 }}>
+            <button onClick={() => setView("settings")} style={{
+              background: "none", border: "none", color: C.line, fontFamily: FONT_UI,
+              fontSize: 12.5, padding: 6, cursor: "pointer", textDecoration: "underline",
+            }}>Settings</button>
+          </div>
         </div>
       </div>
+    );
+  }
+
+  /* ---------------------------------------------------- settings view */
+  if (view === "settings") {
+    return (
+      <SettingsView
+        onBack={() => setView("map")}
+        onRestore={restoreProgress}
+        onReset={resetProgress}
+      />
     );
   }
 
