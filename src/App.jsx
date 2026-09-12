@@ -158,7 +158,11 @@ function topicStats(topicId, progress) {
 function buildLesson(progress, topicId = null, size = 7) {
   const pool = ITEMS.filter((i) => (topicId ? i.topic === topicId : true));
   const dueItems = pool.filter((i) => isDue(progress.items[i.id]));
-  const fresh = pool.filter((i) => !progress.items[i.id]?.seen);
+  /* Shuffle the unseen items so a new lesson introduces a varied handful
+     rather than always the first ones in list order — otherwise items at the
+     tail of a big topic (e.g. the figure questions, which are appended last)
+     would almost never surface. Due items keep their priority and rotation. */
+  const fresh = shuffle(pool.filter((i) => !progress.items[i.id]?.seen));
   let chosen = selectForLesson([...dueItems, ...fresh], size, progress);
   if (chosen.length === 0) {
     // everything is scheduled ahead — offer the least-strong items, still one
