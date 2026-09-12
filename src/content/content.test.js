@@ -21,7 +21,7 @@ async function loadContent() {
 }
 
 const content = await loadContent();
-const { topics, units, items, creatures } = content;
+const { topics, units, items, creatures, figures = {} } = content;
 
 test("subject meta is complete", () => {
   for (const k of ["id", "title", "subtitle", "headline", "storeKey", "creaturePath"]) {
@@ -54,12 +54,21 @@ test("every item has the fields its type needs", () => {
     ids.add(it.id);
     assert.ok(topicIds.has(it.topic), `${where}: unknown topic ${it.topic}`);
     assert.equal(typeof it.q, "string", `${where}: q`);
-    assert.equal(typeof it.why, "string", `${where}: why`);
+    if (it.type !== "label") assert.equal(typeof it.why, "string", `${where}: why`);
 
     if (it.type === "choice") {
-      assert.equal(it.options.length, 4, `${where}: choice needs 4 options`);
-      assert.ok(Number.isInteger(it.a) && it.a >= 0 && it.a < 4, `${where}: a`);
-      assert.equal(new Set(it.options).size, 4, `${where}: duplicate options`);
+      // Figure-choice items may have 2-4 options (some are two-panel picks).
+      const lo = it.fig ? 2 : 4;
+      assert.ok(it.options.length >= lo && it.options.length <= 4, `${where}: choice needs ${lo}-4 options`);
+      assert.ok(Number.isInteger(it.a) && it.a >= 0 && it.a < it.options.length, `${where}: a`);
+      assert.equal(new Set(it.options).size, it.options.length, `${where}: duplicate options`);
+      if (it.fig) assert.ok(figures[it.fig], `${where}: unknown figure ${it.fig}`);
+    } else if (it.type === "tap") {
+      assert.ok(figures[it.fig], `${where}: unknown figure ${it.fig}`);
+      assert.ok(figures[it.fig].hotspots.some((h) => h.id === it.target), `${where}: target not a hotspot`);
+    } else if (it.type === "label") {
+      assert.ok(figures[it.fig], `${where}: unknown figure ${it.fig}`);
+      assert.ok(figures[it.fig].hotspots.length >= 2, `${where}: label figure needs hotspots`);
     } else if (it.type === "gap") {
       assert.equal(it.segments.length, it.answers.length + 1, `${where}: segments must be answers + 1`);
       assert.ok(it.answers.length >= 1, `${where}: needs at least one blank`);

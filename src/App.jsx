@@ -3,6 +3,7 @@ import {
   answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION, GOLD_DAYS,
 } from "./engine/scheduler.js";
 import { selectForLesson } from "./engine/select.js";
+import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 
 /* ========================================================================
    RETRIEVAL PRACTICE ENGINE — subject content lives in src/content/
@@ -46,13 +47,29 @@ const { topics: TOPICS, units: UNITS, creatures: CREATURES } = content;
    goes live. Filtering them out here keeps them out of every lesson AND out
    of the mastery counts, so a topic that owns exam items can still reach
    mastered on its served questions. Re-enable by dropping this filter. */
-const ITEMS = content.items.filter((i) => i.type !== "exam");
+const FIGURES = content.figures || {};
+/* Figure (diagram) questions reference a figure by `fig`. Drop any item whose
+   figure is missing so a bad reference skips the item instead of crashing a
+   lesson, and warn once. */
+const missingFigs = new Set();
+const ITEMS = content.items.filter((i) => {
+  if (i.type === "exam") return false;
+  if (i.fig && !FIGURES[i.fig]) { missingFigs.add(i.fig); return false; }
+  return true;
+});
+if (missingFigs.size && typeof console !== "undefined") {
+  console.warn("[figures] skipping items with missing figures:", [...missingFigs].join(", "));
+}
 
-/* The shape ladder a lesson climbs. Exam is the summit, so it lands last. */
-const RANK = { choice: 1, gap: 2, match: 3, multi: 3, chain: 4, exam: 5 };
+/* The shape ladder a lesson climbs. Exam is the summit, so it lands last.
+   A figure `tap` is a recognise interaction (with choice); a figure `label`
+   is a retrieve interaction (with gap); a figure `choice` keeps choice's rank. */
+const RANK = { choice: 1, tap: 1, gap: 2, label: 2, match: 3, multi: 3, chain: 4, exam: 5 };
 const SHAPE_NAME = {
   choice: "Recognise",
+  tap: "Recognise",
   gap: "Retrieve",
+  label: "Retrieve",
   match: "Connect",
   multi: "Connect",
   chain: "Explain",
@@ -265,12 +282,181 @@ const btnBase = {
   cursor: "pointer", marginBottom: 10, transition: "background .12s, border-color .12s",
 };
 
+/* ------------------------------------------------------- figure render */
+/* The raw figure (SVG or raster) at full container width. Hotspots are
+   overlaid separately, positioned by percentage so both kinds scale. */
+function FigureArt({ figId }) {
+  const fig = FIGURES[figId];
+  if (!fig) return null;
+  if (fig.art.kind === "img") {
+    return <img src={fig.art.src} alt="" style={{ width: "100%", display: "block", borderRadius: 10 }} />;
+  }
+  return <div style={{ width: "100%" }} dangerouslySetInnerHTML={{ __html: fig.art.svg }} />;
+}
+
+/* A figure with tappable hotspots overlaid. Shared by tap and label; `big`
+   renders the enlarged, horizontally-scrollable version for wide figures. */
+function HotspotLayer({ figId, mode, tappedId, assign, order, locked, item, onHotspot }) {
+  const fig = FIGURES[figId];
+  const dims = figureDims(fig);
+  if (!fig || !dims) return null;
+  if (mode === "static") {   // figure-choice: show the figure, no hotspots
+    return <div style={{ width: "100%", lineHeight: 0 }}><FigureArt figId={figId} /></div>;
+  }
+  const targetOk = (h, i) => {
+    if (!locked) return null;
+    if (mode === "tap") return h.id === item.target ? "right" : (h.id === tappedId ? "wrong" : null);
+    return assign?.[i] === i ? "right" : (assign?.[i] != null ? "wrong" : "missed");
+  };
+  return (
+    <div style={{ position: "relative", width: "100%", lineHeight: 0 }}>
+      <FigureArt figId={figId} />
+      {fig.hotspots.map((h, i) => {
+        const v = targetOk(h, i);
+        const assigned = mode === "label" && assign?.[i] != null;
+        const num = assigned ? order.indexOf(i) + 1 : null;
+        const on = mode === "tap" ? tappedId === h.id : assigned;
+        const ring = v === "right" ? C.ok : v === "wrong" ? C.no : v === "missed" ? C.no : (on ? C.glow : C.foam);
+        return (
+          <button key={h.id} onClick={() => !locked && onHotspot(i, h)} disabled={locked}
+            aria-label={h.label}
+            style={{
+              position: "absolute", left: `${(h.x / dims.w) * 100}%`, top: `${(h.y / dims.h) * 100}%`,
+              transform: "translate(-50%, -50%)", width: 30, height: 30, borderRadius: "50%",
+              border: `2.5px solid ${ring}`, borderStyle: v === "missed" ? "dashed" : "solid",
+              background: on || v === "right" ? "rgba(79,216,196,.25)" : v === "wrong" ? "rgba(255,158,125,.25)" : "rgba(4,20,31,.35)",
+              color: C.foam, fontFamily: FONT_UI, fontSize: 13, fontWeight: 700,
+              display: "grid", placeItems: "center", cursor: locked ? "default" : "pointer", padding: 0,
+              boxShadow: "0 0 0 2px rgba(4,20,31,.5)",
+            }}>
+            {num || ""}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* Wraps a hotspot figure with an Enlarge control. Wide figures (aspect > 1.4)
+   are cramped on a phone card; Enlarge opens a full-screen, side-scrollable
+   panel with the same interactive hotspots. */
+function FigureStage(props) {
+  const [big, setBig] = useState(false);
+  const fig = FIGURES[props.figId];
+  const dims = figureDims(fig);
+  const wide = dims && dims.w / dims.h > 1.4;
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ borderRadius: 12, overflow: "hidden", border: `1px solid ${C.shelf}`, background: "rgba(10,42,61,.4)" }}>
+        <HotspotLayer {...props} />
+      </div>
+      {wide && !props.locked && (
+        <button onClick={() => setBig(true)} style={{
+          marginTop: 8, background: "none", border: `1px solid ${C.line}`, borderRadius: 10,
+          color: C.glow, fontFamily: FONT_UI, fontSize: 13, padding: "6px 12px", cursor: "pointer",
+        }}>⤢ Enlarge</button>
+      )}
+      {big && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 40, background: "rgba(4,20,31,.97)",
+          display: "flex", flexDirection: "column", padding: "16px 0",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 16px 10px" }}>
+            <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>Scroll the figure sideways, then tap.</span>
+            <button onClick={() => setBig(false)} style={{
+              background: "none", border: "none", color: C.glow, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
+            }}>✕ Close</button>
+          </div>
+          <div style={{ flex: 1, overflow: "auto", padding: "0 16px", WebkitOverflowScrolling: "touch" }}>
+            <div style={{ width: wide ? Math.round((dims.w / dims.h) * 78) + "vh" : "100%", minWidth: "100%" }}>
+              <HotspotLayer {...props} />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FigureTapQ({ item, locked, tappedId, setTapped }) {
+  return (
+    <>
+      <Prompt>{item.q}</Prompt>
+      <FigureStage figId={item.fig} mode="tap" item={item} locked={locked} tappedId={tappedId}
+        onHotspot={(i, h) => setTapped(h.id)} />
+    </>
+  );
+}
+
+function FigureLabelQ({ item, locked, state, setState }) {
+  const fig = FIGURES[item.fig];
+  const pool = useMemo(() => labelPool(item, fig), [item.id]);
+  const chipOrder = useMemo(() => reorder(pool.map((_, i) => i)), [item.id]);
+  const { assign, order, selLab } = state;
+  const usedLabels = new Set(Object.values(assign));
+
+  const tapHotspot = (i) => {
+    if (assign[i] != null) {
+      const next = { ...assign }; delete next[i];
+      setState({ assign: next, order: order.filter((x) => x !== i), selLab: null });
+      return;
+    }
+    if (selLab == null) return;
+    if (usedLabels.has(selLab)) return;
+    setState({ assign: { ...assign, [i]: selLab }, order: [...order, i], selLab: null });
+  };
+
+  return (
+    <>
+      <Prompt>{item.q}</Prompt>
+      <FigureStage figId={item.fig} mode="label" item={item} locked={locked} assign={assign} order={order}
+        onHotspot={tapHotspot} />
+      {!locked && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {chipOrder.map((p) => {
+            const spent = usedLabels.has(p);
+            const armed = selLab === p;
+            return (
+              <button key={p} onClick={() => !spent && setState({ ...state, selLab: armed ? null : p })}
+                disabled={spent}
+                style={{
+                  fontFamily: FONT_UI, fontSize: 14, padding: "8px 13px", borderRadius: 999,
+                  border: `1.5px solid ${armed ? C.glow : C.line}`,
+                  background: armed ? C.raise : spent ? "transparent" : C.shelf,
+                  color: spent ? C.line : C.foam, cursor: spent ? "default" : "pointer",
+                }}>
+                {pool[p]}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {!locked && (
+        <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 10 }}>
+          {selLab == null ? "Tap a label, then tap its spot on the figure." : "Now tap where it belongs."}
+          {order.length ? ` ${order.length} of ${fig.hotspots.length} placed — tap a numbered spot to undo it.` : ""}
+        </p>
+      )}
+      {locked && (
+        <div style={{ marginTop: 6 }}>
+          {fig.hotspots.map((h, i) => (
+            <p key={h.id} style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, margin: "0 0 4px" }}>
+              <span style={{ color: C.glow }}>{i + 1}.</span> {h.label}
+            </p>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 function ChoiceQ({ item, locked, picked, setPicked }) {
   // Options are authored with the answer first; never show them that way.
   const order = useMemo(() => reorder(item.options.map((_, i) => i)), [item.id]);
   return (
     <>
       <Prompt>{item.q}</Prompt>
+      {item.fig && <FigureStage figId={item.fig} mode="static" item={item} locked={locked} onHotspot={() => {}} />}
       {order.map((i) => {
         let bg = C.shelf, bd = C.line, col = C.foam;
         if (locked) {
@@ -1044,6 +1230,8 @@ export default function App() {
     if (it.type === "match") return { links: {}, order: [], sel: null };
     if (it.type === "chain") return [];
     if (it.type === "exam") return { phase: 1, checkSel: [], order: [] };
+    if (it.type === "tap") return null;
+    if (it.type === "label") return { assign: {}, order: [], selLab: null };
     return null;
   }
 
@@ -1055,6 +1243,8 @@ export default function App() {
     if (item.type === "match") return Object.keys(answer.links).length === item.pairs.length;
     if (item.type === "chain") return answer.length === item.chunks.length;
     if (item.type === "exam") return answer.phase === 2 && answer.order.length === item.build.length;
+    if (item.type === "tap") return answer !== null;
+    if (item.type === "label") return Object.keys(answer.assign).length === (FIGURES[item.fig]?.hotspots.length || 0);
     return false;
   };
 
@@ -1069,6 +1259,8 @@ export default function App() {
          points and the phrases are in the given order */
       return sameSet(answer.checkSel, item.check.map((_, i) => i)) && answer.order.every((k, i) => k === i);
     }
+    if (item.type === "tap") return gradeTap(item, answer);
+    if (item.type === "label") return gradeLabel(FIGURES[item.fig], answer.assign);
     return false;
   };
 
@@ -1441,6 +1633,8 @@ export default function App() {
         {item.type === "match" && <MatchQ item={item} locked={locked} state={answer} setState={setAnswer} />}
         {item.type === "chain" && <ChainQ item={item} locked={locked} order={answer} setOrder={setAnswer} />}
         {item.type === "exam" && <ExamQ item={item} locked={locked} state={answer} setState={setAnswer} />}
+        {item.type === "tap" && <FigureTapQ item={item} locked={locked} tappedId={answer} setTapped={setAnswer} />}
+        {item.type === "label" && <FigureLabelQ item={item} locked={locked} state={answer} setState={setAnswer} />}
       </div>
 
       <div style={{
