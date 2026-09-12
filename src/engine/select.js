@@ -53,11 +53,42 @@ export function familyFilter(candidates, size) {
   return out;
 }
 
-/* Pick up to `size` items from an ordered candidate list, one per family.
-   Due items keep priority over fresh ones (a due member wins the family's
-   single slot over an unseen sibling); due members rotate by last_review. */
+/* Pick up to `size` items from an ordered candidate list. Family exclusion is
+   a soft cap, not a hard one: take one item per family first (due before
+   fresh, due members rotated by last_review), then, only if that leaves the
+   lesson short of `size`, backfill from the held-back same-family siblings —
+   least-recently-reviewed first. So a session never repeats a family while
+   distinct families remain, but a small topic (or a topic where every item is
+   one family) still fills instead of collapsing to a single question. */
 export function selectForLesson(candidates, size, progress, now = new Date()) {
   const due = candidates.filter((i) => isDue(progress.items?.[i.id], now));
   const nonDue = candidates.filter((i) => !isDue(progress.items?.[i.id], now));
-  return familyFilter([...rotateDue(due, progress), ...nonDue], size);
+  const ordered = [...rotateDue(due, progress), ...nonDue];
+
+  const seen = new Set();
+  const oncePerFamily = [];
+  const held = [];
+  for (const it of ordered) {
+    if (it.family && seen.has(it.family)) { held.push(it); continue; }
+    if (it.family) seen.add(it.family);
+    oncePerFamily.push(it);
+  }
+
+  const chosen = oncePerFamily.slice(0, size);
+  if (chosen.length < size && held.length) {
+    const lr = (it) => progress.items?.[it.id]?.fsrs?.last_review || "";
+    const backfill = held
+      .map((it, idx) => ({ it, idx }))
+      .sort((a, b) => {
+        const la = lr(a.it), lb = lr(b.it);
+        if (la !== lb) return la < lb ? -1 : 1;   // least recently reviewed first
+        return a.idx - b.idx;                        // stable
+      })
+      .map((x) => x.it);
+    for (const it of backfill) {
+      if (chosen.length >= size) break;
+      chosen.push(it);
+    }
+  }
+  return chosen;
 }

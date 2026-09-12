@@ -13,12 +13,30 @@ const item = (id, family) => (family ? { id, topic: "t", type: "choice", family 
 const prog = (entries) => ({ items: Object.fromEntries(entries) });
 const ids = (arr) => arr.map((i) => i.id);
 
-test("at most one member of a 3-member family is served", () => {
-  const cands = [item("a1", "fam"), item("a2", "fam"), item("a3", "fam")];
-  const progress = prog([["a1", dueRec("2026-09-05")], ["a2", dueRec("2026-09-06")], ["a3", dueRec("2026-09-07")]]);
+test("only one member of a 3-member family is served while other items can fill the lesson", () => {
+  const cands = [item("a1", "fam"), item("a2", "fam"), item("a3", "fam"),
+    item("s1"), item("s2"), item("s3"), item("s4"), item("s5"), item("s6"), item("s7")];
+  const progress = prog([["a1", dueRec("2026-09-05")], ["a2", dueRec("2026-09-06")], ["a3", dueRec("2026-09-07")],
+    ...["s1","s2","s3","s4","s5","s6","s7"].map((id) => [id, dueRec()])]);
   const out = selectForLesson(cands, 7, progress, NOW);
-  assert.equal(out.length, 1);
-  assert.ok(["a1", "a2", "a3"].includes(out[0].id));
+  assert.equal(out.length, 7);
+  assert.equal(out.filter((i) => i.family === "fam").length, 1);
+});
+
+test("a small single-family topic fills the lesson instead of collapsing", () => {
+  // 2 items, both one family -> a 2-item lesson (the reported Earth-in-space case)
+  const two = [item("a1", "fam"), item("a2", "fam")];
+  const p2 = prog([["a1", dueRec("2026-09-05")], ["a2", dueRec("2026-09-06")]]);
+  const out2 = selectForLesson(two, 7, p2, NOW);
+  assert.equal(out2.length, 2);
+  assert.deepEqual(ids(out2).sort(), ["a1", "a2"]);
+
+  // 3 items, all one family, nothing else -> all three (backfill), rotation order
+  const three = [item("b1", "fam"), item("b2", "fam"), item("b3", "fam")];
+  const p3 = prog([["b1", dueRec("2026-09-10")], ["b2", dueRec("2026-09-02")], ["b3", dueRec("2026-09-06")]]);
+  const out3 = selectForLesson(three, 7, p3, NOW);
+  assert.equal(out3.length, 3);
+  assert.equal(out3[0].id, "b2");   // least-recently-reviewed leads (rotation), then backfill
 });
 
 test("family-less items are never excluded", () => {
@@ -31,11 +49,11 @@ test("family-less items are never excluded", () => {
 test("a due member beats a fresh sibling for the family's slot", () => {
   const cands = [item("d", "fam"), item("f", "fam")];  // d due, f fresh
   const progress = prog([["d", dueRec("2026-09-05")]]);
+  // Both are served (soft cap backfills), but the due one leads.
   const out = selectForLesson(cands, 7, progress, NOW);
-  assert.deepEqual(ids(out), ["d"]);
-  // order in the candidate list must not matter: fresh listed first, due still wins
+  assert.equal(out[0].id, "d");
   const out2 = selectForLesson([item("f", "fam"), item("d", "fam")], 7, progress, NOW);
-  assert.deepEqual(ids(out2), ["d"]);
+  assert.equal(out2[0].id, "d");
 });
 
 test("rotation serves the least-recently-reviewed due member, and alternates", () => {
@@ -43,19 +61,19 @@ test("rotation serves the least-recently-reviewed due member, and alternates", (
   // x1 reviewed more recently than x2 -> x2 (older) should be served
   let progress = prog([["x1", dueRec("2026-09-10")], ["x2", dueRec("2026-09-02")]]);
   let out = selectForLesson(cands, 7, progress, NOW);
-  assert.deepEqual(ids(out), ["x2"]);
+  assert.equal(out[0].id, "x2");
 
   // simulate: x2 was just reviewed (now the most recent); x1 still due and older
   progress = prog([["x1", dueRec("2026-09-02")], ["x2", dueRec("2026-09-11")]]);
   out = selectForLesson(cands, 7, progress, NOW);
-  assert.deepEqual(ids(out), ["x1"]);   // the served member alternated
+  assert.equal(out[0].id, "x1");   // the leading member alternated
 });
 
 test("a missing last_review counts as oldest and is served first", () => {
   const cands = [item("m1", "fam"), item("m2", "fam")];
   const progress = prog([["m1", dueRec("2026-09-05")], ["m2", dueRec(undefined)]]);
   const out = selectForLesson(cands, 7, progress, NOW);
-  assert.deepEqual(ids(out), ["m2"]);
+  assert.equal(out[0].id, "m2");
 });
 
 test("a skipped duplicate does not shrink the lesson", () => {
