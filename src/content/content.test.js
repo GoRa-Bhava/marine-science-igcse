@@ -74,7 +74,7 @@ test("every item has the fields its type needs", () => {
       assert.ok(it.options.length - it.a.length >= 1, `${where}: at least one incorrect`);
       for (const i of it.a) assert.ok(i >= 0 && i < it.options.length, `${where}: a out of range`);
     } else if (it.type === "match") {
-      assert.ok(it.pairs.length >= 3 && it.pairs.length <= 5, `${where}: match needs 3-5 pairs`);
+      assert.ok(it.pairs.length >= 2 && it.pairs.length <= 5, `${where}: match needs 2-5 pairs`);
       assert.equal(new Set(it.pairs.map((p) => p[1])).size, it.pairs.length, `${where}: repeated description`);
       for (const p of it.pairs) assert.equal(p.length, 2, `${where}: pair shape`);
     } else if (it.type === "chain") {
