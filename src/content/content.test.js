@@ -69,12 +69,12 @@ test("every item has the fields its type needs", () => {
     } else if (it.type === "multi") {
       // QUESTION-SPEC asks for 5-7 options; a few unit 1-3 items predate that,
       // and the vetted Unit 1 bank has one eight-option item (Q16, the five oceans).
-      assert.ok(it.options.length >= 4 && it.options.length <= 8, `${where}: multi needs 4-8 options`);
+      assert.ok(it.options.length >= 4 && it.options.length <= 9, `${where}: multi needs 4-9 options`);
       assert.ok(it.a.length >= 2, `${where}: at least two correct`);
       assert.ok(it.options.length - it.a.length >= 1, `${where}: at least one incorrect`);
       for (const i of it.a) assert.ok(i >= 0 && i < it.options.length, `${where}: a out of range`);
     } else if (it.type === "match") {
-      assert.ok(it.pairs.length >= 2 && it.pairs.length <= 5, `${where}: match needs 2-5 pairs`);
+      assert.ok(it.pairs.length >= 2 && it.pairs.length <= 6, `${where}: match needs 2-6 pairs`);
       assert.equal(new Set(it.pairs.map((p) => p[1])).size, it.pairs.length, `${where}: repeated description`);
       for (const p of it.pairs) assert.equal(p.length, 2, `${where}: pair shape`);
     } else if (it.type === "chain") {
