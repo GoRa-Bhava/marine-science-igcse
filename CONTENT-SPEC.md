@@ -146,6 +146,30 @@ leaves a term opposite its own description.
 Four or five `chunks` in the correct order. The learner must reproduce that
 exact order.
 
+### `exam` — Build an exam answer
+
+```js
+{ id: "U1-90", topic: "inside", type: "exam", tier: 3,
+  q: "Describe the structure of the Earth, working from the centre outwards…",
+  check: ["point", "point", "point", "point"],          // 4–6 mark-scheme points
+  distractors: ["wrong point", "wrong point"],          // 2–3 plausible-but-wrong points
+  build: ["phrase 1", "phrase 2", "phrase 3", "phrase 4"], // 4–6 model-answer phrases, in order
+  why: "..." }
+```
+
+Two steps in one card. Step 1 shows `check` and `distractors` shuffled as a
+checklist; it is right only if exactly the `check` points are ticked. Step 2
+then shows `build` shuffled to tap into order. The item counts as correct only
+when both steps are. It sits at the top of the lesson ladder, after `chain`.
+
+### Optional metadata on any item
+
+| Field | Meaning |
+| --- | --- |
+| `tier` | 1 recall, 2 application, 3 exam-style. Stored, not yet used |
+| `ref` | syllabus reference the item is anchored to, e.g. `1.2/LO5` |
+| `family` | concept-family tag for later selection logic (two items of one family should not share a test). Stored, not yet used |
+
 ## `creatures[]`
 
 ```js

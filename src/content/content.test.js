@@ -67,8 +67,9 @@ test("every item has the fields its type needs", () => {
       for (const a of it.answers) assert.ok(it.bank.includes(a), `${where}: answer "${a}" missing from bank`);
       assert.equal(new Set(it.answers).size, it.answers.length, `${where}: repeated answer`);
     } else if (it.type === "multi") {
-      // QUESTION-SPEC asks for 5-7 options; a few unit 1-3 items predate that.
-      assert.ok(it.options.length >= 4 && it.options.length <= 7, `${where}: multi needs 4-7 options`);
+      // QUESTION-SPEC asks for 5-7 options; a few unit 1-3 items predate that,
+      // and the vetted Unit 1 bank has one eight-option item (Q16, the five oceans).
+      assert.ok(it.options.length >= 4 && it.options.length <= 8, `${where}: multi needs 4-8 options`);
       assert.ok(it.a.length >= 2, `${where}: at least two correct`);
       assert.ok(it.options.length - it.a.length >= 1, `${where}: at least one incorrect`);
       for (const i of it.a) assert.ok(i >= 0 && i < it.options.length, `${where}: a out of range`);
@@ -79,6 +80,13 @@ test("every item has the fields its type needs", () => {
     } else if (it.type === "chain") {
       assert.ok(it.chunks.length >= 3 && it.chunks.length <= 6, `${where}: chain needs 3-6 steps`);
       assert.equal(new Set(it.chunks).size, it.chunks.length, `${where}: repeated step`);
+    } else if (it.type === "exam") {
+      assert.ok(it.check.length >= 4 && it.check.length <= 6, `${where}: exam needs 4-6 check points`);
+      assert.ok(it.distractors.length >= 2 && it.distractors.length <= 3, `${where}: exam needs 2-3 distractors`);
+      assert.ok(it.build.length >= 4 && it.build.length <= 6, `${where}: exam needs 4-6 build phrases`);
+      const points = [...it.check, ...it.distractors];
+      assert.equal(new Set(points).size, points.length, `${where}: a point appears twice`);
+      assert.equal(new Set(it.build).size, it.build.length, `${where}: a build phrase appears twice`);
     } else {
       assert.fail(`${where}: unknown type ${it.type}`);
     }

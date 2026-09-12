@@ -40,13 +40,15 @@ const FONT_DISPLAY = "'Fraunces Variable', Georgia, serif";
 import { content } from "./content/index.js";
 const { topics: TOPICS, units: UNITS, items: ITEMS, creatures: CREATURES } = content;
 
-const RANK = { choice: 1, gap: 2, match: 3, multi: 3, chain: 4 };
+/* The shape ladder a lesson climbs. Exam is the summit, so it lands last. */
+const RANK = { choice: 1, gap: 2, match: 3, multi: 3, chain: 4, exam: 5 };
 const SHAPE_NAME = {
   choice: "Recognise",
   gap: "Retrieve",
   match: "Connect",
   multi: "Connect",
   chain: "Explain",
+  exam: "Build an exam answer",
 };
 
 /* ------------------------------------------------------ creature art */
@@ -241,6 +243,7 @@ function Prompt({ children }) {
     <h2 style={{
       fontFamily: FONT_DISPLAY, fontSize: 21, lineHeight: 1.32, color: C.foam,
       fontWeight: 600, margin: "0 0 20px", letterSpacing: "-0.01em",
+      whiteSpace: "pre-line",   // a stem may carry a formula on its own line
     }}>{children}</h2>
   );
 }
@@ -557,6 +560,146 @@ function ChainQ({ item, locked, order, setOrder }) {
   );
 }
 
+/* "Build an exam answer": two steps in one card. Step 1 is a marking-point
+   checklist graded like a multi (the ticked set must equal the correct set);
+   Step 2 reveals the model-answer phrases to tap into order, graded like a
+   chain. The card is right only if both steps are. Step 1 has its own
+   "Check points" button; the lesson's Check button grades step 2. */
+function ExamQ({ item, locked, state, setState }) {
+  const points = useMemo(() => [...item.check, ...item.distractors], [item.id]);
+  const checkOrder = useMemo(() => reorder(points.map((_, i) => i)), [item.id]);
+  const pool = useMemo(
+    () => reorder(item.build.map((c, i) => ({ c, i })), (x) => x.i),
+    [item.id]
+  );
+  const nCheck = item.check.length;
+  const { phase, checkSel, order } = state;
+  const step1Done = phase === 2 || locked;
+  const checkOk = sameSet(checkSel, item.check.map((_, i) => i));
+
+  const toggle = (i) => {
+    if (step1Done) return;
+    setState({ ...state, checkSel: checkSel.includes(i) ? checkSel.filter((x) => x !== i) : [...checkSel, i] });
+  };
+  const checkPoints = () => setState({ ...state, phase: 2 });
+  const add = (k) => !locked && !order.includes(k) && setState({ ...state, order: [...order, k] });
+  const remove = (k) => !locked && setState({ ...state, order: order.filter((x) => x !== k) });
+
+  const stepLabel = {
+    fontFamily: FONT_UI, fontSize: 12, letterSpacing: ".05em", textTransform: "uppercase",
+    color: C.glow, margin: "0 0 10px",
+  };
+  const note = { fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: "0 0 14px", lineHeight: 1.45 };
+
+  return (
+    <>
+      <Prompt>{item.q}</Prompt>
+
+      <p style={stepLabel}>Step 1 · Tick the points you would include</p>
+      {checkOrder.map((i) => {
+        const on = checkSel.includes(i);
+        const right = i < nCheck;
+        let bg = C.shelf, bd = C.line, col = C.foam, dash = "solid";
+        if (step1Done) {
+          if (right && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
+          else if (right) { bd = C.ok; col = C.ok; dash = "dashed"; }       // a point you missed
+          else if (on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }
+          else col = C.mist;
+        } else if (on) { bg = C.raise; bd = C.glow; }
+        return (
+          <button key={i} onClick={() => toggle(i)} disabled={step1Done}
+            style={{
+              ...btnBase, background: bg, borderColor: bd, borderStyle: dash, color: col,
+              display: "flex", gap: 12, alignItems: "center", cursor: step1Done ? "default" : "pointer",
+            }}>
+            <span style={{
+              width: 20, height: 20, flexShrink: 0, borderRadius: 6,
+              border: `2px solid ${on || (step1Done && right) ? bd : C.line}`,
+              background: on ? bd : "transparent",
+            }} />
+            <span>{points[i]}</span>
+          </button>
+        );
+      })}
+
+      {!step1Done && (
+        <button onClick={checkPoints} disabled={checkSel.length === 0} style={{
+          ...btnBase, textAlign: "center", fontWeight: 600, marginTop: 4,
+          background: checkSel.length ? C.glow : C.shelf, color: checkSel.length ? C.abyss : C.line,
+          border: "none", cursor: checkSel.length ? "pointer" : "default",
+        }}>
+          Check points
+        </button>
+      )}
+
+      {step1Done && (
+        <>
+          <p style={{ ...note, color: checkOk ? C.ok : C.no, marginTop: 4 }}>
+            {checkOk
+              ? "All the right points."
+              : "Not quite. Teal points belong in the answer, dashed ones you missed, coral ones do not belong."}
+          </p>
+
+          <p style={stepLabel}>Step 2 · Tap the phrases in order to build the answer</p>
+          <div style={{
+            minHeight: 70, borderRadius: 14, border: `1px dashed ${C.line}`,
+            padding: order.length ? 10 : 20, marginBottom: 16,
+            background: "rgba(255,255,255,.02)",
+          }}>
+            {order.length === 0 && (
+              <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: 0, textAlign: "center" }}>
+                Tap the phrases below in the order they should appear
+              </p>
+            )}
+            {order.map((k, pos) => {
+              const right = locked && k === pos;
+              const bad = locked && k !== pos;
+              return (
+                <div key={k} onClick={() => remove(k)} style={{
+                  fontFamily: FONT_UI, fontSize: 15, lineHeight: 1.4, padding: "10px 12px",
+                  borderRadius: 10, marginBottom: 6, cursor: locked ? "default" : "pointer",
+                  background: bad ? "rgba(255,158,125,.12)" : right ? "rgba(79,216,196,.14)" : C.raise,
+                  border: `1px solid ${bad ? C.no : right ? C.ok : C.glow}`,
+                  color: bad ? C.no : right ? C.ok : C.foam,
+                  display: "flex", gap: 10,
+                }}>
+                  <span style={{ color: C.mist, flexShrink: 0 }}>{pos + 1}</span>
+                  <span>{item.build[k]}</span>
+                </div>
+              );
+            })}
+          </div>
+          {locked && (
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>Model answer</p>
+              {item.build.map((c, i) => (
+                <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px" }}>
+                  <span style={{ color: C.glow }}>{i + 1}.</span> {c}
+                </p>
+              ))}
+            </div>
+          )}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {pool.map(({ c, i }) => {
+              if (order.includes(i)) return null;
+              return (
+                <button key={i} onClick={() => add(i)} disabled={locked}
+                  style={{
+                    fontFamily: FONT_UI, fontSize: 15, lineHeight: 1.35, padding: "10px 13px",
+                    borderRadius: 11, border: `1px solid ${C.line}`, background: C.shelf,
+                    color: C.foam, textAlign: "left", cursor: locked ? "default" : "pointer",
+                  }}>
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
 /* ================================================ 3. VISUAL + REWARD */
 
 function Confetti({ on }) {
@@ -747,6 +890,7 @@ export default function App() {
     if (it.type === "gap") return it.answers.map(() => null);
     if (it.type === "match") return { links: {}, order: [], sel: null };
     if (it.type === "chain") return [];
+    if (it.type === "exam") return { phase: 1, checkSel: [], order: [] };
     return null;
   }
 
@@ -757,6 +901,7 @@ export default function App() {
     if (item.type === "gap") return answer.every((a) => a !== null);
     if (item.type === "match") return Object.keys(answer.links).length === item.pairs.length;
     if (item.type === "chain") return answer.length === item.chunks.length;
+    if (item.type === "exam") return answer.phase === 2 && answer.order.length === item.build.length;
     return false;
   };
 
@@ -766,6 +911,11 @@ export default function App() {
     if (item.type === "gap") return answer.every((a, i) => a === item.answers[i]);
     if (item.type === "match") return item.pairs.every((_, i) => answer.links[i] === i);
     if (item.type === "chain") return answer.every((k, i) => k === i);
+    if (item.type === "exam") {
+      /* right only if both steps are: the ticked set equals the mark-scheme
+         points and the phrases are in the given order */
+      return sameSet(answer.checkSel, item.check.map((_, i) => i)) && answer.order.every((k, i) => k === i);
+    }
     return false;
   };
 
@@ -1107,6 +1257,7 @@ export default function App() {
         {item.type === "gap" && <GapQ item={item} locked={locked} filled={answer} setFilled={setAnswer} />}
         {item.type === "match" && <MatchQ item={item} locked={locked} state={answer} setState={setAnswer} />}
         {item.type === "chain" && <ChainQ item={item} locked={locked} order={answer} setOrder={setAnswer} />}
+        {item.type === "exam" && <ExamQ item={item} locked={locked} state={answer} setState={setAnswer} />}
       </div>
 
       <div style={{
