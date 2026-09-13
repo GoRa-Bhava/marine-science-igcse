@@ -5,6 +5,7 @@ import {
 import { selectForLesson } from "./engine/select.js";
 import { buildRunQueue, runIsResumable, recordMiss } from "./engine/run.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
+import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 
 /* ========================================================================
    RETRIEVAL PRACTICE ENGINE — subject content lives in src/content/
@@ -1532,6 +1533,12 @@ export default function App() {
           }}>
             {content.collection.title} · {progress.creatures.length}/{CREATURES.length}
           </button>
+          <button onClick={() => setView("concepts")} style={{
+            width: "100%", marginTop: 10, padding: "16px", borderRadius: 14, border: `1px solid ${C.line}`,
+            background: C.shelf, color: C.foam, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
+          }}>
+            Concept cards · {COMPARISON_CARDS.length} comparisons
+          </button>
           <div style={{
             marginTop: 18, padding: "12px 14px 6px", borderRadius: 14,
             border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)",
@@ -1574,6 +1581,34 @@ export default function App() {
         onRestore={restoreProgress}
         onReset={resetProgress}
       />
+    );
+  }
+
+  /* -------------------------------------------------- concept cards */
+  /* A browsable gallery of two-sided comparison cards — a learn/review aid.
+     Deliberately outside the question queue, scheduler, mastery and rewards. */
+  if (view === "concepts") {
+    return (
+      <div style={shell} ref={scrollRef}>
+        <style>{keyframes}</style>
+        <div style={{ padding: "30px 22px 8px" }}>
+          <button onClick={() => setView("map")} style={{
+            background: "none", border: "none", color: C.glow, fontFamily: FONT_UI,
+            fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
+          }}>← Back</button>
+          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 6px" }}>
+            Concept cards
+          </h1>
+          <p style={{ fontSize: 14.5, color: C.mist, margin: 0, lineHeight: 1.5 }}>
+            Two-sided comparisons to learn and self-check. These don't count toward mastery.
+          </p>
+        </div>
+        <div style={{ padding: "16px 14px 44px", display: "flex", flexDirection: "column", gap: 18 }}>
+          {COMPARISON_CARDS.map((card) => (
+            <ComparisonCard key={card.id} card={card} />
+          ))}
+        </div>
+      </div>
     );
   }
 
