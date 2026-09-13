@@ -71,11 +71,6 @@ const TOPICS = [
 
   /* Added from the syllabus review: sub-topics the flashcards under-covered. */
 
-  /* Practical and investigative skills (AO3), cross-unit. */
-  { id: "prac-apparatus", unit: 7, name: "Apparatus & measurement", depth: "The right tool for the job" },
-  { id: "prac-variables",  unit: 7, name: "Variables & planning",    depth: "Making it a fair test" },
-  { id: "prac-recording",  unit: 7, name: "Recording & analysing",   depth: "Results, errors, graphs" },
-  { id: "prac-keys",       unit: 7, name: "Keys & microscopy",       depth: "Identifying organisms" },
 ];
 
 const UNITS = [
@@ -86,7 +81,6 @@ const UNITS = [
   { n: 5, name: "Marine ecology" },
   { n: 6, name: "Humans and marine environments" },
   /* Not a syllabus unit: `title` replaces the "Unit n · name" heading. */
-  { n: 7, name: "Practical skills", title: "Practical skills" },
 ];
 
 const ITEMS = [
@@ -2745,95 +2739,6 @@ const ITEMS = [
     options: ["On Atlantic reefs the lionfish has no natural predators and eats large numbers of native reef fish, so removing it reduces predation and allows the native species to recover.", "Lionfish are venomous, so removing them makes the reef safe for divers and snorkellers, whose entrance fees then pay for conservation of the native species.", "Lionfish graze on the living coral, so removing them lets the coral grow back and provide the habitat that native reef fish need in order to return.", "Lionfish are endangered in their native range, so culling means catching them alive on Atlantic reefs and returning them to the Indian and Pacific Oceans."],
     a: 0,
     why: "Invasive species: no natural predators, eats native species → loss of richness. B: a human-safety/funding argument, not an ecological one. C: makes the lionfish a grazer — it is a predator of fish. D: confuses culling with translocation, and lionfish are not endangered." },
-
-  /* ===================================== PRACTICAL SKILLS (AO3), cross-unit ==== */
-  /* ---------------------------------------------------- Apparatus & measurement */
-  { id: "prac-ap1", topic: "prac-apparatus", type: "choice",
-    q: "Which piece of apparatus is used to sample the abundance of organisms in a set area of shore?",
-    options: ["A quadrat", "A Secchi disc", "A measuring cylinder", "A thermometer"],
-    a: 0,
-    why: "A quadrat frames a known area so you can count or estimate the organisms within it." },
-  { id: "prac-ap2", topic: "prac-apparatus", type: "choice",
-    q: "What is a Secchi disc used to measure?",
-    options: ["The depth to which light penetrates the water", "The pH of seawater", "The mass of a food sample", "The number of species on a shore"],
-    a: 0,
-    why: "A Secchi disc is lowered until it just disappears from view, measuring water clarity / light penetration." },
-  { id: "prac-ap3", topic: "prac-apparatus", type: "choice",
-    q: "What is a line transect used to investigate on a shore?",
-    options: ["How organisms are distributed across the shore, from sea to land", "The energy content of a food", "The pH of rock pools", "The salinity of the open ocean"],
-    a: 0,
-    why: "A transect samples how species distribution changes across the shore, e.g. with tidal height." },
-  { id: "prac-ap4", topic: "prac-apparatus", type: "match",
-    q: "Match each instrument to what it measures.",
-    pairs: [["Quadrat", "Abundance of organisms in a set area"], ["Secchi disc", "Light penetration / water clarity"], ["Measuring cylinder", "Volume of a liquid"], ["Thermometer", "Temperature"]],
-    why: "Each instrument measures one specific quantity." },
-
-  /* ---------------------------------------------------- Variables & planning */
-  { id: "prac-va1", topic: "prac-variables", type: "choice",
-    q: "In an experiment, what is the 'independent variable'?",
-    options: ["The variable you deliberately change", "The variable you measure as the result", "A variable kept the same", "A mistake in the method"],
-    a: 0,
-    why: "The independent variable is the one you change; the dependent variable is what you measure." },
-  { id: "prac-va2", topic: "prac-variables", type: "choice",
-    q: "What is the 'dependent variable'?",
-    options: ["The variable you measure as the result", "The variable you deliberately change", "A variable kept constant", "The apparatus used"],
-    a: 0,
-    why: "The dependent variable is the outcome you measure in response to changing the independent variable." },
-  { id: "prac-va3", topic: "prac-variables", type: "gap",
-    q: "Complete the sentence.",
-    segments: ["The variable you change is the ", " variable, the one you measure is the ", " variable, and any variable kept the same is a control variable."],
-    answers: ["independent", "dependent"],
-    bank: ["independent", "dependent", "control", "random", "anomalous"],
-    why: "Independent = changed; dependent = measured; control = kept constant." },
-  { id: "prac-va4", topic: "prac-variables", type: "choice",
-    q: "Why must all control variables be kept the same during an investigation?",
-    options: ["So that any change in the result is caused only by the independent variable", "So the experiment finishes faster", "So no measurements are needed", "So the results are always positive"],
-    a: 0,
-    why: "Keeping controls constant makes it a fair test — only the independent variable can affect the result." },
-
-  /* ---------------------------------------------------- Recording & analysing */
-  { id: "prac-re1", topic: "prac-recording", type: "choice",
-    q: "What is an 'anomalous' result?",
-    options: ["A result that does not fit the pattern of the others", "The average of all the results", "The variable being measured", "A result that is always correct"],
-    a: 0,
-    why: "An anomaly is an odd result that doesn't fit the trend; it is usually repeated or left out of the mean." },
-  { id: "prac-re2", topic: "prac-recording", type: "choice",
-    q: "How can you make the results of an investigation more reliable?",
-    options: ["Repeat the measurements and calculate a mean", "Do it once, as quickly as possible", "Change several variables at once", "Remove the control variables"],
-    a: 0,
-    why: "Repeating and averaging reduces the effect of random error, improving reliability." },
-  { id: "prac-re3", topic: "prac-recording", type: "choice",
-    q: "You have measured how a species' abundance changes with distance along a transect. What is the best way to present this?",
-    options: ["A line graph", "A pie chart of a single value", "A single number", "A labelled diagram"],
-    a: 0,
-    why: "A line graph shows how one continuous variable changes with another — ideal for distance versus abundance." },
-  { id: "prac-re4", topic: "prac-recording", type: "choice",
-    q: "A student reads a thermometer from a different angle each time. What kind of problem is this, and how is it fixed?",
-    options: ["A systematic error, fixed by always reading at eye level", "A random error that cannot be reduced", "An anomaly that should be ignored", "A control variable"],
-    a: 0,
-    why: "Reading at an angle (parallax) is a systematic error; a consistent correct technique removes it.",
-    bridge: true },
-
-  /* ---------------------------------------------------- Keys & microscopy */
-  { id: "prac-ky1", topic: "prac-keys", type: "choice",
-    q: "What is a dichotomous key used for?",
-    options: ["Identifying an organism by answering a series of paired questions", "Measuring the energy in food", "Counting plankton under a microscope", "Recording the tide height"],
-    a: 0,
-    why: "A dichotomous key leads to an organism's identity through a series of either/or choices." },
-  { id: "prac-ky2", topic: "prac-keys", type: "chain",
-    q: "Order the steps of identifying a shore organism with a dichotomous key.",
-    chunks: ["Observe the organism's features", "Answer the first pair of either/or questions", "Follow the route to the next pair and answer it", "Arrive at the organism's name"],
-    why: "Each either/or choice narrows the options until only one organism remains." },
-  { id: "prac-ky3", topic: "prac-keys", type: "choice",
-    q: "Why is a microscope needed to study phytoplankton?",
-    options: ["Phytoplankton are microscopic and too small to see with the naked eye", "Phytoplankton live only in the deep sea", "Microscopes measure salinity", "Phytoplankton are larger than fish"],
-    a: 0,
-    why: "Phytoplankton are microscopic producers, so a microscope is needed to see and identify them." },
-  { id: "prac-ky4", topic: "prac-keys", type: "choice",
-    q: "A microscope's eyepiece lens is ×10 and its objective lens is ×40. What is the total magnification?",
-    options: ["×400", "×50", "×30", "×4000"],
-    a: 0,
-    why: "Total magnification = eyepiece × objective = 10 × 40 = ×400. (A quick data-handling / AO2 calculation.)" },
 ];
 
 const CREATURES = [
@@ -3027,7 +2932,7 @@ function drawnArt(id, C) {
 export default {
   id: "marine-science",
   title: "Marine Science IGCSE",
-  subtitle: "Units 1 to 6, plus practical skills",
+  subtitle: "Units 1 to 6",
   headline: "Earth, water and life",
   /* Names the saved progress in localStorage. Never change it once shipped. */
   storeKey: "marine_u1_v1",
