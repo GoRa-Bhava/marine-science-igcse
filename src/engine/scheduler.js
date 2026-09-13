@@ -19,8 +19,8 @@ export const REQUEST_RETENTION = 0.9;
 
 /* Bumped when the saved progress shape changes. 1 (implicit, no field) was
    the fixed boxes; 2 is FSRS; 3 added the gold-day count on each record;
-   4 adds everCorrect, set once the item has been answered correctly at all. */
-export const PROGRESS_VERSION = 4;
+   4 adds everCorrect; 5 adds `runs`, the per-unit resumable study runs. */
+export const PROGRESS_VERSION = 5;
 
 /* Gold days needed for a topic's items to count as mastered. */
 export const GOLD_DAYS = 3;
@@ -155,7 +155,8 @@ export function migrateRecord(old, now = new Date()) {
 /* Version 3 added goldDays. Records saved before it (v1 boxes or v2 FSRS)
    have no count, so it is seeded from the FSRS review count: a topic the
    learner has already reviewed a few times keeps that credit. Version 4
-   adds everCorrect, seeded from goldDays so nothing already met is lost. */
+   adds everCorrect, seeded from goldDays so nothing already met is lost.
+   Version 5 adds `runs` (per-unit study runs), which simply default empty. */
 export function migrateProgress(progress, now = new Date()) {
   if ((progress.version || 1) >= PROGRESS_VERSION) return { progress, migrated: false };
   const items = {};
@@ -173,5 +174,6 @@ export function migrateProgress(progress, now = new Date()) {
     if (m !== rec) changed = true;
     items[id] = m;
   }
-  return { progress: { ...progress, items, version: PROGRESS_VERSION }, migrated: changed };
+  const runs = progress.runs || {};
+  return { progress: { ...progress, items, runs, version: PROGRESS_VERSION }, migrated: true };
 }

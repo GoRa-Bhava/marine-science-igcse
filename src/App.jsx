@@ -3,6 +3,7 @@ import {
   answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION, GOLD_DAYS,
 } from "./engine/scheduler.js";
 import { selectForLesson } from "./engine/select.js";
+import { buildRunQueue, runIsResumable, recordMiss } from "./engine/run.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 
 /* ========================================================================
@@ -120,7 +121,7 @@ function DrawnCreature({ id, size = 132 }) {
 const STORE_KEY = content.storeKey; // names the saved progress; never changes once shipped
 
 function blankProgress() {
-  return { items: {}, creatures: [], mastered: [], version: PROGRESS_VERSION };
+  return { items: {}, creatures: [], mastered: [], runs: {}, version: PROGRESS_VERSION };
 }
 
 /* Two measures from one pass over a topic's items, using two different
@@ -197,6 +198,24 @@ function buildLesson(progress, topicId = null, size = 7) {
       }
     });
   return out;
+}
+
+/* ---------------------------------------------------------- unit runs */
+/* A run is the whole unit's servable items, ordered wrong/due -> unseen ->
+   known (see engine/run.js). Its queue and position live in progress.runs. */
+const unitTopicIds = (unitId) => new Set(TOPICS.filter((t) => t.unit === unitId).map((t) => t.id));
+function buildRun(progress, unitId) {
+  const topics = unitTopicIds(unitId);
+  return buildRunQueue(ITEMS.filter((i) => topics.has(i.topic)), progress, RANK);
+}
+/* What the map shows for a unit's run: new / resume (pos of len) / done. */
+function runInfo(progress, unitId) {
+  const topics = unitTopicIds(unitId);
+  const total = ITEMS.filter((i) => topics.has(i.topic)).length;
+  const run = progress.runs?.[unitId];
+  if (!run || !run.queue?.length) return { state: "new", pos: 0, len: total, total };
+  if (run.pos >= run.queue.length) return { state: "done", pos: run.queue.length, len: run.queue.length, total };
+  return { state: "resume", pos: run.pos, len: run.queue.length, total };
 }
 
 /* ------------------------------------------------------------- storage */
@@ -1199,6 +1218,7 @@ export default function App() {
   const [wasRight, setWasRight] = useState(false);
   const [requeued, setRequeued] = useState([]);
   const [sessionLog, setSessionLog] = useState([]);
+  const [activeRun, setActiveRun] = useState(null);   // unitId while a per-unit run is playing
   const [reveal, setReveal] = useState(null);
   const [newlyMastered, setNewlyMastered] = useState([]);
   const [celebrate, setCelebrate] = useState(false);
@@ -1222,7 +1242,28 @@ export default function App() {
   const start = (topicId) => {
     const q = buildLesson(progress, topicId, topicId ? 7 : 8);
     if (!q.length) return;
+    setActiveRun(null);
     setQueue(q); setQIdx(0); setLocked(false); setAnswer(initAnswer(q[0]));
+    setRequeued([]); setSessionLog([]); setNewlyMastered([]); setView("lesson");
+  };
+
+  /* Start or resume a per-unit run. A run already in progress resumes at its
+     saved position; a finished or absent run is rebuilt fresh. */
+  const startRun = (unitId, restart = false) => {
+    const existing = progress.runs?.[unitId];
+    let ids, pos, missed;
+    if (!restart && runIsResumable(existing)) {
+      ids = existing.queue; pos = existing.pos; missed = existing.missed || [];
+    } else {
+      ids = buildRun(progress, unitId); pos = 0; missed = [];
+    }
+    const items = ids.map((id) => ITEMS.find((i) => i.id === id)).filter(Boolean);
+    if (!items.length) return;
+    // if content shifted under a saved queue, rebuild cleanly
+    if (items.length !== ids.length) { ids = items.map((i) => i.id); pos = 0; missed = []; }
+    setProgress((p) => ({ ...p, runs: { ...p.runs, [unitId]: { queue: ids, pos, missed } } }));
+    setActiveRun(unitId);
+    setQueue(items); setQIdx(pos); setLocked(false); setAnswer(initAnswer(items[pos]));
     setRequeued([]); setSessionLog([]); setNewlyMastered([]); setView("lesson");
   };
 
@@ -1322,6 +1363,15 @@ export default function App() {
         setCelebrate(true);
         setTimeout(() => setCelebrate(false), 1100);
       }
+
+      /* In a unit run, collect the missed items for the end-of-run review. */
+      if (activeRun) {
+        const run = p.runs?.[activeRun];
+        if (run) {
+          const m = recordMiss(run.missed, item.id, right);
+          if (m !== run.missed) next.runs = { ...(next.runs || p.runs), [activeRun]: { ...run, missed: m } };
+        }
+      }
       return next;
     });
 
@@ -1329,7 +1379,7 @@ export default function App() {
        exam item, which is graded once and then only rescheduled for a later
        day. Re-serving a two-step exam in the same session is confusing and
        could trap the learner on it, so it advances like a graded item. */
-    if (!right && !requeued.includes(item.id) && item.type !== "exam") {
+    if (!right && !requeued.includes(item.id) && item.type !== "exam" && !activeRun) {
       setRequeued((r) => [...r, item.id]);
       setQueue((q) => [...q, item]);
     }
@@ -1341,14 +1391,26 @@ export default function App() {
     const blank = blankProgress();
     saveProgress(blank);          // persist the versioned clean slate
     setProgress(blank);
+    setActiveRun(null);
     setView("map");
   };
 
   const next = () => {
     const n = qIdx + 1;
+    if (activeRun) {
+      setProgress((p) => {
+        const run = p.runs?.[activeRun];
+        return run ? { ...p, runs: { ...p.runs, [activeRun]: { ...run, pos: n } } } : p;
+      });
+      if (n >= queue.length) { setView("review"); return; }
+      setQIdx(n); setLocked(false); setAnswer(initAnswer(queue[n]));
+      return;
+    }
     if (n >= queue.length) { setView("result"); return; }
     setQIdx(n); setLocked(false); setAnswer(initAnswer(queue[n]));
   };
+
+  const leaveLesson = () => setView(activeRun ? "review" : "map");
 
   /* ---------------------------------------------------------- shells */
   const shell = {
@@ -1393,38 +1455,40 @@ export default function App() {
           </p>
         </div>
 
-        {totalDue > 0 && (
-          <div style={{ padding: "14px 22px 4px" }}>
-            <button onClick={() => start(null)} style={{
-              width: "100%", textAlign: "left", padding: "18px 20px", borderRadius: 16,
-              border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)", color: C.foam,
-              cursor: "pointer", fontFamily: FONT_UI,
-            }}>
-              <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, fontWeight: 600, display: "block" }}>
-                Ready to come back
-              </span>
-              <span style={{ fontSize: 14, color: C.mist }}>
-                {totalDue} question{totalDue > 1 ? "s" : ""} due across your topics
-              </span>
-            </button>
-          </div>
-        )}
+        <div style={{ padding: "12px 22px 4px" }}>
+          <button onClick={() => start(null)} style={{
+            width: "100%", textAlign: "center", padding: "11px 16px", borderRadius: 12,
+            border: `1px solid ${C.line}`, background: "transparent", color: C.mist,
+            cursor: "pointer", fontFamily: FONT_UI, fontSize: 14,
+          }}>
+            Mixed review · {totalDue > 0 ? `${totalDue} due across topics` : "all topics"}
+          </button>
+        </div>
 
         <div style={{ padding: "18px 22px 8px" }}>
           {UNITS.map((u) => {
             const list = TOPICS.filter((t) => t.unit === u.n);
             const done = list.filter((t) => stats[t.id].state === "mastered").length;
+            const ri = runInfo(progress, u.n);
+            const runLine = ri.state === "resume" ? `Resume · ${ri.pos} of ${ri.len}`
+              : ri.state === "done" ? "Studied — study it again"
+              : `Study this unit · ${ri.total} questions`;
             return (
               <div key={u.n}>
-                <div style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "baseline",
-                  margin: "6px 0 16px", paddingBottom: 8, borderBottom: `1px solid ${C.shelf}`,
+                <button onClick={() => startRun(u.n)} style={{
+                  width: "100%", textAlign: "left", padding: "14px 16px", borderRadius: 14,
+                  border: `1px solid ${ri.state === "resume" ? C.glow : C.line}`,
+                  background: ri.state === "resume" ? "rgba(79,216,196,.1)" : C.shelf,
+                  color: C.foam, cursor: "pointer", fontFamily: FONT_UI, margin: "6px 0 14px",
                 }}>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 15, fontWeight: 600, color: C.glow }}>
-                    {u.title || `Unit ${u.n} · ${u.name}`}
-                  </span>
-                  <span style={{ fontSize: 12, color: C.line }}>{done}/{list.length}</span>
-                </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                    <span style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.glow }}>
+                      {u.title || `Unit ${u.n} · ${u.name}`}
+                    </span>
+                    <span style={{ fontSize: 12, color: C.line, flexShrink: 0 }}>{done}/{list.length} mastered</span>
+                  </div>
+                  <span style={{ fontSize: 13.5, color: ri.state === "resume" ? C.glow : C.mist }}>{runLine}</span>
+                </button>
                 {list.map((t, idx) => {
                   const s = stats[t.id];
                   return (
@@ -1561,6 +1625,79 @@ export default function App() {
     );
   }
 
+  /* ------------------------------------------ end-of-run review view */
+  if (view === "review") {
+    const run = progress.runs?.[activeRun];
+    const unit = UNITS.find((u) => u.n === activeRun);
+    const unitName = unit ? (unit.title || `Unit ${unit.n} · ${unit.name}`) : "this unit";
+    const missed = (run?.missed || []).map((id) => ITEMS.find((i) => i.id === id)).filter(Boolean);
+    const done = run ? run.pos >= run.queue.length : true;
+    const btn = {
+      width: "100%", padding: "15px", borderRadius: 14, fontFamily: FONT_UI, fontSize: 15,
+      cursor: "pointer", marginBottom: 10,
+    };
+    return (
+      <div style={shell} ref={scrollRef}>
+        <style>{keyframes}</style>
+        <div style={{ padding: "30px 22px 40px" }}>
+          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 6px" }}>
+            {done ? "Run complete" : "Paused"}
+          </h1>
+          <p style={{ fontSize: 15, color: C.mist, margin: "0 0 20px", lineHeight: 1.5 }}>
+            {done
+              ? `You worked through ${unitName}.`
+              : `${unitName} · ${run.pos} of ${run.queue.length} done. Pick up where you left off any time.`}
+          </p>
+
+          {missed.length === 0 ? (
+            <p style={{ fontSize: 15, color: C.glow, lineHeight: 1.6, marginBottom: 24 }}>
+              Nothing missed this run. Clean sweep.
+            </p>
+          ) : (
+            <>
+              <p style={{ fontSize: 14, color: C.foam, fontWeight: 600, margin: "0 0 12px" }}>
+                Worth another look — the {missed.length} you missed:
+              </p>
+              {missed.map((it) => (
+                <div key={it.id} style={{
+                  borderRadius: 14, border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)",
+                  padding: 14, marginBottom: 12,
+                }}>
+                  {it.fig && FIGURES[it.fig] && (
+                    <div style={{ marginBottom: 10, borderRadius: 10, overflow: "hidden" }}>
+                      <FigureArt figId={it.fig} />
+                    </div>
+                  )}
+                  <p style={{ fontFamily: FONT_DISPLAY, fontSize: 16, fontWeight: 600, color: C.foam, margin: "0 0 6px", lineHeight: 1.35 }}>
+                    {it.q}
+                  </p>
+                  {it.why && (
+                    <p style={{ fontSize: 13.5, color: C.mist, margin: 0, lineHeight: 1.5 }}>{it.why}</p>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+
+          <div style={{ marginTop: 20 }}>
+            {done ? (
+              <button onClick={() => startRun(activeRun, true)} style={{ ...btn, border: "none", background: C.glow, color: C.abyss, fontWeight: 600 }}>
+                Study {unitName} again
+              </button>
+            ) : (
+              <button onClick={() => startRun(activeRun)} style={{ ...btn, border: "none", background: C.glow, color: C.abyss, fontWeight: 600 }}>
+                Resume this unit
+              </button>
+            )}
+            <button onClick={() => { setActiveRun(null); setView("map"); }} style={{ ...btn, border: `1px solid ${C.line}`, background: "transparent", color: C.foam }}>
+              Back to the map
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   /* ------------------------------------------------------ result view */
   if (view === "result") {
     const right = sessionLog.filter((s) => s.right).length;
@@ -1613,7 +1750,7 @@ export default function App() {
 
       <div style={{ padding: "22px 22px 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
-          <button onClick={() => setView("map")} style={{
+          <button onClick={leaveLesson} style={{
             background: "none", border: "none", color: C.mist, fontSize: 22,
             padding: 0, cursor: "pointer", lineHeight: 1,
           }} aria-label="Leave lesson">×</button>
