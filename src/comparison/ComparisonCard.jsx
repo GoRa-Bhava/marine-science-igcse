@@ -1,8 +1,19 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ConceptVisual } from "./ConceptVisual";
 import { hasHeroArt, heroFit } from "./card-art";
 import { sideIndexFromScroll } from "./pills";
 import "./comparison-card.css";
+
+// Nearest scrolling ancestor of `node`, or null when the page (window) scrolls.
+function getScrollParent(node) {
+  let el = node && node.parentElement;
+  while (el) {
+    const oy = getComputedStyle(el).overflowY;
+    if ((oy === "auto" || oy === "scroll") && el.scrollHeight > el.clientHeight) return el;
+    el = el.parentElement;
+  }
+  return null;
+}
 
 // Each side leads with a painted hero illustration (card-art/<cardId>__<side>.webp)
 // when one is bundled. If none exists for this side, or the image fails to load,
@@ -159,13 +170,22 @@ export function ComparisonCard({
   const [revealedRows, setRevealedRows] = useState(new Set());
   const [answer, setAnswer] = useState(null);
   const [activeSide, setActiveSide] = useState(0);
+  const sectionRef = useRef(null);
+  const modeBarRef = useRef(null);
   const swipeRef = useRef(null);
+  const testRef = useRef(null);
+  // Each mode press requests a scroll; the nonce lets a re-press of the same
+  // mode re-trigger it, and the effect runs after the (possibly new) DOM commits.
+  const scrollReq = useRef(null);
+  const [scrollNonce, setScrollNonce] = useState(0);
 
   const setCardMode = (next) => {
     setAnswer(null);
     if (next === "learn") setRevealedRows(new Set());
     if (onModeChange) onModeChange(next);
     else setModeState(next);
+    scrollReq.current = next;
+    setScrollNonce((n) => n + 1);
   };
 
   const revealRow = (index) => {
@@ -181,6 +201,42 @@ export function ComparisonCard({
     setActiveSide(sideIndexFromScroll(el.scrollLeft, el.scrollWidth, el.clientWidth, 2));
   };
 
+  // On a mode press, scroll so the sticky mode bar pins to the top and the
+  // relevant content sits just under it: Learn -> bar at top; Recall -> the
+  // visible side's title just below the bar (hero scrolled away, rows in view);
+  // Quick test -> the test section revealed below the bar.
+  useEffect(() => {
+    const target = scrollReq.current;
+    if (!target) return;
+    scrollReq.current = null;
+    const raf = requestAnimationFrame(() => {
+      const bar = modeBarRef.current;
+      if (!bar) return;
+      const barH = bar.offsetHeight;
+      // Each mode pins the bar to the top and positions its content just under it:
+      // Learn -> the hero (top of the side); Recall -> the side title (hero
+      // scrolled away, rows in view); Quick test -> the test section.
+      let el;
+      const offset = barH;
+      if (target === "recall") {
+        el = swipeRef.current?.querySelector(".cc-sideTitleBlock");
+      } else if (target === "test") {
+        el = testRef.current;
+      } else {
+        el = swipeRef.current; // learn: the hero at the top of the pair
+      }
+      if (!el) el = bar;
+      const scroller = getScrollParent(sectionRef.current);
+      const viewportTop = scroller ? scroller.getBoundingClientRect().top : 0;
+      const delta = el.getBoundingClientRect().top - viewportTop - offset;
+      if (Math.abs(delta) < 2) return;
+      const opts = { top: delta, behavior: "smooth" };
+      if (scroller) scroller.scrollBy(opts);
+      else window.scrollBy(opts);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [scrollNonce]);
+
   const classes = ["cc-root", className].filter(Boolean).join(" ");
   const sides = ["a", "b"];
 
@@ -193,7 +249,7 @@ export function ComparisonCard({
   }, [answer, card.quickTest]);
 
   return (
-    <section className={classes} data-card-id={card.id}>
+    <section className={classes} data-card-id={card.id} ref={sectionRef}>
       {/* Shared controls — belong to the comparison, fixed across the swipe. */}
       <div className="cc-meta">
         <span>Unit {card.unit}</span>
@@ -201,10 +257,12 @@ export function ComparisonCard({
       </div>
 
       <div className="cc-header">
-        <div>
-          <h2>{card.title}</h2>
-          <p>{card.subtitle}</p>
-        </div>
+        <h2>{card.title}</h2>
+        <p>{card.subtitle}</p>
+      </div>
+
+      {/* Mode toggle: sticks to the top of the viewport once scrolled past. */}
+      <div className="cc-modebar" ref={modeBarRef}>
         <div className="cc-modes" role="tablist" aria-label="Comparison card mode">
           {(["learn", "recall", "test"]).map((item) => {
             if (item === "test" && !card.quickTest) return null;
@@ -259,7 +317,7 @@ export function ComparisonCard({
       </aside>
 
       {mode === "test" && card.quickTest ? (
-        <div className="cc-test" aria-live="polite">
+        <div className="cc-test" aria-live="polite" ref={testRef}>
           <strong>{card.quickTest.q}</strong>
           <div className="cc-testOptions">
             {card.quickTest.options.map((option, index) => (

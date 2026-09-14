@@ -12,9 +12,15 @@
 .cc-root{color:var(--cc-off);font-family:inherit;max-width:1180px;margin:0 auto}
 .cc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .cc-meta span{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--cc-muted);border:1px solid var(--cc-line);border-radius:999px;padding:5px 8px}
-.cc-header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
-.cc-header h2{margin:0;font-size:clamp(26px,4vw,42px);letter-spacing:-.04em;line-height:1}
+.cc-header{margin-bottom:12px}
+.cc-header h2{margin:0;font-size:clamp(24px,4vw,40px);letter-spacing:-.04em;line-height:1.05}
 .cc-header p{margin:8px 0 0;color:var(--cc-muted);line-height:1.5}
+/* Mode toggle bar sticks to the top of the viewport once you scroll past it,
+   and rides with the card otherwise. Full-bleed (cancels the screen's 14px
+   gutter) with an opaque, blurred backdrop so the card scrolls cleanly under it. */
+.cc-modebar{position:sticky;top:0;z-index:20;margin:0 -14px 14px;padding:11px 14px;
+  background:rgba(6,20,31,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--cc-line)}
 .cc-modes{display:flex;gap:7px;flex-wrap:wrap}
 .cc-modes button,.cc-testOptions button{
   border:1px solid var(--cc-line);background:rgba(255,255,255,.04);color:var(--cc-off);
@@ -96,5 +102,4 @@
 .cc-testNote{opacity:.72}
 /* Desktop: room enough to show both sides at once (no snap needed). */
 @media(min-width:820px){.cc-swipe{scroll-snap-type:none}.cc-slide{flex:0 0 calc(50% - 7px)}.cc-dots{display:none}}
-@media(max-width:820px){.cc-header{align-items:flex-start;flex-direction:column}}
 @media(max-width:760px){.cc-side{padding:18px 15px}.cc-visualWrap{max-height:200px}.cc-row{grid-template-columns:96px 1fr;padding:10px}}
