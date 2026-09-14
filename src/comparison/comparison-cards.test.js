@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { COMPARISON_CARDS, getComparisonCard } from "./comparison-cards.js";
 
-test("there are the seven Batch-1 cards, each with a unique id", () => {
-  assert.equal(COMPARISON_CARDS.length, 7);
+test("there are the 14 cards (Batch 1 + Batch 2), each with a unique id", () => {
+  assert.equal(COMPARISON_CARDS.length, 14);
   const ids = COMPARISON_CARDS.map((c) => c.id);
   assert.equal(new Set(ids).size, ids.length);
 });
