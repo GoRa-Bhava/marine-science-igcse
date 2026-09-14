@@ -1,3 +1,6 @@
+/* Dark theme is the default token set. Every text/surface colour is a token so
+   the light theme (below) can restate each one with real, contrast-checked
+   values rather than reusing dark-background colours. */
 :root{
   --cc-navy: var(--color-bg-deep, #04141F);
   --cc-navy-2: var(--color-surface, #082331);
@@ -8,7 +11,60 @@
   --cc-off: var(--color-text-primary, #EAF6F5);
   --cc-muted: var(--color-text-secondary, #A8C2BE);
   --cc-line: color-mix(in srgb, var(--cc-off) 12%, transparent);
+  --cc-rowborder: transparent; /* rows are borderless on dark (hover adds a line) */
+  --cc-value: #deebea;        /* row answers */
+  --cc-label: #789a96;        /* row labels */
+  --cc-faint: #86a7a3;        /* least-prominent text */
+  --cc-co2: #a8c7c3;
+  --cc-water: #84bbf3;
+  --cc-wrong: #ffc3b4;
+  --cc-panel: rgba(255,255,255,.025);
+  --cc-panel-2: rgba(255,255,255,.04);
+  --cc-rowbg: rgba(255,255,255,.012);
+  --cc-rowhover: rgba(255,255,255,.028);
+  --cc-visualbg: rgba(255,255,255,.03);
+  --cc-visualglow: rgba(255,255,255,.06);
+  --cc-memorybg: rgba(0,0,0,.12);
+  --cc-modebtn: rgba(127,150,160,.10);
+  --cc-shared: rgba(242,217,168,.10);
+  --cc-shadow: rgba(0,0,0,.28);
 }
+/* Light theme — an independent palette (not the dark one lightened). Text is
+   near-black/dark slate at full opacity; accents are deepened to read on white;
+   panels are white/near-white lifted by soft borders + shadows, not by "being
+   a lighter shade of the background". Targets WCAG AA (>=4.5:1 body text). */
+:root[data-theme="light"]{
+  --cc-navy: #E8F1F2;
+  --cc-navy-2: #FFFFFF;
+  --cc-teal: #0C7C6F;
+  --cc-sea: #0C7C6F;
+  --cc-coral: #C2502E;
+  --cc-sand: #8A6410;
+  --cc-off: #12242F;
+  --cc-muted: #46606C;
+  --cc-line: #C2D4DA;
+  --cc-rowborder: #C2D4DA;   /* light rows read as panels via a visible border */
+  --cc-value: #12242F;
+  --cc-label: #465F6B;
+  --cc-faint: #4E6A76;
+  --cc-co2: #3F6A63;
+  --cc-water: #1F5FA6;
+  --cc-wrong: #C2502E;
+  --cc-panel: #F1F6F7;
+  --cc-panel-2: #E9F1F2;
+  --cc-rowbg: #F5F9FA;
+  --cc-rowhover: #E9F1F2;
+  --cc-visualbg: #EDF3F4;
+  --cc-visualglow: rgba(0,0,0,.03);
+  --cc-memorybg: #ECF3F4;
+  --cc-modebtn: rgba(20,60,70,.06);
+  --cc-shared: rgba(138,100,16,.12);
+  --cc-shadow: rgba(20,50,60,.14);
+}
+/* On the light theme a dark hero photo sits on a white card — a soft shadow +
+   the frame border keep it reading as a framed image, not a punched-out hole. */
+:root[data-theme="light"] .cc-visualWrap{box-shadow:0 2px 10px rgba(20,50,60,.12)}
+
 .cc-root{color:var(--cc-off);font-family:inherit;max-width:1180px;margin:0 auto}
 .cc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .cc-meta span{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--cc-muted);border:1px solid var(--cc-line);border-radius:999px;padding:5px 8px}
@@ -23,7 +79,7 @@
   border-bottom:1px solid var(--cc-line)}
 .cc-modes{display:flex;gap:7px;flex-wrap:wrap}
 .cc-modes button,.cc-testOptions button{
-  border:1px solid var(--cc-line);background:rgba(127,150,160,.10);color:var(--cc-off);
+  border:1px solid var(--cc-line);background:var(--cc-modebtn);color:var(--cc-off);
   border-radius:999px;padding:9px 12px;font-weight:800;font-size:13.5px;cursor:pointer;transition:.18s ease
 }
 .cc-modes button.is-active{background:var(--cc-off);color:var(--cc-navy)}
@@ -36,63 +92,55 @@
 .cc-dots{display:flex;gap:9px;justify-content:center;margin-top:12px}
 .cc-dots span{width:8px;height:8px;border-radius:50%;background:var(--cc-line);transition:.2s ease}
 .cc-dots span.is-on{background:var(--cc-teal);box-shadow:0 0 12px color-mix(in srgb,var(--cc-teal) 60%,transparent)}
-.cc-side{flex:1;padding:20px 18px;border:1px solid var(--cc-line);border-radius:24px;background:linear-gradient(180deg,var(--cc-navy-2),var(--cc-navy));box-shadow:0 14px 40px rgba(0,0,0,.28)}
+.cc-side{flex:1;padding:20px 18px;border:1px solid var(--cc-line);border-radius:24px;background:linear-gradient(180deg,var(--cc-navy-2),var(--cc-navy));box-shadow:0 14px 40px var(--cc-shadow)}
 .cc-sideHead{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:16px}
-/* Hero illustration leads each side: full column width, contained, on a faint
-   surface panel with a soft radial glow to lift transparent art off the dark bg. */
 /* A flexible 4:3 band (both sides share it, so the two images read at a matched
-   scale). object-fit:contain fits the WHOLE illustration inside — portrait
-   beakers, wide tuna and the dino's flagellum all show in full, letterboxed on
-   the card surface — never cropped by the fixed box or the rounded panel. */
-.cc-visualWrap{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/3;max-height:260px;padding:10px;border:1px solid var(--cc-line);border-radius:22px;background:rgba(255,255,255,.03);overflow:hidden}
+   scale). object-fit:contain fits the WHOLE illustration inside; cover fills. */
+.cc-visualWrap{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/3;max-height:260px;padding:10px;border:1px solid var(--cc-line);border-radius:22px;background:var(--cc-visualbg);overflow:hidden}
 .cc-visualWrap--hero{background:
-  radial-gradient(120% 90% at 50% 30%, rgba(255,255,255,.06), transparent 70%),
-  rgba(255,255,255,.03)}
+  radial-gradient(120% 90% at 50% 30%, var(--cc-visualglow), transparent 70%),
+  var(--cc-visualbg)}
 .cc-heroArt{display:block}
-/* Transparent cut-out: contain on the glow panel (10px padding from base rule). */
 .cc-heroArt--contain{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
-/* Edge-to-edge 4:3 scene: fill the frame full-bleed (rounded corners clip it). */
 .cc-visualWrap--cover{padding:0;background:none}
 .cc-heroArt--cover{width:100%;height:100%;object-fit:cover}
-/* Emblem fallback shares the frame height so a half-illustrated card still
-   matches side to side; the small emblem simply centres inside it. */
 .cc-visualWrap--emblem{padding:14px}
-.cc-sideTitleBlock h3{margin:0;font-size:clamp(23px,3vw,32px);letter-spacing:-.04em}
+.cc-sideTitleBlock h3{margin:0;font-size:clamp(23px,3vw,32px);letter-spacing:-.04em;color:var(--cc-off)}
 .cc-teal .cc-sideTitleBlock h3{color:var(--cc-teal)}.cc-coral .cc-sideTitleBlock h3{color:var(--cc-coral)}
 .cc-sideTitleBlock p{margin:5px 0 0;color:var(--cc-muted);font-size:13px;line-height:1.4}
-.cc-equation{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;min-height:76px;padding:12px;border:1px solid var(--cc-line);border-radius:18px;background:rgba(255,255,255,.025);margin-bottom:14px}
-.cc-molecule{padding:7px 9px;border-radius:10px;border:1px solid var(--cc-line);background:rgba(255,255,255,.035);font-size:12px;font-weight:900;white-space:nowrap}
-.cc-co2{color:#a8c7c3}.cc-water{color:#84bbf3}.cc-glucose{color:var(--cc-sand)}.cc-oxygen{color:var(--cc-teal)}
+.cc-equation{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;min-height:76px;padding:12px;border:1px solid var(--cc-line);border-radius:18px;background:var(--cc-panel);margin-bottom:14px}
+.cc-molecule{padding:7px 9px;border-radius:10px;border:1px solid var(--cc-line);background:var(--cc-panel-2);font-size:12px;font-weight:900;white-space:nowrap;color:var(--cc-off)}
+.cc-co2{color:var(--cc-co2)}.cc-water{color:var(--cc-water)}.cc-glucose{color:var(--cc-sand)}.cc-oxygen{color:var(--cc-teal)}
 .cc-eqOp{font-weight:900;color:var(--cc-muted)}
 .cc-rows{display:grid;gap:8px}
-.cc-row{width:100%;display:grid;grid-template-columns:112px 1fr;gap:10px;text-align:left;padding:11px;border-radius:15px;border:1px solid transparent;background:rgba(255,255,255,.012);color:inherit;cursor:pointer;transition:.16s ease}
-.cc-row:hover{background:rgba(255,255,255,.028);border-color:var(--cc-line)}
-.cc-teal .cc-row.is-active{background:color-mix(in srgb,var(--cc-teal) 8%,transparent);border-color:color-mix(in srgb,var(--cc-teal) 40%,transparent)}
-.cc-coral .cc-row.is-active{background:color-mix(in srgb,var(--cc-coral) 8%,transparent);border-color:color-mix(in srgb,var(--cc-coral) 40%,transparent)}
-.cc-row.is-shared{box-shadow:inset 0 0 0 1px rgba(242,217,168,.08)}
-.cc-label{font-size:10px;line-height:1.35;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:#789a96}
-.cc-sharedBadge{display:inline-block;margin-left:6px;padding:2px 5px;border-radius:999px;background:rgba(242,217,168,.10);color:var(--cc-sand);font-size:8px;letter-spacing:.08em}
-.cc-value{font-size:13px;line-height:1.45;font-weight:650;color:#deebea}
-.cc-recall{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px dashed var(--cc-line);border-radius:10px;padding:7px 8px;color:#8eaaa6;font-size:11px}
-.cc-reveal{border:1px solid var(--cc-line);border-radius:8px;padding:4px 7px;color:var(--cc-off);background:rgba(255,255,255,.04);font-weight:800}
-.cc-energy{margin-top:14px;padding:14px;border:1px solid var(--cc-line);border-radius:18px;background:rgba(255,255,255,.022)}
+.cc-row{width:100%;display:grid;grid-template-columns:112px 1fr;gap:10px;text-align:left;padding:11px;border-radius:15px;border:1px solid var(--cc-rowborder);background:var(--cc-rowbg);color:inherit;cursor:pointer;transition:.16s ease}
+.cc-row:hover{background:var(--cc-rowhover);border-color:var(--cc-line)}
+.cc-teal .cc-row.is-active{background:color-mix(in srgb,var(--cc-teal) 12%,transparent);border-color:color-mix(in srgb,var(--cc-teal) 55%,transparent)}
+.cc-coral .cc-row.is-active{background:color-mix(in srgb,var(--cc-coral) 12%,transparent);border-color:color-mix(in srgb,var(--cc-coral) 55%,transparent)}
+.cc-row.is-shared{box-shadow:inset 0 0 0 1px var(--cc-shared)}
+.cc-label{font-size:10px;line-height:1.35;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:var(--cc-label)}
+.cc-sharedBadge{display:inline-block;margin-left:6px;padding:2px 5px;border-radius:999px;background:var(--cc-shared);color:var(--cc-sand);font-size:8px;letter-spacing:.08em}
+.cc-value{font-size:13px;line-height:1.45;font-weight:650;color:var(--cc-value)}
+.cc-recall{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px dashed var(--cc-line);border-radius:10px;padding:7px 8px;color:var(--cc-faint);font-size:11px}
+.cc-reveal{border:1px solid var(--cc-line);border-radius:8px;padding:4px 7px;color:var(--cc-off);background:var(--cc-panel-2);font-weight:800}
+.cc-energy{margin-top:14px;padding:14px;border:1px solid var(--cc-line);border-radius:18px;background:var(--cc-panel)}
 .cc-energyHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
-.cc-energyHead strong{font-size:13px}.cc-energyHead span{font-size:11px;color:#86a7a3}
+.cc-energyHead strong{font-size:13px;color:var(--cc-off)}.cc-energyHead span{font-size:11px;color:var(--cc-faint)}
 .cc-energyFlow{display:flex;align-items:center;gap:8px}
-.cc-energyStage{flex:1;min-height:44px;display:grid;place-items:center;text-align:center;padding:8px;border-radius:12px;border:1px solid var(--cc-line);font-size:10px;font-weight:900;background:rgba(255,255,255,.03)}
+.cc-energyStage{flex:1;min-height:44px;display:grid;place-items:center;text-align:center;padding:8px;border-radius:12px;border:1px solid var(--cc-line);font-size:10px;font-weight:900;background:var(--cc-panel);color:var(--cc-off)}
 .cc-teal .cc-energyStage:first-child{color:var(--cc-teal)}.cc-coral .cc-energyStage:last-child{color:var(--cc-coral)}
 .cc-energyArrow{color:var(--cc-muted)}
 /* Memory hook — shared, sits below the pair (about the comparison as a whole). */
-.cc-memory{margin-top:16px;border:1px solid var(--cc-line);border-radius:18px;padding:15px 17px;display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,.12)}
+.cc-memory{margin-top:16px;border:1px solid var(--cc-line);border-radius:18px;padding:15px 17px;display:flex;gap:10px;align-items:flex-start;background:var(--cc-memorybg)}
 .cc-memoryDot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:var(--cc-teal);box-shadow:0 0 16px color-mix(in srgb,var(--cc-teal) 65%,transparent);margin-top:5px}
 .cc-memory p{margin:0;color:var(--cc-muted);font-size:12px;line-height:1.5}.cc-memory strong{color:var(--cc-off)}
-.cc-test{margin-top:12px;border:1px solid var(--cc-line);border-radius:18px;padding:15px;background:rgba(255,255,255,.025)}
-.cc-test>strong{display:block;margin-bottom:10px}
+.cc-test{margin-top:12px;border:1px solid var(--cc-line);border-radius:18px;padding:15px;background:var(--cc-panel)}
+.cc-test>strong{display:block;margin-bottom:10px;color:var(--cc-off)}
 .cc-testOptions{display:flex;gap:8px;flex-wrap:wrap}
 .cc-testOptions button.is-correct{border-color:var(--cc-teal);background:color-mix(in srgb,var(--cc-teal) 12%,transparent)}
 .cc-testOptions button.is-wrong{border-color:var(--cc-coral);background:color-mix(in srgb,var(--cc-coral) 10%,transparent)}
-.cc-test p{font-size:12px;color:var(--cc-muted);line-height:1.45}.cc-test .is-correctText{color:var(--cc-teal)}.cc-test .is-wrongText{color:#ffc3b4}
-.cc-testNote{opacity:.72}
+.cc-test p{font-size:12px;color:var(--cc-muted);line-height:1.45}.cc-test .is-correctText{color:var(--cc-teal)}.cc-test .is-wrongText{color:var(--cc-wrong)}
+.cc-testNote{color:var(--cc-faint)}
 /* Desktop: room enough to show both sides at once (no snap needed). */
 @media(min-width:820px){.cc-swipe{scroll-snap-type:none}.cc-slide{flex:0 0 calc(50% - 7px)}.cc-dots{display:none}}
 @media(max-width:760px){.cc-side{padding:18px 15px}.cc-visualWrap{max-height:200px}.cc-row{grid-template-columns:96px 1fr;padding:10px}}

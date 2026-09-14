@@ -1149,7 +1149,7 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
     background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam, paddingTop: APPBAR_OFFSET,
   };
-  const section = { padding: "18px 20px", borderRadius: 16, border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)", marginBottom: 16 };
+  const section = { padding: "18px 20px", borderRadius: 16, border: `1px solid ${C.line}`, background: C.shelf, marginBottom: 16 };
   const h = { fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, margin: "0 0 6px" };
   const p = { fontSize: 13.5, color: C.mist, lineHeight: 1.5, margin: "0 0 14px" };
   const btn = { width: "100%", padding: "13px 16px", borderRadius: 12, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer" };
@@ -1550,17 +1550,10 @@ export default function App() {
 
   useEffect(() => {
     const root = document.documentElement;
+    // data-theme drives the light/dark token blocks in comparison-card.css.
     root.dataset.theme = theme;
     root.style.colorScheme = theme;
     document.body.style.background = C.bg1;
-    // comparison-card.css reads these; override for light, fall back to its dark defaults otherwise
-    const keys = ["--color-bg-deep", "--color-surface", "--color-text-primary", "--color-text-secondary"];
-    if (theme === "light") {
-      const map = { "--color-bg-deep": C.bg1, "--color-surface": "#EAF5F5", "--color-text-primary": C.foam, "--color-text-secondary": C.mist };
-      keys.forEach((k) => root.style.setProperty(k, map[k]));
-    } else {
-      keys.forEach((k) => root.style.removeProperty(k));
-    }
   }, [theme]);
 
   useEffect(() => {
@@ -1927,7 +1920,7 @@ export default function App() {
           </button>
           <div style={{
             marginTop: 18, padding: "12px 14px 6px", borderRadius: 14,
-            border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)",
+            border: `1px solid ${C.line}`, background: C.shelf,
           }}>
             <p style={{ fontSize: 12.5, color: C.line, margin: "0 0 10px", textAlign: "center" }}>
               No timers, no lives, no streaks.
@@ -2029,7 +2022,7 @@ export default function App() {
               <div key={c.id} style={{
                 borderRadius: 16, padding: 14, minHeight: 190,
                 border: `1px solid ${owned ? C.line : "rgba(30,106,135,.4)"}`,
-                background: owned ? C.shelf : "rgba(18,69,95,.25)",
+                background: owned ? C.raise : C.shelf,
                 display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
               }}>
                 <div style={{ opacity: owned ? 1 : 0.13, filter: owned ? "none" : "grayscale(1)" }}>
@@ -2088,7 +2081,7 @@ export default function App() {
               </p>
               {missed.map((it) => (
                 <div key={it.id} style={{
-                  borderRadius: 14, border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)",
+                  borderRadius: 14, border: `1px solid ${C.line}`, background: C.shelf,
                   padding: 14, marginBottom: 12,
                 }}>
                   {it.fig && FIGURES[it.fig] && (
@@ -2220,7 +2213,7 @@ export default function App() {
             }}>
               {wasRight ? "That's it" : "Not yet — it'll come back"}
             </p>
-            <p style={{ fontSize: 14.5, color: C.foam, lineHeight: 1.5, margin: 0, opacity: 0.9 }}>
+            <p style={{ fontSize: 14.5, color: C.foam, lineHeight: 1.5, margin: 0 }}>
               {item.why}
             </p>
           </div>
