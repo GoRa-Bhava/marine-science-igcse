@@ -161,6 +161,7 @@ export function ComparisonCard({
   initialMode = "learn",
   className = "",
   onModeChange,
+  selector = null,
 }) {
   // Mode is controllable (the Concept-cards screen owns it so it persists when
   // you switch pills); falls back to internal state when used standalone.
@@ -212,12 +213,14 @@ export function ComparisonCard({
     const raf = requestAnimationFrame(() => {
       const bar = modeBarRef.current;
       if (!bar) return;
-      const barH = bar.offsetHeight;
+      // The mode bar pins below the fixed app bar (its CSS sticky `top`), so the
+      // scroll target sits just under BOTH: appbar/sticky offset + bar height.
+      const stickyTop = parseFloat(getComputedStyle(bar).top) || 0;
+      const offset = stickyTop + bar.offsetHeight;
       // Each mode pins the bar to the top and positions its content just under it:
       // Learn -> the hero (top of the side); Recall -> the side title (hero
       // scrolled away, rows in view); Quick test -> the test section.
       let el;
-      const offset = barH;
       if (target === "recall") {
         el = swipeRef.current?.querySelector(".cc-sideTitleBlock");
       } else if (target === "test") {
@@ -250,18 +253,8 @@ export function ComparisonCard({
 
   return (
     <section className={classes} data-card-id={card.id} ref={sectionRef}>
-      {/* Shared controls — belong to the comparison, fixed across the swipe. */}
-      <div className="cc-meta">
-        <span>Unit {card.unit}</span>
-        <span>{card.ref}</span>
-      </div>
-
-      <div className="cc-header">
-        <h2>{card.title}</h2>
-        <p>{card.subtitle}</p>
-      </div>
-
-      {/* Mode toggle: sticks to the top of the viewport once scrolled past. */}
+      {/* Mode toggle — its own row directly below the app bar; sticks to the top
+          (below the app bar) once you scroll past it. */}
       <div className="cc-modebar" ref={modeBarRef}>
         <div className="cc-modes" role="tablist" aria-label="Comparison card mode">
           {(["learn", "recall", "test"]).map((item) => {
@@ -281,6 +274,18 @@ export function ComparisonCard({
             );
           })}
         </div>
+      </div>
+
+      {/* Collapsible comparison selector (which card to show). */}
+      {selector}
+
+      {/* Compact context for the chosen comparison. */}
+      <div className="cc-cardhead">
+        <div className="cc-meta">
+          <span>Unit {card.unit}</span>
+          <span>{card.ref}</span>
+        </div>
+        <p className="cc-subtitle">{card.subtitle}</p>
       </div>
 
       {/* The pair: one side at a time, full width, snap-scroll with an edge peek. */}

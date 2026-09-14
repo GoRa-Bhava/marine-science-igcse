@@ -1147,7 +1147,7 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
 
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
-    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam,
+    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam, paddingTop: APPBAR_OFFSET,
   };
   const section = { padding: "18px 20px", borderRadius: 16, border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)", marginBottom: 16 };
   const h = { fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, margin: "0 0 6px" };
@@ -1157,7 +1157,7 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
 
   return (
     <div style={shell}>
-      <div style={{ padding: "30px 22px 40px" }}>
+      <div style={{ padding: "14px 22px 40px" }}>
         <button onClick={onBack} style={{
           background: "none", border: "none", color: C.accent, fontFamily: FONT_UI,
           fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
@@ -1251,45 +1251,78 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
   );
 }
 
-/* Pill selector for the Concept-cards screen: a sideways-scrolling row of one
-   pill per comparison. Tapping selects; the active pill scrolls into view. */
-function ConceptPills({ activeIndex, onSelect }) {
-  const barRef = useRef(null);
+/* Collapsible comparison selector for the Concept-cards screen: a button showing
+   the current comparison + chevron; tapping expands a 2-column list of all 14.
+   Picking one selects it and collapses; tapping the button again, tapping
+   outside, or Esc also collapses. No horizontal scrolling. */
+function ComparisonSelector({ cards, activeIndex, onSelect }) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
   useEffect(() => {
-    const bar = barRef.current;
-    const pill = bar?.children[activeIndex];
-    if (pill) pill.scrollIntoView({ inline: "center", block: "nearest" });
-  }, [activeIndex]);
+    if (!open) return;
+    const onDoc = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  const current = cards[activeIndex] || cards[0];
   return (
-    <div className="cc-pills" ref={barRef} role="tablist" aria-label="Comparisons"
-      style={{ padding: "6px 22px 12px" }}>
-      {COMPARISON_CARDS.map((card, index) => (
-        <button
-          key={card.id}
-          type="button"
-          role="tab"
-          aria-selected={index === activeIndex}
-          className={`cc-pill${index === activeIndex ? " is-active" : ""}`}
-          onClick={() => onSelect(index)}
-        >
-          {pillLabel(card.id)}
-        </button>
-      ))}
+    <div ref={wrapRef} style={{ position: "relative", marginBottom: 14 }}>
+      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} style={{
+        width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+        padding: "12px 14px", borderRadius: 14, cursor: "pointer",
+        border: `1px solid ${C.line}`, background: C.shelf, color: C.foam,
+        fontFamily: FONT_UI, fontSize: 15.5, fontWeight: 700, textAlign: "left",
+      }}>
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pillLabel(current.id)}</span>
+        <span aria-hidden="true" style={{ color: C.accent, transform: open ? "rotate(180deg)" : "none", transition: ".18s" }}>▾</span>
+      </button>
+      {open && (
+        <div role="listbox" aria-label="Choose a comparison" style={{
+          position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, zIndex: 30,
+          maxHeight: "60vh", overflowY: "auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8,
+          padding: 10, borderRadius: 14, border: `1px solid ${C.line}`, background: C.bg1,
+          boxShadow: "0 18px 44px rgba(0,0,0,.4)",
+        }}>
+          {cards.map((c, i) => (
+            <button key={c.id} type="button" role="option" aria-selected={i === activeIndex}
+              onClick={() => { onSelect(i); setOpen(false); }}
+              style={{
+                textAlign: "left", padding: "11px 12px", borderRadius: 11, cursor: "pointer",
+                border: `1px solid ${i === activeIndex ? C.glow : C.line}`,
+                background: i === activeIndex ? "rgba(79,216,196,.14)" : "transparent",
+                color: i === activeIndex ? C.accent : C.foam, fontFamily: FONT_UI, fontSize: 12.5,
+                fontWeight: i === activeIndex ? 700 : 500, lineHeight: 1.3,
+              }}>
+              {pillLabel(c.id)}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 /* -------------------------------------------------- navigation shell */
-/* Top-right hamburger on every screen; the drawer itself slides in from the
-   LEFT (intentional, per the product owner). */
+/* A fixed-height top app bar on every screen. It's constrained to the app
+   column (max 480, centred), reserves its own height so page content never
+   sits under it, and pins the hamburger top-right with a real margin + safe
+   area so it's always fully visible. The drawer slides in from the LEFT
+   (intentional, per the product owner). */
+const APPBAR_H = 52;
+// Height + top safe-area; also the top padding every screen shell reserves, and
+// where the concept-cards sticky mode bar pins to (kept in sync in the CSS).
+const APPBAR_OFFSET = `calc(${APPBAR_H}px + env(safe-area-inset-top, 0px))`;
+
 function HamburgerButton({ open, onClick }) {
   return (
     <button
       type="button" aria-label="Open menu" aria-expanded={open} aria-haspopup="true"
       onClick={onClick}
       style={{
-        position: "fixed", top: 12, right: "max(12px, calc((100vw - 480px) / 2 + 12px))",
-        zIndex: 60, width: 42, height: 42, borderRadius: 12, border: `1px solid ${C.line}`,
+        width: 42, height: 42, flex: "0 0 auto", borderRadius: 12, border: `1px solid ${C.line}`,
         background: C.shelf, color: C.foam, cursor: "pointer", display: "grid", placeItems: "center",
       }}
     >
@@ -1297,6 +1330,21 @@ function HamburgerButton({ open, onClick }) {
         {[1, 6, 11].map((y) => <rect key={y} x="0" y={y} width="20" height="2" rx="1" fill={C.foam} />)}
       </svg>
     </button>
+  );
+}
+
+function AppBar({ open, onOpen }) {
+  return (
+    <div style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 90, boxSizing: "border-box",
+      maxWidth: 480, margin: "0 auto", height: APPBAR_OFFSET,
+      paddingTop: "env(safe-area-inset-top, 0px)",
+      paddingLeft: 12, paddingRight: "calc(14px + env(safe-area-inset-right, 0px))",
+      display: "flex", alignItems: "center", justifyContent: "flex-end",
+      background: C.bg0, borderBottom: `1px solid ${C.line}`,
+    }}>
+      <HamburgerButton open={open} onClick={onOpen} />
+    </div>
   );
 }
 
@@ -1436,7 +1484,8 @@ function HomeView({ onUnits, onConcepts, masteredCount, totalTopics }) {
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
     background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam,
-    display: "flex", flexDirection: "column", justifyContent: "center", padding: "40px 28px",
+    display: "flex", flexDirection: "column", justifyContent: "center",
+    padding: "40px 28px", paddingTop: APPBAR_OFFSET,
   };
   const primary = {
     width: "100%", padding: "20px 18px", borderRadius: 18, border: `1px solid ${C.glow}`,
@@ -1719,7 +1768,7 @@ export default function App() {
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
     background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`,
-    color: C.foam, position: "relative",
+    color: C.foam, position: "relative", paddingTop: APPBAR_OFFSET,
   };
 
   const keyframes = `
@@ -1743,7 +1792,7 @@ export default function App() {
   const page = (content) => (
     <>
       {content}
-      <HamburgerButton open={drawerOpen} onClick={() => setDrawerOpen(true)} />
+      <AppBar open={drawerOpen} onOpen={() => setDrawerOpen(true)} />
       <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} current={view} items={navItems} />
     </>
   );
@@ -1778,7 +1827,7 @@ export default function App() {
     return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
-        <div style={{ padding: "34px 22px 12px" }}>
+        <div style={{ padding: "14px 22px 12px" }}>
           <p style={{ fontSize: 13, color: C.accent, margin: "0 0 6px", letterSpacing: ".04em" }}>
             {content.title} · {content.subtitle}
           </p>
@@ -1931,25 +1980,25 @@ export default function App() {
     return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
-        <div style={{ padding: "30px 22px 6px" }}>
-          <button onClick={() => setView("map")} style={{
+        <div style={{ padding: "10px 14px 0" }}>
+          <button onClick={() => setView("home")} style={{
             background: "none", border: "none", color: C.accent, fontFamily: FONT_UI,
-            fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 14,
+            fontSize: 15, padding: "2px 4px", cursor: "pointer", marginBottom: 6,
           }}>← Back</button>
-          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 26, fontWeight: 600, margin: "0 0 4px" }}>
-            Concept cards
-          </h1>
-          <p style={{ fontSize: 13.5, color: C.mist, margin: 0, lineHeight: 1.45 }}>
-            Pick a comparison, then swipe between the two sides. These don't count toward mastery.
-          </p>
         </div>
-        <ConceptPills activeIndex={conceptIndex} onSelect={setConceptIndex} />
-        <div style={{ padding: "10px 14px 44px" }}>
+        <div style={{ padding: "0 14px 44px" }}>
           <ComparisonCard
             key={card.id}
             card={card}
             mode={conceptMode}
             onModeChange={setConceptMode}
+            selector={
+              <ComparisonSelector
+                cards={COMPARISON_CARDS}
+                activeIndex={conceptIndex}
+                onSelect={setConceptIndex}
+              />
+            }
           />
         </div>
       </div>
@@ -1961,7 +2010,7 @@ export default function App() {
     return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
-        <div style={{ padding: "30px 22px 10px" }}>
+        <div style={{ padding: "14px 22px 10px" }}>
           <button onClick={() => setView("map")} style={{
             background: "none", border: "none", color: C.accent, fontFamily: FONT_UI,
             fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
@@ -2018,7 +2067,7 @@ export default function App() {
     return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
-        <div style={{ padding: "30px 22px 40px" }}>
+        <div style={{ padding: "14px 22px 40px" }}>
           <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 6px" }}>
             {done ? "Run complete" : "Paused"}
           </h1>

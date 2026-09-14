@@ -12,28 +12,21 @@
 .cc-root{color:var(--cc-off);font-family:inherit;max-width:1180px;margin:0 auto}
 .cc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .cc-meta span{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--cc-muted);border:1px solid var(--cc-line);border-radius:999px;padding:5px 8px}
-.cc-header{margin-bottom:12px}
-.cc-header h2{margin:0;font-size:clamp(24px,4vw,40px);letter-spacing:-.04em;line-height:1.05}
-.cc-header p{margin:8px 0 0;color:var(--cc-muted);line-height:1.5}
-/* Mode toggle bar sticks to the top of the viewport once you scroll past it,
-   and rides with the card otherwise. Full-bleed (cancels the screen's 14px
-   gutter) with an opaque, blurred backdrop so the card scrolls cleanly under it. */
-.cc-modebar{position:sticky;top:0;z-index:20;margin:0 -14px 14px;padding:11px 14px;
-  background:rgba(6,20,31,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+/* Compact context line for the chosen comparison (below the selector). */
+.cc-cardhead{margin-bottom:12px}
+.cc-subtitle{margin:8px 0 0;color:var(--cc-muted);line-height:1.5;font-size:14px}
+/* Mode toggle bar — its own row; sticks just below the fixed app bar (kept in
+   sync with APPBAR_H in App.jsx) once you scroll past it. Full-bleed with a
+   theme-aware, blurred backdrop so the card scrolls cleanly under it. */
+.cc-modebar{position:sticky;top:calc(52px + env(safe-area-inset-top, 0px));z-index:20;margin:0 -14px 12px;padding:10px 14px;
+  background:color-mix(in srgb, var(--cc-navy) 90%, transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid var(--cc-line)}
 .cc-modes{display:flex;gap:7px;flex-wrap:wrap}
 .cc-modes button,.cc-testOptions button{
-  border:1px solid var(--cc-line);background:rgba(255,255,255,.04);color:var(--cc-off);
-  border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer;transition:.18s ease
+  border:1px solid var(--cc-line);background:rgba(127,150,160,.10);color:var(--cc-off);
+  border-radius:999px;padding:9px 12px;font-weight:800;font-size:13.5px;cursor:pointer;transition:.18s ease
 }
 .cc-modes button.is-active{background:var(--cc-off);color:var(--cc-navy)}
-
-/* Pill selector bar — one pill per comparison, scrolls sideways on phone. */
-.cc-pills{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
-.cc-pills::-webkit-scrollbar{display:none}
-.cc-pill{flex:0 0 auto;white-space:nowrap;scroll-snap-align:center;padding:8px 13px;border-radius:999px;border:1px solid var(--cc-line);background:rgba(255,255,255,.03);color:var(--cc-muted);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:.15s ease}
-.cc-pill:hover{background:rgba(255,255,255,.07);color:var(--cc-off)}
-.cc-pill.is-active{background:var(--cc-teal);border-color:var(--cc-teal);color:var(--cc-navy)}
 
 /* The pair as a horizontal snap-scroller: one side at a time, full width,
    with a thin peek of the other side so it's obvious you can swipe. */
