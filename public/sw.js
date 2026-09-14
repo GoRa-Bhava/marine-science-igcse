@@ -1,6 +1,6 @@
 /* Offline support for Earth and Oceans.
    Bump CACHE when you deploy a new version. */
-const CACHE = "marine-v47";
+const CACHE = "marine-v48";
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();

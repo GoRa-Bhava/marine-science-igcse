@@ -22,19 +22,24 @@
 }
 .cc-modes button.is-active{background:var(--cc-off);color:var(--cc-navy)}
 .cc-shell{border:1px solid var(--cc-line);border-radius:28px;overflow:hidden;background:linear-gradient(180deg,var(--cc-navy-2),var(--cc-navy));box-shadow:0 18px 48px rgba(0,0,0,.28)}
-.cc-compare{display:grid;grid-template-columns:1fr 1px 1fr}
+.cc-compare{display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr)}
 .cc-divider{background:var(--cc-line)}
 .cc-side{padding:22px}
 .cc-sideHead{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:16px}
 /* Hero illustration leads each side: full column width, contained, on a faint
    surface panel with a soft radial glow to lift transparent art off the dark bg. */
-.cc-visualWrap{display:grid;place-items:center;border:1px solid var(--cc-line);border-radius:22px;background:rgba(255,255,255,.03);overflow:hidden}
-.cc-visualWrap--hero{height:184px;padding:10px;background:
+/* A flexible 4:3 band (both sides share it, so the two images read at a matched
+   scale). object-fit:contain fits the WHOLE illustration inside — portrait
+   beakers, wide tuna and the dino's flagellum all show in full, letterboxed on
+   the card surface — never cropped by the fixed box or the rounded panel. */
+.cc-visualWrap{box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/3;max-height:260px;padding:10px;border:1px solid var(--cc-line);border-radius:22px;background:rgba(255,255,255,.03);overflow:hidden}
+.cc-visualWrap--hero{background:
   radial-gradient(120% 90% at 50% 30%, rgba(255,255,255,.06), transparent 70%),
   rgba(255,255,255,.03)}
-.cc-heroArt{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
-/* Emblem fallback keeps a compact, self-contained badge look. */
-.cc-visualWrap--emblem{height:120px;padding:12px}
+.cc-heroArt{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;display:block;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
+/* Emblem fallback shares the frame height so a half-illustrated card still
+   matches side to side; the small emblem simply centres inside it. */
+.cc-visualWrap--emblem{padding:14px}
 .cc-sideTitleBlock h3{margin:0;font-size:clamp(23px,3vw,32px);letter-spacing:-.04em}
 .cc-teal .cc-sideTitleBlock h3{color:var(--cc-teal)}.cc-coral .cc-sideTitleBlock h3{color:var(--cc-coral)}
 .cc-sideTitleBlock p{margin:5px 0 0;color:var(--cc-muted);font-size:13px;line-height:1.4}
@@ -81,4 +86,4 @@
 .cc-test p{font-size:12px;color:var(--cc-muted);line-height:1.45}.cc-test .is-correctText{color:var(--cc-teal)}.cc-test .is-wrongText{color:#ffc3b4}
 .cc-testNote{opacity:.72}
 @media(max-width:820px){.cc-header{align-items:flex-start;flex-direction:column}.cc-focus{grid-template-columns:1fr}.cc-memory{border-left:none;border-top:1px solid var(--cc-line)}}
-@media(max-width:760px){.cc-compare{grid-template-columns:1fr}.cc-divider{height:1px;width:100%}.cc-side{padding:18px 15px}.cc-visualWrap--hero{height:150px}.cc-visualWrap--emblem{height:104px}.cc-row{grid-template-columns:96px 1fr;padding:10px}.cc-focusGrid{grid-template-columns:1fr}}
+@media(max-width:760px){.cc-compare{grid-template-columns:1fr}.cc-divider{height:1px;width:100%}.cc-side{padding:18px 15px}.cc-visualWrap{max-height:200px}.cc-row{grid-template-columns:96px 1fr;padding:10px}.cc-focusGrid{grid-template-columns:1fr}}
