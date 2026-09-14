@@ -1568,7 +1568,13 @@ export default function App() {
   }, []);
 
   useEffect(() => { if (ready) saveProgress(progress); }, [progress, ready]);
-  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [qIdx, view]);
+  // A new question (Next) or a new screen starts at the top — reset both the
+  // inner scroll area and the window (the app-bar reserve can leave the page
+  // itself scrolled).
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }, [qIdx, view]);
   // Start each newly-selected comparison from the top (the mode bar unpins).
   useEffect(() => { if (view === "concepts") window.scrollTo({ top: 0 }); }, [conceptIndex]);
 
