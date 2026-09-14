@@ -1013,56 +1013,6 @@ async function fetchLatestBuild() {
   return Number(m[1]);
 }
 
-function UpdateCheck() {
-  const [state, setState] = useState({ kind: "idle" });
-
-  const check = async () => {
-    setState({ kind: "checking" });
-    try {
-      const latest = await fetchLatestBuild();
-      setState(latest > BUILD ? { kind: "available", latest } : { kind: "current" });
-    } catch (e) {
-      setState({ kind: "error" });
-    }
-  };
-
-  const link = {
-    background: "none", border: "none", padding: 0, color: C.accent, cursor: "pointer",
-    fontFamily: FONT_UI, fontSize: 12.5, textDecoration: "underline",
-  };
-
-  return (
-    <div style={{ fontSize: 12.5, color: C.line, lineHeight: 1.6, marginTop: 14, textAlign: "center" }}>
-      <div>
-        App build {BUILD || "dev"}
-        {state.kind === "idle" && <> · <button onClick={check} style={link}>Check for updates</button></>}
-      </div>
-      {state.kind === "checking" && <div>Checking…</div>}
-      {state.kind === "current" && (
-        <div>You have the latest version. <button onClick={check} style={link}>Check again</button></div>
-      )}
-      {state.kind === "error" && (
-        <div>Couldn't reach GitHub. Are you online? <button onClick={check} style={link}>Try again</button></div>
-      )}
-      {state.kind === "available" && (
-        <>
-          <button onClick={() => { window.location.href = APK_URL; }} style={{
-            display: "block", width: "100%", marginTop: 10, padding: 14, borderRadius: 14,
-            border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)", color: C.foam,
-            fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
-          }}>
-            Download build {state.latest}
-          </button>
-          <div style={{ marginTop: 8 }}>
-            It downloads in your browser. Open the file when it finishes and tap Install.
-            Your progress stays.
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
 /* ------------------------------------------------------------ settings */
 /* Back up, restore, and a guarded full reset. All saved state is the single
    record under STORE_KEY, so a reset is just blankProgress() written back. */
@@ -1982,12 +1932,6 @@ export default function App() {
           }}>
             {content.collection.title} · {progress.creatures.length}/{CREATURES.length}
           </button>
-          <button onClick={() => setView("concepts")} style={{
-            width: "100%", marginTop: 10, padding: "16px", borderRadius: 14, border: `1px solid ${C.line}`,
-            background: C.shelf, color: C.foam, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
-          }}>
-            Concept cards · {COMPARISON_CARDS.length} comparisons
-          </button>
           <div style={{
             marginTop: 18, padding: "12px 14px 6px", borderRadius: 14,
             border: `1px solid ${C.line}`, background: C.shelf,
@@ -2009,13 +1953,6 @@ export default function App() {
                 Full after three correct days: <span style={{ color: C.gold }}>Mastered</span>, and once earned it stays.
               </p>
             </div>
-          </div>
-          {IS_NATIVE && <UpdateCheck />}
-          <div style={{ textAlign: "center", marginTop: 16 }}>
-            <button onClick={() => setView("settings")} style={{
-              background: "none", border: "none", color: C.line, fontFamily: FONT_UI,
-              fontSize: 12.5, padding: 6, cursor: "pointer", textDecoration: "underline",
-            }}>Settings</button>
           </div>
         </div>
       </div>
