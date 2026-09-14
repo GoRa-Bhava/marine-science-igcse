@@ -7,6 +7,7 @@ import { buildRunQueue, runIsResumable, recordMiss } from "./engine/run.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
+import { InteractiveLab } from "./interactives/index.js";
 import { paletteFor, DEFAULT_SETTINGS } from "./theme.js";
 import { makeBackup, readBackup } from "./settings-io.js";
 
@@ -1486,7 +1487,7 @@ function UpdatesControl() {
 }
 
 /* -------------------------------------------------------------- home */
-function HomeView({ onUnits, onConcepts, masteredCount, totalTopics }) {
+function HomeView({ onUnits, onConcepts, onInteractive, masteredCount, totalTopics }) {
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
     background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam,
@@ -1520,6 +1521,10 @@ function HomeView({ onUnits, onConcepts, masteredCount, totalTopics }) {
       <button style={primary} onClick={onConcepts}>
         Concept Cards / 14 Comparisons
         <span style={sub}>Two-sided comparisons to learn &amp; self-check</span>
+      </button>
+      <button style={primary} onClick={onInteractive}>
+        Interactive Lab
+        <span style={sub}>Change one thing and watch the rest respond</span>
       </button>
     </div>
   );
@@ -1801,6 +1806,7 @@ export default function App() {
     { key: "home", label: "Home", onClick: () => go("home") },
     { key: "map", label: "Units 1–6 Multiple Choice", onClick: () => go("map") },
     { key: "concepts", label: "Concept Cards (14 Comparisons)", onClick: () => go("concepts") },
+    { key: "interactive", label: "Interactive Lab", onClick: () => go("interactive") },
     { key: "settings", label: "Settings", onClick: () => go("settings") },
     { key: "updates", render: () => <UpdatesControl /> },
   ];
@@ -1829,6 +1835,7 @@ export default function App() {
         <HomeView
           onUnits={() => setView("map")}
           onConcepts={() => setView("concepts")}
+          onInteractive={() => setView("interactive")}
           masteredCount={masteredCount}
           totalTopics={TOPICS.length}
         />
@@ -2016,6 +2023,19 @@ export default function App() {
             }
           />
         </div>
+      </div>
+    );
+  }
+
+  /* ---------------------------------------------------- interactives */
+  /* A learn/explore surface only — never routed through buildLesson, the FSRS
+     scheduler, mastery, progress, or rewards. The lab ships its own CSS
+     (theme-aware via data-theme); the app shell supplies the page background. */
+  if (view === "interactive") {
+    return page(
+      <div style={shell} ref={scrollRef}>
+        <style>{keyframes}</style>
+        <InteractiveLab onBack={() => setView("home")} />
       </div>
     );
   }
