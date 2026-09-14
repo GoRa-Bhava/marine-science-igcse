@@ -16,15 +16,28 @@
 .cc-header h2{margin:0;font-size:clamp(26px,4vw,42px);letter-spacing:-.04em;line-height:1}
 .cc-header p{margin:8px 0 0;color:var(--cc-muted);line-height:1.5}
 .cc-modes{display:flex;gap:7px;flex-wrap:wrap}
-.cc-modes button,.cc-focusActions button,.cc-testOptions button{
+.cc-modes button,.cc-testOptions button{
   border:1px solid var(--cc-line);background:rgba(255,255,255,.04);color:var(--cc-off);
   border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer;transition:.18s ease
 }
 .cc-modes button.is-active{background:var(--cc-off);color:var(--cc-navy)}
-.cc-shell{border:1px solid var(--cc-line);border-radius:28px;overflow:hidden;background:linear-gradient(180deg,var(--cc-navy-2),var(--cc-navy));box-shadow:0 18px 48px rgba(0,0,0,.28)}
-.cc-compare{display:grid;grid-template-columns:minmax(0,1fr) 1px minmax(0,1fr)}
-.cc-divider{background:var(--cc-line)}
-.cc-side{padding:22px}
+
+/* Pill selector bar — one pill per comparison, scrolls sideways on phone. */
+.cc-pills{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity}
+.cc-pills::-webkit-scrollbar{display:none}
+.cc-pill{flex:0 0 auto;white-space:nowrap;scroll-snap-align:center;padding:8px 13px;border-radius:999px;border:1px solid var(--cc-line);background:rgba(255,255,255,.03);color:var(--cc-muted);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:.15s ease}
+.cc-pill:hover{background:rgba(255,255,255,.07);color:var(--cc-off)}
+.cc-pill.is-active{background:var(--cc-teal);border-color:var(--cc-teal);color:var(--cc-navy)}
+
+/* The pair as a horizontal snap-scroller: one side at a time, full width,
+   with a thin peek of the other side so it's obvious you can swipe. */
+.cc-swipe{display:flex;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x mandatory}
+.cc-swipe::-webkit-scrollbar{display:none}
+.cc-slide{flex:0 0 calc(100% - 30px);min-width:0;scroll-snap-align:center;display:flex}
+.cc-dots{display:flex;gap:9px;justify-content:center;margin-top:12px}
+.cc-dots span{width:8px;height:8px;border-radius:50%;background:var(--cc-line);transition:.2s ease}
+.cc-dots span.is-on{background:var(--cc-teal);box-shadow:0 0 12px color-mix(in srgb,var(--cc-teal) 60%,transparent)}
+.cc-side{flex:1;padding:20px 18px;border:1px solid var(--cc-line);border-radius:24px;background:linear-gradient(180deg,var(--cc-navy-2),var(--cc-navy));box-shadow:0 14px 40px rgba(0,0,0,.28)}
 .cc-sideHead{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:16px}
 /* Hero illustration leads each side: full column width, contained, on a faint
    surface panel with a soft radial glow to lift transparent art off the dark bg. */
@@ -70,17 +83,8 @@
 .cc-energyStage{flex:1;min-height:44px;display:grid;place-items:center;text-align:center;padding:8px;border-radius:12px;border:1px solid var(--cc-line);font-size:10px;font-weight:900;background:rgba(255,255,255,.03)}
 .cc-teal .cc-energyStage:first-child{color:var(--cc-teal)}.cc-coral .cc-energyStage:last-child{color:var(--cc-coral)}
 .cc-energyArrow{color:var(--cc-muted)}
-.cc-focus{display:grid;grid-template-columns:1.2fr .8fr;border-top:1px solid var(--cc-line)}
-.cc-focusMain{padding:17px 19px;background:rgba(255,255,255,.025)}
-.cc-focusEyebrow{display:block;color:#7f9f9b;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
-.cc-focusMain h4{margin:0 0 10px;font-size:19px}
-.cc-focusShared{margin-left:9px;font-size:10px;font-weight:800;color:var(--cc-sand);border:1px solid rgba(242,217,168,.2);border-radius:999px;padding:3px 6px;vertical-align:middle}
-.cc-focusGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.cc-focusGrid>div{border:1px solid var(--cc-line);border-radius:13px;padding:10px;background:rgba(255,255,255,.02)}
-.cc-focusGrid small{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#789a96;font-weight:900;margin-bottom:4px}
-.cc-focusGrid strong{font-size:12px;line-height:1.4}
-.cc-focusActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.cc-memory{border-left:1px solid var(--cc-line);padding:17px 19px;display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,.07)}
+/* Memory hook — shared, sits below the pair (about the comparison as a whole). */
+.cc-memory{margin-top:16px;border:1px solid var(--cc-line);border-radius:18px;padding:15px 17px;display:flex;gap:10px;align-items:flex-start;background:rgba(0,0,0,.12)}
 .cc-memoryDot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:var(--cc-teal);box-shadow:0 0 16px color-mix(in srgb,var(--cc-teal) 65%,transparent);margin-top:5px}
 .cc-memory p{margin:0;color:var(--cc-muted);font-size:12px;line-height:1.5}.cc-memory strong{color:var(--cc-off)}
 .cc-test{margin-top:12px;border:1px solid var(--cc-line);border-radius:18px;padding:15px;background:rgba(255,255,255,.025)}
@@ -90,5 +94,7 @@
 .cc-testOptions button.is-wrong{border-color:var(--cc-coral);background:color-mix(in srgb,var(--cc-coral) 10%,transparent)}
 .cc-test p{font-size:12px;color:var(--cc-muted);line-height:1.45}.cc-test .is-correctText{color:var(--cc-teal)}.cc-test .is-wrongText{color:#ffc3b4}
 .cc-testNote{opacity:.72}
-@media(max-width:820px){.cc-header{align-items:flex-start;flex-direction:column}.cc-focus{grid-template-columns:1fr}.cc-memory{border-left:none;border-top:1px solid var(--cc-line)}}
-@media(max-width:760px){.cc-compare{grid-template-columns:1fr}.cc-divider{height:1px;width:100%}.cc-side{padding:18px 15px}.cc-visualWrap{max-height:200px}.cc-row{grid-template-columns:96px 1fr;padding:10px}.cc-focusGrid{grid-template-columns:1fr}}
+/* Desktop: room enough to show both sides at once (no snap needed). */
+@media(min-width:820px){.cc-swipe{scroll-snap-type:none}.cc-slide{flex:0 0 calc(50% - 7px)}.cc-dots{display:none}}
+@media(max-width:820px){.cc-header{align-items:flex-start;flex-direction:column}}
+@media(max-width:760px){.cc-side{padding:18px 15px}.cc-visualWrap{max-height:200px}.cc-row{grid-template-columns:96px 1fr;padding:10px}}

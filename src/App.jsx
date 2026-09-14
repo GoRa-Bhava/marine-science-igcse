@@ -6,6 +6,7 @@ import { selectForLesson } from "./engine/select.js";
 import { buildRunQueue, runIsResumable, recordMiss } from "./engine/run.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
+import { pillLabel } from "./comparison/pills.js";
 
 /* ========================================================================
    RETRIEVAL PRACTICE ENGINE — subject content lives in src/content/
@@ -1207,6 +1208,34 @@ function SettingsView({ onRestore, onReset, onBack }) {
   );
 }
 
+/* Pill selector for the Concept-cards screen: a sideways-scrolling row of one
+   pill per comparison. Tapping selects; the active pill scrolls into view. */
+function ConceptPills({ activeIndex, onSelect }) {
+  const barRef = useRef(null);
+  useEffect(() => {
+    const bar = barRef.current;
+    const pill = bar?.children[activeIndex];
+    if (pill) pill.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [activeIndex]);
+  return (
+    <div className="cc-pills" ref={barRef} role="tablist" aria-label="Comparisons"
+      style={{ padding: "6px 22px 12px" }}>
+      {COMPARISON_CARDS.map((card, index) => (
+        <button
+          key={card.id}
+          type="button"
+          role="tab"
+          aria-selected={index === activeIndex}
+          className={`cc-pill${index === activeIndex ? " is-active" : ""}`}
+          onClick={() => onSelect(index)}
+        >
+          {pillLabel(card.id)}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- app */
 export default function App() {
   const [progress, setProgress] = useState(blankProgress);
@@ -1223,6 +1252,8 @@ export default function App() {
   const [reveal, setReveal] = useState(null);
   const [newlyMastered, setNewlyMastered] = useState([]);
   const [celebrate, setCelebrate] = useState(false);
+  const [conceptIndex, setConceptIndex] = useState(0);   // which comparison card is shown
+  const [conceptMode, setConceptMode] = useState("learn"); // persists across pills
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -1588,25 +1619,30 @@ export default function App() {
   /* A browsable gallery of two-sided comparison cards — a learn/review aid.
      Deliberately outside the question queue, scheduler, mastery and rewards. */
   if (view === "concepts") {
+    const card = COMPARISON_CARDS[conceptIndex] || COMPARISON_CARDS[0];
     return (
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
-        <div style={{ padding: "30px 22px 8px" }}>
+        <div style={{ padding: "30px 22px 6px" }}>
           <button onClick={() => setView("map")} style={{
             background: "none", border: "none", color: C.glow, fontFamily: FONT_UI,
-            fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
+            fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 14,
           }}>← Back</button>
-          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 6px" }}>
+          <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 26, fontWeight: 600, margin: "0 0 4px" }}>
             Concept cards
           </h1>
-          <p style={{ fontSize: 14.5, color: C.mist, margin: 0, lineHeight: 1.5 }}>
-            Two-sided comparisons to learn and self-check. These don't count toward mastery.
+          <p style={{ fontSize: 13.5, color: C.mist, margin: 0, lineHeight: 1.45 }}>
+            Pick a comparison, then swipe between the two sides. These don't count toward mastery.
           </p>
         </div>
-        <div style={{ padding: "16px 14px 44px", display: "flex", flexDirection: "column", gap: 18 }}>
-          {COMPARISON_CARDS.map((card) => (
-            <ComparisonCard key={card.id} card={card} />
-          ))}
+        <ConceptPills activeIndex={conceptIndex} onSelect={setConceptIndex} />
+        <div style={{ padding: "10px 14px 44px" }}>
+          <ComparisonCard
+            key={card.id}
+            card={card}
+            mode={conceptMode}
+            onModeChange={setConceptMode}
+          />
         </div>
       </div>
     );

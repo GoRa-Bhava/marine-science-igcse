@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { ConceptVisual } from "./ConceptVisual";
 import { hasHeroArt, heroFit } from "./card-art";
+import { sideIndexFromScroll } from "./pills";
 import "./comparison-card.css";
 
 // Each side leads with a painted hero illustration (card-art/<cardId>__<side>.webp)
@@ -145,22 +146,26 @@ function AccentSide({
 
 export function ComparisonCard({
   card,
+  mode: modeProp,
   initialMode = "learn",
   className = "",
   onModeChange,
 }) {
-  const [mode, setMode] = useState(initialMode);
+  // Mode is controllable (the Concept-cards screen owns it so it persists when
+  // you switch pills); falls back to internal state when used standalone.
+  const [modeState, setModeState] = useState(initialMode);
+  const mode = modeProp ?? modeState;
   const [activeRow, setActiveRow] = useState(0);
   const [revealedRows, setRevealedRows] = useState(new Set());
   const [answer, setAnswer] = useState(null);
-
-  const active = card.rows[activeRow];
+  const [activeSide, setActiveSide] = useState(0);
+  const swipeRef = useRef(null);
 
   const setCardMode = (next) => {
-    setMode(next);
     setAnswer(null);
     if (next === "learn") setRevealedRows(new Set());
-    onModeChange?.(next);
+    if (onModeChange) onModeChange(next);
+    else setModeState(next);
   };
 
   const revealRow = (index) => {
@@ -171,7 +176,13 @@ export function ComparisonCard({
     });
   };
 
+  const onSwipeScroll = (event) => {
+    const el = event.currentTarget;
+    setActiveSide(sideIndexFromScroll(el.scrollLeft, el.scrollWidth, el.clientWidth, 2));
+  };
+
   const classes = ["cc-root", className].filter(Boolean).join(" ");
+  const sides = ["a", "b"];
 
   const testState = useMemo(() => {
     if (!card.quickTest || answer === null) return null;
@@ -183,6 +194,7 @@ export function ComparisonCard({
 
   return (
     <section className={classes} data-card-id={card.id}>
+      {/* Shared controls — belong to the comparison, fixed across the swipe. */}
       <div className="cc-meta">
         <span>Unit {card.unit}</span>
         <span>{card.ref}</span>
@@ -213,60 +225,38 @@ export function ComparisonCard({
         </div>
       </div>
 
-      <div className="cc-shell">
-        <div className="cc-compare">
-          <AccentSide
-            card={card}
-            side="a"
-            activeRow={activeRow}
-            mode={mode}
-            revealedRows={revealedRows}
-            onSelectRow={setActiveRow}
-            onRevealRow={revealRow}
-          />
-          <div className="cc-divider" aria-hidden="true" />
-          <AccentSide
-            card={card}
-            side="b"
-            activeRow={activeRow}
-            mode={mode}
-            revealedRows={revealedRows}
-            onSelectRow={setActiveRow}
-            onRevealRow={revealRow}
-          />
-        </div>
-
-        <div className="cc-focus">
-          <div className="cc-focusMain">
-            <span className="cc-focusEyebrow">Selected comparison</span>
-            <h4>
-              {active.label}
-              {active.shared ? <span className="cc-focusShared">Same on both sides</span> : null}
-            </h4>
-            <div className="cc-focusGrid">
-              <div>
-                <small>{card.a.name}</small>
-                <strong>{mode === "recall" && !revealedRows.has(activeRow) ? "Hidden — reveal when ready." : active.a}</strong>
-              </div>
-              <div>
-                <small>{card.b.name}</small>
-                <strong>{mode === "recall" && !revealedRows.has(activeRow) ? "Hidden — reveal when ready." : active.b}</strong>
-              </div>
-            </div>
-            <div className="cc-focusActions">
-              {mode === "recall" && !revealedRows.has(activeRow) ? (
-                <button type="button" onClick={() => revealRow(activeRow)}>Reveal this pair</button>
-              ) : null}
-              <button type="button" onClick={() => setActiveRow((activeRow + 1) % card.rows.length)}>Next comparison</button>
-            </div>
+      {/* The pair: one side at a time, full width, snap-scroll with an edge peek. */}
+      <div className="cc-swipe" ref={swipeRef} onScroll={onSwipeScroll}>
+        {sides.map((side) => (
+          <div className="cc-slide" key={side}>
+            <AccentSide
+              card={card}
+              side={side}
+              activeRow={activeRow}
+              mode={mode}
+              revealedRows={revealedRows}
+              onSelectRow={setActiveRow}
+              onRevealRow={revealRow}
+            />
           </div>
-
-          <aside className="cc-memory">
-            <span className="cc-memoryDot" />
-            <p><strong>Memory hook:</strong> {card.memoryHook}</p>
-          </aside>
-        </div>
+        ))}
       </div>
+
+      <div className="cc-dots" role="tablist" aria-label="Shown side">
+        {sides.map((side, index) => (
+          <span
+            key={side}
+            className={activeSide === index ? "is-on" : ""}
+            aria-label={card[side].name}
+            aria-selected={activeSide === index}
+          />
+        ))}
+      </div>
+
+      <aside className="cc-memory">
+        <span className="cc-memoryDot" />
+        <p><strong>Memory hook:</strong> {card.memoryHook}</p>
+      </aside>
 
       {mode === "test" && card.quickTest ? (
         <div className="cc-test" aria-live="polite">
