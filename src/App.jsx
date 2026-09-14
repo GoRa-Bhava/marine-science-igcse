@@ -7,6 +7,8 @@ import { buildRunQueue, runIsResumable, recordMiss } from "./engine/run.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
+import { paletteFor, DEFAULT_SETTINGS } from "./theme.js";
+import { makeBackup, readBackup } from "./settings-io.js";
 
 /* ========================================================================
    RETRIEVAL PRACTICE ENGINE — subject content lives in src/content/
@@ -18,22 +20,14 @@ import { pillLabel } from "./comparison/pills.js";
    ======================================================================== */
 
 /* ---------------------------------------------------------------- tokens */
-const C = {
-  abyss: "#04141F",
-  deep: "#0A2A3D",
-  shelf: "#12455F",
-  raise: "#17546F",
-  line: "#1E6A87",
-  foam: "#EAF6F5",
-  mist: "#A9C7D2",
-  glow: "#4FD8C4",
-  glowDim: "#2A9C90",
-  coral: "#FF7A5C",
-  sand: "#F2D9A8",
-  gold: "#F3C34E",
-  ok: "#4FD8C4",
-  no: "#FF9E7D",
-};
+/* The module-level `C` is swapped by setPalette() at the top of each App render,
+   so every component (which reads `C` at render time) picks up the active theme.
+   Palettes live in theme.js; several SVGs feed `C` values into presentation
+   attributes, so they must stay real hex (var() is invalid there). */
+let C = paletteFor("dark");
+function setPalette(theme) { C = paletteFor(theme); }
+
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 const FONT_UI = "'Karla', ui-sans-serif, system-ui, sans-serif";
 const FONT_DISPLAY = "'Fraunces Variable', Georgia, serif";
@@ -122,8 +116,10 @@ function DrawnCreature({ id, size = 132 }) {
    strongly an item is held. */
 const STORE_KEY = content.storeKey; // names the saved progress; never changes once shipped
 
+/* App preferences (DEFAULT_SETTINGS, from theme.js) live inside the single
+   progress record, so they're saved, backed up, and reset with everything else. */
 function blankProgress() {
-  return { items: {}, creatures: [], mastered: [], runs: {}, version: PROGRESS_VERSION };
+  return { items: {}, creatures: [], mastered: [], runs: {}, settings: { ...DEFAULT_SETTINGS }, version: PROGRESS_VERSION };
 }
 
 /* Two measures from one pass over a topic's items, using two different
@@ -229,7 +225,9 @@ async function loadProgress() {
       /* Progress saved by the fixed-box scheduler (no version field) is
          converted to FSRS once and written back. Nothing is lost. */
       const { progress, migrated } = migrateProgress({
-        ...blankProgress(), ...saved, version: saved.version || 1,
+        ...blankProgress(), ...saved,
+        settings: { ...DEFAULT_SETTINGS, ...(saved.settings || {}) },
+        version: saved.version || 1,
       });
       if (migrated) await saveProgress(progress);
       return progress;
@@ -378,7 +376,7 @@ function FigureStage(props) {
       {wide && !props.locked && (
         <button onClick={() => setBig(true)} style={{
           marginTop: 8, background: "none", border: `1px solid ${C.line}`, borderRadius: 10,
-          color: C.glow, fontFamily: FONT_UI, fontSize: 13, padding: "6px 12px", cursor: "pointer",
+          color: C.accent, fontFamily: FONT_UI, fontSize: 13, padding: "6px 12px", cursor: "pointer",
         }}>⤢ Enlarge</button>
       )}
       {big && (
@@ -389,7 +387,7 @@ function FigureStage(props) {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 16px 10px" }}>
             <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>Scroll the figure sideways, then tap.</span>
             <button onClick={() => setBig(false)} style={{
-              background: "none", border: "none", color: C.glow, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
+              background: "none", border: "none", color: C.accent, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer",
             }}>✕ Close</button>
           </div>
           <div style={{ flex: 1, overflow: "auto", padding: "0 16px", WebkitOverflowScrolling: "touch" }}>
@@ -466,7 +464,7 @@ function FigureLabelQ({ item, locked, state, setState }) {
         <div style={{ marginTop: 6 }}>
           {fig.hotspots.map((h, i) => (
             <p key={h.id} style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, margin: "0 0 4px" }}>
-              <span style={{ color: C.glow }}>{i + 1}.</span> {h.label}
+              <span style={{ color: C.accent }}>{i + 1}.</span> {h.label}
             </p>
           ))}
         </div>
@@ -704,7 +702,7 @@ function MatchQ({ item, locked, state, setState }) {
           </p>
           {item.pairs.map(([a, b], i) => (
             <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px", lineHeight: 1.4 }}>
-              <span style={{ color: C.glow }}>{a}</span> — {b}
+              <span style={{ color: C.accent }}>{a}</span> — {b}
             </p>
           ))}
         </div>
@@ -756,7 +754,7 @@ function ChainQ({ item, locked, order, setOrder }) {
           <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>Correct order</p>
           {item.chunks.map((c, i) => (
             <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px" }}>
-              <span style={{ color: C.glow }}>{i + 1}.</span> {c}
+              <span style={{ color: C.accent }}>{i + 1}.</span> {c}
             </p>
           ))}
         </div>
@@ -808,7 +806,7 @@ function ExamQ({ item, locked, state, setState }) {
 
   const stepLabel = {
     fontFamily: FONT_UI, fontSize: 12, letterSpacing: ".05em", textTransform: "uppercase",
-    color: C.glow, margin: "0 0 10px",
+    color: C.accent, margin: "0 0 10px",
   };
   const note = { fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: "0 0 14px", lineHeight: 1.45 };
 
@@ -895,7 +893,7 @@ function ExamQ({ item, locked, state, setState }) {
               <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>Model answer</p>
               {item.build.map((c, i) => (
                 <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px" }}>
-                  <span style={{ color: C.glow }}>{i + 1}.</span> {c}
+                  <span style={{ color: C.accent }}>{i + 1}.</span> {c}
                 </p>
               ))}
             </div>
@@ -1029,7 +1027,7 @@ function UpdateCheck() {
   };
 
   const link = {
-    background: "none", border: "none", padding: 0, color: C.glow, cursor: "pointer",
+    background: "none", border: "none", padding: 0, color: C.accent, cursor: "pointer",
     fontFamily: FONT_UI, fontSize: 12.5, textDecoration: "underline",
   };
 
@@ -1068,7 +1066,7 @@ function UpdateCheck() {
 /* ------------------------------------------------------------ settings */
 /* Back up, restore, and a guarded full reset. All saved state is the single
    record under STORE_KEY, so a reset is just blankProgress() written back. */
-function SettingsView({ onRestore, onReset, onBack }) {
+function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
   const [backupMsg, setBackupMsg] = useState("");
   const [showText, setShowText] = useState(false);
   const [restoreText, setRestoreText] = useState("");
@@ -1076,7 +1074,7 @@ function SettingsView({ onRestore, onReset, onBack }) {
   const [restoreErr, setRestoreErr] = useState("");
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const json = () => exportProgress();
+  const json = () => JSON.stringify(makeBackup(exportProgress()), null, 2);
 
   const backUp = () => {
     setBackupMsg("");
@@ -1115,38 +1113,83 @@ function SettingsView({ onRestore, onReset, onBack }) {
 
   const restore = () => {
     setRestoreMsg(""); setRestoreErr("");
-    let parsed;
-    try { parsed = JSON.parse(restoreText); }
-    catch (e) { setRestoreErr("That doesn't look like a valid backup. Nothing was changed."); return; }
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      setRestoreErr("That doesn't look like a valid backup. Nothing was changed."); return;
+    const res = readBackup(restoreText);
+    if (!res.ok) {
+      setRestoreErr(res.error === "newer-schema"
+        ? "This backup is from a newer version of the app. Nothing was changed."
+        : "That doesn't look like a valid backup. Nothing was changed.");
+      return;
     }
     /* Merge onto a blank slate and migrate, exactly as first load does, so an
        older-shaped backup upgrades cleanly. */
-    const { progress } = migrateProgress({ ...blankProgress(), ...parsed, version: parsed.version || 1 });
+    const { progress } = migrateProgress({
+      ...blankProgress(), ...res.progress,
+      settings: { ...DEFAULT_SETTINGS, ...(res.progress.settings || {}) },
+      version: res.progress.version || 1,
+    });
     onRestore(progress);
     setRestoreText("");
     setRestoreMsg("Progress restored.");
   };
 
+  const seg = (value, options, onChange) => (
+    <div style={{ display: "flex", gap: 8 }}>
+      {options.map((o) => (
+        <button key={o.value} type="button" onClick={() => onChange(o.value)} aria-pressed={value === o.value} style={{
+          flex: 1, padding: "12px 10px", borderRadius: 12, cursor: "pointer", fontFamily: FONT_UI, fontSize: 14, fontWeight: 600,
+          border: `1px solid ${value === o.value ? C.glow : C.line}`,
+          background: value === o.value ? "rgba(79,216,196,.14)" : "transparent",
+          color: value === o.value ? C.accent : C.foam,
+        }}>{o.label}</button>
+      ))}
+    </div>
+  );
+
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
-    background: `linear-gradient(${C.deep} 0%, ${C.abyss} 60%)`, color: C.foam,
+    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam,
   };
   const section = { padding: "18px 20px", borderRadius: 16, border: `1px solid ${C.shelf}`, background: "rgba(18,69,95,.25)", marginBottom: 16 };
   const h = { fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, margin: "0 0 6px" };
   const p = { fontSize: 13.5, color: C.mist, lineHeight: 1.5, margin: "0 0 14px" };
   const btn = { width: "100%", padding: "13px 16px", borderRadius: 12, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam, fontFamily: FONT_UI, fontSize: 15, cursor: "pointer" };
-  const note = { fontSize: 12.5, color: C.glow, marginTop: 10, lineHeight: 1.5 };
+  const note = { fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 };
 
   return (
     <div style={shell}>
       <div style={{ padding: "30px 22px 40px" }}>
         <button onClick={onBack} style={{
-          background: "none", border: "none", color: C.glow, fontFamily: FONT_UI,
+          background: "none", border: "none", color: C.accent, fontFamily: FONT_UI,
           fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
         }}>← Back</button>
         <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 20px" }}>Settings</h1>
+
+        {/* Feedback timing */}
+        <div style={section}>
+          <h2 style={h}>Feedback timing</h2>
+          <p style={p}>In a unit run, show the answer after each question, or hold it all to the end-of-run review.</p>
+          {seg(settings.feedback || "immediate", [
+            { value: "immediate", label: "Immediate" },
+            { value: "review", label: "End of run" },
+          ], (v) => onSetSetting("feedback", v))}
+        </div>
+
+        {/* Theme */}
+        <div style={section}>
+          <h2 style={h}>Theme</h2>
+          <p style={p}>Dark oceanic, or a light variant.</p>
+          {seg(settings.theme || "dark", [
+            { value: "dark", label: "Dark" },
+            { value: "light", label: "Light" },
+          ], (v) => onSetSetting("theme", v))}
+        </div>
+
+        {/* About / version + updates */}
+        <div style={section}>
+          <h2 style={h}>About</h2>
+          <p style={p}>Marine Science IGCSE Revision App 2026/27 · build {BUILD || "dev"}. A no-login revision app; your progress is saved on this device.</p>
+          <UpdatesControl />
+        </div>
 
         {/* 1. Back up */}
         <div style={section}>
@@ -1159,7 +1202,7 @@ function SettingsView({ onRestore, onReset, onBack }) {
           {(showText || false) && (
             <textarea readOnly value={json()} onFocus={(e) => e.target.select()} rows={5}
               style={{ width: "100%", marginTop: 10, fontFamily: "monospace", fontSize: 11, padding: 8,
-                borderRadius: 8, border: `1px solid ${C.line}`, background: C.abyss, color: C.mist, resize: "vertical" }} />
+                borderRadius: 8, border: `1px solid ${C.line}`, background: C.inset, color: C.mist, resize: "vertical" }} />
           )}
         </div>
 
@@ -1172,7 +1215,7 @@ function SettingsView({ onRestore, onReset, onBack }) {
           <textarea value={restoreText} onChange={(e) => { setRestoreText(e.target.value); setRestoreErr(""); }}
             placeholder="…or paste your backup JSON here" rows={4}
             style={{ width: "100%", fontFamily: "monospace", fontSize: 11, padding: 8, borderRadius: 8,
-              border: `1px solid ${restoreErr ? C.no : C.line}`, background: C.abyss, color: C.foam, resize: "vertical", boxSizing: "border-box" }} />
+              border: `1px solid ${restoreErr ? C.no : C.line}`, background: C.inset, color: C.foam, resize: "vertical", boxSizing: "border-box" }} />
           <button onClick={restore} disabled={!restoreText.trim()} style={{
             ...btn, marginTop: 10, cursor: restoreText.trim() ? "pointer" : "default",
             opacity: restoreText.trim() ? 1 : 0.5,
@@ -1236,11 +1279,203 @@ function ConceptPills({ activeIndex, onSelect }) {
   );
 }
 
+/* -------------------------------------------------- navigation shell */
+/* Top-right hamburger on every screen; the drawer itself slides in from the
+   LEFT (intentional, per the product owner). */
+function HamburgerButton({ open, onClick }) {
+  return (
+    <button
+      type="button" aria-label="Open menu" aria-expanded={open} aria-haspopup="true"
+      onClick={onClick}
+      style={{
+        position: "fixed", top: 12, right: "max(12px, calc((100vw - 480px) / 2 + 12px))",
+        zIndex: 60, width: 42, height: 42, borderRadius: 12, border: `1px solid ${C.line}`,
+        background: C.shelf, color: C.foam, cursor: "pointer", display: "grid", placeItems: "center",
+      }}
+    >
+      <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true">
+        {[1, 6, 11].map((y) => <rect key={y} x="0" y={y} width="20" height="2" rx="1" fill={C.foam} />)}
+      </svg>
+    </button>
+  );
+}
+
+function NavDrawer({ open, onClose, current, items }) {
+  const ref = useRef(null);
+  const touchX = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";   // no page scroll behind the drawer
+    const focusables = () => [...(ref.current?.querySelectorAll("button") || [])];
+    const onKey = (e) => {
+      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "Tab") {
+        const f = focusables();
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    const raf = requestAnimationFrame(() => focusables()[0]?.focus());
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+      cancelAnimationFrame(raf);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
+  const onTouchMove = (e) => {
+    if (touchX.current != null && touchX.current - e.touches[0].clientX > 55) { touchX.current = null; onClose(); }
+  };
+
+  return (
+    <>
+      <div onClick={onClose} aria-hidden="true" style={{
+        position: "fixed", inset: 0, zIndex: 70, background: "rgba(2,10,16,.55)", animation: "mrise .16s ease-out",
+      }} />
+      <nav ref={ref} aria-label="Main navigation" onTouchStart={onTouchStart} onTouchMove={onTouchMove} style={{
+        position: "fixed", top: 0, left: 0, height: "100dvh", width: "min(320px, 80%)", zIndex: 80,
+        background: C.bg1, borderRight: `1px solid ${C.line}`, boxShadow: "0 0 44px rgba(0,0,0,.45)",
+        display: "flex", flexDirection: "column", padding: "16px 14px", animation: "slideIn .22s ease-out",
+        overflowY: "auto",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 19, fontWeight: 600, color: C.foam }}>Menu</span>
+          <button type="button" onClick={onClose} aria-label="Close menu" style={{
+            background: "none", border: "none", color: C.mist, fontSize: 26, lineHeight: 1, cursor: "pointer", padding: "0 4px",
+          }}>×</button>
+        </div>
+        {items.map((it) => it.render ? (
+          <div key={it.key}>{it.render()}</div>
+        ) : (
+          <button key={it.key} type="button" onClick={it.onClick}
+            aria-current={current === it.key ? "page" : undefined}
+            style={{
+              textAlign: "left", padding: "13px 12px", marginBottom: 6, borderRadius: 12, cursor: "pointer",
+              border: `1px solid ${current === it.key ? C.glow : "transparent"}`,
+              background: current === it.key ? "rgba(79,216,196,.12)" : "transparent",
+              color: current === it.key ? C.accent : C.foam,
+              fontFamily: FONT_UI, fontSize: 15, fontWeight: current === it.key ? 700 : 500,
+            }}>
+            {it.label}
+          </button>
+        ))}
+      </nav>
+    </>
+  );
+}
+
+/* One "Check for updates" control for both platforms. Web: refresh the service
+   worker and reload to the newest deploy. Native (APK): compare the build number
+   to the latest GitHub release and hand the download to the phone's browser. */
+function UpdatesControl() {
+  const [state, setState] = useState({ kind: "idle" });
+  const link = {
+    background: "none", border: "none", padding: 0, color: C.accent, cursor: "pointer",
+    fontFamily: FONT_UI, fontSize: 13, textDecoration: "underline",
+  };
+
+  const check = async () => {
+    setState({ kind: "checking" });
+    try {
+      if (IS_NATIVE) {
+        const latest = await fetchLatestBuild();
+        setState(latest > BUILD ? { kind: "available", latest } : { kind: "current" });
+        return;
+      }
+      const reg = await navigator.serviceWorker?.getRegistration?.();
+      if (!reg) { setState({ kind: "updating" }); window.location.reload(); return; }
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!reloaded) { reloaded = true; window.location.reload(); }
+      });
+      await reg.update();
+      const fresh = reg.installing || reg.waiting;
+      if (fresh) { setState({ kind: "updating" }); fresh.postMessage?.({ type: "SKIP_WAITING" }); }
+      else setState({ kind: "current" });
+    } catch (e) { setState({ kind: "error" }); }
+  };
+
+  return (
+    <div style={{ fontSize: 13, color: C.mist, lineHeight: 1.6 }}>
+      <button type="button" onClick={check} style={{
+        textAlign: "left", padding: "13px 12px", width: "100%", borderRadius: 12, cursor: "pointer",
+        border: "1px solid transparent", background: "transparent", color: C.foam,
+        fontFamily: FONT_UI, fontSize: 15, fontWeight: 500,
+      }}>
+        Check for updates
+      </button>
+      <div style={{ padding: "0 12px" }}>
+        {state.kind === "checking" && <div>Checking…</div>}
+        {state.kind === "updating" && <div>Updating…</div>}
+        {state.kind === "current" && <div>Up to date (build {BUILD || "dev"}). <button onClick={check} style={link}>Check again</button></div>}
+        {state.kind === "error" && <div>Couldn't check. Are you online? <button onClick={check} style={link}>Try again</button></div>}
+        {state.kind === "available" && (
+          <button type="button" onClick={() => { window.location.href = APK_URL; }} style={{
+            display: "block", width: "100%", marginTop: 8, padding: 12, borderRadius: 12,
+            border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)", color: C.foam,
+            fontFamily: FONT_UI, fontSize: 14, cursor: "pointer",
+          }}>
+            Download build {state.latest}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------- home */
+function HomeView({ onUnits, onConcepts, masteredCount, totalTopics }) {
+  const shell = {
+    fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
+    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam,
+    display: "flex", flexDirection: "column", justifyContent: "center", padding: "40px 28px",
+  };
+  const primary = {
+    width: "100%", padding: "20px 18px", borderRadius: 18, border: `1px solid ${C.glow}`,
+    background: "rgba(79,216,196,.10)", color: C.foam, fontFamily: FONT_UI, fontSize: 18,
+    fontWeight: 600, cursor: "pointer", marginBottom: 16, lineHeight: 1.3,
+  };
+  const sub = { display: "block", fontSize: 13, fontWeight: 500, color: C.accent, marginTop: 4 };
+  return (
+    <div style={shell}>
+      <p style={{ textAlign: "center", fontSize: 13, color: C.accent, letterSpacing: ".06em", margin: "0 0 10px" }}>
+        {content.title}
+      </p>
+      <h1 style={{
+        fontFamily: FONT_DISPLAY, fontSize: 32, fontWeight: 600, textAlign: "center",
+        lineHeight: 1.15, letterSpacing: "-0.02em", margin: "0 0 6px",
+      }}>
+        Marine Science IGCSE Revision App 2026/27
+      </h1>
+      <p style={{ textAlign: "center", fontSize: 13.5, color: C.mist, margin: "0 0 34px", lineHeight: 1.5 }}>
+        {masteredCount} of {totalTopics} topics mastered
+      </p>
+      <button style={primary} onClick={onUnits}>
+        Units 1–6 Multiple Choice
+        <span style={sub}>Study by unit or mix all topics</span>
+      </button>
+      <button style={primary} onClick={onConcepts}>
+        Concept Cards / 14 Comparisons
+        <span style={sub}>Two-sided comparisons to learn &amp; self-check</span>
+      </button>
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- app */
 export default function App() {
   const [progress, setProgress] = useState(blankProgress);
   const [ready, setReady] = useState(false);
-  const [view, setView] = useState("map");
+  const [view, setView] = useState("home");
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [queue, setQueue] = useState([]);
   const [qIdx, setQIdx] = useState(0);
   const [locked, setLocked] = useState(false);
@@ -1255,6 +1490,29 @@ export default function App() {
   const [conceptIndex, setConceptIndex] = useState(0);   // which comparison card is shown
   const [conceptMode, setConceptMode] = useState("learn"); // persists across pills
   const scrollRef = useRef(null);
+
+  /* Active theme — read from saved settings and applied to the module palette
+     synchronously, so this render and every child use the right colours. */
+  const settings = progress.settings || DEFAULT_SETTINGS;
+  const theme = settings.theme === "light" ? "light" : "dark";
+  setPalette(theme);
+  const setSetting = (key, value) =>
+    setProgress((p) => ({ ...p, settings: { ...DEFAULT_SETTINGS, ...(p.settings || {}), [key]: value } }));
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    document.body.style.background = C.bg1;
+    // comparison-card.css reads these; override for light, fall back to its dark defaults otherwise
+    const keys = ["--color-bg-deep", "--color-surface", "--color-text-primary", "--color-text-secondary"];
+    if (theme === "light") {
+      const map = { "--color-bg-deep": C.bg1, "--color-surface": "#EAF5F5", "--color-text-primary": C.foam, "--color-text-secondary": C.mist };
+      keys.forEach((k) => root.style.setProperty(k, map[k]));
+    } else {
+      keys.forEach((k) => root.style.removeProperty(k));
+    }
+  }, [theme]);
 
   useEffect(() => {
     loadProgress().then((p) => { setProgress(p); setReady(true); });
@@ -1446,19 +1704,49 @@ export default function App() {
 
   const leaveLesson = () => setView(activeRun ? "review" : "map");
 
+  /* Feedback timing (Settings): in a per-unit run set to "end-of-run review",
+     a Check grades the item and advances without showing the per-question
+     explanation — all feedback is gathered on the review screen. "immediate"
+     (and every non-run lesson) reveals the explanation per question as before. */
+  const deferFeedback = settings.feedback === "review" && !!activeRun;
+  const onPrimary = () => {
+    if (locked) { next(); return; }
+    if (deferFeedback) { submit(); next(); return; }
+    submit();
+  };
+
   /* ---------------------------------------------------------- shells */
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
-    background: `linear-gradient(${C.deep} 0%, ${C.abyss} 60%)`,
+    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`,
     color: C.foam, position: "relative",
   };
 
   const keyframes = `
     @keyframes mfall { to { transform: translateY(420px) rotate(540deg); opacity: 0 } }
     @keyframes mrise { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+    @keyframes slideIn { from { transform: translateX(-100%) } to { transform: none } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important } }
     button:focus-visible, div:focus-visible { outline: 2px solid ${C.glow}; outline-offset: 2px }
   `;
+
+  /* Global nav chrome wrapped around every screen. The hamburger is top-right;
+     the drawer slides in from the left (intentional). */
+  const go = (target) => { setDrawerOpen(false); setView(target); };
+  const navItems = [
+    { key: "home", label: "Home", onClick: () => go("home") },
+    { key: "map", label: "Units 1–6 Multiple Choice", onClick: () => go("map") },
+    { key: "concepts", label: "Concept Cards (14 Comparisons)", onClick: () => go("concepts") },
+    { key: "settings", label: "Settings", onClick: () => go("settings") },
+    { key: "updates", render: () => <UpdatesControl /> },
+  ];
+  const page = (content) => (
+    <>
+      {content}
+      <HamburgerButton open={drawerOpen} onClick={() => setDrawerOpen(true)} />
+      <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} current={view} items={navItems} />
+    </>
+  );
 
   if (!ready) {
     return (
@@ -1468,14 +1756,30 @@ export default function App() {
     );
   }
 
+  /* -------------------------------------------------------- home view */
+  if (view === "home") {
+    const masteredCount = TOPICS.filter((t) => stats[t.id].state === "mastered").length;
+    return page(
+      <>
+        <style>{keyframes}</style>
+        <HomeView
+          onUnits={() => setView("map")}
+          onConcepts={() => setView("concepts")}
+          masteredCount={masteredCount}
+          totalTopics={TOPICS.length}
+        />
+      </>
+    );
+  }
+
   /* --------------------------------------------------------- map view */
   if (view === "map") {
     const masteredCount = TOPICS.filter((t) => stats[t.id].state === "mastered").length;
-    return (
+    return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
         <div style={{ padding: "34px 22px 12px" }}>
-          <p style={{ fontSize: 13, color: C.glow, margin: "0 0 6px", letterSpacing: ".04em" }}>
+          <p style={{ fontSize: 13, color: C.accent, margin: "0 0 6px", letterSpacing: ".04em" }}>
             {content.title} · {content.subtitle}
           </p>
           <h1 style={{
@@ -1516,7 +1820,7 @@ export default function App() {
                   color: C.foam, cursor: "pointer", fontFamily: FONT_UI, margin: "6px 0 14px",
                 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-                    <span style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.glow }}>
+                    <span style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.accent }}>
                       {u.title || `Unit ${u.n} · ${u.name}`}
                     </span>
                     <span style={{ fontSize: 12, color: C.line, flexShrink: 0 }}>{done}/{list.length} mastered</span>
@@ -1582,7 +1886,7 @@ export default function App() {
             <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 8 }}>
               <DepthNode state="inprogress" blueFrac={0.6} goldFrac={0} size={34} />
               <p style={{ fontSize: 12.5, color: C.mist, margin: 0, lineHeight: 1.45 }}>
-                <span style={{ color: C.glow }}>Teal ring</span> fills with every question you get right.
+                <span style={{ color: C.accent }}>Teal ring</span> fills with every question you get right.
                 Full once you have answered them all: <span style={{ color: C.foam }}>Done</span>.
               </p>
             </div>
@@ -1608,11 +1912,13 @@ export default function App() {
 
   /* ---------------------------------------------------- settings view */
   if (view === "settings") {
-    return (
+    return page(
       <SettingsView
-        onBack={() => setView("map")}
+        onBack={() => setView("home")}
         onRestore={restoreProgress}
         onReset={resetProgress}
+        settings={settings}
+        onSetSetting={setSetting}
       />
     );
   }
@@ -1622,12 +1928,12 @@ export default function App() {
      Deliberately outside the question queue, scheduler, mastery and rewards. */
   if (view === "concepts") {
     const card = COMPARISON_CARDS[conceptIndex] || COMPARISON_CARDS[0];
-    return (
+    return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
         <div style={{ padding: "30px 22px 6px" }}>
           <button onClick={() => setView("map")} style={{
-            background: "none", border: "none", color: C.glow, fontFamily: FONT_UI,
+            background: "none", border: "none", color: C.accent, fontFamily: FONT_UI,
             fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 14,
           }}>← Back</button>
           <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 26, fontWeight: 600, margin: "0 0 4px" }}>
@@ -1652,12 +1958,12 @@ export default function App() {
 
   /* -------------------------------------------------- collection view */
   if (view === "collection") {
-    return (
+    return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
         <div style={{ padding: "30px 22px 10px" }}>
           <button onClick={() => setView("map")} style={{
-            background: "none", border: "none", color: C.glow, fontFamily: FONT_UI,
+            background: "none", border: "none", color: C.accent, fontFamily: FONT_UI,
             fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
           }}>← Back</button>
           <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 6px" }}>
@@ -1709,7 +2015,7 @@ export default function App() {
       width: "100%", padding: "15px", borderRadius: 14, fontFamily: FONT_UI, fontSize: 15,
       cursor: "pointer", marginBottom: 10,
     };
-    return (
+    return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
         <div style={{ padding: "30px 22px 40px" }}>
@@ -1723,7 +2029,7 @@ export default function App() {
           </p>
 
           {missed.length === 0 ? (
-            <p style={{ fontSize: 15, color: C.glow, lineHeight: 1.6, marginBottom: 24 }}>
+            <p style={{ fontSize: 15, color: C.accent, lineHeight: 1.6, marginBottom: 24 }}>
               Nothing missed this run. Clean sweep.
             </p>
           ) : (
@@ -1775,7 +2081,7 @@ export default function App() {
   if (view === "result") {
     const right = sessionLog.filter((s) => s.right).length;
     const missed = sessionLog.filter((s) => !s.right).length;
-    return (
+    return page(
       <div style={{ ...shell, display: "flex", flexDirection: "column", justifyContent: "center", padding: "40px 24px" }}>
         <style>{keyframes}</style>
         <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 32, fontWeight: 600, margin: "0 0 14px", lineHeight: 1.15 }}>
@@ -1785,7 +2091,7 @@ export default function App() {
           {right} answered from memory{missed > 0 && `, ${missed} not yet`}.
         </p>
         {missed > 0 && (
-          <p style={{ fontSize: 15, color: C.glow, lineHeight: 1.6, margin: "0 0 8px" }}>
+          <p style={{ fontSize: 15, color: C.accent, lineHeight: 1.6, margin: "0 0 8px" }}>
             The ones you missed come back tomorrow.
           </p>
         )}
@@ -1817,7 +2123,7 @@ export default function App() {
   const topic = TOPICS.find((t) => t.id === item.topic);
   const pct = ((qIdx) / queue.length) * 100;
 
-  return (
+  return page(
     <div style={{ ...shell, display: "flex", flexDirection: "column" }}>
       <style>{keyframes}</style>
 
@@ -1834,7 +2140,7 @@ export default function App() {
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 18 }}>
           <span style={{
             fontSize: 11.5, padding: "3px 9px", borderRadius: 20,
-            border: `1px solid ${C.line}`, color: C.glow,
+            border: `1px solid ${C.line}`, color: C.accent,
           }}>{SHAPE_NAME[item.type]}</span>
           <span style={{ fontSize: 12.5, color: C.line }}>{topic.name}</span>
         </div>
@@ -1871,7 +2177,7 @@ export default function App() {
           </div>
         )}
         <button
-          onClick={locked ? next : submit}
+          onClick={onPrimary}
           disabled={!locked && !canSubmit()}
           style={{
             width: "100%", padding: "16px", borderRadius: 14, border: "none",
@@ -1880,7 +2186,9 @@ export default function App() {
             color: !locked && !canSubmit() ? C.line : C.abyss,
             cursor: !locked && !canSubmit() ? "default" : "pointer",
           }}>
-          {locked ? (qIdx + 1 >= queue.length ? "Finish" : "Next") : "Check"}
+          {locked
+            ? (qIdx + 1 >= queue.length ? "Finish" : "Next")
+            : (deferFeedback ? (qIdx + 1 >= queue.length ? "Finish" : "Next") : "Check")}
         </button>
       </div>
 
@@ -1891,7 +2199,7 @@ export default function App() {
           alignItems: "center", padding: 32, textAlign: "center", zIndex: 20,
           animation: "mrise .3s ease-out",
         }}>
-          <p style={{ fontSize: 13, color: C.glow, letterSpacing: ".05em", margin: "0 0 4px" }}>
+          <p style={{ fontSize: 13, color: C.accent, letterSpacing: ".05em", margin: "0 0 4px" }}>
             {reveal.rarity} discovery
           </p>
           <CreatureArt id={reveal.id} size={168} />
