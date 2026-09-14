@@ -1546,6 +1546,7 @@ export default function App() {
   const [conceptMode, setConceptMode] = useState("learn"); // persists across pills
   const [unitIndex, setUnitIndex] = useState(0);          // which unit the map shows
   const scrollRef = useRef(null);
+  const feedbackRef = useRef(null);
 
   /* Active theme — read from saved settings and applied to the module palette
      synchronously, so this render and every child use the right colours. */
@@ -1575,6 +1576,14 @@ export default function App() {
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
     window.scrollTo(0, 0);
   }, [qIdx, view]);
+
+  // Pressing Check locks the question and reveals the answer/explanation in the
+  // footer — scroll it into view so it isn't left below the fold.
+  useEffect(() => {
+    if (!locked || !feedbackRef.current) return;
+    const el = feedbackRef.current;
+    requestAnimationFrame(() => el.scrollIntoView({ block: "end", behavior: "smooth" }));
+  }, [locked]);
   // Start each newly-selected comparison from the top (the mode bar unpins).
   useEffect(() => { if (view === "concepts") window.scrollTo({ top: 0 }); }, [conceptIndex]);
 
@@ -2212,7 +2221,7 @@ export default function App() {
         {item.type === "label" && <FigureLabelQ item={item} locked={locked} state={answer} setState={setAnswer} />}
       </div>
 
-      <div style={{
+      <div ref={feedbackRef} style={{
         padding: "16px 22px 26px", position: "relative",
         borderTop: locked ? `1px solid ${C.line}` : "none",
         background: locked ? (wasRight ? "rgba(79,216,196,.07)" : "rgba(255,158,125,.06)") : "transparent",
