@@ -1,6 +1,37 @@
 import React, { useMemo, useState } from "react";
 import { ConceptVisual } from "./ConceptVisual";
+import { hasHeroArt } from "./card-art";
 import "./comparison-card.css";
+
+// Each side leads with a painted hero illustration (card-art/<cardId>__<side>.webp)
+// when one is bundled. If none exists for this side, or the image fails to load,
+// the side falls back to its ConceptVisual emblem — per side, so a half-illustrated
+// card renders art on the side that has it and the emblem on the side that doesn't.
+function SideVisual({ card, side }) {
+  const data = card[side];
+  const [failed, setFailed] = useState(false);
+
+  if (!hasHeroArt(card.id, side) || failed) {
+    return (
+      <div className="cc-visualWrap cc-visualWrap--emblem">
+        <ConceptVisual visualKey={data.visualKey} accent={data.accent} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="cc-visualWrap cc-visualWrap--hero">
+      <img
+        className="cc-heroArt"
+        src={`card-art/${card.id}__${side}.webp`}
+        alt={data.name}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
 
 function AccentSide({
   card,
@@ -16,9 +47,7 @@ function AccentSide({
   return (
     <article className={`cc-side cc-${data.accent}`}>
       <header className="cc-sideHead">
-        <div className="cc-visualWrap">
-          <ConceptVisual visualKey={data.visualKey} accent={data.accent} />
-        </div>
+        <SideVisual card={card} side={side} />
         <div className="cc-sideTitleBlock">
           <h3>{data.name}</h3>
           <p>{data.kicker}</p>

@@ -1,0 +1,11 @@
+{
+  "note": "Per-side hero illustrations for the comparison cards. Transparent WebP, ~800px long edge. Convention: <cardId>__a.webp / <cardId>__b.webp, where a/b match the side order in comparison-cards.ts. For any missing side the component falls back to the ConceptVisual emblem. All 14 cards are now fully illustrated (both sides).",
+  "available": [
+    "cmp-resp-photo", "cmp-seagrass-kelp", "cmp-dino-diatom", "cmp-sonar-radar", "cmp-sandy-muddy",
+    "cmp-fossil-renewable", "cmp-open-closed-aquaculture", "cmp-solid-gas-solubility",
+    "cmp-sexual-asexual", "cmp-nares-lateralline", "cmp-detritivore-decomposer",
+    "cmp-pneumatophore-proproot", "cmp-pelagic-benthic", "cmp-respiration-gasexchange"
+  ],
+  "partial": {},
+  "pending": []
+}
