@@ -1147,7 +1147,7 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
 
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
-    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam, paddingTop: APPBAR_OFFSET,
+    background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam, paddingTop: APPBAR_OFFSET, overflowX: "clip",
   };
   const section = { padding: "18px 20px", borderRadius: 16, border: `1px solid ${C.line}`, background: C.shelf, marginBottom: 16 };
   const h = { fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, margin: "0 0 6px" };
@@ -1201,7 +1201,7 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
           {backupMsg && <p style={note}>{backupMsg}</p>}
           {(showText || false) && (
             <textarea readOnly value={json()} onFocus={(e) => e.target.select()} rows={5}
-              style={{ width: "100%", marginTop: 10, fontFamily: "monospace", fontSize: 11, padding: 8,
+              style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box", marginTop: 10, fontFamily: "monospace", fontSize: 11, padding: 8,
                 borderRadius: 8, border: `1px solid ${C.line}`, background: C.inset, color: C.mist, resize: "vertical" }} />
           )}
         </div>
@@ -1211,7 +1211,7 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
           <h2 style={h}>Restore from a backup</h2>
           <p style={p}>Paste a backup, or choose a saved file, then restore. This replaces your current progress.</p>
           <input type="file" accept="application/json,.json" onChange={readFile}
-            style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, display: "block" }} />
+            style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, display: "block", maxWidth: "100%", boxSizing: "border-box" }} />
           <textarea value={restoreText} onChange={(e) => { setRestoreText(e.target.value); setRestoreErr(""); }}
             placeholder="…or paste your backup JSON here" rows={4}
             style={{ width: "100%", fontFamily: "monospace", fontSize: 11, padding: 8, borderRadius: 8,
@@ -1297,6 +1297,62 @@ function ComparisonSelector({ cards, activeIndex, onSelect }) {
                 fontWeight: i === activeIndex ? 700 : 500, lineHeight: 1.3,
               }}>
               {pillLabel(c.id)}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Collapsible unit selector for the Units page — the same pattern as the
+   comparison selector, a vertical list (unit labels are longer). Picking a unit
+   shows that unit and collapses; toggle / outside click / Esc also collapse. */
+function UnitMenu({ units, activeIndex, onSelect, subFor }) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  const label = (u) => u.title || `Unit ${u.n} · ${u.name}`;
+  const current = units[activeIndex] || units[0];
+  return (
+    <div ref={wrapRef} style={{ position: "relative" }}>
+      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} style={{
+        width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+        padding: "13px 15px", borderRadius: 14, cursor: "pointer",
+        border: `1px solid ${C.line}`, background: C.shelf, color: C.foam,
+        fontFamily: FONT_UI, fontSize: 15.5, fontWeight: 700, textAlign: "left",
+      }}>
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label(current)}</span>
+        <span aria-hidden="true" style={{ color: C.accent, transform: open ? "rotate(180deg)" : "none", transition: ".18s" }}>▾</span>
+      </button>
+      {open && (
+        <div role="listbox" aria-label="Choose a unit" style={{
+          position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, zIndex: 30,
+          maxHeight: "70vh", overflowY: "auto", display: "grid", gap: 8,
+          padding: 10, borderRadius: 14, border: `1px solid ${C.line}`, background: C.bg1,
+          boxShadow: "0 18px 44px rgba(0,0,0,.4)",
+        }}>
+          {units.map((u, i) => (
+            <button key={u.n} type="button" role="option" aria-selected={i === activeIndex}
+              onClick={() => { onSelect(i); setOpen(false); }}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
+                textAlign: "left", padding: "12px 13px", borderRadius: 11, cursor: "pointer",
+                border: `1px solid ${i === activeIndex ? C.glow : C.line}`,
+                background: i === activeIndex ? "rgba(79,216,196,.14)" : "transparent",
+                color: i === activeIndex ? C.accent : C.foam, fontFamily: FONT_UI, fontSize: 14,
+                fontWeight: i === activeIndex ? 700 : 500, lineHeight: 1.3,
+              }}>
+              <span>{label(u)}</span>
+              {subFor && <span style={{ flexShrink: 0, fontSize: 12, color: C.mist }}>{subFor(u)}</span>}
             </button>
           ))}
         </div>
@@ -1485,7 +1541,7 @@ function HomeView({ onUnits, onConcepts, masteredCount, totalTopics }) {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
     background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam,
     display: "flex", flexDirection: "column", justifyContent: "center",
-    padding: "40px 28px", paddingTop: APPBAR_OFFSET,
+    padding: "40px 28px", paddingTop: APPBAR_OFFSET, overflowX: "clip",
   };
   const primary = {
     width: "100%", padding: "20px 18px", borderRadius: 18, border: `1px solid ${C.glow}`,
@@ -1538,6 +1594,7 @@ export default function App() {
   const [celebrate, setCelebrate] = useState(false);
   const [conceptIndex, setConceptIndex] = useState(0);   // which comparison card is shown
   const [conceptMode, setConceptMode] = useState("learn"); // persists across pills
+  const [unitIndex, setUnitIndex] = useState(0);          // which unit the map shows
   const scrollRef = useRef(null);
 
   /* Active theme — read from saved settings and applied to the module palette
@@ -1761,7 +1818,7 @@ export default function App() {
   const shell = {
     fontFamily: FONT_UI, maxWidth: 480, margin: "0 auto", minHeight: "100dvh",
     background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`,
-    color: C.foam, position: "relative", paddingTop: APPBAR_OFFSET,
+    color: C.foam, position: "relative", paddingTop: APPBAR_OFFSET, overflowX: "clip",
   };
 
   const keyframes = `
@@ -1845,8 +1902,21 @@ export default function App() {
           </button>
         </div>
 
-        <div style={{ padding: "18px 22px 8px" }}>
-          {UNITS.map((u) => {
+        <div style={{ padding: "16px 22px 2px" }}>
+          <UnitMenu
+            units={UNITS}
+            activeIndex={unitIndex}
+            onSelect={setUnitIndex}
+            subFor={(u) => {
+              const l = TOPICS.filter((t) => t.unit === u.n);
+              const d = l.filter((t) => stats[t.id].state === "mastered").length;
+              return `${d}/${l.length}`;
+            }}
+          />
+        </div>
+
+        <div style={{ padding: "10px 22px 8px" }}>
+          {[UNITS[unitIndex] || UNITS[0]].map((u) => {
             const list = TOPICS.filter((t) => t.unit === u.n);
             const done = list.filter((t) => stats[t.id].state === "mastered").length;
             const ri = runInfo(progress, u.n);
