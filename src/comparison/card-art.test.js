@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { COMPARISON_CARDS } from "./comparison-cards.js";
-import { CARD_ART, hasHeroArt } from "./card-art.js";
+import { CARD_ART, FULL_FRAME, hasHeroArt, heroFit } from "./card-art.js";
 
 // The component leads each side with a hero <img> when hasHeroArt(id, side) is
 // true, and falls back to the ConceptVisual emblem otherwise. The app has no DOM
@@ -35,4 +35,24 @@ test("every art key names a real card side (no orphan art entries)", () => {
   const validKeys = new Set();
   for (const c of COMPARISON_CARDS) for (const side of ["a", "b"]) validKeys.add(`${c.id}__${side}`);
   for (const key of CARD_ART) assert.ok(validKeys.has(key), `art key ${key} matches a card side`);
+  for (const key of FULL_FRAME) assert.ok(validKeys.has(key), `full-frame key ${key} matches a card side`);
+});
+
+test("heroFit is cover for full-frame scenes and contain otherwise", () => {
+  // every full-frame side must also have art, and resolve to cover
+  for (const key of FULL_FRAME) {
+    assert.ok(CARD_ART.has(key), `full-frame ${key} has art`);
+    const [id, side] = key.split("__");
+    assert.equal(heroFit(id, side), "cover");
+  }
+  // a cut-out side (has art, not full-frame) resolves to contain
+  for (const c of COMPARISON_CARDS) {
+    for (const side of ["a", "b"]) {
+      if (hasHeroArt(c.id, side) && !FULL_FRAME.has(`${c.id}__${side}`)) {
+        assert.equal(heroFit(c.id, side), "contain");
+      }
+    }
+  }
+  // unknown side defaults to contain (safe for the emblem-fallback path)
+  assert.equal(heroFit("cmp-does-not-exist", "a"), "contain");
 });

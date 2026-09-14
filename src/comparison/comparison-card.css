@@ -36,7 +36,12 @@
 .cc-visualWrap--hero{background:
   radial-gradient(120% 90% at 50% 30%, rgba(255,255,255,.06), transparent 70%),
   rgba(255,255,255,.03)}
-.cc-heroArt{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;display:block;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
+.cc-heroArt{display:block}
+/* Transparent cut-out: contain on the glow panel (10px padding from base rule). */
+.cc-heroArt--contain{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
+/* Edge-to-edge 4:3 scene: fill the frame full-bleed (rounded corners clip it). */
+.cc-visualWrap--cover{padding:0;background:none}
+.cc-heroArt--cover{width:100%;height:100%;object-fit:cover}
 /* Emblem fallback shares the frame height so a half-illustrated card still
    matches side to side; the small emblem simply centres inside it. */
 .cc-visualWrap--emblem{padding:14px}

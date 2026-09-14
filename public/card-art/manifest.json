@@ -1,11 +1,30 @@
 {
-  "note": "Per-side hero illustrations for the comparison cards. Transparent WebP, ~800px long edge. Convention: <cardId>__a.webp / <cardId>__b.webp, where a/b match the side order in comparison-cards.ts. For any missing side the component falls back to the ConceptVisual emblem. All 14 cards are now fully illustrated (both sides).",
+  "note": "Per-side hero illustrations for the comparison cards. WebP, ~1000px long edge. Convention: <cardId>__a.webp / <cardId>__b.webp, a/b matching side order in comparison-cards.ts. All 14 cards fully illustrated (28 images).",
+  "rendering": "fullFrameSides are edge-to-edge 4:3 scenes with a filled oceanic backdrop (safe to use object-fit:cover + rounded-corner clipping, since each is exactly 4:3 so cover never crops). Every other side is a transparent cut-out on the app surface and must stay object-fit:contain. Keeping contain everywhere is also fine — it renders both correctly.",
   "available": [
     "cmp-resp-photo", "cmp-seagrass-kelp", "cmp-dino-diatom", "cmp-sonar-radar", "cmp-sandy-muddy",
     "cmp-fossil-renewable", "cmp-open-closed-aquaculture", "cmp-solid-gas-solubility",
     "cmp-sexual-asexual", "cmp-nares-lateralline", "cmp-detritivore-decomposer",
     "cmp-pneumatophore-proproot", "cmp-pelagic-benthic", "cmp-respiration-gasexchange"
   ],
-  "partial": {},
-  "pending": []
+  "fullFrameSides": [
+    "cmp-dino-diatom__a", "cmp-dino-diatom__b",
+    "cmp-seagrass-kelp__a", "cmp-seagrass-kelp__b",
+    "cmp-sexual-asexual__a", "cmp-sexual-asexual__b",
+    "cmp-solid-gas-solubility__a", "cmp-solid-gas-solubility__b",
+    "cmp-sonar-radar__a", "cmp-sonar-radar__b",
+    "cmp-detritivore-decomposer__a", "cmp-detritivore-decomposer__b",
+    "cmp-nares-lateralline__a", "cmp-nares-lateralline__b",
+    "cmp-pelagic-benthic__a", "cmp-pelagic-benthic__b",
+    "cmp-open-closed-aquaculture__b",
+    "cmp-respiration-gasexchange__b"
+  ],
+  "transparentCutoutSides": [
+    "cmp-resp-photo__a", "cmp-resp-photo__b",
+    "cmp-sandy-muddy__a", "cmp-sandy-muddy__b",
+    "cmp-fossil-renewable__a", "cmp-fossil-renewable__b",
+    "cmp-pneumatophore-proproot__a", "cmp-pneumatophore-proproot__b",
+    "cmp-open-closed-aquaculture__a",
+    "cmp-respiration-gasexchange__a"
+  ]
 }

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { ConceptVisual } from "./ConceptVisual";
-import { hasHeroArt } from "./card-art";
+import { hasHeroArt, heroFit } from "./card-art";
 import "./comparison-card.css";
 
 // Each side leads with a painted hero illustration (card-art/<cardId>__<side>.webp)
@@ -19,10 +19,13 @@ function SideVisual({ card, side }) {
     );
   }
 
+  // Edge-to-edge 4:3 scenes fill the frame (cover); transparent cut-outs are
+  // contained on the glow panel. Both keep the same frame height.
+  const fit = heroFit(card.id, side);
   return (
-    <div className="cc-visualWrap cc-visualWrap--hero">
+    <div className={`cc-visualWrap cc-visualWrap--hero cc-visualWrap--${fit}`}>
       <img
-        className="cc-heroArt"
+        className={`cc-heroArt cc-heroArt--${fit}`}
         src={`card-art/${card.id}__${side}.webp`}
         alt={data.name}
         loading="lazy"
