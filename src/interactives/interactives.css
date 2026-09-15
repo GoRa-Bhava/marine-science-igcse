@@ -573,15 +573,77 @@
 .rs-caption { font-size: 12.5px; }
 
 /* --- Melt two tanks (Units 2 & 6) --- */
-.melt-scene { display: block; width: 100%; height: auto; margin-bottom: 8px; }
+.melt-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+  border-radius: 18px;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .2));
+}
 .melt-tanks .lc-outputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.melt-scene rect, .melt-scene path, .melt-scene line { transition: y .3s ease, height .3s ease, d .3s ease; }
+.melt-water-body {
+  transition: y .48s cubic-bezier(.22, .8, .28, 1), height .48s cubic-bezier(.22, .8, .28, 1);
+}
+.melt-berg-scale,
+.melt-glacier-scale {
+  transform-box: view-box;
+  transform-origin: 0 0;
+  transition: transform .48s cubic-bezier(.22, .8, .28, 1), opacity .32s ease;
+}
+.melt-brash,
+.melt-streams,
+.melt-rise-indicator {
+  transition: opacity .32s ease;
+}
+.melt-berg-bob { animation: melt-berg-bob .9s ease-in-out infinite alternate; }
+.melt-stream {
+  fill: none;
+  stroke: #bff3f2;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 5 7;
+  animation: meltwater-flow .72s linear infinite;
+  filter: drop-shadow(0 0 2px rgba(191, 243, 242, .7));
+}
+.melt-stream-delay { animation-delay: -.32s; stroke-width: 2.4; opacity: .76; }
+.melt-water-surface { filter: drop-shadow(0 0 3px rgba(184, 244, 242, .5)); }
+.melt-glass { filter: drop-shadow(0 2px 3px rgba(216, 247, 245, .1)); }
+.melt-glass-shine {
+  fill: none;
+  stroke: #d8f7f5;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: .18;
+}
+.melt-tank-rim {
+  fill: none;
+  stroke: #d8f7f5;
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: .25;
+}
+.melt-reference-line {
+  fill: none;
+  stroke: #f3c34e;
+  stroke-width: 1.8;
+  stroke-dasharray: 7 6;
+  opacity: .9;
+}
+.melt-rise-indicator line {
+  stroke: #7fe0d3;
+  stroke-width: 2;
+  transition: y1 .48s cubic-bezier(.22, .8, .28, 1), y2 .48s cubic-bezier(.22, .8, .28, 1);
+}
+.melt-rise-indicator path { fill: #7fe0d3; }
+.melt-rock { filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, .28)); }
+.melt-berg-submerged { opacity: .74; }
 .melt-ref, .melt-rise, .melt-tank-label {
   fill: #d9f6f2; font-family: Karla, system-ui, sans-serif; font-weight: 700;
 }
-.melt-ref { font-size: 11px; fill: #f3c34e; }
-.melt-rise { font-size: 11px; fill: #7fe0d3; }
-.melt-tank-label { font-size: 12px; }
+.melt-ref { font-size: 10.5px; fill: #f3c34e; letter-spacing: .025em; }
+.melt-rise { font-size: 10.5px; fill: #7fe0d3; }
+.melt-tank-label { font-size: 12.5px; letter-spacing: .015em; }
 .melt-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .lc-check .melt-opt {
   flex: 1 1 auto; min-width: 0; padding: 11px 12px; border-radius: 12px; cursor: pointer;
@@ -590,3 +652,21 @@
 }
 .lc-check .melt-opt.is-correct { border-color: var(--lc-accent); background: color-mix(in srgb, var(--lc-accent) 28%, transparent); }
 .lc-check .melt-opt.is-wrong { border-color: var(--lc-coral); background: color-mix(in srgb, var(--lc-coral) 26%, transparent); }
+
+@keyframes melt-berg-bob {
+  from { transform: translateY(-1.5px) rotate(-.35deg); }
+  to { transform: translateY(1.5px) rotate(.35deg); }
+}
+@keyframes meltwater-flow {
+  to { stroke-dashoffset: -12; }
+}
+
+@media (max-width: 405px) {
+  .melt-tank-label { font-size: 11.5px; }
+  .melt-ref, .melt-rise { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .melt-berg-bob,
+  .melt-stream { animation: none !important; }
+}

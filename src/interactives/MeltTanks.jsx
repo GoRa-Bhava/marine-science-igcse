@@ -2,75 +2,162 @@ import React, { useState } from "react";
 import "./interactives.css";
 import { floatingLevel, landLevel, iceRemaining, raisesSea, REFERENCE_LEVEL } from "./melt.js";
 
-const BOTTOM = 262;
-const LVL = (level) => BOTTOM - (level / 100) * 164;   // level% → y
+const BOTTOM = 324;
+const LVL = (level) => BOTTOM - (level / 100) * 196;   // level% → y
 const REF_Y = LVL(REFERENCE_LEVEL);
 
 // Two tanks side by side with a shared reference line, so the comparison is
 // unmistakable. Floating tank's water stays on the line; land tank's rises.
 function MeltScene(melt) {
   const r = iceRemaining(melt);
+  const waterA = LVL(floatingLevel(melt));
   const waterB = LVL(landLevel(melt));
-  // Tank A (floating) berg, centred on the reference line and shrinking with r.
-  const aCx = 148;
-  const aW = 40 + 60 * r;
-  const berg = `M${aCx - aW / 2} ${REF_Y} L${aCx - aW / 3} ${REF_Y - 42 * r} L${aCx + aW / 6} ${REF_Y - 30 * r} L${aCx + aW / 2} ${REF_Y} L${aCx + aW / 3} ${REF_Y + 48 * r} L${aCx - aW / 4} ${REF_Y + 42 * r} Z`;
-  // Tank B land ice on a ledge above the water; shrinks with r.
-  const ledgeTop = 150;
-  const iceW = 30 + 66 * r;
-  const iceH = 20 + 46 * r;
+  const meltProgress = 1 - r;
+  // Ice mass is three-dimensional: a cube-root scale keeps the remaining ice
+  // readable until the last part melts, while still reaching zero at full melt.
+  const iceScale = Math.cbrt(Math.max(0, r));
+  const iceOpacity = r > 0 ? Math.min(1, r * 8) : 0;
+  const brashOpacity = Math.sin(Math.PI * meltProgress) * 0.8;
+  const streamOpacity = Math.min(1, meltProgress * 1.6);
+  const riseVisible = landLevel(melt) > REFERENCE_LEVEL + 0.3;
 
   return (
-    <svg className="melt-scene" viewBox="0 0 560 300" role="img"
+    <svg className="melt-scene" viewBox="0 0 600 360" role="img"
       aria-label={`Two tanks at ${Math.round(melt)}% melted: the floating-ice tank's level is unchanged; the land-ice tank's level has risen.`}>
       <defs>
-        <linearGradient id="melt-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2a93ad" /><stop offset="1" stopColor="#0c3a4f" /></linearGradient>
+        <linearGradient id="melt-scene-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#102f40" /><stop offset="1" stopColor="#061b28" />
+        </linearGradient>
+        <linearGradient id="melt-water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#2e9fba" /><stop offset=".18" stopColor="#187890" /><stop offset="1" stopColor="#082d43" />
+        </linearGradient>
+        <linearGradient id="melt-water-sheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#d7fbfa" stopOpacity=".05" />
+          <stop offset=".45" stopColor="#d7fbfa" stopOpacity=".46" />
+          <stop offset="1" stopColor="#d7fbfa" stopOpacity=".08" />
+        </linearGradient>
+        <linearGradient id="melt-ice-tip" x1="0" y1="0" x2=".8" y2="1">
+          <stop offset="0" stopColor="#ffffff" /><stop offset=".52" stopColor="#dff7f5" /><stop offset="1" stopColor="#91c9d2" />
+        </linearGradient>
+        <linearGradient id="melt-ice-sub" x1="0" y1="0" x2=".6" y2="1">
+          <stop offset="0" stopColor="#c9f5f4" /><stop offset="1" stopColor="#5699b5" />
+        </linearGradient>
+        <linearGradient id="melt-glacier" x1="0" y1="0" x2=".8" y2="1">
+          <stop offset="0" stopColor="#f8ffff" /><stop offset=".48" stopColor="#c9eff0" /><stop offset="1" stopColor="#6ea7bb" />
+        </linearGradient>
+        <linearGradient id="melt-rock" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#806c55" /><stop offset=".55" stopColor="#4f4438" /><stop offset="1" stopColor="#2d2d2d" />
+        </linearGradient>
+        <linearGradient id="melt-glass-edge" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#d8f7f5" stopOpacity=".75" /><stop offset=".5" stopColor="#4c7d8d" stopOpacity=".38" /><stop offset="1" stopColor="#d8f7f5" stopOpacity=".62" />
+        </linearGradient>
+        <filter id="melt-soft-shadow" x="-30%" y="-30%" width="160%" height="170%">
+          <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#020b11" floodOpacity=".55" />
+        </filter>
+        <clipPath id="melt-clip-a"><rect x="30" y="68" width="252" height="256" rx="13" /></clipPath>
+        <clipPath id="melt-clip-b"><rect x="318" y="68" width="252" height="256" rx="13" /></clipPath>
       </defs>
-      <rect width="560" height="300" rx="18" fill="#0d2937" />
-
-      {/* shared reference line across both tanks */}
-      <line x1="10" x2="550" y1={REF_Y} y2={REF_Y} stroke="#f3c34e" strokeDasharray="5 5" opacity=".8" />
-      <text x="550" y={REF_Y - 6} textAnchor="end" className="melt-ref">reference level</text>
+      <rect width="600" height="360" rx="22" fill="url(#melt-scene-bg)" />
+      <circle cx="70" cy="33" r="1.2" fill="#d9f6f2" opacity=".45" />
+      <circle cx="284" cy="40" r="1" fill="#d9f6f2" opacity=".32" />
+      <circle cx="548" cy="28" r="1.4" fill="#d9f6f2" opacity=".4" />
 
       {/* ---- Tank A: floating ice ---- */}
       <g>
-        <rect x="26" y="40" width="240" height={BOTTOM - 40} rx="8" fill="#0a1f2b" stroke="#3b6274" strokeWidth="2" />
-        <clipPath id="clipA"><rect x="28" y="42" width="236" height={BOTTOM - 44} rx="7" /></clipPath>
-        <g clipPath="url(#clipA)">
-          {/* berg first, then translucent water so the tip shows above the line */}
-          <path d={berg} fill="#eaf6f5" stroke="#bcd7db" strokeWidth="1.5" />
-          <rect x="28" y={REF_Y} width="236" height={BOTTOM - REF_Y} fill="url(#melt-water)" opacity=".7" />
+        <rect x="24" y="62" width="264" height="268" rx="18" fill="#041621" opacity=".7" filter="url(#melt-soft-shadow)" />
+        <g clipPath="url(#melt-clip-a)">
+          <rect x="30" y="68" width="252" height="256" fill="#071f2d" />
+          <rect className="melt-water-body" x="30" y={waterA} width="252" height={BOTTOM - waterA} fill="url(#melt-water)" />
+
+          {/* Larger submerged mass, visible through the water. */}
+          <g className="melt-berg-scale" style={{ transform: `translate(156px, ${waterA}px) scale(${iceScale})`, opacity: iceOpacity }}>
+            <g className="melt-berg-bob">
+              <path className="melt-berg-submerged" d="M-58 0 L-48 33 L-25 66 L7 75 L42 52 L59 13 L50 0 Z"
+                fill="url(#melt-ice-sub)" stroke="#c9f3f1" strokeWidth="1.7" />
+              <path d="M-48 32 L-8 16 L7 75 M-8 16 L42 52" fill="none" stroke="#d8ffff" strokeWidth="1.1" opacity=".36" />
+            </g>
+          </g>
+
+          {/* Brash ice and bubbles appear during the melt without affecting level. */}
+          <g className="melt-brash" style={{ opacity: brashOpacity }}>
+            <path d={`M88 ${waterA - 2} l9 -6 l8 7 l-7 5 Z`} fill="#dff7f5" />
+            <path d={`M207 ${waterA + 4} l7 -5 l10 5 l-5 6 Z`} fill="#b9e4e7" />
+            <circle cx="112" cy={waterA + 28} r="3" fill="none" stroke="#a9e7ea" />
+            <circle cx="218" cy={waterA + 49} r="2" fill="none" stroke="#a9e7ea" />
+          </g>
+
+          <path className="melt-water-surface" d={`M30 ${waterA} C60 ${waterA - 2}, 84 ${waterA + 2}, 112 ${waterA} S166 ${waterA - 2}, 194 ${waterA} S250 ${waterA + 2}, 282 ${waterA}`}
+            fill="none" stroke="url(#melt-water-sheen)" strokeWidth="4" />
+
+          {/* Crisp tip above the waterline, faceted rather than blob-like. */}
+          <g className="melt-berg-scale" style={{ transform: `translate(156px, ${waterA}px) scale(${iceScale})`, opacity: iceOpacity }}>
+            <g className="melt-berg-bob">
+              <path d="M-58 0 L-39 -31 L-19 -38 L-7 -55 L14 -36 L34 -42 L59 0 Z"
+                fill="url(#melt-ice-tip)" stroke="#efffff" strokeWidth="1.8" />
+              <path d="M-39 -31 L-10 -20 L-7 -55 M-10 -20 L14 -36 L34 -42 M-10 -20 L10 0"
+                fill="none" stroke="#78b4c4" strokeWidth="1.2" opacity=".62" />
+              <path d="M-54 -2 L55 -2" stroke="#ffffff" strokeWidth="1" opacity=".55" />
+            </g>
+          </g>
         </g>
-        <text x="146" y="32" textAnchor="middle" className="melt-tank-label">Sea ice (floating)</text>
+        <rect className="melt-glass" x="24" y="62" width="264" height="268" rx="18" fill="none" stroke="url(#melt-glass-edge)" strokeWidth="2.2" />
+        <path className="melt-glass-shine" d="M37 84 V296" />
+        <path className="melt-tank-rim" d="M38 64 H274" />
+        <text x="156" y="45" textAnchor="middle" className="melt-tank-label">Sea ice (floating)</text>
       </g>
 
       {/* ---- Tank B: land ice ---- */}
       <g>
-        <rect x="294" y="40" width="240" height={BOTTOM - 40} rx="8" fill="#0a1f2b" stroke="#3b6274" strokeWidth="2" />
-        <clipPath id="clipB"><rect x="296" y="42" width="236" height={BOTTOM - 44} rx="7" /></clipPath>
-        <g clipPath="url(#clipB)">
-          {/* water (rises with melt) */}
-          <rect x="296" y={waterB} width="236" height={BOTTOM - waterB} fill="url(#melt-water)" opacity=".7" />
-          {/* land ledge on the left, above the water */}
-          <path d={`M296 ${BOTTOM} L296 ${ledgeTop} L360 ${ledgeTop} L392 ${BOTTOM} Z`} fill="#5b4a36" stroke="#755c40" strokeWidth="1.5" />
-          {/* ice block sitting on the ledge */}
-          <path d={`M${328 - iceW / 2} ${ledgeTop} L${328 - iceW / 2 + 6} ${ledgeTop - iceH} L${328 + iceW / 2 - 8} ${ledgeTop - iceH + 4} L${328 + iceW / 2} ${ledgeTop} Z`}
-            fill="#eaf6f5" stroke="#bcd7db" strokeWidth="1.5" />
-          {/* meltwater drips once melting starts */}
-          {melt > 0 && [0, 1, 2].map((i) => (
-            <circle key={i} cx={360 + i * 6} cy={ledgeTop + 14 + i * 20} r="2.6" fill="#bfeff4" opacity=".8" />
-          ))}
-        </g>
-        {/* sea-level-rise marker (grows above the reference line) */}
-        {landLevel(melt) > REFERENCE_LEVEL + 0.3 && (
-          <g>
-            <line x1="516" x2="516" y1={REF_Y} y2={waterB} stroke="#7fe0d3" strokeWidth="2" />
-            <path d={`M516 ${waterB} l-4 7 l8 0 Z`} fill="#7fe0d3" />
-            <text x="512" y={(REF_Y + waterB) / 2 + 3} textAnchor="end" className="melt-rise">sea-level rise</text>
+        <rect x="312" y="62" width="264" height="268" rx="18" fill="#041621" opacity=".7" filter="url(#melt-soft-shadow)" />
+        <g clipPath="url(#melt-clip-b)">
+          <rect x="318" y="68" width="252" height="256" fill="#071f2d" />
+          <rect className="melt-water-body" x="318" y={waterB} width="252" height={BOTTOM - waterB} fill="url(#melt-water)" />
+
+          {/* Rock ledge keeps the glacier unmistakably on land. */}
+          <path className="melt-rock" d="M318 324 V174 L342 160 H416 L443 188 L464 324 Z" fill="url(#melt-rock)" stroke="#9a8264" strokeWidth="1.5" />
+          <path d="M342 160 L371 188 L416 160 M372 188 L408 217 L443 188 M408 217 L431 265"
+            fill="none" stroke="#b49a78" strokeWidth="1.2" opacity=".36" />
+
+          {/* The ice sheet retreats up the ledge as its mass shrinks. */}
+          <g className="melt-glacier-scale" style={{ transform: `translate(${338 + meltProgress * 13}px, ${166 - meltProgress * 5}px) scale(${iceScale})`, opacity: iceOpacity }}>
+            <path d="M0 0 L5 -52 L23 -70 L49 -83 L78 -72 L98 -44 L105 0 Z"
+              fill="url(#melt-glacier)" stroke="#ecffff" strokeWidth="1.8" />
+            <path d="M2 -5 H103 L98 4 H5 Z" fill="#5d8ea3" opacity=".62" />
+            <path d="M8 -44 C35 -34, 64 -53, 94 -40 M6 -25 C31 -17, 70 -31, 102 -19"
+              fill="none" stroke="#73b5c5" strokeWidth="4" opacity=".42" />
+            <path d="M27 -67 L34 -47 L27 -33 M67 -72 L60 -54 L69 -40"
+              fill="none" stroke="#3f8198" strokeWidth="2.2" strokeLinecap="round" />
+            <path d="M13 -49 C36 -42, 65 -58, 90 -48" fill="none" stroke="#efffff" strokeWidth="1.4" opacity=".75" />
           </g>
-        )}
-        <text x="414" y="32" textAnchor="middle" className="melt-tank-label">Ice sheet / glacier (on land)</text>
+
+          {/* Meltwater runs down the rock into the sea; it is decoration only. */}
+          <g className="melt-streams" style={{ opacity: streamOpacity }}>
+            <path className="melt-stream" d={`M397 164 C401 181, 416 190, 420 205 S438 ${Math.max(waterB, 220) - 7}, 442 ${Math.max(waterB, 220)}`} />
+            <path className="melt-stream melt-stream-delay" d={`M377 164 C381 180, 392 187, 397 199 S414 ${Math.max(waterB, 224) - 8}, 417 ${Math.max(waterB, 224)}`} />
+          </g>
+
+          <path className="melt-water-surface" d={`M318 ${waterB} C348 ${waterB - 2}, 374 ${waterB + 2}, 403 ${waterB} S456 ${waterB - 2}, 486 ${waterB} S540 ${waterB + 2}, 570 ${waterB}`}
+            fill="none" stroke="url(#melt-water-sheen)" strokeWidth="4" />
+
+          {riseVisible && (
+            <g className="melt-rise-indicator">
+              <line x1="552" x2="552" y1={REF_Y} y2={waterB} />
+              <line x1="546" x2="558" y1={REF_Y} y2={REF_Y} />
+              <path d={`M552 ${waterB} l-6 9 h12 Z`} />
+              <text x="544" y={waterB - 9} textAnchor="end" className="melt-rise">sea-level rise</text>
+            </g>
+          )}
+        </g>
+        <rect className="melt-glass" x="312" y="62" width="264" height="268" rx="18" fill="none" stroke="url(#melt-glass-edge)" strokeWidth="2.2" />
+        <path className="melt-glass-shine" d="M325 84 V296" />
+        <path className="melt-tank-rim" d="M326 64 H562" />
+        <text x="444" y="45" textAnchor="middle" className="melt-tank-label">Ice sheet / glacier (on land)</text>
       </g>
+
+      {/* Drawn last so one shared datum visibly crosses both tanks. */}
+      <line className="melt-reference-line" x1="18" x2="582" y1={REF_Y} y2={REF_Y} />
+      <rect x="251" y={REF_Y - 19} width="98" height="17" rx="8.5" fill="#092331" opacity=".93" />
+      <text x="300" y={REF_Y - 7} textAnchor="middle" className="melt-ref">reference level</text>
     </svg>
   );
 }
