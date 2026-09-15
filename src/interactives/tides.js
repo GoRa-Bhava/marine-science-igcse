@@ -51,5 +51,5 @@ export function moonPhase(angle) {
 }
 
 export function tidalRangeText(angle) {
-  return `${Math.round(tidalRangeLevel(angle) * 100)}% of spring-tide range`;
+  return `${Math.round(tidalRangeLevel(angle) * 100)}% of spring-tide amplitude`;
 }

@@ -93,8 +93,8 @@ function TideScene(angle) {
       </g>
 
       <g className="tide-bulge-labels" transform={`rotate(${-angle} ${CX} ${CY})`}>
-        <text x={CX + rx + 9} y={CY - 5}>near bulge</text>
-        <text x={CX - rx - 9} y={CY - 5} textAnchor="end">far bulge</text>
+        <text x={CX + rx + 9} y={CY - 5}>high tide</text>
+        <text x={CX - rx - 9} y={CY - 5} textAnchor="end">high tide</text>
       </g>
       <text x="24" y="386" className="tide-scene-caption">Drag the Moon around its orbit</text>
     </svg>
@@ -124,7 +124,7 @@ export function TidesInteractive() {
   const outputs = [
     {
       id: "range",
-      label: "Tidal range",
+      label: "Tidal amplitude",
       render: (value) => ({ display: tidalRangeText(value), level: tidalRangeLevel(value) }),
     },
     {
@@ -192,12 +192,12 @@ export function TidesInteractive() {
       <section className="tide-facts" aria-labelledby="tide-facts-title">
         <h3 id="tide-facts-title">What the model shows</h3>
         <div className="tide-fact-grid">
-          <p><strong>Two bulges</strong> give most coasts two high tides and two low tides as Earth rotates through them.</p>
-          <p><strong>Near and far:</strong> the Moon pulls water on the near side more strongly than Earth’s centre, and water on the far side less strongly, producing the second bulge.</p>
-          <p><strong>The Moon matters more</strong> because tidal force changes very quickly with distance. The Sun is much more massive, but much farther away.</p>
-          <p><strong>“Spring” is not a season.</strong> Spring tides happen around new and full Moon, about twice each lunar month; neap tides happen around the quarter Moons.</p>
+          <p><strong>What makes tides.</strong> The Moon’s gravity pulls on the ocean water (the Sun helps too). As the Earth spins, each coast moves into and out of the raised water, giving about two high tides and two low tides a day.</p>
+          <p><strong>Spring tides — the big ones.</strong> When the Sun and Moon line up (new Moon and full Moon), their pulls combine: high tide is higher and low tide is lower — the largest tidal amplitude.</p>
+          <p><strong>Neap tides — the small ones.</strong> When the Sun and Moon are at right angles (the quarter Moons), their pulls partly cancel, so the gap between high and low tide is smallest.</p>
+          <p><strong>Watch the traps.</strong> “Spring” means the tide springs up, not the season. Spring tides are big because the Sun and Moon line up — not because the Moon comes closer. Both the Moon and the Sun pull on the water; the Moon just has the larger effect.</p>
         </div>
-        <p className="tide-model-note">This teaching model uses lunar effect + solar effect × cos(2θ). It shows the relative range, rather than predicting the height or time at one coast.</p>
+        <p className="tide-model-note">Teaching model: lunar effect + solar effect × cos(2θ). It shows the relative amplitude, not the height or time at any one coast.</p>
       </section>
     </article>
   );
