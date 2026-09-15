@@ -1,6 +1,7 @@
 import React from "react";
 import { TidesInteractive } from "./TidesInteractive.jsx";
 import { DepthSliderDemo } from "./DepthSliderDemo.jsx";
+import { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
 
 export function InteractiveLab({ onBack }) {
   return (
@@ -13,6 +14,7 @@ export function InteractiveLab({ onBack }) {
       </header>
       <TidesInteractive />
       <DepthSliderDemo />
+      <EstuaryTidalSlider />
       <aside className="interactive-next" aria-label="Possible future interactives">
         <strong>Designed to grow</strong>
         <p>The same pattern can power salinity and density, dissolved oxygen and temperature, depth and light, population growth, or wave height and wind speed.</p>

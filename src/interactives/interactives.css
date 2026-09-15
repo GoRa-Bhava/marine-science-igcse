@@ -545,3 +545,16 @@
   line-height: 1.5;
 }
 .depth-note strong { color: var(--lc-ink); }
+
+/* --- Estuary tidal slider (Unit 5) --- */
+.estuary-scene { display: block; width: 100%; height: auto; }
+.estuary-end,
+.estuary-front,
+.estuary-sample {
+  fill: #d9f6f2;
+  font-family: Karla, system-ui, sans-serif;
+  font-weight: 700;
+}
+.estuary-end { font-size: 12.5px; }
+.estuary-front { font-size: 11.5px; fill: #bfeff4; }
+.estuary-sample { font-size: 12px; fill: #f3c34e; }
