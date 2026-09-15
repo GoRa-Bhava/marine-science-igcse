@@ -76,6 +76,26 @@ export function LinkedControl({ driver, outputs, scene, quickCheck, className = 
   const renderScene = scene ? scene(value) : null;
   const resultClass = checkResult == null ? "" : checkResult ? " is-pass" : " is-try";
 
+  const outputsBlock = (
+    <div className="lc-outputs" aria-label="Linked outputs">
+      {outputs.map((output) => {
+        const rendered = output.render(value);
+        const level = rendered.level == null ? null : clamp(rendered.level, 0, 1);
+        return (
+          <article className={`lc-output ${rendered.visualState ? `is-${rendered.visualState}` : ""}`} key={output.id}>
+            <span className="lc-output-label">{output.label}</span>
+            <strong>{rendered.display}</strong>
+            {level != null && (
+              <span className="lc-meter" aria-hidden="true">
+                <span style={{ width: `${level * 100}%` }} />
+              </span>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  );
+
   return (
     <section className={`linked-control ${className}`.trim()} aria-labelledby={labelId}>
       <div className="lc-driver-heading">
@@ -87,24 +107,29 @@ export function LinkedControl({ driver, outputs, scene, quickCheck, className = 
       </div>
 
       {driver.kind === "dial" ? (
-        <div
-          className="lc-dial"
-          role="slider"
-          tabIndex="0"
-          aria-label={driver.ariaLabel || driver.label}
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-valuenow={Math.round(value)}
-          aria-valuetext={valueLabel}
-          onPointerDown={pointerDown}
-          onPointerMove={pointerMove}
-          onKeyDown={dialKeyDown}
-        >
-          {renderScene}
-        </div>
+        <>
+          <div
+            className="lc-dial"
+            role="slider"
+            tabIndex="0"
+            aria-label={driver.ariaLabel || driver.label}
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={Math.round(value)}
+            aria-valuetext={valueLabel}
+            onPointerDown={pointerDown}
+            onPointerMove={pointerMove}
+            onKeyDown={dialKeyDown}
+          >
+            {renderScene}
+          </div>
+          <p className="lc-instruction">{driver.instruction || "Drag around the path, or use the arrow keys."}</p>
+          {outputsBlock}
+        </>
       ) : (
         <>
           {renderScene && <div className="lc-scene">{renderScene}</div>}
+          {outputsBlock}
           <label className="lc-slider-wrap">
             <span>{driver.instruction || `Adjust ${driver.label.toLowerCase()}`}</span>
             <input
@@ -123,28 +148,6 @@ export function LinkedControl({ driver, outputs, scene, quickCheck, className = 
           </label>
         </>
       )}
-
-      {driver.kind === "dial" && (
-        <p className="lc-instruction">{driver.instruction || "Drag around the path, or use the arrow keys."}</p>
-      )}
-
-      <div className="lc-outputs" aria-label="Linked outputs">
-        {outputs.map((output) => {
-          const rendered = output.render(value);
-          const level = rendered.level == null ? null : clamp(rendered.level, 0, 1);
-          return (
-            <article className={`lc-output ${rendered.visualState ? `is-${rendered.visualState}` : ""}`} key={output.id}>
-              <span className="lc-output-label">{output.label}</span>
-              <strong>{rendered.display}</strong>
-              {level != null && (
-                <span className="lc-meter" aria-hidden="true">
-                  <span style={{ width: `${level * 100}%` }} />
-                </span>
-              )}
-            </article>
-          );
-        })}
-      </div>
 
       {quickCheck && (
         <div className="lc-check">
