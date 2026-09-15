@@ -18,8 +18,12 @@ function TideScene(angle) {
   const moonX = CX + ORBIT * Math.cos(theta);
   const moonY = CY - ORBIT * Math.sin(theta);
   const range = tidalRangeLevel(angle);
-  const rx = 78 + range * 15;
-  const ry = 71 - range * 10;
+  // Exaggerate the bulge so it visibly grows toward spring tides and shrinks
+  // toward neap: range runs ~0.43 (neap) to 1 (spring), so rx swings ~87->104
+  // and ry ~64->55, i.e. a near-round shape at neap and a strongly stretched
+  // one at spring.
+  const rx = 74 + range * 30;
+  const ry = 70 - range * 15;
   const label = tideLabel(angle);
 
   return (
