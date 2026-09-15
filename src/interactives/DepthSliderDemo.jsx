@@ -75,11 +75,11 @@ export function DepthSliderDemo() {
     {
       id: "light",
       label: "Light remaining",
-      render: (d) => ({ display: `${Math.round(lightPercent(d))}% of surface`, level: lightLevel(d), visualState: "fall" }),
+      render: (d) => ({ display: `${Math.round(lightPercent(d))}% of surface light`, level: lightLevel(d), visualState: "fall" }),
     },
     {
       id: "pressure",
-      label: "Pressure (≈1 atm / 10 m)",
+      label: "Pressure ≈ (about 1 atm per 10 m)",
       render: (d) => ({ display: `≈ ${Math.round(pressureAtm(d))} atm`, level: Math.min(1, d / MAX_DEPTH), visualState: "rise" }),
     },
     {
