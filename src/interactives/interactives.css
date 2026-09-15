@@ -558,3 +558,16 @@
 .estuary-end { font-size: 12.5px; }
 .estuary-front { font-size: 11.5px; fill: #bfeff4; }
 .estuary-sample { font-size: 12px; fill: #f3c34e; }
+
+/* --- Rocky-shore tide-line (Unit 5) --- */
+.rocky-scene { display: block; width: 100%; height: auto; }
+.rocky-shore .lc-outputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rs-organism { transition: opacity .2s ease; }
+.rs-organism.is-stressed { opacity: .38; filter: grayscale(1); }
+.rs-zone, .rs-mark, .rs-tideline, .rs-caption {
+  fill: #d9f6f2; font-family: Karla, system-ui, sans-serif; font-weight: 700;
+}
+.rs-zone { font-size: 12px; opacity: .85; }
+.rs-mark { font-size: 11px; fill: #f3c34e; }
+.rs-tideline { font-size: 11px; fill: #bfeff4; }
+.rs-caption { font-size: 12.5px; }
