@@ -3,6 +3,7 @@ import { TidesInteractive } from "./TidesInteractive.jsx";
 import { DepthSliderDemo } from "./DepthSliderDemo.jsx";
 import { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
 import { RockyShoreTideline } from "./RockyShoreTideline.jsx";
+import { MeltTanks } from "./MeltTanks.jsx";
 
 export function InteractiveLab({ onBack }) {
   return (
@@ -17,6 +18,7 @@ export function InteractiveLab({ onBack }) {
       <DepthSliderDemo />
       <EstuaryTidalSlider />
       <RockyShoreTideline />
+      <MeltTanks />
       <aside className="interactive-next" aria-label="Possible future interactives">
         <strong>Designed to grow</strong>
         <p>The same pattern can power salinity and density, dissolved oxygen and temperature, depth and light, population growth, or wave height and wind speed.</p>

@@ -571,3 +571,22 @@
 .rs-mark { font-size: 11px; fill: #f3c34e; }
 .rs-tideline { font-size: 11px; fill: #bfeff4; }
 .rs-caption { font-size: 12.5px; }
+
+/* --- Melt two tanks (Units 2 & 6) --- */
+.melt-scene { display: block; width: 100%; height: auto; margin-bottom: 8px; }
+.melt-tanks .lc-outputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.melt-scene rect, .melt-scene path, .melt-scene line { transition: y .3s ease, height .3s ease, d .3s ease; }
+.melt-ref, .melt-rise, .melt-tank-label {
+  fill: #d9f6f2; font-family: Karla, system-ui, sans-serif; font-weight: 700;
+}
+.melt-ref { font-size: 11px; fill: #f3c34e; }
+.melt-rise { font-size: 11px; fill: #7fe0d3; }
+.melt-tank-label { font-size: 12px; }
+.melt-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.lc-check .melt-opt {
+  flex: 1 1 auto; min-width: 0; padding: 11px 12px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--lc-line); background: color-mix(in srgb, var(--lc-line) 14%, transparent); color: var(--lc-ink);
+  font: 700 13px/1.25 Karla, system-ui, sans-serif;
+}
+.lc-check .melt-opt.is-correct { border-color: var(--lc-accent); background: color-mix(in srgb, var(--lc-accent) 28%, transparent); }
+.lc-check .melt-opt.is-wrong { border-color: var(--lc-coral); background: color-mix(in srgb, var(--lc-coral) 26%, transparent); }
