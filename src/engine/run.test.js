@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildRunQueue, rankInterleave, runIsResumable, recordMiss } from "./run.js";
+import { buildRunQueue, rankInterleave, runIsResumable, recordMiss, shouldRequeueAfterWrong } from "./run.js";
 
 const RANK = { choice: 1, tap: 1, gap: 2, label: 2, match: 3, multi: 3, chain: 4, exam: 5 };
 const NOW = new Date("2026-09-13T10:00:00Z");
@@ -80,4 +80,19 @@ test("missed set collects exactly the wrong answers, once each", () => {
   missed = recordMiss(missed, "b", false);  // wrong again -> still once
   missed = recordMiss(missed, "c", false);  // wrong -> added
   assert.deepEqual(missed, ["b", "c"]);
+});
+
+test("a wrong exam answer advances instead of being re-served in the same lesson", () => {
+  const exam = { id: "U1-90", topic: "inside", type: "exam" };
+  const choice = { id: "Q1", topic: "inside", type: "choice" };
+  // The reported loop bug: a wrong exam item must NOT requeue (it advances and
+  // FSRS reschedules it for a later day).
+  assert.equal(shouldRequeueAfterWrong(exam, false, {}), false, "wrong exam does not requeue");
+  // A wrong ordinary item does come back once in a free-study lesson.
+  assert.equal(shouldRequeueAfterWrong(choice, false, {}), true, "wrong choice requeues once");
+  // ...but never twice, and never a correct answer.
+  assert.equal(shouldRequeueAfterWrong(choice, false, { alreadyRequeued: true }), false, "no double requeue");
+  assert.equal(shouldRequeueAfterWrong(choice, true, {}), false, "correct answers never requeue");
+  // In a per-unit run nothing requeues (misses go to the end-of-run review).
+  assert.equal(shouldRequeueAfterWrong(choice, false, { inRun: true }), false, "runs never requeue");
 });

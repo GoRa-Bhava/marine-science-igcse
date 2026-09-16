@@ -3,7 +3,7 @@ import {
   answer as scheduleAnswer, isDue, itemStrength, migrateProgress, PROGRESS_VERSION, GOLD_DAYS,
 } from "./engine/scheduler.js";
 import { selectForLesson } from "./engine/select.js";
-import { buildRunQueue, runIsResumable, recordMiss } from "./engine/run.js";
+import { buildRunQueue, runIsResumable, recordMiss, shouldRequeueAfterWrong } from "./engine/run.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
@@ -39,19 +39,14 @@ const FONT_DISPLAY = "'Fraunces Variable', Georgia, serif";
    See src/content/index.js to switch subject and CONTENT-SPEC.md for the shape. */
 import { content } from "./content/index.js";
 const { topics: TOPICS, units: UNITS, creatures: CREATURES } = content;
-/* Exam items ("Build an exam answer", type "exam") stay in the content data
-   and the trial pages but are not served in the app yet: the two-step
-   interaction still needs per-step feedback and a clearer title before it
-   goes live. Filtering them out here keeps them out of every lesson AND out
-   of the mastery counts, so a topic that owns exam items can still reach
-   mastered on its served questions. Re-enable by dropping this filter. */
 const FIGURES = content.figures || {};
 /* Figure (diagram) questions reference a figure by `fig`. Drop any item whose
    figure is missing so a bad reference skips the item instead of crashing a
-   lesson, and warn once. */
+   lesson, and warn once. (Exam items are now live: the two-step interaction
+   grades once and advances, shows per-step feedback and the model answer, and
+   reschedules a wrong answer for a later day rather than re-serving it.) */
 const missingFigs = new Set();
 const ITEMS = content.items.filter((i) => {
-  if (i.type === "exam") return false;
   if (i.fig && !FIGURES[i.fig]) { missingFigs.add(i.fig); return false; }
   return true;
 });
@@ -71,7 +66,7 @@ const SHAPE_NAME = {
   match: "Connect",
   multi: "Connect",
   chain: "Explain",
-  exam: "Build an exam answer",
+  exam: "Exam answer",
 };
 
 /* ------------------------------------------------------ creature art */
@@ -796,6 +791,7 @@ function ExamQ({ item, locked, state, setState }) {
   const { phase, checkSel, order } = state;
   const step1Done = phase === 2 || locked;
   const checkOk = sameSet(checkSel, item.check.map((_, i) => i));
+  const orderOk = order.length === item.build.length && order.every((k, i) => k === i);
 
   const toggle = (i) => {
     if (step1Done) return;
@@ -814,6 +810,12 @@ function ExamQ({ item, locked, state, setState }) {
   return (
     <>
       <Prompt>{item.q}</Prompt>
+
+      {!locked && (
+        <p style={note}>
+          Answer in two steps: first tick the marking points you would include, then tap those points in order to build the answer.
+        </p>
+      )}
 
       <p style={stepLabel}>Step 1 · Tick the points you would include</p>
       {checkOrder.map((i) => {
@@ -897,6 +899,14 @@ function ExamQ({ item, locked, state, setState }) {
                   <span style={{ color: C.accent }}>{i + 1}.</span> {c}
                 </p>
               ))}
+              <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 12 }}>
+                <span style={{ fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 600, color: checkOk ? C.ok : C.no }}>
+                  {checkOk ? "✓ Step 1 — you chose the right points." : "✗ Step 1 — the points weren't all right."}
+                </span>
+                <span style={{ fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 600, color: orderOk ? C.ok : C.no }}>
+                  {orderOk ? "✓ Step 2 — correct order." : "✗ Step 2 — the order wasn't right (see the model answer above)."}
+                </span>
+              </div>
             </div>
           )}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -1740,7 +1750,7 @@ export default function App() {
        exam item, which is graded once and then only rescheduled for a later
        day. Re-serving a two-step exam in the same session is confusing and
        could trap the learner on it, so it advances like a graded item. */
-    if (!right && !requeued.includes(item.id) && item.type !== "exam" && !activeRun) {
+    if (shouldRequeueAfterWrong(item, right, { alreadyRequeued: requeued.includes(item.id), inRun: !!activeRun })) {
       setRequeued((r) => [...r, item.id]);
       setQueue((q) => [...q, item]);
     }
@@ -2253,7 +2263,7 @@ export default function App() {
               fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, margin: "0 0 5px",
               color: wasRight ? C.ok : C.no,
             }}>
-              {wasRight ? "That's it" : "Not yet — it'll come back"}
+              {wasRight ? "That's it" : (item.type === "exam" ? "Not quite — check the steps above" : "Not yet — it'll come back")}
             </p>
             <p style={{ fontSize: 14.5, color: C.foam, lineHeight: 1.5, margin: 0 }}>
               {item.why}
