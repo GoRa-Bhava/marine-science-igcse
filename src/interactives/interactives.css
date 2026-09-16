@@ -863,3 +863,82 @@
   .fw-remove .fw-outputs { grid-template-columns: minmax(0, 94px) minmax(0, 1fr); padding-inline: 12px; }
   .fw-hint { font-size: 11px; }
 }
+
+/* --- Process-meter (Unit 6: eutrophication & greenhouse) --- */
+.process-meter .lc-slider-wrap,
+.process-meter .lc-check { margin-inline: 14px; }
+.pm-scene-wrap { padding: 0 14px; }
+.eutro-scene, .gh-scene {
+  display: block; width: 100%; height: auto; margin: 4px 0 10px; border-radius: 14px;
+}
+.eu-label, .eu-note, .gh-label, .gh-gas {
+  fill: #d9f6f2; font-family: Karla, system-ui, sans-serif; font-weight: 700;
+}
+.eu-label { font-size: 12px; fill: #b7e39a; }
+.eu-note { font-size: 13px; }
+.eu-note-o2 { fill: #8fe0d2; }
+.eu-note-decomp { fill: #f0b45a; }
+.gh-label { font-size: 12px; }
+.gh-label-sun { fill: #f6c945; }
+.gh-label-gas { fill: #cdd9dd; }
+.gh-gas { font-size: 11px; fill: #eef6f7; font-weight: 700; }
+.gh-thermo-fill { fill: #4fd8c4; transition: y .3s ease, height .3s ease, fill .3s ease; }
+.gh-thermo-fill.is-warm { fill: #f3c34e; }
+.gh-thermo-fill.is-hot { fill: #ff7a5c; }
+.eu-fish { transition: transform .5s cubic-bezier(.22,.8,.28,1); transform-box: view-box; transform-origin: center; }
+.eu-bubbles, .eu-decomp { transition: opacity .35s ease; }
+.eu-bubble { fill: none; stroke: #bdeee7; stroke-width: 1.3; }
+.eu-bubble-0 { animation: eu-rise .9s ease-in infinite; }
+.eu-bubble-1 { animation: eu-rise .8s ease-in -.3s infinite; }
+.eu-bubble-2 { animation: eu-rise .95s ease-in -.55s infinite; }
+.eu-germ { fill: #c69a4e; }
+.eu-germ-1 { fill: #d8b268; animation: eu-jitter .8s ease-in-out infinite alternate; }
+@keyframes eu-rise { from { transform: translateY(6px); opacity: 0; } 30% { opacity: .9; } to { transform: translateY(-10px); opacity: 0; } }
+@keyframes eu-jitter { from { transform: translate(-1.5px, 1px); } to { transform: translate(1.5px, -1px); } }
+
+.pm-meter {
+  margin: 4px 14px 14px; padding: 12px 13px; border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--lc-line) 60%, transparent);
+  background: var(--lc-panel-raised);
+}
+.pm-meter-head { display: flex; flex-direction: column; gap: 3px; margin-bottom: 9px; }
+.pm-meter-read { color: var(--lc-ink); font-size: 13px; font-weight: 600; line-height: 1.35; }
+.pm-meter-track {
+  display: block; overflow: hidden; height: 12px; border-radius: 99px;
+  background: color-mix(in srgb, var(--lc-line) 32%, transparent);
+}
+.pm-meter-fill { display: block; height: 100%; border-radius: inherit; background: var(--lc-accent); transition: width .3s ease, background .3s ease; }
+.pm-meter.is-rise .pm-meter-fill { background: var(--lc-accent); }
+.pm-meter.is-fall .pm-meter-fill { background: var(--lc-gold); }
+.pm-meter.is-crisis .pm-meter-fill { background: var(--lc-coral); }
+.pm-meter.is-warm .pm-meter-fill { background: var(--lc-gold); }
+.pm-meter.is-hot .pm-meter-fill { background: var(--lc-coral); }
+.pm-meter.is-calm .pm-meter-fill { background: color-mix(in srgb, var(--lc-accent) 70%, var(--lc-line)); }
+
+.pm-stages { list-style: none; margin: 0 0 4px; padding: 0 14px; display: grid; gap: 7px; }
+.pm-stage {
+  display: grid; grid-template-columns: 26px 1fr; align-items: start; gap: 10px;
+  padding: 9px 11px; border-radius: 12px; opacity: .5;
+  border: 1px solid color-mix(in srgb, var(--lc-line) 45%, transparent); background: color-mix(in srgb, var(--lc-panel-raised) 55%, transparent);
+  transition: opacity .25s ease, border-color .25s ease, background .25s ease;
+}
+.pm-stage.is-reached { opacity: 1; }
+.pm-stage.is-current { border-color: var(--lc-accent); background: color-mix(in srgb, var(--lc-accent) 12%, transparent); }
+.pm-stage-num {
+  display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  background: color-mix(in srgb, var(--lc-line) 40%, transparent); color: var(--lc-ink);
+  font: 700 13px/1 Karla, system-ui, sans-serif;
+}
+.pm-stage.is-current .pm-stage-num { background: var(--lc-accent); color: var(--lc-accent-ink); }
+.pm-stage-body { display: flex; flex-direction: column; gap: 2px; }
+.pm-stage-body strong { color: var(--lc-ink); font-size: 13.5px; }
+.pm-stage-body span { color: var(--lc-muted); font-size: 12px; line-height: 1.4; }
+.pm-crux { margin-inline: 14px; }
+
+@media (max-width: 405px) {
+  .pm-scene-wrap, .pm-stages { padding-inline: 10px; }
+  .pm-meter, .pm-crux, .process-meter .lc-slider-wrap, .process-meter .lc-check { margin-inline: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eu-bubble-0, .eu-bubble-1, .eu-bubble-2, .eu-germ-1 { animation: none !important; }
+}

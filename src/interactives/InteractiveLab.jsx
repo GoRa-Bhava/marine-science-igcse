@@ -5,6 +5,8 @@ import { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
 import { RockyShoreTideline } from "./RockyShoreTideline.jsx";
 import { MeltTanks } from "./MeltTanks.jsx";
 import { FoodWebRemoval } from "./FoodWebRemoval.jsx";
+import { EutrophicationMeter } from "./EutrophicationMeter.jsx";
+import { GreenhouseMeter } from "./GreenhouseMeter.jsx";
 import { CollapsibleSelector } from "./CollapsibleSelector.jsx";
 import { LAB_ITEMS } from "./labItems.js";
 
@@ -16,6 +18,8 @@ const COMPONENTS = {
   estuary: EstuaryTidalSlider,
   rocky: RockyShoreTideline,
   foodweb: FoodWebRemoval,
+  eutrophication: EutrophicationMeter,
+  greenhouse: GreenhouseMeter,
 };
 
 const STORE_KEY = "marine_lab_selected";

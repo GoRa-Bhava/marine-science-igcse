@@ -9,4 +9,6 @@ export const LAB_ITEMS = [
   { key: "estuary", label: "Estuary tides (Unit 5)" },
   { key: "rocky", label: "Rocky-shore zonation (Unit 5)" },
   { key: "foodweb", label: "Food-web removal (Unit 4)" },
+  { key: "eutrophication", label: "Eutrophication & oxygen (Unit 6)" },
+  { key: "greenhouse", label: "Enhanced greenhouse effect (Unit 6)" },
 ];

@@ -6,3 +6,6 @@ export { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
 export { RockyShoreTideline } from "./RockyShoreTideline.jsx";
 export { MeltTanks } from "./MeltTanks.jsx";
 export { FoodWebRemoval } from "./FoodWebRemoval.jsx";
+export { ProcessMeter } from "./ProcessMeter.jsx";
+export { EutrophicationMeter } from "./EutrophicationMeter.jsx";
+export { GreenhouseMeter } from "./GreenhouseMeter.jsx";

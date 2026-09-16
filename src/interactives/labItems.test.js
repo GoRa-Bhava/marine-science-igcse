@@ -13,5 +13,5 @@ test("every lab item has a unique key and a concept+unit label", () => {
 });
 
 test("the menu order matches the brief", () => {
-  assert.deepEqual(LAB_ITEMS.map((i) => i.key), ["tides", "depth", "melt", "estuary", "rocky", "foodweb"]);
+  assert.deepEqual(LAB_ITEMS.map((i) => i.key), ["tides", "depth", "melt", "estuary", "rocky", "foodweb", "eutrophication", "greenhouse"]);
 });
