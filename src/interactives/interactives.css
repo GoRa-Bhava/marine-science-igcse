@@ -29,32 +29,6 @@
   box-sizing: border-box;
 }
 
-/* Collapsible selector (Interactive Lab) — same pattern as the Concept Cards
-   comparison selector, themed via the --lc-* tokens. */
-.lab-select { position: relative; margin: 0 0 16px; }
-.lab-select-btn {
-  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 12px 14px; border-radius: 14px; cursor: pointer;
-  border: 1px solid var(--lc-line); background: var(--lc-panel-raised); color: var(--lc-ink);
-  font: 700 15.5px/1.2 Karla, system-ui, sans-serif; text-align: left;
-}
-.lab-select-current { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.lab-select-chev { flex: 0 0 auto; color: var(--lc-accent); transition: transform .18s ease; }
-.lab-select-panel {
-  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30;
-  max-height: 60vh; overflow-y: auto; display: grid; gap: 8px; padding: 10px;
-  border-radius: 14px; border: 1px solid var(--lc-line); background: var(--lc-panel);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, .4);
-}
-.lab-select-opt {
-  text-align: left; padding: 12px 13px; border-radius: 11px; cursor: pointer;
-  border: 1px solid var(--lc-line); background: color-mix(in srgb, var(--lc-line) 14%, transparent);
-  color: var(--lc-ink); font: 600 13.5px/1.3 Karla, system-ui, sans-serif;
-}
-.lab-select-opt.is-active {
-  border-color: var(--lc-accent); background: color-mix(in srgb, var(--lc-accent) 20%, transparent); color: var(--lc-accent);
-}
-
 .interactive-lab {
   width: 100%;
   padding: 10px 14px 52px;
@@ -623,6 +597,54 @@
   transition: opacity .32s ease;
 }
 .melt-berg-bob { animation: melt-berg-bob .9s ease-in-out infinite alternate; }
+.melt-water-grain { opacity: .72; }
+.melt-ice-ink,
+.melt-ice-facet,
+.melt-glacier-ink,
+.melt-glacier-band,
+.melt-crevasse,
+.melt-rock-ink,
+.melt-rock-cracks {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.melt-ice-ink { stroke: #397e99; stroke-width: 1.15; opacity: .56; }
+.melt-ice-facet { stroke: #75b5c7; stroke-width: 1.15; opacity: .62; }
+.melt-glacier-ink { stroke: #4d91aa; stroke-width: 1.25; opacity: .7; }
+.melt-glacier-band { stroke: #6aafc1; stroke-width: 4.5; opacity: .36; }
+.melt-crevasse { stroke: #286d8c; stroke-width: 2.1; opacity: .86; }
+.melt-rock-ink { stroke: #211f1b; stroke-width: 1.25; opacity: .62; }
+.melt-rock-cracks { stroke: #231f19; stroke-width: 1.7; opacity: .72; }
+.melt-glacier-rill {
+  fill: none;
+  stroke: #bff8fa;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 8 5;
+  animation: meltwater-flow .72s linear infinite;
+}
+.melt-current-lines {
+  fill: none;
+  stroke: #b6ecea;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 7 7;
+  opacity: .3;
+  animation: melt-current-flow .9s linear infinite;
+}
+.melt-current-arrow { stroke-dasharray: none; }
+.melt-current-lines-b { opacity: .38; }
+.melt-brash-a { animation: melt-brash-a .84s ease-in-out infinite alternate; }
+.melt-brash-b { animation: melt-brash-b .9s ease-in-out infinite alternate; }
+.melt-brash-c { animation: melt-brash-a .76s ease-in-out -.25s infinite alternate; }
+.melt-bubble {
+  fill: none;
+  stroke: #b7edf0;
+  stroke-width: 1.2;
+}
+.melt-bubble-a { animation: melt-bubbles .82s ease-in infinite; }
+.melt-bubble-b { animation: melt-bubbles .9s ease-in -.36s infinite; }
 .melt-stream {
   fill: none;
   stroke: #bff3f2;
@@ -632,7 +654,32 @@
   animation: meltwater-flow .72s linear infinite;
   filter: drop-shadow(0 0 2px rgba(191, 243, 242, .7));
 }
-.melt-stream-delay { animation-delay: -.32s; stroke-width: 2.4; opacity: .76; }
+.melt-stream-main { stroke-width: 4.2; stroke-dasharray: 11 5; }
+.melt-stream-delay { animation-delay: -.32s; stroke-width: 2.7; opacity: .78; }
+.melt-waterfall-shadow {
+  fill: none;
+  stroke: #154f65;
+  stroke-width: 11;
+  stroke-linecap: round;
+  opacity: .7;
+}
+.melt-waterfall-body {
+  fill: none;
+  stroke: #75cfe1;
+  stroke-width: 8;
+  stroke-linecap: round;
+  opacity: .88;
+  filter: drop-shadow(0 0 3px rgba(117, 207, 225, .75));
+}
+.melt-foam {
+  fill: #d9ffff;
+  stroke: #82cdd1;
+  stroke-width: 1;
+  transform-box: view-box;
+  transform-origin: center;
+  animation: melt-foam .7s ease-in-out infinite alternate;
+  transition: transform .48s cubic-bezier(.22, .8, .28, 1);
+}
 .melt-water-surface { filter: drop-shadow(0 0 3px rgba(184, 244, 242, .5)); }
 .melt-glass { filter: drop-shadow(0 2px 3px rgba(216, 247, 245, .1)); }
 .melt-glass-shine {
@@ -686,6 +733,26 @@
 @keyframes meltwater-flow {
   to { stroke-dashoffset: -12; }
 }
+@keyframes melt-current-flow {
+  to { stroke-dashoffset: -14; }
+}
+@keyframes melt-brash-a {
+  from { transform: translate(-2px, -1px) rotate(-1deg); }
+  to { transform: translate(3px, 1px) rotate(1.5deg); }
+}
+@keyframes melt-brash-b {
+  from { transform: translate(2px, 1px) rotate(1deg); }
+  to { transform: translate(-3px, -1px) rotate(-1deg); }
+}
+@keyframes melt-bubbles {
+  from { transform: translateY(7px); opacity: 0; }
+  30% { opacity: .8; }
+  to { transform: translateY(-9px); opacity: 0; }
+}
+@keyframes melt-foam {
+  from { opacity: .62; }
+  to { opacity: .96; }
+}
 
 @media (max-width: 405px) {
   .melt-tank-label { font-size: 11.5px; }
@@ -694,5 +761,39 @@
 
 @media (prefers-reduced-motion: reduce) {
   .melt-berg-bob,
-  .melt-stream { animation: none !important; }
+  .melt-stream,
+  .melt-glacier-rill,
+  .melt-current-lines,
+  .melt-brash-a,
+  .melt-brash-b,
+  .melt-brash-c,
+  .melt-bubble,
+  .melt-foam { animation: none !important; }
+}
+
+/* Restored: Interactive Lab collapsible selector (added in build 81) */
+/* Collapsible selector (Interactive Lab) — same pattern as the Concept Cards
+   comparison selector, themed via the --lc-* tokens. */
+.lab-select { position: relative; margin: 0 0 16px; }
+.lab-select-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 14px; border-radius: 14px; cursor: pointer;
+  border: 1px solid var(--lc-line); background: var(--lc-panel-raised); color: var(--lc-ink);
+  font: 700 15.5px/1.2 Karla, system-ui, sans-serif; text-align: left;
+}
+.lab-select-current { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lab-select-chev { flex: 0 0 auto; color: var(--lc-accent); transition: transform .18s ease; }
+.lab-select-panel {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30;
+  max-height: 60vh; overflow-y: auto; display: grid; gap: 8px; padding: 10px;
+  border-radius: 14px; border: 1px solid var(--lc-line); background: var(--lc-panel);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .4);
+}
+.lab-select-opt {
+  text-align: left; padding: 12px 13px; border-radius: 11px; cursor: pointer;
+  border: 1px solid var(--lc-line); background: color-mix(in srgb, var(--lc-line) 14%, transparent);
+  color: var(--lc-ink); font: 600 13.5px/1.3 Karla, system-ui, sans-serif;
+}
+.lab-select-opt.is-active {
+  border-color: var(--lc-accent); background: color-mix(in srgb, var(--lc-accent) 20%, transparent); color: var(--lc-accent);
 }
