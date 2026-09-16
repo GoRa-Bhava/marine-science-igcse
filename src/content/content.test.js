@@ -157,6 +157,16 @@ test("Q20 is handled by the match interaction (climate zones, no 'subtropical')"
   assert.ok(!pairText.includes("subtropical"), "no 'subtropical' filler in the pairs");
 });
 
+test("U6 evaluate items keep the balanced answer keyed first (a=0, 4 options)", () => {
+  for (const id of ["U6-19", "U6-59", "U6-65", "U6-91"]) {
+    const it = items.find((i) => i.id === id);
+    assert.ok(it, `${id} present`);
+    assert.equal(it.type, "choice");
+    assert.equal(it.options.length, 4, `${id}: four options`);
+    assert.equal(it.a, 0, `${id}: correct answer keyed first`);
+  }
+});
+
 test("creatures are unique with a valid rarity", () => {
   const ids = new Set();
   for (const c of creatures) {
