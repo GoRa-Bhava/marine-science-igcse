@@ -797,3 +797,69 @@
 .lab-select-opt.is-active {
   border-color: var(--lc-accent); background: color-mix(in srgb, var(--lc-accent) 20%, transparent); color: var(--lc-accent);
 }
+
+/* --- Food-web removal (Unit 4) --- */
+.fw-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 4px 16px 10px;
+}
+.fw-hint { color: var(--lc-muted); font-size: 12px; line-height: 1.35; }
+.fw-reset {
+  flex: 0 0 auto; appearance: none; cursor: pointer;
+  border: 1px solid var(--lc-line); border-radius: 999px; padding: 7px 13px;
+  background: var(--lc-panel-raised); color: var(--lc-ink);
+  font: 700 12px/1.2 Karla, system-ui, sans-serif;
+}
+.fw-reset:disabled { opacity: .45; cursor: default; }
+.fw-scene {
+  display: block; width: 100%; height: auto; margin: 0 auto 8px; max-width: 460px;
+  padding: 0 12px;
+}
+.fw-remove .fw-outputs { grid-template-columns: minmax(0, 108px) minmax(0, 1fr); padding: 0 16px; }
+.fw-caption-cell strong { min-height: 0; font-size: 12.5px; line-height: 1.4; font-weight: 600; }
+
+.fw-edge {
+  stroke: #6fd8c8; stroke-width: 2.4; stroke-linecap: round;
+  transition: stroke .25s ease, opacity .25s ease;
+}
+.fw-edge.is-broken {
+  stroke: #5f7d86; stroke-width: 2; stroke-dasharray: 5 6; opacity: .6;
+}
+
+.fw-node { cursor: pointer; }
+.fw-node .fw-card {
+  fill: var(--fw-card-fill, #123f54); stroke: #4fd8c4; stroke-width: 2;
+  transition: fill .25s ease, stroke .25s ease, opacity .25s ease;
+}
+.fw-node.is-producer .fw-card { stroke: #f3c34e; fill: #143a3a; }
+.fw-node .fw-label {
+  fill: #eaf6f5; font-family: Karla, system-ui, sans-serif; font-weight: 700; font-size: 15px;
+}
+.fw-node .fw-role {
+  fill: #f3c34e; font-family: Karla, system-ui, sans-serif; font-weight: 700; font-size: 10px;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.fw-node.is-declined { opacity: .34; }
+.fw-node.is-declined .fw-card { fill: #24343c; stroke: #5f7d86; }
+.fw-node.is-removed .fw-card { fill: #2a1c1c; stroke: #ff7a5c; }
+.fw-node.is-removed .fw-label { fill: #f0c3b7; }
+.fw-strike { stroke: #ff7a5c; stroke-width: 2.6; stroke-linecap: round; }
+.fw-node:focus-visible { outline: none; }
+.fw-node:focus-visible .fw-card { stroke: var(--lc-accent); stroke-width: 3.4; }
+.fw-node:hover .fw-card { filter: brightness(1.12); }
+
+:root[data-theme="light"] .fw-node .fw-card { fill: #dff0ee; stroke: #0c7c6f; }
+:root[data-theme="light"] .fw-node.is-producer .fw-card { fill: #f6efd8; stroke: #8a6410; }
+:root[data-theme="light"] .fw-node .fw-label { fill: #12242f; }
+:root[data-theme="light"] .fw-node .fw-role { fill: #8a6410; }
+:root[data-theme="light"] .fw-node.is-declined .fw-card { fill: #d4dde0; stroke: #78909a; }
+:root[data-theme="light"] .fw-node.is-removed .fw-card { fill: #f3ddd5; stroke: #c2502e; }
+:root[data-theme="light"] .fw-node.is-removed .fw-label { fill: #8a3b22; }
+:root[data-theme="light"] .fw-edge { stroke: #0c7c6f; }
+:root[data-theme="light"] .fw-edge.is-broken { stroke: #78909a; }
+
+@media (max-width: 405px) {
+  .fw-scene { padding: 0 6px; }
+  .fw-remove .fw-outputs { grid-template-columns: minmax(0, 94px) minmax(0, 1fr); padding-inline: 12px; }
+  .fw-hint { font-size: 11px; }
+}

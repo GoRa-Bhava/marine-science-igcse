@@ -8,4 +8,5 @@ export const LAB_ITEMS = [
   { key: "melt", label: "Melting ice & sea level (Units 2 & 6)" },
   { key: "estuary", label: "Estuary tides (Unit 5)" },
   { key: "rocky", label: "Rocky-shore zonation (Unit 5)" },
+  { key: "foodweb", label: "Food-web removal (Unit 4)" },
 ];

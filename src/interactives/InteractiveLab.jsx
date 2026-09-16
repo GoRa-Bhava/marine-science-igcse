@@ -4,6 +4,7 @@ import { DepthSliderDemo } from "./DepthSliderDemo.jsx";
 import { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
 import { RockyShoreTideline } from "./RockyShoreTideline.jsx";
 import { MeltTanks } from "./MeltTanks.jsx";
+import { FoodWebRemoval } from "./FoodWebRemoval.jsx";
 import { CollapsibleSelector } from "./CollapsibleSelector.jsx";
 import { LAB_ITEMS } from "./labItems.js";
 
@@ -14,6 +15,7 @@ const COMPONENTS = {
   melt: MeltTanks,
   estuary: EstuaryTidalSlider,
   rocky: RockyShoreTideline,
+  foodweb: FoodWebRemoval,
 };
 
 const STORE_KEY = "marine_lab_selected";
