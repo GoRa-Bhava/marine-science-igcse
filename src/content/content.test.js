@@ -146,16 +146,15 @@ test("G11 uses the source's N/S-vs-E/W direction mapping", () => {
   assert.ok(it.bank.includes("up or down") && it.bank.includes("bearings"), "strengthened distractors present");
 });
 
-// NOTE (Q20): the FIX brief expected Q20 to become a `match` (three location→climate
-// -zone pairs, no "subtropical"). The authoritative unit1_items.py still defines Q20
-// as a `choice` MCQ with the "subtropical" near-miss, so the app mirrors the source
-// rather than fabricating unvetted pairs. If/when the source is changed to the match
-// form, update this test to assert `it.type === "match"` and check its pairs.
-test("Q20 mirrors the source of truth (still a choice MCQ)", () => {
+test("Q20 is handled by the match interaction (climate zones, no 'subtropical')", () => {
   const it = items.find((i) => i.id === "Q20");
   assert.ok(it, "Q20 present");
-  assert.equal(it.type, "choice");
-  assert.equal(it.options[it.a], "the tropical zone");
+  assert.equal(it.type, "match", "Q20 is a match, not an MCQ");
+  const rights = it.pairs.map((p) => p[1]);
+  assert.deepEqual([...rights].sort(), ["polar zone", "temperate zone", "tropical zone"].sort());
+  // The non-syllabus "subtropical" filler must not appear in any pair (either side).
+  const pairText = it.pairs.flat().join(" ").toLowerCase();
+  assert.ok(!pairText.includes("subtropical"), "no 'subtropical' filler in the pairs");
 });
 
 test("creatures are unique with a valid rarity", () => {
