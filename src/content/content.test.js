@@ -108,6 +108,56 @@ test("every topic has questions", () => {
   }
 });
 
+// All permutations of a small index array (used to prove option-order independence).
+function permutations(arr) {
+  if (arr.length <= 1) return [arr];
+  const out = [];
+  for (let i = 0; i < arr.length; i++) {
+    const rest = [...arr.slice(0, i), ...arr.slice(i + 1)];
+    for (const p of permutations(rest)) out.push([arr[i], ...p]);
+  }
+  return out;
+}
+
+test("U2-18 correct answer resolves to 'slightly alkaline' regardless of option order", () => {
+  const it = items.find((i) => i.id === "U2-18");
+  assert.ok(it, "U2-18 present");
+  assert.equal(it.type, "choice");
+  // New source option set: "strongly acidic" filler replaced by "strongly alkaline".
+  assert.deepEqual(
+    [...it.options].sort(),
+    ["neutral", "slightly acidic", "slightly alkaline", "strongly alkaline"].sort(),
+  );
+  assert.ok(!it.options.includes("strongly acidic"), "old filler removed");
+  // Correctness is tied to the authored index `a`; ChoiceQ only shuffles the DISPLAY
+  // order, so the option flagged correct is "slightly alkaline" under every permutation.
+  assert.equal(it.options[it.a], "slightly alkaline");
+  for (const order of permutations(it.options.map((_, i) => i))) {
+    const shownCorrect = order.find((i) => i === it.a);
+    assert.equal(it.options[shownCorrect], "slightly alkaline", `order ${order}`);
+  }
+});
+
+test("G11 uses the source's N/S-vs-E/W direction mapping", () => {
+  const it = items.find((i) => i.id === "G11");
+  assert.ok(it, "G11 present");
+  assert.equal(it.type, "gap");
+  assert.deepEqual(it.answers, ["coordinates", "north or south", "east or west"]);
+  assert.ok(it.bank.includes("up or down") && it.bank.includes("bearings"), "strengthened distractors present");
+});
+
+// NOTE (Q20): the FIX brief expected Q20 to become a `match` (three location→climate
+// -zone pairs, no "subtropical"). The authoritative unit1_items.py still defines Q20
+// as a `choice` MCQ with the "subtropical" near-miss, so the app mirrors the source
+// rather than fabricating unvetted pairs. If/when the source is changed to the match
+// form, update this test to assert `it.type === "match"` and check its pairs.
+test("Q20 mirrors the source of truth (still a choice MCQ)", () => {
+  const it = items.find((i) => i.id === "Q20");
+  assert.ok(it, "Q20 present");
+  assert.equal(it.type, "choice");
+  assert.equal(it.options[it.a], "the tropical zone");
+});
+
 test("creatures are unique with a valid rarity", () => {
   const ids = new Set();
   for (const c of creatures) {

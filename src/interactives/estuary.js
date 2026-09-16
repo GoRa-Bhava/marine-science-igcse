@@ -19,7 +19,7 @@ export function salinityLevel(tide) {
 export function salinityBand(tide) {
   if (tide >= HIGH_TIDE) return "Salty (sea water)";
   if (tide <= 15) return "Fresh–brackish";
-  return "Brackish";
+  return "Brackish (fresh + sea mix)";
 }
 
 // Temperature: the point is STABILITY. Swing is wide at low tide (shallow water
@@ -29,7 +29,7 @@ export function temperatureSwing(tide) {
   return clamp01(1 - tide / 100);
 }
 export function temperatureStabilityBand(tide) {
-  if (tide >= 80) return "Steady (sea-buffered)";
+  if (tide >= 80) return "Steady (sea water evens it out)";
   if (tide <= 25) return "Swings with the air";
   return "Fairly steady";
 }
