@@ -1,26 +1,22 @@
 import React, { useState } from "react";
-import { TidesInteractive } from "./TidesInteractive.jsx";
-import { DepthSliderDemo } from "./DepthSliderDemo.jsx";
-import { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
-import { RockyShoreTideline } from "./RockyShoreTideline.jsx";
-import { MeltTanks } from "./MeltTanks.jsx";
-import { FoodWebRemoval } from "./FoodWebRemoval.jsx";
-import { EutrophicationMeter } from "./EutrophicationMeter.jsx";
+import MarineInteractive from "./MarineInteractive.jsx";
 import { GreenhouseMeter } from "./GreenhouseMeter.jsx";
 import { CollapsibleSelector } from "./CollapsibleSelector.jsx";
 import { LAB_ITEMS } from "./labItems.js";
 
-// key → component (labels/order live in labItems.js).
-const COMPONENTS = {
-  tides: TidesInteractive,
-  depth: DepthSliderDemo,
-  melt: MeltTanks,
-  estuary: EstuaryTidalSlider,
-  rocky: RockyShoreTideline,
-  foodweb: FoodWebRemoval,
-  eutrophication: EutrophicationMeter,
-  greenhouse: GreenhouseMeter,
-};
+// The nine packaged interactives are self-contained HTML documents; Vite inlines
+// each as a raw string that MarineInteractive drops into an isolated iframe.
+import tides from "./embeds/tides.html?raw";
+import depth from "./embeds/depth.html?raw";
+import melt from "./embeds/melt.html?raw";
+import elnino from "./embeds/elnino.html?raw";
+import zones from "./embeds/zones.html?raw";
+import rockyshore from "./embeds/rockyshore.html?raw";
+import estuary from "./embeds/estuary.html?raw";
+import foodweb from "./embeds/foodweb.html?raw";
+import eutrophication from "./embeds/eutrophication.html?raw";
+
+const HTML = { tides, depth, melt, elnino, zones, rockyshore, estuary, foodweb, eutrophication };
 
 const STORE_KEY = "marine_lab_selected";
 
@@ -34,10 +30,9 @@ function initialIndex() {
   }
 }
 
-export function InteractiveLab({ onBack }) {
+export function InteractiveLab({ onBack, theme = "dark" }) {
   const [index, setIndex] = useState(initialIndex);
   const item = LAB_ITEMS[index] || LAB_ITEMS[0];
-  const Current = COMPONENTS[item.key];
 
   const select = (i) => {
     setIndex(i);
@@ -50,7 +45,7 @@ export function InteractiveLab({ onBack }) {
       <header className="interactive-lab-header">
         <p className="interactive-kicker">Learn by changing one thing</p>
         <h1>Interactive lab</h1>
-        <p>Pick an interactive, then drag or slide one input and watch every linked result update immediately.</p>
+        <p>Pick an interactive, then change one thing and watch every linked result respond. These are teaching aids beside the quiz — explore, then test yourself in the questions.</p>
       </header>
 
       <CollapsibleSelector
@@ -61,11 +56,21 @@ export function InteractiveLab({ onBack }) {
         ariaLabel="Choose an interactive"
       />
 
-      {Current ? <Current /> : null}
+      {item.kind === "native"
+        ? <GreenhouseMeter />
+        : (
+          <MarineInteractive
+            key={item.key}
+            html={HTML[item.key]}
+            title={item.label}
+            theme={theme}
+            className="lab-embed"
+          />
+        )}
 
-      <aside className="interactive-next" aria-label="Possible future interactives">
-        <strong>Designed to grow</strong>
-        <p>More interactives use the same pattern — food webs, the greenhouse and eutrophication chains, and others land in this menu as they arrive.</p>
+      <aside className="interactive-next" aria-label="About these interactives">
+        <strong>Explore, then retrieve</strong>
+        <p>Each interactive has its own quick self-check for instant feedback. The graded questions in each unit are where your progress is recorded.</p>
       </aside>
     </main>
   );

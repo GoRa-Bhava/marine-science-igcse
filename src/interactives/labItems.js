@@ -1,14 +1,18 @@
-// The Interactive Lab's menu: one entry per interactive, labelled by concept +
-// unit so the selector doubles as a course map. Add new interactives here as
-// they land. Kept as plain data (no JSX) so it is unit-testable; InteractiveLab
-// maps each key to its component.
+// The Interactive Lab's menu. The nine packaged interactives come from the shared
+// registry (interactivesRegistry.js) and are embedded as isolated iframes;
+// greenhouse is still the native React component until it is packaged the same
+// way. Kept as plain data (no JSX) so it stays unit-testable; InteractiveLab maps
+// each key to either the iframe wrapper (kind "embed") or a native component
+// (kind "native").
+import { INTERACTIVES } from "./interactivesRegistry.js";
+
+export const PACKAGED = INTERACTIVES.map((i) => ({
+  key: i.slug,
+  label: `${i.title} (Unit ${i.unit})`,
+  kind: "embed",
+}));
+
 export const LAB_ITEMS = [
-  { key: "tides", label: "Tides (Unit 1)" },
-  { key: "depth", label: "Ocean depth (Unit 2)" },
-  { key: "melt", label: "Melting ice & sea level (Units 2 & 6)" },
-  { key: "estuary", label: "Estuary tides (Unit 5)" },
-  { key: "rocky", label: "Rocky-shore zonation (Unit 5)" },
-  { key: "foodweb", label: "Food-web removal (Unit 4)" },
-  { key: "eutrophication", label: "Eutrophication & oxygen (Unit 6)" },
-  { key: "greenhouse", label: "Enhanced greenhouse effect (Unit 6)" },
+  ...PACKAGED,
+  { key: "greenhouse", label: "Enhanced greenhouse effect (Unit 6)", kind: "native" },
 ];

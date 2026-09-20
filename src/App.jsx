@@ -2045,7 +2045,7 @@ export default function App() {
     return page(
       <div style={shell} ref={scrollRef}>
         <style>{keyframes}</style>
-        <InteractiveLab onBack={() => setView("home")} />
+        <InteractiveLab onBack={() => setView("home")} theme={theme} />
       </div>
     );
   }

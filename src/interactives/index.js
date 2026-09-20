@@ -1,11 +1,6 @@
-export { LinkedControl } from "./LinkedControl.jsx";
 export { InteractiveLab } from "./InteractiveLab.jsx";
-export { TidesInteractive } from "./TidesInteractive.jsx";
-export { DepthSliderDemo } from "./DepthSliderDemo.jsx";
-export { EstuaryTidalSlider } from "./EstuaryTidalSlider.jsx";
-export { RockyShoreTideline } from "./RockyShoreTideline.jsx";
-export { MeltTanks } from "./MeltTanks.jsx";
-export { FoodWebRemoval } from "./FoodWebRemoval.jsx";
-export { ProcessMeter } from "./ProcessMeter.jsx";
-export { EutrophicationMeter } from "./EutrophicationMeter.jsx";
+export { default as MarineInteractive } from "./MarineInteractive.jsx";
+export { INTERACTIVES } from "./interactivesRegistry.js";
+// Greenhouse stays a native React component until it is packaged like the others.
 export { GreenhouseMeter } from "./GreenhouseMeter.jsx";
+export { ProcessMeter } from "./ProcessMeter.jsx";
