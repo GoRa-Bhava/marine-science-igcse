@@ -4,6 +4,7 @@ import {
 } from "./engine/scheduler.js";
 import { selectForLesson } from "./engine/select.js";
 import { buildRunQueue, runIsResumable, recordMiss, shouldRequeueAfterWrong } from "./engine/run.js";
+import { examPoints, examModel, examCorrectIdx } from "./engine/exam.js";
 import { figureDims, labelPool, gradeTap, gradeLabel } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
@@ -775,37 +776,32 @@ function ChainQ({ item, locked, order, setOrder }) {
   );
 }
 
-/* "Build an exam answer": two steps in one card. Step 1 is a marking-point
-   checklist graded like a multi (the ticked set must equal the correct set);
-   Step 2 reveals the model-answer phrases to tap into order, graded like a
-   chain. The card is right only if both steps are. Step 1 has its own
-   "Check points" button; the lesson's Check button grades step 2. */
+/* Exam-style (tier-3) item: a single auto-graded marking-point checklist, then
+   a read-only model answer for study. The learner ticks the points they'd
+   include; grading is content-only (the ticked set must equal the true mark
+   points). Answer ORDER is never authored, entered or graded. Grading helpers
+   live in engine/exam.js. */
 function ExamQ({ item, locked, state, setState }) {
-  const points = useMemo(() => [...item.check, ...item.distractors], [item.id]);
-  const checkOrder = useMemo(() => reorder(points.map((_, i) => i)), [item.id]);
-  const pool = useMemo(
-    () => reorder(item.build.map((c, i) => ({ c, i })), (x) => x.i),
-    [item.id]
-  );
-  const nCheck = item.check.length;
-  const { phase, checkSel, order } = state;
-  const step1Done = phase === 2 || locked;
-  const checkOk = sameSet(checkSel, item.check.map((_, i) => i));
-  const orderOk = order.length === item.build.length && order.every((k, i) => k === i);
+  const pts = useMemo(() => examPoints(item), [item.id]);
+  const model = useMemo(() => examModel(item), [item.id]);
+  const display = useMemo(() => reorder(pts.map((_, i) => i)), [item.id]);
+  const { checkSel } = state;
 
   const toggle = (i) => {
-    if (step1Done) return;
-    setState({ ...state, checkSel: checkSel.includes(i) ? checkSel.filter((x) => x !== i) : [...checkSel, i] });
+    if (locked) return;
+    setState({ checkSel: checkSel.includes(i) ? checkSel.filter((x) => x !== i) : [...checkSel, i] });
   };
-  const checkPoints = () => setState({ ...state, phase: 2 });
-  const add = (k) => !locked && !order.includes(k) && setState({ ...state, order: [...order, k] });
-  const remove = (k) => !locked && setState({ ...state, order: order.filter((x) => x !== k) });
 
+  const totalCorrect = pts.filter((p) => p.correct).length;
+  const chosenCorrect = checkSel.filter((i) => pts[i].correct).length;
+  const wrongPicks = checkSel.filter((i) => !pts[i].correct).length;
+  const missed = totalCorrect - chosenCorrect;
+
+  const note = { fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: "0 0 14px", lineHeight: 1.45 };
   const stepLabel = {
     fontFamily: FONT_UI, fontSize: 12, letterSpacing: ".05em", textTransform: "uppercase",
     color: C.accent, margin: "0 0 10px",
   };
-  const note = { fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: "0 0 14px", lineHeight: 1.45 };
 
   return (
     <>
@@ -813,116 +809,63 @@ function ExamQ({ item, locked, state, setState }) {
 
       {!locked && (
         <p style={note}>
-          Answer in two steps: first tick the marking points you would include, then tap those points in order to build the answer.
+          Tick every marking point you would include in your answer. The examiner awards the points, not the order.
         </p>
       )}
 
-      <p style={stepLabel}>Step 1 · Tick the points you would include</p>
-      {checkOrder.map((i) => {
+      <p style={stepLabel}>Tick the points you would include</p>
+      {display.map((i) => {
+        const p = pts[i];
         const on = checkSel.includes(i);
-        const right = i < nCheck;
         let bg = C.shelf, bd = C.line, col = C.foam, dash = "solid";
-        if (step1Done) {
-          if (right && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
-          else if (right) { bd = C.ok; col = C.ok; dash = "dashed"; }       // a point you missed
-          else if (on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }
+        if (locked) {
+          if (p.correct && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }          // included, correct
+          else if (p.correct) { bd = C.ok; col = C.ok; dash = "dashed"; }                        // a mark point missed
+          else if (on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }                  // does not belong
           else col = C.mist;
         } else if (on) { bg = C.raise; bd = C.glow; }
         return (
-          <button key={i} onClick={() => toggle(i)} disabled={step1Done}
-            style={{
-              ...btnBase, background: bg, borderColor: bd, borderStyle: dash, color: col,
-              display: "flex", gap: 12, alignItems: "center", cursor: step1Done ? "default" : "pointer",
-            }}>
-            <span style={{
-              width: 20, height: 20, flexShrink: 0, borderRadius: 6,
-              border: `2px solid ${on || (step1Done && right) ? bd : C.line}`,
-              background: on ? bd : "transparent",
-            }} />
-            <span>{points[i]}</span>
-          </button>
+          <div key={i}>
+            <button onClick={() => toggle(i)} disabled={locked}
+              style={{
+                ...btnBase, background: bg, borderColor: bd, borderStyle: dash, color: col,
+                display: "flex", gap: 12, alignItems: "center", cursor: locked ? "default" : "pointer",
+                marginBottom: locked && !p.correct && on && p.reason ? 2 : 10,
+              }}>
+              <span style={{
+                width: 20, height: 20, flexShrink: 0, borderRadius: 6,
+                border: `2px solid ${on || (locked && p.correct) ? bd : C.line}`,
+                background: on ? bd : "transparent",
+              }} />
+              <span>{p.text}</span>
+            </button>
+            {locked && on && !p.correct && p.reason && (
+              <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.no, margin: "0 0 10px 32px", lineHeight: 1.4 }}>
+                {p.reason}
+              </p>
+            )}
+          </div>
         );
       })}
 
-      {!step1Done && (
-        <button onClick={checkPoints} disabled={checkSel.length === 0} style={{
-          ...btnBase, textAlign: "center", fontWeight: 600, marginTop: 4,
-          background: checkSel.length ? C.glow : C.shelf, color: checkSel.length ? C.abyss : C.line,
-          border: "none", cursor: checkSel.length ? "pointer" : "default",
-        }}>
-          Check points
-        </button>
-      )}
-
-      {step1Done && (
+      {locked && (
         <>
-          <p style={{ ...note, color: checkOk ? C.ok : C.no, marginTop: 4 }}>
-            {checkOk
-              ? "All the right points."
-              : "Not quite. Teal points belong in the answer, dashed ones you missed, coral ones do not belong."}
+          <p style={{ ...note, color: missed === 0 && wrongPicks === 0 ? C.ok : C.no, marginTop: 4 }}>
+            {missed === 0 && wrongPicks === 0
+              ? `All ${totalCorrect} mark points — nothing extra.`
+              : `You included ${chosenCorrect} of ${totalCorrect} mark points${wrongPicks ? `, and ${wrongPicks} that don’t belong` : ""}. Teal = correct, dashed = missed, coral = does not belong.`}
           </p>
 
-          <p style={stepLabel}>Step 2 · Tap the phrases in order to build the answer</p>
+          <p style={stepLabel}>Model answer &middot; for study</p>
           <div style={{
-            minHeight: 70, borderRadius: 14, border: `1px dashed ${C.line}`,
-            padding: order.length ? 10 : 20, marginBottom: 16,
+            borderRadius: 14, border: `1px solid ${C.line}`, padding: 16, marginBottom: 4,
             background: "rgba(255,255,255,.02)",
           }}>
-            {order.length === 0 && (
-              <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: 0, textAlign: "center" }}>
-                Tap the phrases below in the order they should appear
+            {model.map((c, i) => (
+              <p key={i} style={{ fontFamily: FONT_UI, fontSize: 15, lineHeight: 1.5, color: C.foam, margin: i ? "8px 0 0" : 0 }}>
+                <span style={{ color: C.accent, fontWeight: 700 }}>{i + 1}.</span> {c}
               </p>
-            )}
-            {order.map((k, pos) => {
-              const right = locked && k === pos;
-              const bad = locked && k !== pos;
-              return (
-                <div key={k} onClick={() => remove(k)} style={{
-                  fontFamily: FONT_UI, fontSize: 15, lineHeight: 1.4, padding: "10px 12px",
-                  borderRadius: 10, marginBottom: 6, cursor: locked ? "default" : "pointer",
-                  background: bad ? "rgba(255,158,125,.12)" : right ? "rgba(79,216,196,.14)" : C.raise,
-                  border: `1px solid ${bad ? C.no : right ? C.ok : C.glow}`,
-                  color: bad ? C.no : right ? C.ok : C.foam,
-                  display: "flex", gap: 10,
-                }}>
-                  <span style={{ color: C.mist, flexShrink: 0 }}>{pos + 1}</span>
-                  <span>{item.build[k]}</span>
-                </div>
-              );
-            })}
-          </div>
-          {locked && (
-            <div style={{ marginBottom: 16 }}>
-              <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>Model answer</p>
-              {item.build.map((c, i) => (
-                <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px" }}>
-                  <span style={{ color: C.accent }}>{i + 1}.</span> {c}
-                </p>
-              ))}
-              <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 12 }}>
-                <span style={{ fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 600, color: checkOk ? C.ok : C.no }}>
-                  {checkOk ? "✓ Step 1 — you chose the right points." : "✗ Step 1 — the points weren't all right."}
-                </span>
-                <span style={{ fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 600, color: orderOk ? C.ok : C.no }}>
-                  {orderOk ? "✓ Step 2 — correct order." : "✗ Step 2 — the order wasn't right (see the model answer above)."}
-                </span>
-              </div>
-            </div>
-          )}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {pool.map(({ c, i }) => {
-              if (order.includes(i)) return null;
-              return (
-                <button key={i} onClick={() => add(i)} disabled={locked}
-                  style={{
-                    fontFamily: FONT_UI, fontSize: 15, lineHeight: 1.35, padding: "10px 13px",
-                    borderRadius: 11, border: `1px solid ${C.line}`, background: C.shelf,
-                    color: C.foam, textAlign: "left", cursor: locked ? "default" : "pointer",
-                  }}>
-                  {c}
-                </button>
-              );
-            })}
+            ))}
           </div>
         </>
       )}
@@ -1645,7 +1588,7 @@ export default function App() {
     if (it.type === "gap") return it.answers.map(() => null);
     if (it.type === "match") return { links: {}, order: [], sel: null };
     if (it.type === "chain") return [];
-    if (it.type === "exam") return { phase: 1, checkSel: [], order: [] };
+    if (it.type === "exam") return { checkSel: [] };
     if (it.type === "tap") return null;
     if (it.type === "label") return { assign: {}, order: [], selLab: null };
     return null;
@@ -1658,7 +1601,7 @@ export default function App() {
     if (item.type === "gap") return answer.every((a) => a !== null);
     if (item.type === "match") return Object.keys(answer.links).length === item.pairs.length;
     if (item.type === "chain") return answer.length === item.chunks.length;
-    if (item.type === "exam") return answer.phase === 2 && answer.order.length === item.build.length;
+    if (item.type === "exam") return answer.checkSel.length > 0;
     if (item.type === "tap") return answer !== null;
     if (item.type === "label") return Object.keys(answer.assign).length === (FIGURES[item.fig]?.hotspots.length || 0);
     return false;
@@ -1671,9 +1614,9 @@ export default function App() {
     if (item.type === "match") return item.pairs.every((_, i) => answer.links[i] === i);
     if (item.type === "chain") return answer.every((k, i) => k === i);
     if (item.type === "exam") {
-      /* right only if both steps are: the ticked set equals the mark-scheme
-         points and the phrases are in the given order */
-      return sameSet(answer.checkSel, item.check.map((_, i) => i)) && answer.order.every((k, i) => k === i);
+      /* Content-only: pass iff the ticked set equals the true mark points
+         (no misses, no wrong picks). Order is never graded. */
+      return sameSet(answer.checkSel, examCorrectIdx(item));
     }
     if (item.type === "tap") return gradeTap(item, answer);
     if (item.type === "label") return gradeLabel(FIGURES[item.fig], answer.assign);
@@ -2263,7 +2206,7 @@ export default function App() {
               fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, margin: "0 0 5px",
               color: wasRight ? C.ok : C.no,
             }}>
-              {wasRight ? "That's it" : (item.type === "exam" ? "Not quite — check the steps above" : "Not yet — it'll come back")}
+              {wasRight ? "That's it" : (item.type === "exam" ? "Not quite — compare with the model answer" : "Not yet — it'll come back")}
             </p>
             <p style={{ fontSize: 14.5, color: C.foam, lineHeight: 1.5, margin: 0 }}>
               {item.why}
