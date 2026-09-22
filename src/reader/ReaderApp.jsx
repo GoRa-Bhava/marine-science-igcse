@@ -2,15 +2,20 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createProgressStore } from "./progressStore.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, pickNext, masteryState, readiness, unitReadiness } from "./scoring.js";
+import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 
-/* The Units 1–6 Reader — self-paced, book-style flow with durable device-local
-   progress (IndexedDB) and a wrong-weighted smart-practice mode. Reuses the
-   existing item components via `renderItemBody` and shared grading, so questions
-   look and grade exactly as in the classic flow. */
+/* The Units 1–6 Reader — the whole app. A self-paced, book-style flow with
+   durable device-local progress (IndexedDB) and a wrong-weighted smart-practice
+   mode. Reuses the existing item components via `renderItemBody` and shared
+   grading, so questions look and grade exactly as before. The Library also hosts
+   the learn/reference surfaces (Interactive Lab, Concept Cards, Ocean
+   discoveries) and the app's settings (theme, updates, back up / restore). */
 
 const FONT_UI = "Karla, system-ui, sans-serif";
 const FONT_DISPLAY = "Fraunces, Georgia, serif";
 const TIER = { 1: "RECALL", 2: "APPLICATION", 3: "EXAM" };
+const IS_NATIVE = typeof window !== "undefined" && !!window.Capacitor?.isNativePlatform?.();
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 function daysToExam(iso) {
   if (!iso) return null;
@@ -29,7 +34,11 @@ function answerText(item) {
   return "";
 }
 
-export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit, initAnswer, CreatureArt, creatures, onUseClassic }) {
+export function ReaderApp({
+  content, C, theme, onSetTheme, renderItemBody, grade, canSubmit, initAnswer,
+  CreatureArt, creatures, InteractiveLab, ComparisonCard, ComparisonSelector,
+  comparisonCards = [], UpdatesControl,
+}) {
   const index = useMemo(() => buildContentIndex(content.items, content.figures || {}), [content]);
   const itemById = useMemo(() => Object.fromEntries(content.items.map((i) => [i.id, i])), [content]);
 
@@ -57,23 +66,35 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
   const [reveal, setReveal] = useState(null);
   const [celebrate, setCelebrate] = useState(null);
 
-  // ---- load persisted state on mount ----
+  // Concept-cards state lives here so the chosen comparison + learn/self-check
+  // mode persist while you flip between cards (as they did in the classic screen).
+  const [conceptIndex, setConceptIndex] = useState(0);
+  const [conceptMode, setConceptMode] = useState("learn");
+
+  // Settings: back up / restore / reset (against this device's Reader store).
+  const [backupMsg, setBackupMsg] = useState("");
+  const [restoreText, setRestoreText] = useState("");
+  const [restoreMsg, setRestoreMsg] = useState("");
+  const [restoreErr, setRestoreErr] = useState("");
+  const [confirmReset, setConfirmReset] = useState(false);
+
+  // ---- load persisted state (also re-run after restore / reset) ----
+  async function loadAll() {
+    if (!storeRef.current) storeRef.current = await createProgressStore();
+    const store = storeRef.current;
+    const [all, bm, st, sec] = await Promise.all([
+      store.getAllItemProgress(), store.getBookmark(), store.getSettings(), store.getAllSectionState(),
+    ]);
+    setProgressMap(Object.fromEntries(all.map((r) => [r.itemId || r.id, r])));
+    setSectionStates(Object.fromEntries(sec.map((r) => [r.sectionId || r.id, r])));
+    setSettings(st || {});
+    setOwned((st && st.creatures) || []);
+    setBookmark(bm);
+  }
+
   useEffect(() => {
     let live = true;
-    (async () => {
-      const store = await createProgressStore();
-      storeRef.current = store;
-      const [all, bm, st, sec] = await Promise.all([
-        store.getAllItemProgress(), store.getBookmark(), store.getSettings(), store.getAllSectionState(),
-      ]);
-      if (!live) return;
-      setProgressMap(Object.fromEntries(all.map((r) => [r.itemId || r.id, r])));
-      setSectionStates(Object.fromEntries(sec.map((r) => [r.sectionId || r.id, r])));
-      setSettings(st || {});
-      setOwned((st && st.creatures) || []);
-      setBookmark(bm);
-      setReady(true);
-    })();
+    (async () => { await loadAll(); if (live) setReady(true); })();
     return () => { live = false; };
   }, []);
 
@@ -216,8 +237,13 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
   if (view === "checkpoint") return <Shell C={C}>{renderCheckpoint()}{celebrateOverlay()}</Shell>;
   if (view === "summary") return <Shell C={C}>{renderSummary()}</Shell>;
   if (view === "browse") return <Shell C={C}>{renderBrowse()}</Shell>;
+  if (view === "interactives") return <Shell C={C}>{renderInteractives()}</Shell>;
+  if (view === "concepts") return <Shell C={C}>{renderConcepts()}</Shell>;
+  if (view === "collection") return <Shell C={C}>{renderCollection()}{revealOverlay()}</Shell>;
   if (view === "settings") return <Shell C={C}>{renderSettings()}</Shell>;
   return <Shell C={C}>{renderLibrary()}{revealOverlay()}</Shell>;
+
+  function backToLibrary() { setView("library"); }
 
   // ---------- Library ----------
   function renderLibrary() {
@@ -252,15 +278,40 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
           <button style={entryBtn(C)} onClick={() => startBrowse(bookmark ? index.sections[bookmark.sectionId].orderedItemIds : index.sections[index.sectionIds[0]].orderedItemIds, bookmark ? `${bookmark.sectionId}` : `${index.sectionIds[0]}`)}>👁 Browse</button>
         </div>
 
+        <div style={{ marginTop: 22 }}>
+          <p style={kicker(C)}>EXPLORE</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
+            {EXPLORE_ENTRIES.map((e) => (
+              <button key={e.key} onClick={() => setView(e.view)}
+                style={{ display: "flex", alignItems: "center", gap: 14, width: "100%", textAlign: "left", ...card(C), border: `1px solid ${C.line}55`, cursor: "pointer" }}>
+                <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>{e.icon}</span>
+                <span style={{ flex: 1 }}>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontWeight: 700, fontSize: 16, color: C.foam }}>{e.title}</span>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 2 }}>{e.blurb}</span>
+                </span>
+                <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {weakest && (
-          <div style={{ ...card(C), display: "flex", gap: 16, alignItems: "center", marginTop: 14 }}>
+          <div style={{ ...card(C), display: "flex", gap: 16, alignItems: "center", marginTop: 22 }}>
             <Donut C={C} pct={Math.round(weakest.r * 100)} />
-            <div style={{ fontFamily: FONT_UI }}>
+            <div style={{ fontFamily: FONT_UI, flex: 1 }}>
               <div style={{ color: C.foam, fontWeight: 700, fontSize: 16 }}>{index.units.find((u) => u.unitId === weakest.u.unitId)?.title} — {Math.round(weakest.r * 100)}% ready</div>
               <div style={{ color: C.mist, fontSize: 13, marginTop: 2 }}>{dte != null ? `${dte} days to exam · ` : ""}your weakest topic</div>
             </div>
           </div>
         )}
+
+        <button onClick={() => setView(DISCOVERIES_ENTRY.view)}
+          style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", ...card(C), marginTop: 12, cursor: "pointer" }}>
+          <span aria-hidden="true" style={{ fontSize: 22, lineHeight: 1 }}>{DISCOVERIES_ENTRY.icon}</span>
+          <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 15.5, fontWeight: 700, color: C.foam }}>{DISCOVERIES_ENTRY.title}</span>
+          <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>{owned.length}/{creatures.length} found</span>
+          <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+        </button>
 
         {index.units.map((u) => (
           <div key={u.unitId} style={{ ...card(C), marginTop: 14 }}>
@@ -289,8 +340,6 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
 
         <div style={{ textAlign: "center", marginTop: 24 }}>
           <button onClick={() => setView("settings")} style={linkBtn(C)}>Settings</button>
-          <span style={{ color: C.line }}> · </span>
-          <button onClick={onUseClassic} style={linkBtn(C)}>Use the classic experience</button>
         </div>
       </div>
     );
@@ -428,13 +477,157 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
     );
   }
 
-  // ---------- Settings (exam date + experience) ----------
+  // ---------- Interactive Lab (learn/explore surface) ----------
+  function renderInteractives() {
+    return (
+      <div style={pad}>
+        <TopBar C={C} left="Interactive Lab" />
+        {InteractiveLab ? <InteractiveLab onBack={backToLibrary} theme={theme} /> : (
+          <div>
+            <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
+            <p style={sub(C)}>The interactive lab isn't available.</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ---------- Concept Cards (two-sided comparisons) ----------
+  function renderConcepts() {
+    const cards = comparisonCards;
+    const card = cards[conceptIndex] || cards[0];
+    return (
+      <div style={pad}>
+        <TopBar C={C} left="Concept Cards" />
+        <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
+        <div style={{ marginTop: 8 }}>
+          {card && ComparisonCard ? (
+            <ComparisonCard
+              key={card.id}
+              card={card}
+              mode={conceptMode}
+              onModeChange={setConceptMode}
+              selector={ComparisonSelector ? (
+                <ComparisonSelector cards={cards} activeIndex={conceptIndex} onSelect={setConceptIndex} />
+              ) : null}
+            />
+          ) : <p style={sub(C)}>No comparison cards available.</p>}
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- Ocean Discoveries collection ----------
+  function renderCollection() {
+    const coll = content.collection || {};
+    return (
+      <div style={pad}>
+        <TopBar C={C} left="Discoveries" />
+        <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
+        <h1 style={{ ...h1(C), marginTop: 8 }}>{coll.title || "Ocean discoveries"}</h1>
+        <p style={{ ...sub(C), marginTop: 4 }}>{owned.length} of {creatures.length} found.{coll.blurb ? ` ${coll.blurb}` : ""}</p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 18 }}>
+          {creatures.map((c) => {
+            const has = owned.includes(c.id);
+            return (
+              <div key={c.id} style={{
+                borderRadius: 16, padding: 14, minHeight: 190,
+                border: `1px solid ${has ? `${C.line}55` : `${C.line}33`}`,
+                background: has ? (C.panel || "rgba(255,255,255,.03)") : "transparent",
+                display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
+              }}>
+                <div style={{ opacity: has ? 1 : 0.13, filter: has ? "none" : "grayscale(1)" }}>
+                  {CreatureArt ? <CreatureArt id={c.id} size={92} /> : null}
+                </div>
+                <p style={{ fontFamily: FONT_DISPLAY, fontSize: 15, fontWeight: 600, margin: "6px 0 3px", color: has ? C.foam : C.line }}>
+                  {has ? c.name : "Undiscovered"}
+                </p>
+                <p style={{ fontFamily: FONT_UI, fontSize: 11.5, color: has ? C.glow : C.line, margin: 0 }}>{c.rarity}</p>
+                {has && <p style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, lineHeight: 1.45, marginTop: 7 }}>{c.fact}</p>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ---------- Settings (theme, updates, exam date, back up / restore) ----------
+  async function doBackup() {
+    setBackupMsg("");
+    const dump = await (store() ? store().exportAll() : Promise.resolve(null));
+    if (!dump) { setBackupMsg("Nothing to back up yet."); return; }
+    const json = JSON.stringify({ app: "marine-reader", ...dump }, null, 2);
+    const filename = `marine-reader-${todayISO()}.json`;
+    if (!IS_NATIVE) {
+      try {
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        setBackupMsg(`Saved ${filename} to your downloads.`);
+        return;
+      } catch (e) { /* fall through to clipboard */ }
+    }
+    if (navigator.clipboard?.writeText) {
+      try { await navigator.clipboard.writeText(json); setBackupMsg("Copied your progress to the clipboard. Paste it somewhere safe."); return; }
+      catch (e) { /* fall through */ }
+    }
+    setBackupMsg("Couldn't save automatically — try again from a browser.");
+  }
+
+  function readRestoreFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { setRestoreText(String(reader.result || "")); setRestoreErr(""); setRestoreMsg(""); };
+    reader.readAsText(file);
+  }
+
+  async function doRestore() {
+    setRestoreMsg(""); setRestoreErr("");
+    let dump;
+    try { dump = JSON.parse(restoreText); } catch (e) { setRestoreErr("That doesn't look like valid backup JSON. Nothing was changed."); return; }
+    if (!dump || typeof dump !== "object" || !Array.isArray(dump.items)) {
+      setRestoreErr("That doesn't look like a Reader backup. Nothing was changed."); return;
+    }
+    if (store()) await store().importAll(dump, { merge: false }); // replace with the backup
+    await loadAll();
+    setRestoreText(""); setRestoreMsg("Progress restored.");
+  }
+
+  async function doReset() {
+    if (store()) await store().clearAll();
+    await loadAll();
+    setBookmark(null); setConfirmReset(false); setView("library");
+  }
+
   function renderSettings() {
     return (
       <div style={pad}>
         <TopBar C={C} left="Settings" />
         <button onClick={() => setView("library")} style={linkBtn(C)}>‹ Back</button>
         <h1 style={{ ...h1(C), marginTop: 8 }}>Settings</h1>
+
+        {/* Theme */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Theme</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10 }}>Dark oceanic, or a light variant.</div>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[["dark", "Dark"], ["light", "Light"]].map(([v, l]) => (
+              <button key={v} type="button" aria-pressed={theme === v} onClick={() => onSetTheme && onSetTheme(v)} style={{
+                flex: 1, padding: "12px 10px", borderRadius: 12, cursor: "pointer", fontFamily: FONT_UI, fontSize: 14, fontWeight: 700,
+                border: `1px solid ${theme === v ? C.glow : C.line}`,
+                background: theme === v ? "rgba(79,216,196,.14)" : "transparent",
+                color: theme === v ? C.accent : C.foam,
+              }}>{l}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Exam date */}
         <div style={{ ...card(C), marginTop: 14 }}>
           <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Exam date</div>
           <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10 }}>Optional — drives the readiness countdown.</div>
@@ -442,9 +635,55 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
             onChange={async (e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, examDate: v })); if (store()) await store().putSettings({ examDate: v }); }}
             style={{ fontFamily: FONT_UI, fontSize: 15, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
         </div>
+
+        {/* About + updates */}
         <div style={{ ...card(C), marginTop: 14 }}>
-          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 8 }}>Experience</div>
-          <button style={ghostBtn(C)} onClick={onUseClassic}>Switch to the classic experience</button>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>About</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 8, lineHeight: 1.5 }}>Marine Science IGCSE Revision App 2026/27. A no-login revision app; your progress is saved on this device.</div>
+          {UpdatesControl ? <UpdatesControl /> : null}
+        </div>
+
+        {/* Back up */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Back up my progress</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Save a copy of your reading history and Ocean discoveries. Do this before resetting or moving to a new phone.</div>
+          <button onClick={doBackup} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)" }}>
+            {IS_NATIVE ? "Copy my progress" : "Back up my progress"}
+          </button>
+          {backupMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{backupMsg}</p>}
+        </div>
+
+        {/* Restore */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Restore from a backup</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Choose a saved file, or paste a backup, then restore. This replaces your current progress.</div>
+          <input type="file" accept="application/json,.json" onChange={readRestoreFile}
+            style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, display: "block", maxWidth: "100%", boxSizing: "border-box" }} />
+          <textarea value={restoreText} onChange={(e) => { setRestoreText(e.target.value); setRestoreErr(""); }}
+            placeholder="…or paste your backup JSON here" rows={4}
+            style={{ width: "100%", fontFamily: "monospace", fontSize: 11, padding: 8, borderRadius: 8, boxSizing: "border-box",
+              border: `1px solid ${restoreErr ? C.no : C.line}`, background: C.shelf, color: C.foam, resize: "vertical" }} />
+          <button onClick={doRestore} disabled={!restoreText.trim()} style={{
+            ...ghostBtn(C), width: "100%", marginTop: 10,
+            cursor: restoreText.trim() ? "pointer" : "default", opacity: restoreText.trim() ? 1 : 0.5,
+          }}>Restore this backup</button>
+          {restoreErr && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.no, marginTop: 10, lineHeight: 1.5 }}>{restoreErr}</p>}
+          {restoreMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{restoreMsg}</p>}
+        </div>
+
+        {/* Reset */}
+        <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.coral}66` }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Start from scratch</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Erase all your reading progress and Ocean discoveries on this device. Back up first if you might want it again.</div>
+          {!confirmReset ? (
+            <button onClick={() => setConfirmReset(true)} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.coral}`, color: C.coral }}>Reset everything</button>
+          ) : (
+            <div>
+              <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, lineHeight: 1.5, margin: "0 0 12px" }}>This can't be undone.</p>
+              <button onClick={doReset} style={{ ...primaryBtn(C), background: C.coral, color: "#fff", marginBottom: 8 }}>Erase everything</button>
+              <button onClick={() => setConfirmReset(false)} style={{ ...ghostBtn(C), width: "100%" }}>Cancel</button>
+            </div>
+          )}
         </div>
       </div>
     );
