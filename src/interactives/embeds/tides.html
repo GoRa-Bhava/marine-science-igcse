@@ -1,4 +1,8 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Drag the Moon</title>
 <style>
   :root{
@@ -77,8 +81,8 @@
 
   .controls{display:flex;gap:10px;flex-wrap:wrap}
   button.set{font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;
-    padding:10px 14px;border-radius:11px;border:1px solid var(--line);
-    background:var(--panel-2);color:var(--ink);transition:transform .08s,border-color .2s}
+    padding:10px 14px;border-radius:11px;border:1px solid var(--ink-soft);
+    background:var(--panel-2);color:var(--ink);transition:transform .08s,border-color .2s,background .2s}
   button.set:hover{border-color:color-mix(in srgb,var(--teal) 40%,var(--line))}
   button.set:active{transform:translateY(1px)}
   button.set:focus-visible,[role=slider]:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
@@ -101,12 +105,15 @@
   footer{margin-top:22px;color:var(--ink-soft);font-size:12px;
     font-family:var(--font-m);letter-spacing:.02em}
 
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
-<div class="wrap">
+</head>
+<body>
+<main class="wrap">
   <p class="eyebrow">Marine Science IGCSE · 1.4 Tides</p>
   <h1>Drag the Moon</h1>
   <p class="sub">Move the Moon around the Earth and watch the tidal range change. When the Sun and Moon line up their pulls add together; when they sit at right angles the pulls partly cancel.</p>
@@ -185,7 +192,7 @@
           </g>
         </svg>
       </figure>
-      <div class="legend" aria-hidden="true">
+      <div class="legend">
         <span><i style="background:#ff6a4d"></i> high tide</span>
         <span><i style="background:#7fe0ec"></i> low tide</span>
       </div>
@@ -218,8 +225,9 @@
     </div>
   </div>
 
+  <p id="live" class="sr-only" aria-live="polite"></p>
   <footer>Prototype · clean-SVG interactive, no animation engine · IGCSE Marine Science 0697</footer>
-</div>
+</main>
 
 <script>
 (function(){
@@ -231,6 +239,7 @@
   var badge=document.getElementById('badge'), badgeText=document.getElementById('badgeText');
   var fill=document.getElementById('fill'), rangeVal=document.getElementById('rangeVal');
   var explain=document.getElementById('explain');
+  var live=document.getElementById('live'), lastMode=null;
   var svg=document.getElementById('svg');
   var theta=0; // math angle, 0 = toward Sun (right)
 
@@ -278,6 +287,8 @@
       explain.className='explain';
       explain.innerHTML='As the Moon moves out of line with the Sun, the two pulls no longer fully add together, so the tidal range shrinks toward its neap minimum.';
     }
+    moonG.setAttribute('aria-valuetext', badgeText.textContent+', '+rangeVal.textContent+' tidal range');
+    if(mode!==lastMode){ lastMode=mode; if(live) live.textContent=badgeText.textContent+' — '+rangeVal.textContent+' tidal range'; }
   }
 
   function setFromPoint(clientX,clientY){
@@ -313,5 +324,5 @@
   render();
 })();
 </script>
-
-</body></html>
+</body>
+</html>
