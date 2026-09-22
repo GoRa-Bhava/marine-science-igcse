@@ -1,4 +1,8 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ice and Sea Level</title>
 <style>
   :root{
@@ -37,7 +41,7 @@
   input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid var(--coral);cursor:pointer}
   input[type=range]:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
   .qbtns{display:flex;gap:9px}
-  button.set{font-family:var(--font-b);font-size:13.5px;font-weight:600;cursor:pointer;padding:9px 13px;border-radius:11px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);transition:.15s}
+  button.set{font-family:var(--font-b);font-size:13.5px;font-weight:600;cursor:pointer;padding:9px 13px;border-radius:11px;border:1px solid var(--ink-soft);background:var(--panel-2);color:var(--ink);transition:.15s}
   button.set:hover{border-color:color-mix(in srgb,var(--teal) 40%,var(--line))}
   button.set:active{transform:translateY(1px)}
 
@@ -56,16 +60,21 @@
   .quiz .q{font-weight:600;font-size:14.5px;margin:0}
   .opts{display:flex;gap:9px;flex-wrap:wrap}
   button.opt{font-family:var(--font-b);font-size:13.5px;font-weight:600;cursor:pointer;padding:9px 13px;border-radius:11px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);transition:.15s}
+  button.opt:hover{border-color:color-mix(in srgb,var(--teal) 40%,var(--line))}
+  button.opt:active{transform:translateY(1px)}
   button.opt:focus-visible,button.set:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
   .fb{font-size:13.5px;min-height:1.4em;margin:0}
   .fb.ok{color:var(--teal-ink)} .fb.no{color:var(--coral-ink)}
   footer{margin-top:22px;color:var(--ink-soft);font-size:12px;font-family:var(--font-m);letter-spacing:.02em}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
-<div class="wrap">
+</head>
+<body>
+<main class="wrap">
   <p class="eyebrow">Marine Science IGCSE · 2.1 & 6.8 Sea level</p>
   <h1>Melting ice &amp; sea level</h1>
   <p class="sub">Two tanks, one shared starting level. Melt the ice and watch what happens: only one of them raises the water — the trap that catches most students.</p>
@@ -90,11 +99,11 @@
             <clipPath id="clipA"><rect x="26" y="68" width="148" height="188" rx="5"/></clipPath>
             <g clip-path="url(#clipA)">
               <rect id="waterA" x="26" y="150" width="148" height="108" fill="url(#wa)" opacity=".85"/>
-              <g id="iceA"><image href="data:image/webp;base64,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" x="50" y="121" width="100" height="58"/></g>
+              <g id="iceA"><image href="data:image/webp;base64,UklGRtINAABXRUJQVlA4WAoAAAAQAAAAxQAAcQAAQUxQSFABAAABgBxJkiIp9Fc6DpqnumrhExETQE6lhuL//HWT5+pUuTVPHlgFU8QJpogqdLfoe8E0uT05NsESHJkD1UXttPnENDw/AVbAMC9noDcz1IjsbjLcUJwF1TUGHIcLcXwR7Qg8xu4C18/0/00a5BEOz3mczhjmYYy6HQ4w1ANoMbsNXA4qGO4BoEz7oGZEbtHGpEeCewnJHehD3GVM7kB7Hg3cyB1tw43KPUYcllM2G8bkDewXgf/mylVGfQP7YNw3ATPeswlg5mwCmDcZT5taAqoAWAPbDXKm4GDumCBjUoX/AwImzSr4Xqjgt9t7kSrwiQIfJjQ/SqgBxSB31IB3BYmjBtSA6ZceNeBbgRpQA2rA6tcc61PF1jyxOU1szxEHpogz8wEdDk8CAWaAIG9HnFcj2FsR+y24oTIbD1cPg+vHQA4fRiYfRDYfQFrXkfAB7gtWUDggXAwAAPA8AJ0BKsYAcgA+VSSORSOiIRYKRlQ4BUSyiKj1pH8BegbfwAp3hP3UY+W4e53BylvMdE0aD3Q3r/P/TZtNHquidXpcfE+c48fPVrE+LPQvw9he0TNl15r6BJg9V0ftFckzJ67Tc1nAf5tPVjAchfFIW2uTjTZhRsHfeJyYhT+xTfi1gUL4fa58sOlkF6EGl1ARyRcS51BKtk/kpsYW+F3d7p13Sdoe5d7WIsab2YF1vxOy5F2QtnZ3tC7hYNBY9C4/y+Co7RqYL6F5hKDoRalhci6A5ZD0ylENBjVxjdE2xtOqQYMyEk73y+hQ4dnjfpohvaydMUOag0LgcJ5t6pTHwxjMO0WfW5mI19ONZIUo8wqSGyux1STsr9761fR+IOHtefXzzwH1UcOpx9UUPvEdQT9jCIbwzC4/WpYdHFm66hhhgk40k3pw5BlUFBkSP48h8+7yEvdmz9j6ybsuFMCPh4aZBDIVIji3DbtW8owSYeyWgmcsYMXDYg36ZgcoaocPRmgC1Y9I3Y2wrf3F7ieuzobB4dJRlSMgN493duDS7yXfh402i3kdyKkCS5mkHh+VBn3inUa/9ijSmw5Z1R7luURNp4KU8krCw12UQoXeufQDb2mAaKTtlH+C5CGJALmXuCEtLyNN6cF0bOJKIoAA/vvMT//4fwAADt7B4ljfdWgT284r/4MskP+OFOLfw9f88BYuD8s81Jmp1EPDU3F8QUZ4YxO/PMOdndvyO6hs+ZywXkBcrAWLJKtrlLvpkMR2uMWxSeLsfX49C5jKAYSKbC1BVH5LXfk67HvyiNvrH+E3/+QZb1WGX2f1aEnfqczEAYEsg89y6f/KUXfvi+PKxdDfYeA8TSo7viGi/7HKzKIplRnIr+ch///n1EptOYmax9DLZzB9l0xcEvX96tiu38z3krOsdGcr3mSpErlpjBYTXiyMKTsmZ+WgwapWgMPws7VvCLkc/lIk1Z9gd1DSo2OcW2fm+gjpE8H2enIThAGTjomW7CfKviC6fbKXGTbNp9GP+t2inCy/Prm+Yf15W3+ea4JZbVMGg+J+8M8nuYq+/d0uhmcGdn4x3Gr76r+Vfgw842BmJECsNomX5CtDAsqNuznzXObHcQc5rlI4OxlCH3v7trLq9AWlfXoTJj9ZtJAx+seH/L0+YXwWT+OcXZrgruX1t/Vl1xSEqkJW6MkgStdG4Nq8024i0gkXaK8Q4OBM4mowYhZaeq4y8cPeo41yU9vVgfTxaEtlThzAWOHqb0lZidIgfVyCl4uTRRBOaOCu+2lMpBsX4GwlLeWAbESJ8Wd+1cAWcLHvT+rfpDf/tt05X6G91h8hgQ3imwdbvI1o0ycBkjIKuB4XR7PNdtAz80eLXWqNWaNcTuPJVUKiA2crg+coqpuQ1O5I7qv6WIV3R8s9udzBCDw/tjjauKPnISjrjvqCh1Qfucyeka81oHEU+x81LsrlYrYCfe65T+BeTIlfVI001THn8DLGqcv06Q34/Bkd27GeqVHK12ES2R6ySJP9b7U4lYgn/Oj8YQGyZizzphoXfMpPh5YlHr0yxICxNZV20xLSsJDEvBi98w3odi5Cwji80Apr6JHVQpRtRJUq127yk26bOnE4y4EC2AItr8m/Oqi1MbgtN+aPKKXPu+fVWoeg7dZT7XMFiJir85H87ljWMlKIyMs3wW96Mt0jnosKATLM9c5KgIAh0P9BoVrTDLdQQ9FyT9sKYoJSnvOBXNGMPEDnL/3eDsAiWIShC9tZpPkdtXDVJ3IXXribP9DIiJzldu1ECDihk2yfKUoPy4r4HpzLDoWWEJtibzJXnhK3JkWkMezhttbF+zFLSf2sLPfYS0i9rsu/5z39rrDMXE/UJL+76MSFSfpKAJxFBaKR7/6WkY8TbJ8+BUipoTdSRDzDTUnB/8uDsCd0Zmi2j0XuhjBT3oX3NXZc2UL67Q5oo6qroDReRDcjX0oM0UluojPZi/hloGs/2P4tBVWs0p/5IPxNlxmKRy5CDl4y84sfNPpTEJNmZnzmQUY7ViPYOJIkHchxxDbRJY50nRGgADea73GwrYlRf1W/2BBUkm444LubEf/VyGZRVRtRv4LVAGQd/e9tBgmig5MiezY1OdvSLsuXjwZVpjSwWcEMkWd8cq/hqvLKMUoAgqBbd2AUyNIi1wcyD1MrMitLDi7vRgSn3FZlKk7sGio1CAJl0QhjjlOammop2fTxXYGCZcSOpt4KbJltVMRInPzYgdS8UWHvHN0G4td0Rs65wReSmH8zw/9ZNaqCDQZv2aDWiPatannJq/ALveoaOKxLaAJpcEzB0jJiyUoDsz0jYt0OuXcmR//t7gJCOfDs68CS0hGpms31fXv+Skl1yL7S4sjlamkSpbDDTrXiKLw/ta/Kxqvytv8g4Conn5H9C6QDcqRD1mn4nEKc/DKEHZzPgwXfYdmXY6RCQ5LN4ub5WvNoN7u6SGVq9o3d0fHPBlXsd41JisNK3KZw8DXGoGx9iSIoDjDYKR/ZdiS5ae4rPm32heI72rq+7eU6aR9GbEuo1xHB0o6Tdy5vwfpIre55F2Vaq4kGQw7oGGlkltC+j948GY0urgs+sMURj8qChBa6BQSp68xX6qFG3/x7/LEoJkysG1Mo7FZ0zhKax64Nk7cYoHD6NO8dKXoT/dJKal6X1f+tccFrKdATiH27SOKoVkwMGvC4cnyDdJZe+PMfJ8h0W085VRRUkAFsryMeVyf4k80H69Tf4P/4HE8jjwS4zPYTmWwEvrjBGTcNdmc+1gBb/fjqPTa6dhyNua/CcZRFxKVsoACJb6k8iZXCxq86wqf0XjiA9EinQWRY/L014h2aoOVQuqBiUEw8hxSxGJKdTOYrCNiq5fTBdnMZ604c31p0/VkI+oD0hudssvhLz2v/C4YJtJbYCyrRL/rHyczUuQJAD1e4rAA6jgLktNFzwplKdl9JRpjYXl0WwsdLCHhIzjpt7MHp9m6UXE4YFPdqdM8gB/BoGd88t6Pqqcjmgk+yGxqBviYKikcrr49n5/23uxosJ6JCcrJpR99uNra/DIesWXtI554+pnrxuZDExfreLTmO3dVFrFKrjgZ/OoZ6yJXtIJc65GUSdh12NqJbPviRIMt0iWLsxkh8s57Vb14GCcO+ZjqGRqxe70seIByefuQ/x4aRk7wD8ZZX8YVy2iQa/N2clxG327n5Epv2UdydX9T/nH0OQ3L8lfYTbih3Vj5hLBBhGu1H+pRF5OCh/5C/hk1oA/IfsFnIggc9f5qG1HOE/4tw2rjMztugtSdCUmFhh+vxP4dq55gUdbaEAaDQda+Jfw7WXgfaL3aYZGmKhUPimrfASlbMDWBoQ3wgdXr96edMK9l9iV0/qUdCOQYlMcIm1hEc1XWr2NqWkMxZzU7O+h3goBO1DZhaj6ULbLM5gK3nY3/7djioU47HyEnDNM3QYMOWwROqmzWsljx5qlx3srFSId4A34wuxpPZlPtp49/mhwfgaiWdIoDeKtaNk+QujKHOfLEqj+f8LPdh/8zrWC44BNujxIH9yrk1ScmXRgfmF4QiM47uAKrJG4U4l8duXL49SeB9n452T0XPAsSJUsggDA/TJuFQPPmou1Os0aGQh8YR5IHEw62aLq5tqaySV35n0z7jljBVWSCxz5673rPnpXLLy5XJHx17UZceBg1MkDSa/KuzlPcf/Bkj3RxZD0lev3Haze8poBhLagNxrqKV+3/cqH7mwrKV/flfr0u2nULtjDNyfWJhTfss2IGSWE0AQgUAeW+DAXlBP/oESLYNryO+IJYgK2jrrZ9HR7DM9jzi1povL14WWDQ03UOfCDBDQCTtvVIAX08ftiY+94aSCgUS1zzUCJkULR3nZtr42DRsZQS6gAwDpNN6LYbVjLzWmli6D1vuG7tSVw71YzcqN1FnmQxmSiUYoul73tSvzZBp9FGO2BSEHBENh4S04/05+MihVgASgDML2wnAu7VAAZ5Wf7QfPOnU+u/eEtMrxfeBCNcDL6kGEnv3k67aAAY36uZECZhMRh53yqPpn62Hj/woBIh1ODnP+AyyXomN6yuAD88WZtHs2W6HxGb9JaSIrATj/yqMKBPqcp6BfJ2ScpzIi544WhsL+eebrCKWGDjWK/+eWG+4IKK2+mhzdOHUnu1fHHALfsV2gYfmRJKstcTBlsr0jGnV+sXvw0AHjkCCI87QeakoZdPfIAAA==" x="50" y="121" width="100" height="58"/></g>
               <rect id="tintA" x="26" y="150" width="148" height="108" fill="#1f8fab" opacity=".42"/>
               <path id="waveA" d="M26 150 q18 -5 37 0 t37 0 t37 0 t37 0" fill="none" stroke="#dffaff" stroke-opacity=".85" stroke-width="2"/>
             </g>
-            <text x="100" y="276" text-anchor="middle" font-family="Public Sans,sans-serif" font-size="12" font-weight="600" fill="#0d2a37">Sea ice — floating</text>
+            <text x="100" y="276" text-anchor="middle" font-family="Public Sans,sans-serif" font-size="12" font-weight="600" style="fill:var(--ink)">Sea ice — floating</text>
           </g>
 
           <!-- TANK B: ice on land -->
@@ -122,7 +131,7 @@
                 <text id="riseTxt" x="358" y="140" font-family="IBM Plex Mono,monospace" font-size="9" fill="#ffd0a0">rise</text>
               </g>
             </g>
-            <text x="300" y="276" text-anchor="middle" font-family="Public Sans,sans-serif" font-size="12" font-weight="600" fill="#0d2a37">Ice on land — glacier</text>
+            <text x="300" y="276" text-anchor="middle" font-family="Public Sans,sans-serif" font-size="12" font-weight="600" style="fill:var(--ink)">Ice on land — glacier</text>
           </g>
         </svg>
       </figure>
@@ -157,8 +166,9 @@
       </div>
     </div>
   </div>
+  <p id="live" class="sr-only" aria-live="polite"></p>
   <footer>Prototype · clean-SVG interactive, no animation engine · IGCSE Marine Science 0697</footer>
-</div>
+</main>
 
 <script>
 (function(){
@@ -168,6 +178,7 @@
   var iceA=document.getElementById('iceA'), iceB=document.getElementById('iceB');
   var riseM=document.getElementById('riseM'), riseLine=document.getElementById('riseLine'), riseTxt=document.getElementById('riseTxt'), trickle=document.getElementById('trickle');
   var rB=document.getElementById('rB'), cap=document.getElementById('cap');
+  var live=document.getElementById('live'), lastState=null;
 
   function waves(x,y){return 'M'+x+' '+y+' q18 -5 37 0 t37 0 t37 0 t37 0';}
   function render(){
@@ -191,6 +202,16 @@
     rB.textContent = m<0.02?'Sea level: unchanged so far':'Sea level: risen by the added meltwater';
     if(m<0.02){ cap.innerHTML='Melt the ice to compare the two tanks.'; }
     else{ cap.innerHTML='Only melting <b>land</b> ice adds new water and raises the sea. The <b>floating</b> ice was already displacing its own mass of water, so its meltwater just replaces it — <b>no change</b>.'; }
+
+    if(live){
+      var state = m<0.02 ? 'unmelted' : (m>0.98 ? 'melted' : 'melting');
+      if(state!==lastState){
+        lastState=state;
+        if(state==='unmelted'){ live.textContent='Ice unmelted: both tanks at the shared start level.'; }
+        else if(state==='melted'){ live.textContent='Sea-ice tank melted: water level unchanged. Land-ice tank melted: water level rises.'; }
+        else{ live.textContent='Ice melting ('+Math.round(m*100)+' percent). Sea-ice tank: level unchanged. Land-ice tank: level rising.'; }
+      }
+    }
   }
   melt.addEventListener('input',render);
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -211,5 +232,5 @@
   render();
 })();
 </script>
-
-</body></html>
+</body>
+</html>
