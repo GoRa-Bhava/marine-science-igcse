@@ -161,7 +161,9 @@ class ProgressStore {
   async getItemProgress(id) { await this._ready; return this._safe(() => this.backend.get("items", id), null); }
   async putItemProgress(rec) {
     await this._ready;
-    const out = { ...rec, id: rec.id, updatedAt: now() };
+    // ItemProgress is keyed by itemId (spec §2); the store keeps a stable `id`.
+    const id = rec.id ?? rec.itemId;
+    const out = { ...rec, id, itemId: rec.itemId ?? id, updatedAt: now() };
     return this._safe(async () => { await this.backend.put("items", out); return out; }, out);
   }
   async getAllItemProgress() { await this._ready; return this._safe(() => this.backend.getAll("items"), []); }
@@ -178,7 +180,9 @@ class ProgressStore {
   async getSectionState(id) { await this._ready; return this._safe(() => this.backend.get("sections", id), null); }
   async putSectionState(rec) {
     await this._ready;
-    const out = { ...rec, id: rec.id, updatedAt: now() };
+    // SectionState is keyed by sectionId (spec §2).
+    const id = rec.id ?? rec.sectionId;
+    const out = { ...rec, id, sectionId: rec.sectionId ?? id, updatedAt: now() };
     return this._safe(async () => { await this.backend.put("sections", out); return out; }, out);
   }
   async getAllSectionState() { await this._ready; return this._safe(() => this.backend.getAll("sections"), []); }
