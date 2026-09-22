@@ -71,10 +71,13 @@ export function sectionStats(itemIds, progressMap = {}) {
 export function masteryState(itemIds, progressMap = {}) {
   const s = sectionStats(itemIds, progressMap);
   if (s.attempted === 0) return "unstarted";
-  const majorityLE1 = s.boxLE1 > s.attempted / 2;
   const majorityGE3 = s.boxGE3 > s.attempted / 2;
+  // Mastery = DURABLE accuracy: high accuracy AND items proven across repeats (box>=3).
   if (s.accuracy >= 0.8 && majorityGE3) return "mastered";
-  if (s.accuracy < 0.5 || majorityLE1) return "weak";
+  // Weak is driven by ACCURACY only. A fresh high-accuracy pass leaves every item at
+  // box 1, which must read as "improving", never "weak" — box level only gates the
+  // upgrade to mastered, it never forces a downgrade.
+  if (s.accuracy < 0.5) return "weak";
   return "improving";
 }
 

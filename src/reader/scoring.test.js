@@ -78,6 +78,20 @@ test("mastery states", () => {
   assert.equal(masteryState(ids, mid), "improving");
 });
 
+test("fresh 100% pass is improving, never weak (box level never forces a downgrade)", () => {
+  const ids = ["a", "b", "c", "d"];
+  // Every item answered correctly once: correct bumps 0->1, so all sit at box 1
+  // with accuracy 1.0. Box clause must NOT drag this to "weak".
+  const perfectOnce = {
+    a: { timesSeen: 1, timesCorrect: 1, box: 1 },
+    b: { timesSeen: 1, timesCorrect: 1, box: 1 },
+    c: { timesSeen: 1, timesCorrect: 1, box: 1 },
+    d: { timesSeen: 1, timesCorrect: 1, box: 1 },
+  };
+  assert.equal(masteryState(ids, perfectOnce), "improving");
+  assert.notEqual(masteryState(ids, perfectOnce), "weak");
+});
+
 test("readiness = coverage × accuracy", () => {
   const ids = ["a", "b", "c", "d"]; // total 4
   const pm = { a: { timesSeen: 2, timesCorrect: 2, box: 2 }, b: { timesSeen: 2, timesCorrect: 1, box: 1 } }; // attempted 2/4, acc 3/4
