@@ -807,6 +807,7 @@ function ExamQ({ item, locked, state, setState }) {
 
   return (
     <>
+      <p style={stepLabel}>Exam-type question</p>
       <Prompt>{item.q}</Prompt>
 
       {!locked && (

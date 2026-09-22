@@ -240,7 +240,7 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
               Unit {bmSec.unitId} · {index.units.find((u) => u.unitId === bmSec.unitId)?.title}
             </div>
             <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 15, marginBottom: 14 }}>
-              §{bmSec.sectionId} {bmSec.title} — question {(bookmark.indexInSection || 0) + 1} of {bmSec.total}
+              {bmSec.sectionId} {bmSec.title} — question {(bookmark.indexInSection || 0) + 1} of {bmSec.total}
             </div>
             <button style={primaryBtn(C)} onClick={resume}>Continue reading ›</button>
           </div>
@@ -249,7 +249,7 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
           <button style={entryBtn(C)} onClick={resume}>📖 Read</button>
           <button style={entryBtn(C)} onClick={startSmart}>🎲 Smart practice</button>
-          <button style={entryBtn(C)} onClick={() => startBrowse(bookmark ? index.sections[bookmark.sectionId].orderedItemIds : index.sections[index.sectionIds[0]].orderedItemIds, bookmark ? `§${bookmark.sectionId}` : `§${index.sectionIds[0]}`)}>👁 Browse</button>
+          <button style={entryBtn(C)} onClick={() => startBrowse(bookmark ? index.sections[bookmark.sectionId].orderedItemIds : index.sections[index.sectionIds[0]].orderedItemIds, bookmark ? `${bookmark.sectionId}` : `${index.sectionIds[0]}`)}>👁 Browse</button>
         </div>
 
         {weakest && (
@@ -305,7 +305,7 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
     return (
       <div style={pad}>
         <TopBar C={C} left={mode === "smart" ? "Smart practice" : `Reading · Unit ${loc?.unitId}`} />
-        <p style={kicker(C)}>{mode === "smart" ? "SMART PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · §${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
+        <p style={kicker(C)}>{mode === "smart" ? "SMART PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
           <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}`}</span>
@@ -346,19 +346,19 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
         <TopBar C={C} left="Section end" />
         <div style={{ width: 84, height: 84, borderRadius: "50%", background: "rgba(79,216,196,.16)", display: "grid", placeItems: "center", margin: "40px auto 16px", color: C.ok, fontSize: 34 }}>✓</div>
         <p style={{ ...kicker(C), textAlign: "center" }}>SECTION COMPLETE</p>
-        <h1 style={{ ...h1(C), fontSize: 30 }}>You've finished §{sec.sectionId} {sec.title}</h1>
+        <h1 style={{ ...h1(C), fontSize: 30 }}>You've finished {sec.sectionId} {sec.title}</h1>
         <div style={{ display: "flex", justifyContent: "center", gap: 40, margin: "22px 0" }}>
           <Stat C={C} n={session.count} label="QUESTIONS" />
           <Stat C={C} n={session.correct} label="CORRECT" />
           <Stat C={C} n={session.count ? Math.round((session.correct / session.count) * 100) + "%" : "—"} label="THIS SESSION" />
         </div>
-        <p style={{ ...sub(C), textAlign: "center" }}>§{sec.sectionId} is now <strong style={{ color: statusColor(C, st) }}>{st}</strong>.</p>
+        <p style={{ ...sub(C), textAlign: "center" }}>{sec.sectionId} is now <strong style={{ color: statusColor(C, st) }}>{st}</strong>.</p>
         <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
           {nextSec
-            ? <button style={primaryBtn(C)} onClick={() => continueSection(nextSec)}>Continue to §{nextSec} {index.sections[nextSec].title} ›</button>
+            ? <button style={primaryBtn(C)} onClick={() => continueSection(nextSec)}>Continue to {nextSec} {index.sections[nextSec].title} ›</button>
             : <button style={primaryBtn(C)} onClick={() => setView("summary")}>Finish ›</button>}
           <button style={ghostBtn(C)} onClick={() => setView("summary")}>Stop for now</button>
-          <button style={ghostBtn(C)} onClick={() => startBrowse(sec.orderedItemIds, `§${sec.sectionId} ${sec.title}`)}>Review this section</button>
+          <button style={ghostBtn(C)} onClick={() => startBrowse(sec.orderedItemIds, `${sec.sectionId} ${sec.title}`)}>Review this section</button>
         </div>
       </div>
     );
@@ -384,7 +384,7 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
             {wrongIds.map((id) => (
               <div key={id} style={{ display: "flex", gap: 10, padding: "10px 0", borderTop: `1px solid ${C.line}22`, fontFamily: FONT_UI, fontSize: 14.5, color: C.foam }}>
                 <span style={{ color: C.no }}>✗</span>
-                <span>§{secOf(itemById[id])} — {(itemById[id].q || "").slice(0, 90)}</span>
+                <span>{secOf(itemById[id])} — {(itemById[id].q || "").slice(0, 90)}</span>
               </div>
             ))}
           </div>
@@ -410,7 +410,7 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
         <p style={{ ...sub(C), marginTop: 2 }}>Question and answer together, nothing to attempt — just to jog the memory.</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "10px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
-          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>§{secOf(it)} · {browse.pos + 1} of {browse.ids.length}</span>
+          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{secOf(it)} · {browse.pos + 1} of {browse.ids.length}</span>
         </div>
         <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, lineHeight: 1.25, margin: "6px 0 14px", whiteSpace: "pre-line" }}>{it.q}</div>
         <div style={{ ...card(C), border: `1px solid ${C.ok}55` }}>
@@ -470,7 +470,7 @@ export function ReaderApp({ content, C, theme, renderItemBody, grade, canSubmit,
       <div style={overlay(C)} onClick={() => setCelebrate(null)}>
         <div style={{ fontSize: 44 }}>🎉</div>
         <h2 style={{ fontFamily: FONT_DISPLAY, fontSize: 26, color: C.ok, margin: "8px 0" }}>Mastered!</h2>
-        <p style={{ fontFamily: FONT_UI, color: C.foam, maxWidth: 340, textAlign: "center" }}>§{sec.sectionId} {sec.title} just crossed into mastered.</p>
+        <p style={{ fontFamily: FONT_UI, color: C.foam, maxWidth: 340, textAlign: "center" }}>{sec.sectionId} {sec.title} just crossed into mastered.</p>
         <button style={primaryBtn(C)} onClick={() => setCelebrate(null)}>Nice</button>
       </div>
     );
