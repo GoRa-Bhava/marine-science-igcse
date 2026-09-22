@@ -10,6 +10,8 @@ import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
 import { InteractiveLab } from "./interactives/index.js";
 import { paletteFor, DEFAULT_SETTINGS } from "./theme.js";
+import { initAnswer as initAnswerShared, canSubmit as canSubmitShared, gradeItem } from "./quiz/grade.js";
+import { ReaderApp } from "./reader/ReaderApp.jsx";
 import { makeBackup, readBackup } from "./settings-io.js";
 
 /* ========================================================================
@@ -805,6 +807,7 @@ function ExamQ({ item, locked, state, setState }) {
 
   return (
     <>
+      <p style={stepLabel}>Exam-type question</p>
       <Prompt>{item.q}</Prompt>
 
       {!locked && (
@@ -970,7 +973,7 @@ async function fetchLatestBuild() {
 /* ------------------------------------------------------------ settings */
 /* Back up, restore, and a guarded full reset. All saved state is the single
    record under STORE_KEY, so a reset is just blankProgress() written back. */
-function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
+function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting, onUseReader }) {
   const [backupMsg, setBackupMsg] = useState("");
   const [showText, setShowText] = useState(false);
   const [restoreText, setRestoreText] = useState("");
@@ -1067,6 +1070,17 @@ function SettingsView({ onRestore, onReset, onBack, settings, onSetSetting }) {
           fontSize: 15, padding: 0, cursor: "pointer", marginBottom: 16,
         }}>← Back</button>
         <h1 style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, margin: "0 0 20px" }}>Settings</h1>
+
+        {onUseReader && (
+          <div style={section}>
+            <h2 style={h}>Experience</h2>
+            <p style={p}>You're in the classic experience. The new book-style Reader is the default.</p>
+            <button onClick={onUseReader} style={{
+              appearance: "none", border: `1px solid ${C.line}`, borderRadius: 12, background: C.raise,
+              color: C.foam, fontFamily: FONT_UI, fontSize: 15, fontWeight: 700, padding: "12px 14px", cursor: "pointer",
+            }}>Switch to the new Reader</button>
+          </div>
+        )}
 
         {/* Feedback timing */}
         <div style={section}>
@@ -1484,10 +1498,38 @@ function HomeView({ onUnits, onConcepts, onInteractive, masteredCount, totalTopi
 }
 
 /* ---------------------------------------------------------------- app */
+/* Dispatch one item's interaction to its component. Shared by the classic
+   lesson render and the Reader so both look and behave identically. */
+export function ItemBody({ item, locked, answer, setAnswer }) {
+  if (!item) return null;
+  return (
+    <>
+      {item.type === "choice" && <ChoiceQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
+      {item.type === "multi" && <MultiQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
+      {item.type === "gap" && <GapQ item={item} locked={locked} filled={answer} setFilled={setAnswer} />}
+      {item.type === "match" && <MatchQ item={item} locked={locked} state={answer} setState={setAnswer} />}
+      {item.type === "chain" && <ChainQ item={item} locked={locked} order={answer} setOrder={setAnswer} />}
+      {item.type === "exam" && <ExamQ item={item} locked={locked} state={answer} setState={setAnswer} />}
+      {item.type === "tap" && <FigureTapQ item={item} locked={locked} tappedId={answer} setTapped={setAnswer} />}
+      {item.type === "label" && <FigureLabelQ item={item} locked={locked} state={answer} setState={setAnswer} />}
+    </>
+  );
+}
+
 export default function App() {
   const [progress, setProgress] = useState(blankProgress);
   const [ready, setReady] = useState(false);
   const [view, setView] = useState("home");
+  // Which top-level experience: the new book-style Reader (default) or the
+  // classic session-builder. `?flow=classic|reader` overrides the saved choice.
+  const [experience, setExperienceState] = useState(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get("flow");
+      if (q === "classic" || q === "reader") return q;
+      return window.localStorage.getItem("marine_experience") || "reader";
+    } catch (e) { return "reader"; }
+  });
+  const setExperience = (v) => { setExperienceState(v); try { window.localStorage.setItem("marine_experience", v); } catch (e) { /* ignore */ } };
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [queue, setQueue] = useState([]);
   const [qIdx, setQIdx] = useState(0);
@@ -1581,47 +1623,10 @@ export default function App() {
     setRequeued([]); setSessionLog([]); setNewlyMastered([]); setView("lesson");
   };
 
-  function initAnswer(it) {
-    if (!it) return null;
-    if (it.type === "choice") return null;
-    if (it.type === "multi") return [];
-    if (it.type === "gap") return it.answers.map(() => null);
-    if (it.type === "match") return { links: {}, order: [], sel: null };
-    if (it.type === "chain") return [];
-    if (it.type === "exam") return { checkSel: [] };
-    if (it.type === "tap") return null;
-    if (it.type === "label") return { assign: {}, order: [], selLab: null };
-    return null;
-  }
-
-  const canSubmit = () => {
-    if (!item || locked) return false;
-    if (item.type === "choice") return answer !== null;
-    if (item.type === "multi") return answer.length > 0;
-    if (item.type === "gap") return answer.every((a) => a !== null);
-    if (item.type === "match") return Object.keys(answer.links).length === item.pairs.length;
-    if (item.type === "chain") return answer.length === item.chunks.length;
-    if (item.type === "exam") return answer.checkSel.length > 0;
-    if (item.type === "tap") return answer !== null;
-    if (item.type === "label") return Object.keys(answer.assign).length === (FIGURES[item.fig]?.hotspots.length || 0);
-    return false;
-  };
-
-  const grade = () => {
-    if (item.type === "choice") return answer === item.a;
-    if (item.type === "multi") return sameSet(answer, item.a);
-    if (item.type === "gap") return answer.every((a, i) => a === item.answers[i]);
-    if (item.type === "match") return item.pairs.every((_, i) => answer.links[i] === i);
-    if (item.type === "chain") return answer.every((k, i) => k === i);
-    if (item.type === "exam") {
-      /* Content-only: pass iff the ticked set equals the true mark points
-         (no misses, no wrong picks). Order is never graded. */
-      return sameSet(answer.checkSel, examCorrectIdx(item));
-    }
-    if (item.type === "tap") return gradeTap(item, answer);
-    if (item.type === "label") return gradeLabel(FIGURES[item.fig], answer.assign);
-    return false;
-  };
+  // Grading is shared with the Reader (src/quiz/grade.js); behaviour unchanged.
+  const initAnswer = (it) => initAnswerShared(it);
+  const canSubmit = () => !locked && canSubmitShared(item, answer);
+  const grade = () => gradeItem(item, answer);
 
   const submit = () => {
     if (!canSubmit()) return;
@@ -1780,6 +1785,23 @@ export default function App() {
   }
 
   /* -------------------------------------------------------- home view */
+  if (experience === "reader") {
+    return (
+      <ReaderApp
+        content={content}
+        C={C}
+        theme={theme}
+        renderItemBody={(item, s) => <ItemBody item={item} {...s} />}
+        grade={gradeItem}
+        canSubmit={canSubmitShared}
+        initAnswer={initAnswerShared}
+        CreatureArt={CreatureArt}
+        creatures={CREATURES}
+        onUseClassic={() => setExperience("classic")}
+      />
+    );
+  }
+
   if (view === "home") {
     const masteredCount = TOPICS.filter((t) => stats[t.id].state === "mastered").length;
     return page(
@@ -1943,6 +1965,7 @@ export default function App() {
         onReset={resetProgress}
         settings={settings}
         onSetSetting={setSetting}
+        onUseReader={() => setExperience("reader")}
       />
     );
   }
