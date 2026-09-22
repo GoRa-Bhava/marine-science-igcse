@@ -15,7 +15,7 @@ export const INTERACTIVES = [
   { slug: "melt",           title: "Melting ice & sea level",   unit: 2, syllabus: "2.1/LO6 · 6.8",     tierFit: ["application"],           note: "Two tanks; only land ice raises the level. The classic trap." },
   { slug: "elnino",         title: "El Niño",                   unit: 2, syllabus: "2.6/LO2–3",         tierFit: ["application", "exam"],    note: "Normal ⇄ El Niño toggle: winds, warm water, upwelling, catch." },
   { slug: "zones",          title: "Ocean zones",               unit: 5, syllabus: "5.3/LO3–11",        tierFit: ["recall", "application"], note: "Tap a zone → five conditions animate." },
-  { slug: "rockyshore",     title: "Rocky-shore zonation",      unit: 5, syllabus: "5.4/LO1–3",         tierFit: ["application", "exam"],    note: "Tide slider + tap organism → tolerance band & 'can't live here' ghosts." },
+  { slug: "rockyshore",     title: "Rocky-shore zonation",      unit: 5, syllabus: "5.4/LO1–3",         tierFit: ["application", "exam"],    note: "Tide slider + tap organism → highlights its tolerance band and explains why it can't live higher or lower." },
   { slug: "estuary",        title: "Estuary tidal cycle",       unit: 5, syllabus: "5.6/LO2 · 2.2/LO11", tierFit: ["application"],           note: "Tide floods/drains a mangrove mudflat; salinity/temp/O₂ meters." },
   { slug: "foodweb",        title: "Food-web removal",          unit: 4, syllabus: "4.4/LO4",           tierFit: ["application", "exam"],    note: "Tap to remove an organism; knock-on effects + quiz." },
   { slug: "eutrophication", title: "Eutrophication",            unit: 6, syllabus: "6.7/LO5",           tierFit: ["exam"],                  note: "Step-through; dissolved-oxygen graph rises then crashes." },
