@@ -142,6 +142,7 @@ class ProgressStore {
       items: await this.backend.getAll("items"),
       sections: await this.backend.getAll("sections"),
       bookmark: await this.backend.get("kv", "bookmark"),
+      bookmarks: await this.backend.get("kv", "bookmarks"),
       settings: await this.backend.get("kv", "settings"),
     };
   }
@@ -151,6 +152,7 @@ class ProgressStore {
     for (const it of dump.items || []) await this.backend.put("items", it);
     for (const se of dump.sections || []) await this.backend.put("sections", se);
     if (dump.bookmark) await this.backend.put("kv", { ...dump.bookmark, id: "bookmark" });
+    if (dump.bookmarks) await this.backend.put("kv", { ...dump.bookmarks, id: "bookmarks" });
     if (dump.settings) await this.backend.put("kv", { ...dump.settings, id: "settings" });
   }
 
@@ -173,6 +175,16 @@ class ProgressStore {
   async putBookmark(rec) {
     await this._ready;
     const out = { ...rec, id: "bookmark", updatedAt: now() };
+    return this._safe(async () => { await this.backend.put("kv", out); return out; }, out);
+  }
+
+  // ---- per-unit bookmarks ----
+  // One kv record: { id:"bookmarks", byUnit: { [unitId]: {unitId, sectionId, itemId, indexInSection} },
+  //                  lastUnitId, updatedAt }. The legacy single `bookmark` above is kept for migration.
+  async getBookmarks() { await this._ready; return this._safe(() => this.backend.get("kv", "bookmarks"), null); }
+  async putBookmarks(rec) {
+    await this._ready;
+    const out = { ...rec, id: "bookmarks", updatedAt: now() };
     return this._safe(async () => { await this.backend.put("kv", out); return out; }, out);
   }
 
@@ -206,8 +218,9 @@ class ProgressStore {
       items: await this.backend.getAll("items"),
       sections: await this.backend.getAll("sections"),
       bookmark: await this.backend.get("kv", "bookmark"),
+      bookmarks: await this.backend.get("kv", "bookmarks"),
       settings: await this.backend.get("kv", "settings"),
-    }), { schemaVersion: SCHEMA_VERSION, exportedAt: now(), meta: this.meta, items: [], sections: [], bookmark: null, settings: null });
+    }), { schemaVersion: SCHEMA_VERSION, exportedAt: now(), meta: this.meta, items: [], sections: [], bookmark: null, bookmarks: null, settings: null });
   }
 
   // Merge by default (last-write-wins per record via updatedAt). replace: wipe first.
@@ -228,6 +241,7 @@ class ProgressStore {
       for (const it of dump.items || []) await mergeRec("items", it);
       for (const se of dump.sections || []) await mergeRec("sections", se);
       if (dump.bookmark) await mergeRec("kv", { ...dump.bookmark, id: "bookmark" });
+      if (dump.bookmarks) await mergeRec("kv", { ...dump.bookmarks, id: "bookmarks" });
       if (dump.settings) await mergeRec("kv", { ...dump.settings, id: "settings" });
       return { imported };
     }, { imported: 0 });

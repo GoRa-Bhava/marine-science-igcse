@@ -45,6 +45,27 @@ test("bookmark, section state and settings persist and merge", async () => {
   assert.equal(st.flow, "reader");
 });
 
+test("per-unit bookmarks persist and round-trip through export/import", async () => {
+  const a = createMemoryStore();
+  const rec = { byUnit: { 1: { unitId: 1, sectionId: "1.2", itemId: "Q9", indexInSection: 9 } }, lastUnitId: 1 };
+  const out = await a.putBookmarks(rec);
+  assert.equal(out.id, "bookmarks");
+  assert.ok(out.updatedAt > 0, "stamped updatedAt");
+  const got = await a.getBookmarks();
+  assert.equal(got.lastUnitId, 1);
+  assert.equal(got.byUnit[1].sectionId, "1.2");
+  assert.equal(await createMemoryStore().getBookmarks(), null, "absent by default");
+
+  // Backup → restore carries per-unit bookmarks into a fresh store.
+  const dump = await a.exportAll();
+  assert.equal(dump.bookmarks.byUnit[1].itemId, "Q9", "export includes bookmarks");
+  const b = createMemoryStore();
+  await b.importAll(dump);
+  const rb = await b.getBookmarks();
+  assert.equal(rb.byUnit[1].indexInSection, 9);
+  assert.equal(rb.lastUnitId, 1);
+});
+
 test("meta carries schemaVersion + a generated deviceId", async () => {
   const s = createMemoryStore();
   const meta = await s.getMeta();
