@@ -56,7 +56,9 @@ test("every item has the fields its type needs", () => {
     assert.equal(typeof it.q, "string", `${where}: q`);
     if (it.type !== "label") assert.equal(typeof it.why, "string", `${where}: why`);
 
-    if (it.type === "choice") {
+    if (it.type === "truefalse") {
+      assert.equal(typeof it.answer, "boolean", `${where}: truefalse answer must be a boolean`);
+    } else if (it.type === "choice") {
       // Figure-choice items may have 2-4 options (some are two-panel picks).
       const lo = it.fig ? 2 : 4;
       assert.ok(it.options.length >= lo && it.options.length <= 4, `${where}: choice needs ${lo}-4 options`);
@@ -165,6 +167,26 @@ test("U6 evaluate items keep the balanced answer keyed first (a=0, 4 options)", 
     assert.equal(it.options.length, 4, `${id}: four options`);
     assert.equal(it.a, 0, `${id}: correct answer keyed first`);
   }
+});
+
+test("true/false seed items are present, tier-1, and grade on a boolean", () => {
+  const tf = items.filter((i) => i.type === "truefalse");
+  assert.ok(tf.length >= 20, `expected the T/F seed set, got ${tf.length}`);
+  for (const it of tf) {
+    assert.equal(it.tier, 1, `${it.id}: T/F is recall tier 1`);
+    assert.equal(typeof it.answer, "boolean", `${it.id}: boolean answer`);
+    assert.ok(typeof it.q === "string" && it.q.length > 0, `${it.id}: statement`);
+  }
+});
+
+test("ridge/trench item U1-98 is now a live multi with the {0,1,2,3} true set", () => {
+  const it = items.find((i) => i.id === "U1-98");
+  assert.ok(it, "U1-98 present");
+  assert.equal(it.type, "multi", "converted from exam to multi");
+  assert.equal(it.tier, 2, "application tier");
+  assert.equal(it.options.length, 8, "8 statements (4 true / 4 false)");
+  assert.deepEqual([...it.a].sort((x, y) => x - y), [0, 1, 2, 3]);
+  assert.match(it.q, /mid-ocean ridge and an ocean trench/i);
 });
 
 test("creatures are unique with a valid rarity", () => {

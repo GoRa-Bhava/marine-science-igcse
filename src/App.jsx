@@ -7,6 +7,7 @@ import { InteractiveLab } from "./interactives/index.js";
 import { paletteFor } from "./theme.js";
 import { initAnswer as initAnswerShared, canSubmit as canSubmitShared, gradeItem } from "./quiz/grade.js";
 import { ReaderApp } from "./reader/ReaderApp.jsx";
+import { FLASHCARDS } from "./flashcards/flashcards.js";
 
 /* ========================================================================
    MARINE SCIENCE REVISION APP — subject content lives in src/content/
@@ -314,6 +315,41 @@ function ChoiceQ({ item, locked, picked, setPicked }) {
           </button>
         );
       })}
+    </>
+  );
+}
+
+/* True/False verdict: two big buttons. `picked` is a boolean. Grading reuses the
+   choice path (grade.js compares the boolean to item.answer); the reader then
+   reveals `why` exactly as for every other type. */
+function TrueFalseQ({ item, locked, picked, setPicked }) {
+  const opts = [
+    { val: true, label: "True" },
+    { val: false, label: "False" },
+  ];
+  return (
+    <>
+      <Prompt>{item.q}</Prompt>
+      <div style={{ display: "flex", gap: 12 }}>
+        {opts.map(({ val, label }) => {
+          let bg = C.shelf, bd = C.line, col = C.foam;
+          if (locked) {
+            if (val === item.answer) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
+            else if (val === picked) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }
+            else { col = C.mist; }
+          } else if (val === picked) { bg = C.raise; bd = C.glow; }
+          return (
+            <button key={label} onClick={() => !locked && setPicked(val)} disabled={locked}
+              style={{
+                ...btnBase, flex: 1, textAlign: "center", marginBottom: 0, fontSize: 18, fontWeight: 600,
+                padding: "20px 16px", background: bg, borderColor: bd, color: col,
+                cursor: locked ? "default" : "pointer",
+              }}>
+              {label}
+            </button>
+          );
+        })}
+      </div>
     </>
   );
 }
@@ -841,6 +877,7 @@ export function ItemBody({ item, locked, answer, setAnswer }) {
   return (
     <>
       {item.type === "choice" && <ChoiceQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
+      {item.type === "truefalse" && <TrueFalseQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
       {item.type === "multi" && <MultiQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
       {item.type === "gap" && <GapQ item={item} locked={locked} filled={answer} setFilled={setAnswer} />}
       {item.type === "match" && <MatchQ item={item} locked={locked} state={answer} setState={setAnswer} />}
@@ -906,6 +943,7 @@ export default function App() {
         ComparisonSelector={ComparisonSelector}
         comparisonCards={COMPARISON_CARDS}
         UpdatesControl={UpdatesControl}
+        flashcards={FLASHCARDS}
       />
     </>
   );
