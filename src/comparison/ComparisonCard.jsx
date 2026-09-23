@@ -88,7 +88,7 @@ function AccentSide({
       <div className="cc-rows">
         {card.rows.map((row, index) => {
           const value = row[side];
-          const hidden = mode === "recall" && !revealedRows.has(index);
+          const hidden = (mode === "recall" || mode === "test") && !revealedRows.has(index);
           return (
             <button
               key={`${row.label}-${side}`}
@@ -109,7 +109,7 @@ function AccentSide({
 
               {hidden ? (
                 <span className="cc-recall">
-                  <span>Hidden for recall</span>
+                  <span>Hidden — recall it</span>
                   <span
                     role="button"
                     tabIndex={0}
@@ -182,7 +182,7 @@ export function ComparisonCard({
 
   const setCardMode = (next) => {
     setAnswer(null);
-    if (next === "learn") setRevealedRows(new Set());
+    if (next === "learn" || next === "test") setRevealedRows(new Set());
     if (onModeChange) onModeChange(next);
     else setModeState(next);
     scrollReq.current = next;
@@ -334,7 +334,7 @@ export function ComparisonCard({
                     ? index === card.quickTest.answer ? "is-correct" : "is-wrong"
                     : ""
                 }
-                onClick={() => setAnswer(index)}
+                onClick={() => { setAnswer(index); setRevealedRows(new Set(card.rows.map((_, i) => i))); }}
               >
                 {option}
               </button>
