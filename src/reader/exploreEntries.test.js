@@ -13,6 +13,9 @@ test("Library exposes Interactive Lab and Concept Cards in the Explore group", (
   assert.match(byKey.interactives.title, /Interactive Lab/i);
   assert.match(byKey.concepts.title, /Concept Cards/i);
   assert.match(byKey.concepts.title, /14/); // 14 comparisons
+  assert.ok(byKey.flashcards, "Flashcards entry present");
+  assert.equal(byKey.flashcards.view, "flashcards");
+  assert.match(byKey.flashcards.title, /Flashcards/i);
 });
 
 test("Library exposes a Discoveries entry for the Ocean discoveries collection", () => {
@@ -28,7 +31,7 @@ test("every Explore/Discoveries view is a distinct route that is not the library
     assert.ok(!seen.has(v), `duplicate view route: ${v}`);
     seen.add(v);
   }
-  // interactives, concepts, collection
-  assert.equal(EXPLORE_VIEWS.length, 3);
+  // interactives, concepts, flashcards, collection
+  assert.equal(EXPLORE_VIEWS.length, 4);
   assert.equal(LIBRARY_VIEW, "library");
 });

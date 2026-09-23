@@ -23,6 +23,13 @@ export const EXPLORE_ENTRIES = [
     blurb: "Two-sided comparisons — learn & self-check",
     icon: "🃏",
   },
+  {
+    key: "flashcards",
+    view: "flashcards",
+    title: "Flashcards",
+    blurb: "Flip to learn · test yourself · by unit",
+    icon: "🎴",
+  },
 ];
 
 // The Ocean Discoveries collection — a small entry by the readiness card.

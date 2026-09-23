@@ -14,6 +14,7 @@ export const sameSet = (a, b) => a.length === b.length && [...a].sort().every((v
 export function initAnswer(it) {
   if (!it) return null;
   if (it.type === "choice") return null;
+  if (it.type === "truefalse") return null;
   if (it.type === "multi") return [];
   if (it.type === "gap") return it.answers.map(() => null);
   if (it.type === "match") return { links: {}, order: [], sel: null };
@@ -27,6 +28,7 @@ export function initAnswer(it) {
 export function canSubmit(item, answer) {
   if (!item) return false;
   if (item.type === "choice") return answer !== null;
+  if (item.type === "truefalse") return answer !== null;
   if (item.type === "multi") return answer.length > 0;
   if (item.type === "gap") return answer.every((a) => a !== null);
   if (item.type === "match") return Object.keys(answer.links).length === item.pairs.length;
@@ -39,6 +41,7 @@ export function canSubmit(item, answer) {
 
 export function gradeItem(item, answer) {
   if (item.type === "choice") return answer === item.a;
+  if (item.type === "truefalse") return answer === item.answer; // answer is a boolean
   if (item.type === "multi") return sameSet(answer, item.a);
   if (item.type === "gap") return answer.every((a, i) => a === item.answers[i]);
   if (item.type === "match") return item.pairs.every((_, i) => answer.links[i] === i);
