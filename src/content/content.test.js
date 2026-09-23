@@ -169,13 +169,22 @@ test("U6 evaluate items keep the balanced answer keyed first (a=0, 4 options)", 
   }
 });
 
-test("true/false seed items are present, tier-1, and grade on a boolean", () => {
+test("true/false bank is integrated (recall/application tier, boolean answer, q from stem)", () => {
   const tf = items.filter((i) => i.type === "truefalse");
-  assert.ok(tf.length >= 20, `expected the T/F seed set, got ${tf.length}`);
+  assert.ok(tf.length >= 40, `expected the full T/F bank, got ${tf.length}`);
   for (const it of tf) {
-    assert.equal(it.tier, 1, `${it.id}: T/F is recall tier 1`);
+    assert.ok(it.tier === 1 || it.tier === 2, `${it.id}: T/F is tier 1 or 2, got ${it.tier}`);
     assert.equal(typeof it.answer, "boolean", `${it.id}: boolean answer`);
-    assert.ok(typeof it.q === "string" && it.q.length > 0, `${it.id}: statement`);
+    assert.ok(typeof it.q === "string" && it.q.length > 0, `${it.id}: statement (q from stem)`);
+  }
+});
+
+test('"mark which are true" multi bank is integrated (tier 2, 8 options, exact true set)', () => {
+  const mt = items.filter((i) => i.type === "multi" && /^MT-/.test(i.id));
+  assert.ok(mt.length >= 20, `expected the mark-true bank, got ${mt.length}`);
+  for (const it of mt) {
+    assert.equal(it.options.length, 8, `${it.id}: 8 statements`);
+    assert.ok(Array.isArray(it.a) && it.a.length === 4, `${it.id}: 4 true`);
   }
 });
 
