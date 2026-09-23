@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { LAB_ITEMS } from "./labItems.js";
 import { INTERACTIVES } from "./interactivesRegistry.js";
 
-test("lab menu = the packaged interactives (registry order) plus native greenhouse", () => {
+test("lab menu = the packaged interactives (registry order) plus greenhouse", () => {
   assert.equal(LAB_ITEMS.length, INTERACTIVES.length + 1);
   const keys = LAB_ITEMS.map((i) => i.key);
   assert.equal(new Set(keys).size, keys.length, "keys are unique");
@@ -19,9 +19,8 @@ test("every lab item has a unit-labelled label and a valid kind", () => {
   }
 });
 
-test("the nine packaged items are embeds; greenhouse is native", () => {
+test("every lab item is now an iframe embed (greenhouse included)", () => {
   for (const it of LAB_ITEMS) {
-    if (it.key === "greenhouse") assert.equal(it.kind, "native");
-    else assert.equal(it.kind, "embed", `${it.key} is an iframe embed`);
+    assert.equal(it.kind, "embed", `${it.key} is an iframe embed`);
   }
 });

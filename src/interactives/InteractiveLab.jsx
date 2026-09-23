@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import MarineInteractive from "./MarineInteractive.jsx";
-import { GreenhouseMeter } from "./GreenhouseMeter.jsx";
 import { CollapsibleSelector } from "./CollapsibleSelector.jsx";
 import { LAB_ITEMS } from "./labItems.js";
 
-// The nine packaged interactives are self-contained HTML documents; Vite inlines
-// each as a raw string that MarineInteractive drops into an isolated iframe.
+// The packaged interactives are self-contained HTML documents; Vite inlines each
+// as a raw string that MarineInteractive drops into an isolated iframe.
 import tides from "./embeds/tides.html?raw";
 import depth from "./embeds/depth.html?raw";
 import melt from "./embeds/melt.html?raw";
@@ -15,8 +14,9 @@ import rockyshore from "./embeds/rockyshore.html?raw";
 import estuary from "./embeds/estuary.html?raw";
 import foodweb from "./embeds/foodweb.html?raw";
 import eutrophication from "./embeds/eutrophication.html?raw";
+import greenhouse from "./embeds/greenhouse.html?raw";
 
-const HTML = { tides, depth, melt, elnino, zones, rockyshore, estuary, foodweb, eutrophication };
+const HTML = { tides, depth, melt, elnino, zones, rockyshore, estuary, foodweb, eutrophication, greenhouse };
 
 const STORE_KEY = "marine_lab_selected";
 
@@ -56,17 +56,13 @@ export function InteractiveLab({ onBack, theme = "dark" }) {
         ariaLabel="Choose an interactive"
       />
 
-      {item.kind === "native"
-        ? <GreenhouseMeter />
-        : (
-          <MarineInteractive
-            key={item.key}
-            html={HTML[item.key]}
-            title={item.label}
-            theme={theme}
-            className="lab-embed"
-          />
-        )}
+      <MarineInteractive
+        key={item.key}
+        html={HTML[item.key]}
+        title={item.label}
+        theme={theme}
+        className="lab-embed"
+      />
 
       <aside className="interactive-next" aria-label="About these interactives">
         <strong>Explore, then retrieve</strong>
