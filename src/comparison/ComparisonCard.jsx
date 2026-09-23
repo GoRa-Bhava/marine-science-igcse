@@ -316,10 +316,14 @@ export function ComparisonCard({
         ))}
       </div>
 
-      <aside className="cc-memory">
-        <span className="cc-memoryDot" />
-        <p><strong>Memory hook:</strong> {card.memoryHook}</p>
-      </aside>
+      {/* The memory hook names the exact fact the quick test asks, so it only
+          shows in Learn — hidden in Recall and Quick test so it can't cue the answer. */}
+      {mode === "learn" && (
+        <aside className="cc-memory">
+          <span className="cc-memoryDot" />
+          <p><strong>Memory hook:</strong> {card.memoryHook}</p>
+        </aside>
+      )}
 
       {mode === "test" && card.quickTest ? (
         <div className="cc-test" aria-live="polite" ref={testRef}>
