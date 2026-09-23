@@ -3,6 +3,7 @@ import { createProgressStore } from "./progressStore.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, pickNext, masteryState, readiness, unitReadiness } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
+import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 
 /* The Units 1–6 Reader — the whole app. A self-paced, book-style flow with
    durable device-local progress (IndexedDB) and a wrong-weighted smart-practice
@@ -95,6 +96,10 @@ export function ReaderApp({
   const [fcPos, setFcPos] = useState(0);
   const [fcFlipped, setFcFlipped] = useState(false);
   const [fcSeen, setFcSeen] = useState(() => new Set());
+
+  // Read = syllabus notes (book-style). Read-only: no queue, mastery or rewards.
+  const [notesUnit, setNotesUnit] = useState(null); // null = unit picker; 1..6 = a unit
+  const [notesSec, setNotesSec] = useState(null);   // section id string within the unit
 
   // Settings: back up / restore / reset (against this device's Reader store).
   const [backupMsg, setBackupMsg] = useState("");
@@ -263,6 +268,7 @@ export function ReaderApp({
   else if (view === "checkpoint") viewContent = <>{renderCheckpoint()}{celebrateOverlay()}</>;
   else if (view === "summary") viewContent = renderSummary();
   else if (view === "browse") viewContent = renderBrowse();
+  else if (view === "notes") viewContent = renderNotes();
   else if (view === "interactives") viewContent = renderInteractives();
   else if (view === "concepts") viewContent = renderConcepts();
   else if (view === "flashcards") viewContent = renderFlashcards();
@@ -285,10 +291,6 @@ export function ReaderApp({
     const sum = index.units.reduce((s, u) => s + unitReadiness(u.sectionIds.map((x) => index.sections[x].orderedItemIds), progressMap), 0);
     return Math.round((sum / index.units.length) * 100);
   }
-  function browseFromBookmark() {
-    const sid = bookmark ? bookmark.sectionId : index.sectionIds[0];
-    startBrowse(index.sections[sid].orderedItemIds, `${sid}`);
-  }
   function renderSidebar() {
     const dte = daysToExam(settings.examDate);
     const nav = (key, label, onClick, active) => (
@@ -300,7 +302,7 @@ export function ReaderApp({
         <nav className="rl-nav" aria-label="Primary">
           {nav("read", "📖 Revise a unit", resume, view === "reader" && mode === "read")}
           {nav("smart", "🎲 Smart practice", startSmart, view === "reader" && mode === "smart")}
-          {nav("browse", "👁 Read", browseFromBookmark, view === "browse")}
+          {nav("notes", "👁 Read", () => setView("notes"), view === "notes")}
           <div className="rl-nav-group">Explore</div>
           {EXPLORE_ENTRIES.map((e) => nav(e.key, `${e.icon} ${e.title.split(" · ")[0]}`, () => setView(e.view), view === e.view))}
           {nav("collection", "🐚 Ocean Discoveries", () => setView("collection"), view === "collection")}
@@ -314,7 +316,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Revision", browse: "Read", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section complete", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Revision", notes: "Read", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section complete", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -378,7 +380,7 @@ export function ReaderApp({
 
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
           <button style={entryBtn(C)} onClick={startSmart}>🎲 Smart practice</button>
-          <button style={entryBtn(C)} onClick={() => startBrowse(bookmark ? index.sections[bookmark.sectionId].orderedItemIds : index.sections[index.sectionIds[0]].orderedItemIds, bookmark ? `${bookmark.sectionId}` : `${index.sectionIds[0]}`)}>👁 Read</button>
+          <button style={entryBtn(C)} onClick={() => setView("notes")}>👁 Read</button>
         </div>
 
         <div style={{ marginTop: 22 }}>
@@ -598,6 +600,123 @@ export function ReaderApp({
             disabled={browse.pos + 1 >= browse.ids.length}
             onClick={() => setBrowse((b) => ({ ...b, pos: Math.min(b.pos + 1, b.ids.length - 1) }))}>Next question ›</button>
         </div>
+      </div>
+    );
+  }
+
+  // ---------- Read: syllabus notes (Units 1–6), book-style, read-only ----------
+  // Pure reading surface — no scoring, bookmark writes, queue/mastery/readiness
+  // changes or reward rolls. The only jump into the practice loop is the explicit
+  // "Revise …" nudge at the foot of a section (startRead).
+  function notesOpenUnit(u) { setNotesUnit(u); setNotesSec(notesByUnit(u)[0]?.id || null); }
+  function notesBackToUnits() { setNotesUnit(null); }
+
+  function renderNotes() {
+    // ----- unit picker -----
+    if (notesUnit == null) {
+      return (
+        <div style={pad} className="rl-pad">
+          <TopBar C={C} left="Read" />
+          <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
+          <p style={kicker(C)}>READ · SYLLABUS NOTES</p>
+          <h1 style={{ ...h1(C), marginTop: 2 }}>Read the unit</h1>
+          <p style={{ ...sub(C), marginTop: 4 }}>Plain-English notes for every syllabus point, unit by unit. Just to read — nothing here is graded or tracked.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
+            {notesUnits.map((u) => {
+              const unit = NOTES[u];
+              if (!unit) return null;
+              const n = (unit.sections || []).length;
+              return (
+                <button key={u} onClick={() => notesOpenUnit(u)}
+                  style={{ ...card(C), display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, textAlign: "left", cursor: "pointer" }}>
+                  <span style={{ minWidth: 0 }}>
+                    <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 12, fontWeight: 700, letterSpacing: ".08em", color: C.accent }}>UNIT {u}</span>
+                    <span style={{ display: "block", fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam, marginTop: 2 }}>{unit.title}</span>
+                  </span>
+                  <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, whiteSpace: "nowrap" }}>{n} section{n === 1 ? "" : "s"} ›</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ----- a unit: section tabs + the active section -----
+    const unit = NOTES[notesUnit];
+    const sections = notesByUnit(notesUnit);
+    const active = sections.find((s) => s.id === notesSec) || sections[0];
+    if (!unit || !active) {
+      return (
+        <div style={pad} className="rl-pad">
+          <TopBar C={C} left="Read" />
+          <button onClick={notesBackToUnits} style={linkBtn(C)}>‹ Units</button>
+          <p style={sub(C)}>No notes for this unit yet.</p>
+        </div>
+      );
+    }
+    const hasPractice = !!index.sections[active.id];
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left={`Read · Unit ${notesUnit}`} />
+        <button onClick={notesBackToUnits} style={linkBtn(C)}>‹ Units</button>
+        <p style={{ ...kicker(C), marginTop: 8 }}>UNIT {notesUnit}</p>
+        <h1 style={{ ...h1(C), marginTop: 2 }}>{unit.title}</h1>
+
+        {/* section tabs — horizontal scroll on phone, select which section to read */}
+        <div style={{ display: "flex", gap: 8, overflowX: "auto", margin: "14px 0 4px", paddingBottom: 4, WebkitOverflowScrolling: "touch" }}>
+          {sections.map((s) => {
+            const on = s.id === active.id;
+            return (
+              <button key={s.id} onClick={() => setNotesSec(s.id)} title={s.title} aria-current={on ? "true" : undefined}
+                style={{ flex: "0 0 auto", padding: "8px 13px", borderRadius: 999, cursor: "pointer", fontFamily: FONT_UI, fontSize: 13, fontWeight: 700,
+                  border: `1px solid ${on ? C.glow : C.line}`, background: on ? "rgba(79,216,196,.14)" : "transparent", color: on ? C.accent : C.mist, whiteSpace: "nowrap" }}>
+                {s.id}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* active section: heading, intro, then a card per note */}
+        <h2 style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, lineHeight: 1.2, margin: "16px 0 0" }}>{active.id} {active.title}</h2>
+        {active.intro && <p style={{ ...sub(C), marginTop: 6 }}>{active.intro}</p>}
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
+          {(active.notes || []).map((note, i) => (
+            <div key={i} style={{ ...card(C) }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                <h3 style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.foam, margin: 0, lineHeight: 1.3 }}>{note.h}</h3>
+                {note.ref && <span style={refChip(C)}>{note.ref}</span>}
+              </div>
+              {/* body is human-authored HTML (bold key terms); render as HTML per brief */}
+              <div className="rl-note-body" style={{ fontFamily: FONT_UI, fontSize: 15.5, color: C.mist, lineHeight: 1.6, marginTop: 8 }}
+                dangerouslySetInnerHTML={{ __html: note.body }} />
+              {note.linked && (
+                <span style={{ ...refChip(C), display: "inline-block", marginTop: 10, background: "transparent", border: `1px dashed ${C.line}`, color: C.mist }}>🔗 {note.linked}</span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* key terms for the section */}
+        {active.terms?.length ? (
+          <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.glow}55` }}>
+            <p style={{ ...kicker(C), marginTop: 0 }}>KEY TERMS</p>
+            <dl style={{ margin: "10px 0 0" }}>
+              {active.terms.map(([term, def], i) => (
+                <div key={i} style={{ marginTop: i ? 12 : 0 }}>
+                  <dt style={{ fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, color: C.foam }}>{term}</dt>
+                  <dd style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.mist, lineHeight: 1.55, margin: "2px 0 0" }}>{def}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ) : null}
+
+        {/* revise nudge — the one explicit hop into the practice loop */}
+        {hasPractice && (
+          <button style={{ ...primaryBtn(C), marginTop: 18 }} onClick={() => startRead(active.id, 0)}>Revise {active.id} ›</button>
+        )}
       </div>
     );
   }
@@ -957,6 +1076,7 @@ const ghostBtn = (C) => ({ padding: "14px 16px", borderRadius: 14, border: `1px 
 const entryBtn = (C) => ({ flex: 1, padding: "16px 8px", borderRadius: 14, border: `1px solid ${C.line}`, background: C.shelf || "transparent", color: C.foam, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, cursor: "pointer" });
 const linkBtn = (C) => ({ background: "none", border: "none", color: C.accent, fontFamily: FONT_UI, fontSize: 14, cursor: "pointer", padding: 4 });
 const tierPill = (C, tier) => ({ display: "inline-block", padding: "6px 12px", borderRadius: 999, background: tier === 3 ? "rgba(255,122,92,.16)" : "rgba(15,120,110,.9)", color: tier === 3 ? C.coral : "#eafffb", fontFamily: FONT_UI, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" });
+const refChip = (C) => ({ flex: "0 0 auto", padding: "3px 9px", borderRadius: 999, background: "rgba(79,216,196,.12)", color: C.accent, fontFamily: FONT_UI, fontSize: 11, fontWeight: 700, letterSpacing: ".03em", whiteSpace: "nowrap" });
 const overlay = (C) => ({ position: "fixed", inset: 0, background: "rgba(4,20,31,.94)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, padding: 30, zIndex: 50 });
 function statusColor(C, st) { return st === "mastered" ? C.ok : st === "improving" ? C.gold : st === "weak" ? C.coral : C.line; }
 function StatusPill({ C, state }) {
