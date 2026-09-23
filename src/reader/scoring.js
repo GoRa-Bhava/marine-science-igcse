@@ -51,6 +51,22 @@ export function pickNext(pool, progressMap = {}, recent = [], rng = Math.random)
   return eligible[eligible.length - 1];
 }
 
+// ---- Coverage + revise list (home progress; read-only over ItemProgress) --
+// % covered for a set of item ids = attempted / total (attempted = timesSeen > 0).
+export function coverage(itemIds, progressMap = {}) {
+  const total = itemIds.length;
+  const attempted = itemIds.filter((id) => (progressMap[id]?.timesSeen || 0) > 0).length;
+  return { attempted, total, pct: total ? Math.round((attempted / total) * 100) : 0 };
+}
+
+// The ids that "need revision" = last answer was wrong. wrongFlag stays true until
+// the next correct answer (boxAfter sets it false + boxes the item up), so a
+// revised-correct question drops off this list automatically. Order is preserved,
+// so passing a book-ordered id list yields a book-ordered revise run.
+export function reviseIds(itemIds, progressMap = {}) {
+  return itemIds.filter((id) => progressMap[id]?.wrongFlag === true);
+}
+
 // ---- Mastery + readiness (per section/topic) -----------------------------
 export function sectionStats(itemIds, progressMap = {}) {
   const total = itemIds.length;

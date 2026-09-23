@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createProgressStore } from "./progressStore.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
-import { boxAfter, pickNext, masteryState, readiness, unitReadiness } from "./scoring.js";
+import { boxAfter, pickNext, masteryState, readiness, unitReadiness, coverage, reviseIds } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 
@@ -172,6 +172,15 @@ export function ReaderApp({
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(wrongIds[0]);
   }
+  // Revise an explicit id list sourced from persisted progress (the "Revise these N"
+  // action). Grades + persists exactly like normal practice, so a correct answer
+  // clears wrongFlag and the item leaves the revise list next time. Ends at summary.
+  function startRevise(ids, label) {
+    if (!ids.length) return;
+    setMode("revise"); setSectionId(null); setQueue(ids); setPos(0);
+    setSession({ answered: [], wrong: [], count: 0, correct: 0 });
+    setView("reader"); loadItem(ids[0]);
+  }
   function resume() {
     if (bookmark && index.sections[bookmark.sectionId]) startRead(bookmark.sectionId, Math.max(0, bookmark.indexInSection || 0));
     else startRead(index.sectionIds[0], 0);
@@ -286,11 +295,6 @@ export function ReaderApp({
   function backToLibrary() { setView("library"); }
 
   // ---------- desktop shell: sidebar + top bar ----------
-  function overallReadyPct() {
-    if (!index.units.length) return 0;
-    const sum = index.units.reduce((s, u) => s + unitReadiness(u.sectionIds.map((x) => index.sections[x].orderedItemIds), progressMap), 0);
-    return Math.round((sum / index.units.length) * 100);
-  }
   function renderSidebar() {
     const dte = daysToExam(settings.examDate);
     const nav = (key, label, onClick, active) => (
@@ -308,7 +312,7 @@ export function ReaderApp({
           {nav("collection", "🐚 Ocean Discoveries", () => setView("collection"), view === "collection")}
         </nav>
         <div className="rl-side-foot">
-          <div className="rl-ready-chip">{overallReadyPct()}% exam ready{dte != null ? ` · ${dte} days left` : ""}</div>
+          {dte != null && <div className="rl-ready-chip">{dte} days to exam</div>}
           {nav("home", "Home", () => setView("library"), view === "library")}
           {nav("settings", "Settings", () => setView("settings"), view === "settings")}
         </div>
@@ -321,7 +325,6 @@ export function ReaderApp({
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
         <div className="rl-topbar-right">
-          <div className="rl-ready-meter">{overallReadyPct()}% exam ready</div>
           <div className="rl-theme-toggle">
             <button type="button" aria-pressed={theme === "dark"} onClick={() => onSetTheme && onSetTheme("dark")}>Dark</button>
             <button type="button" aria-pressed={theme === "light"} onClick={() => onSetTheme && onSetTheme("light")}>Light</button>
@@ -333,17 +336,19 @@ export function ReaderApp({
 
   // ---------- Library ----------
   function renderLibrary() {
-    const started = index.units.map((u) => ({ u, r: unitReadiness(u.sectionIds.map((x) => index.sections[x].orderedItemIds), progressMap) }));
-    const attempted = started.filter((x) => index.units.find((y) => y.unitId === x.u.unitId).sectionIds.some((s) => (index.sections[s].orderedItemIds).some((id) => progressMap[id])));
-    // "Weakest" is only meaningful once ≥2 topics have been attempted to compare.
-    // 1 attempted → a progress nudge (never "weakest"); 0 → no focus card at all.
-    const attemptedSorted = attempted.slice().sort((a, b) => a.r - b.r);
-    const focus =
-      attempted.length >= 2 ? { ...attemptedSorted[0], label: "your weakest topic" } :
-      attempted.length === 1 ? { ...attempted[0], label: "keep building your first topic" } :
-      null;
-    const dte = daysToExam(settings.examDate);
     const bmSec = bookmark && index.sections[bookmark.sectionId];
+    const unitIdsOf = (u) => u.sectionIds.flatMap((s) => index.sections[s].orderedItemIds);
+    // Focus = the unit you're mid-way through (bookmark's unit), else Unit 1.
+    const focusUnit = index.units.find((u) => u.unitId === (bmSec ? bmSec.unitId : index.units[0]?.unitId)) || index.units[0];
+    const fIds = unitIdsOf(focusUnit);
+    const fCov = coverage(fIds, progressMap);
+    const fRev = reviseIds(fIds, progressMap);
+    // to-revise status pill: coral when there's work, green when a started unit is
+    // clear, muted "Not started" otherwise.
+    const revisePill = (attempted, n) => {
+      const st = n > 0 ? { c: C.coral, t: `● ${n} to revise` } : attempted > 0 ? { c: C.ok, t: "✓ nothing to revise" } : { c: C.line, t: "Not started" };
+      return <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 11px", borderRadius: 999, border: `1px solid ${st.c}`, color: st.c, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 700 }}>{st.t}</span>;
+    };
     return (
       <div style={pad} className="rl-pad rl-pad--home">
         <TopBar C={C} left="Library" />
@@ -351,32 +356,24 @@ export function ReaderApp({
         <h1 style={h1(C)}>Your revision</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Pick up where you left off, or choose anywhere.</p>
 
-        {bmSec ? (
-          <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
-            <p style={kicker(C)}>RESUME</p>
-            <div style={{ fontFamily: FONT_DISPLAY, fontSize: 24, fontWeight: 600, color: C.foam, margin: "4px 0 8px" }}>
-              Unit {bmSec.unitId} · {index.units.find((u) => u.unitId === bmSec.unitId)?.title}
+        {/* Focus card = the resume hero + this unit's coverage & to-revise. */}
+        <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
+          <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+            <Donut C={C} pct={fCov.pct} color={fCov.pct === 100 ? C.ok : C.glow} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ ...kicker(C), marginTop: 0 }}>UNIT {focusUnit.unitId}</p>
+              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, margin: "2px 0 4px", lineHeight: 1.15 }}>{focusUnit.title}</div>
+              <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{fCov.pct}% covered · {fCov.attempted} of {fCov.total} questions attempted</div>
             </div>
-            <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 15, marginBottom: 14 }}>
-              {bmSec.sectionId} {bmSec.title} — question {(bookmark.indexInSection || 0) + 1} of {bmSec.total}
-            </div>
-            <button style={primaryBtn(C)} onClick={resume}>Continue revising ›</button>
           </div>
-        ) : (() => {
-          const firstSec = index.sections[index.sectionIds[0]];
-          return (
-            <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
-              <p style={kicker(C)}>START</p>
-              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 24, fontWeight: 600, color: C.foam, margin: "4px 0 8px" }}>
-                Unit {firstSec.unitId} · {index.units.find((u) => u.unitId === firstSec.unitId)?.title}
-              </div>
-              <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 15, marginBottom: 14 }}>
-                {firstSec.sectionId} {firstSec.title}
-              </div>
-              <button style={primaryBtn(C)} onClick={resume}>Revise ›</button>
-            </div>
-          );
-        })()}
+          <div style={{ marginTop: 12 }}>{revisePill(fCov.attempted, fRev.length)}</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 14 }}>
+            <button style={primaryBtn(C)} onClick={resume}>{bmSec ? "Continue revising ›" : "Revise ›"}</button>
+            {fRev.length > 0 && (
+              <button style={{ ...primaryBtn(C), background: C.coral, color: "#fff" }} onClick={() => startRevise(fRev, `Unit ${focusUnit.unitId} to revise`)}>Revise these {fRev.length} →</button>
+            )}
+          </div>
+        </div>
 
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
           <button style={entryBtn(C)} onClick={startSmart}>🎲 Smart practice</button>
@@ -400,16 +397,6 @@ export function ReaderApp({
           </div>
         </div>
 
-        {focus && (
-          <div style={{ ...card(C), display: "flex", gap: 16, alignItems: "center", marginTop: 22 }}>
-            <Donut C={C} pct={Math.round(focus.r * 100)} />
-            <div style={{ fontFamily: FONT_UI, flex: 1 }}>
-              <div style={{ color: C.foam, fontWeight: 700, fontSize: 16 }}>{index.units.find((u) => u.unitId === focus.u.unitId)?.title} — {Math.round(focus.r * 100)}% ready</div>
-              <div style={{ color: C.mist, fontSize: 13, marginTop: 2 }}>{dte != null ? `${dte} days to exam · ` : ""}{focus.label}</div>
-            </div>
-          </div>
-        )}
-
         <button onClick={() => setView(DISCOVERIES_ENTRY.view)}
           style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", ...card(C), marginTop: 12, cursor: "pointer" }}>
           <span aria-hidden="true" style={{ fontSize: 22, lineHeight: 1 }}>{DISCOVERIES_ENTRY.icon}</span>
@@ -418,31 +405,38 @@ export function ReaderApp({
           <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
         </button>
 
+        {/* Unit grid: one compact card per unit — coverage ring + % covered, and a
+            revise-this-unit link. Tap the card to start reading the unit. */}
         <div className="rl-unit-grid">
-        {index.units.map((u) => (
-          <div key={u.unitId} style={{ ...card(C), marginTop: 14 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 20, fontWeight: 600, color: C.foam }}>Unit {u.unitId} · {u.title}</div>
-              <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.line }}>{u.sectionIds.reduce((n, s) => n + (index.sections[s].orderedItemIds.filter((id) => progressMap[id]).length), 0)} / {u.total} seen</div>
-            </div>
-            {u.sectionIds.map((sid) => {
-              const sec = index.sections[sid];
-              const st = masteryState(sec.orderedItemIds, progressMap);
-              const r = readiness(sec.orderedItemIds, progressMap).value;
-              const here = bookmark && bookmark.sectionId === sid;
-              return (
-                <button key={sid} onClick={() => startRead(sid, 0)}
-                  style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", background: here ? "rgba(79,216,196,.08)" : "transparent", border: "none", borderRadius: 12, padding: "12px 10px", cursor: "pointer" }}>
-                  <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 15.5, fontWeight: here ? 700 : 500, color: C.foam }}>{sid} {sec.title}</span>
-                  <span style={{ width: 90, height: 6, borderRadius: 99, background: "rgba(255,255,255,.12)", overflow: "hidden" }}>
-                    <span style={{ display: "block", height: "100%", width: `${Math.round(r * 100)}%`, background: statusColor(C, st) }} />
+        {index.units.map((u) => {
+          const ids = unitIdsOf(u);
+          const cov = coverage(ids, progressMap);
+          const rev = reviseIds(ids, progressMap);
+          const here = bmSec && bmSec.unitId === u.unitId;
+          return (
+            <div key={u.unitId} className="rl-unit-card" style={{ ...card(C), marginTop: 14, border: here ? `1.5px solid ${C.glow}` : `1px solid ${C.line}55` }}>
+              <button onClick={() => startRead(u.sectionIds[0], 0)}
+                style={{ display: "flex", gap: 14, alignItems: "center", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
+                <Donut C={C} pct={cov.pct} size={52} color={cov.pct === 100 ? C.ok : C.glow} />
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: "block", fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Unit {u.unitId} · {u.title}</span>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, marginTop: 2 }}>
+                    {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${cov.total} questions`}
                   </span>
-                  <StatusPill C={C} state={here ? "here" : st} />
-                </button>
-              );
-            })}
-          </div>
-        ))}
+                </span>
+                <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+              </button>
+              {(rev.length > 0 || cov.attempted > 0) && (
+                <div style={{ marginTop: 10 }}>
+                  {rev.length > 0
+                    ? <button onClick={() => startRevise(rev, `Unit ${u.unitId} to revise`)}
+                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.coral, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>● Revise {rev.length} →</button>
+                    : <span style={{ color: C.ok, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>✓ all clear</span>}
+                </div>
+              )}
+            </div>
+          );
+        })}
         </div>
 
         <div style={{ textAlign: "center", marginTop: 24 }}>
@@ -1087,13 +1081,16 @@ function StatusPill({ C, state }) {
 function Stat({ C, n, label }) {
   return <div style={{ textAlign: "center" }}><div style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, color: C.foam }}>{n}</div><div style={{ fontFamily: FONT_UI, fontSize: 11, letterSpacing: ".08em", color: C.mist }}>{label}</div></div>;
 }
-function Donut({ C, pct }) {
-  const r = 26, circ = 2 * Math.PI * r, off = circ * (1 - pct / 100);
+function Donut({ C, pct, size = 72, color }) {
+  const stroke = color || C.glow;
+  const sw = size >= 64 ? 8 : 6;
+  const cx = size / 2, r = cx - sw / 2 - 2;
+  const circ = 2 * Math.PI * r, off = circ * (1 - Math.max(0, Math.min(100, pct)) / 100);
   return (
-    <svg width="72" height="72" viewBox="0 0 72 72">
-      <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,.14)" strokeWidth="8" />
-      <circle cx="36" cy="36" r={r} fill="none" stroke={C.glow} strokeWidth="8" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={off} transform="rotate(-90 36 36)" />
-      <text x="36" y="41" textAnchor="middle" fontFamily={FONT_UI} fontSize="15" fontWeight="700" fill={C.foam}>{pct}%</text>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ flex: "0 0 auto" }}>
+      <circle cx={cx} cy={cx} r={r} fill="none" stroke="rgba(255,255,255,.14)" strokeWidth={sw} />
+      <circle cx={cx} cy={cx} r={r} fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={off} transform={`rotate(-90 ${cx} ${cx})`} />
+      <text x={cx} y={cx + size * 0.07} textAnchor="middle" fontFamily={FONT_UI} fontSize={size >= 64 ? 15 : 12} fontWeight="700" fill={C.foam}>{pct}%</text>
     </svg>
   );
 }

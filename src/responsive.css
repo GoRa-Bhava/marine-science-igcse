@@ -92,7 +92,6 @@
     font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 20px; color: var(--rl-ink);
   }
   .rl-topbar-right { display: flex; align-items: center; gap: 16px; }
-  .rl-ready-meter { font-family: Karla, system-ui, sans-serif; font-size: 13px; color: var(--rl-mist); }
   .rl-theme-toggle { display: inline-flex; gap: 4px; border: 1px solid color-mix(in srgb, var(--rl-line) 60%, transparent); border-radius: 10px; padding: 3px; }
   .rl-theme-toggle button {
     appearance: none; cursor: pointer; border: none; background: transparent;

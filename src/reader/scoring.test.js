@@ -2,7 +2,30 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   boxAfter, weightFor, pickNext, suppressN, masteryState, readiness, unitReadiness,
+  coverage, reviseIds,
 } from "./scoring.js";
+
+test("coverage: attempted = timesSeen>0; pct rounds; empty set is 0%", () => {
+  const ids = ["a", "b", "c", "d"];
+  const pm = { a: { timesSeen: 3 }, b: { timesSeen: 0 }, c: { timesSeen: 1 } }; // d unseen
+  const c = coverage(ids, pm);
+  assert.equal(c.total, 4);
+  assert.equal(c.attempted, 2, "a and c have timesSeen>0; b(0) and d(missing) do not");
+  assert.equal(c.pct, 50);
+  assert.deepEqual(coverage([], pm), { attempted: 0, total: 0, pct: 0 });
+  assert.equal(coverage(["a"], {}).pct, 0, "no progress → 0% covered");
+});
+
+test("reviseIds: only wrongFlag===true, in the given order; clears on a correct answer", () => {
+  const ids = ["a", "b", "c"];
+  let pm = { a: { wrongFlag: true }, b: { wrongFlag: false }, c: { wrongFlag: true } };
+  assert.deepEqual(reviseIds(ids, pm), ["a", "c"], "book order preserved");
+  // A correct answer on 'a' clears its wrongFlag (via boxAfter) → drops off the list.
+  pm = { ...pm, a: boxAfter(pm.a, true, "a") };
+  assert.equal(pm.a.wrongFlag, false);
+  assert.deepEqual(reviseIds(ids, pm), ["c"], "revised-correct item leaves the revise list");
+  assert.deepEqual(reviseIds(ids, {}), [], "brand-new user has nothing to revise");
+});
 
 test("box ladder: correct climbs to 5, wrong resets to 0, counts track", () => {
   let p = boxAfter(null, true, "Q1");      // unseen -> correct
