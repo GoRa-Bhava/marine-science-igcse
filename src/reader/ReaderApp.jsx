@@ -3,7 +3,6 @@ import { createProgressStore } from "./progressStore.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, pickNext, masteryState, readiness, unitReadiness } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
-import { retrievalToItem } from "../flashcards/flashcards.js";
 
 /* The Units 1–6 Reader — the whole app. A self-paced, book-style flow with
    durable device-local progress (IndexedDB) and a wrong-weighted smart-practice
@@ -95,10 +94,6 @@ export function ReaderApp({
   const [fcUnit, setFcUnit] = useState(null);   // null = unit picker; number or "all" = a deck
   const [fcPos, setFcPos] = useState(0);
   const [fcFlipped, setFcFlipped] = useState(false);
-  const [fcMode, setFcMode] = useState("learn"); // learn | test
-  const [fcAnswer, setFcAnswer] = useState(null);
-  const [fcLocked, setFcLocked] = useState(false);
-  const [fcRight, setFcRight] = useState(false);
   const [fcSeen, setFcSeen] = useState(() => new Set());
 
   // Settings: back up / restore / reset (against this device's Reader store).
@@ -630,18 +625,12 @@ export function ReaderApp({
 
   // ---------- Flashcards (standalone revision deck) ----------
   function fcMarkSeen(id) { setFcSeen((s) => (s.has(id) ? s : new Set(s).add(id))); }
-  function fcOpenDeck(u) { setFcUnit(u); setFcPos(0); setFcFlipped(false); setFcMode("learn"); setFcLocked(false); setFcSeen(new Set()); }
-  function fcBackToUnits() { setFcUnit(null); setFcMode("learn"); setFcLocked(false); setFcFlipped(false); }
+  function fcOpenDeck(u) { setFcUnit(u); setFcPos(0); setFcFlipped(false); setFcSeen(new Set()); }
+  function fcBackToUnits() { setFcUnit(null); setFcFlipped(false); }
   function fcNext(deck) {
     const cur = deck[fcPos]; if (cur) fcMarkSeen(cur.id);
     const np = fcPos + 1;
-    if (np < deck.length) { setFcPos(np); setFcFlipped(false); setFcMode("learn"); setFcLocked(false); setFcAnswer(null); }
-  }
-  function fcStartTest(card) { setFcMode("test"); setFcLocked(false); setFcAnswer(initAnswer(retrievalToItem(card))); }
-  function fcCheck(card) {
-    const it = retrievalToItem(card);
-    if (!canSubmit(it, fcAnswer)) return;
-    setFcRight(grade(it, fcAnswer)); setFcLocked(true); fcMarkSeen(card.id);
+    if (np < deck.length) { setFcPos(np); setFcFlipped(false); }
   }
 
   function renderFlashcards() {
@@ -655,7 +644,7 @@ export function ReaderApp({
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>FLASHCARDS · REVISION</p>
           <h1 style={{ ...h1(C), marginTop: 2 }}>Flip to learn</h1>
-          <p style={{ ...sub(C), marginTop: 4 }}>A separate revision deck — flip a card, then test yourself. Kept apart from your unit progress.</p>
+          <p style={{ ...sub(C), marginTop: 4 }}>A separate revision deck — flip a card to reveal the answer. Pure practice; kept apart from your unit progress.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
             <button onClick={() => fcOpenDeck("all")} style={{ ...card(C), border: `1.5px solid ${C.glow}`, textAlign: "left", cursor: "pointer" }}>
               <div style={{ fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Mixed deck</div>
@@ -684,7 +673,6 @@ export function ReaderApp({
     }
     const seenCount = deck.filter((c) => fcSeen.has(c.id)).length;
     const rm = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const testItem = retrievalToItem(fcCard);
 
     return (
       <div style={pad} className="rl-pad">
@@ -694,57 +682,30 @@ export function ReaderApp({
           <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>{fcCard.topic} · {seenCount} of {deck.length} seen</span>
         </div>
 
-        {fcMode === "learn" ? (
-          <>
-            {/* flip card */}
-            <div style={{ perspective: 1200, marginTop: 12 }}>
-              <div role="button" tabIndex={0} aria-label={fcFlipped ? "Show front" : "Show back"}
-                onClick={() => { setFcFlipped((f) => !f); fcMarkSeen(fcCard.id); }}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFcFlipped((f) => !f); fcMarkSeen(fcCard.id); } }}
-                style={{ position: "relative", minHeight: 220, transformStyle: "preserve-3d", cursor: "pointer",
-                  transition: rm ? "none" : "transform .5s", transform: fcFlipped ? "rotateY(180deg)" : "none" }}>
-                {/* front */}
-                <div style={{ ...card(C), position: "absolute", inset: 0, backfaceVisibility: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: 8 }}>
-                  <span style={kicker(C)}>TERM</span>
-                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 26, fontWeight: 600, color: C.foam }}>{fcCard.front}</span>
-                  <span style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist }}>tap to flip</span>
-                </div>
-                {/* back */}
-                <div style={{ ...card(C), position: "absolute", inset: 0, backfaceVisibility: "hidden", transform: "rotateY(180deg)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: 8 }}>
-                  <span style={kicker(C)}>DEFINITION</span>
-                  <span style={{ fontFamily: FONT_UI, fontSize: 17, lineHeight: 1.5, color: C.foam }}>{fcCard.back}</span>
-                </div>
-              </div>
+        {/* flip card — front → tap to reveal back. Revision only: nothing graded or stored. */}
+        <div style={{ perspective: 1200, marginTop: 12 }}>
+          <div role="button" tabIndex={0} aria-label={fcFlipped ? "Show term" : "Show definition"}
+            onClick={() => { setFcFlipped((f) => !f); fcMarkSeen(fcCard.id); }}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFcFlipped((f) => !f); fcMarkSeen(fcCard.id); } }}
+            style={{ position: "relative", minHeight: 220, transformStyle: "preserve-3d", cursor: "pointer",
+              transition: rm ? "none" : "transform .5s", transform: fcFlipped ? "rotateY(180deg)" : "none" }}>
+            {/* front */}
+            <div style={{ ...card(C), position: "absolute", inset: 0, backfaceVisibility: "hidden", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: 8 }}>
+              <span style={kicker(C)}>TERM</span>
+              <span style={{ fontFamily: FONT_DISPLAY, fontSize: 26, fontWeight: 600, color: C.foam }}>{fcCard.front}</span>
+              <span style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist }}>tap to reveal</span>
             </div>
-            <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-              <button style={ghostBtn(C)} onClick={() => setFcFlipped((f) => !f)}>{fcFlipped ? "Show term" : "Show definition"}</button>
-              <button style={{ ...ghostBtn(C), flex: 1 }} onClick={() => fcStartTest(fcCard)}>Test yourself</button>
-              <button style={{ ...primaryBtn(C), flex: 1 }} disabled={fcPos + 1 >= deck.length} onClick={() => fcNext(deck)}>Next ›</button>
+            {/* back */}
+            <div style={{ ...card(C), position: "absolute", inset: 0, backfaceVisibility: "hidden", transform: "rotateY(180deg)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: 8 }}>
+              <span style={kicker(C)}>DEFINITION</span>
+              <span style={{ fontFamily: FONT_UI, fontSize: 17, lineHeight: 1.5, color: C.foam }}>{fcCard.back}</span>
             </div>
-          </>
-        ) : (
-          <>
-            {/* test yourself: reuse the shared renderer + grading */}
-            <p style={{ ...kicker(C), marginTop: 14 }}>TEST YOURSELF</p>
-            <div style={{ marginTop: 6 }}>
-              {renderItemBody(testItem, { locked: fcLocked, answer: fcAnswer, setAnswer: setFcAnswer })}
-            </div>
-            {fcLocked && (
-              <div aria-live="polite" style={{ ...card(C), marginTop: 16 }}>
-                <div style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: fcRight ? C.ok : C.no, marginBottom: 6 }}>
-                  {fcRight ? "Correct" : "Not quite"}
-                </div>
-                <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}>{fcCard.front} — {fcCard.back}</div>
-              </div>
-            )}
-            <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-              <button style={ghostBtn(C)} onClick={() => { setFcMode("learn"); setFcLocked(false); }}>Back to card</button>
-              {!fcLocked
-                ? <button style={{ ...primaryBtn(C), flex: 1, opacity: canSubmit(testItem, fcAnswer) ? 1 : 0.5 }} disabled={!canSubmit(testItem, fcAnswer)} onClick={() => fcCheck(fcCard)}>Check</button>
-                : <button style={{ ...primaryBtn(C), flex: 1 }} onClick={() => { setFcMode("learn"); setFcLocked(false); fcNext(deck); }}>{fcPos + 1 >= deck.length ? "Done" : "Next card ›"}</button>}
-            </div>
-          </>
-        )}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+          <button style={ghostBtn(C)} onClick={() => setFcFlipped((f) => !f)}>{fcFlipped ? "Show term" : "Show definition"}</button>
+          <button style={{ ...primaryBtn(C), flex: 1 }} disabled={fcPos + 1 >= deck.length} onClick={() => fcNext(deck)}>Next ›</button>
+        </div>
       </div>
     );
   }

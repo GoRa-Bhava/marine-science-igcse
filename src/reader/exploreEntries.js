@@ -27,7 +27,7 @@ export const EXPLORE_ENTRIES = [
     key: "flashcards",
     view: "flashcards",
     title: "Flashcards",
-    blurb: "Flip to learn · test yourself · by unit",
+    blurb: "Flip to learn · by unit",
     icon: "🎴",
   },
 ];
