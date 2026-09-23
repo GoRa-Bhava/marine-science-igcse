@@ -68,7 +68,7 @@ export function ReaderApp({
   const [sectionStates, setSectionStates] = useState({});
   const [settings, setSettings] = useState({});
   const [owned, setOwned] = useState([]);
-  const [bookmark, setBookmark] = useState(null);
+  const [bookmarks, setBookmarks] = useState({ byUnit: {}, lastUnitId: null });
 
   const [view, setView] = useState("library");
   const [mode, setMode] = useState("read");       // read | smart | retry
@@ -112,14 +112,22 @@ export function ReaderApp({
   async function loadAll() {
     if (!storeRef.current) storeRef.current = await createProgressStore();
     const store = storeRef.current;
-    const [all, bm, st, sec] = await Promise.all([
-      store.getAllItemProgress(), store.getBookmark(), store.getSettings(), store.getAllSectionState(),
+    const [all, bmOld, bms, st, sec] = await Promise.all([
+      store.getAllItemProgress(), store.getBookmark(), store.getBookmarks(),
+      store.getSettings(), store.getAllSectionState(),
     ]);
     setProgressMap(Object.fromEntries(all.map((r) => [r.itemId || r.id, r])));
     setSectionStates(Object.fromEntries(sec.map((r) => [r.sectionId || r.id, r])));
     setSettings(st || {});
     setOwned((st && st.creatures) || []);
-    setBookmark(bm);
+    // Per-unit bookmarks. First launch after the upgrade: seed from the legacy
+    // single bookmark so the user's current resume point survives.
+    let bookmarksRec = (bms && bms.byUnit) ? bms : { byUnit: {}, lastUnitId: null };
+    if (!Object.keys(bookmarksRec.byUnit).length && bmOld && bmOld.unitId != null) {
+      bookmarksRec = { byUnit: { [bmOld.unitId]: bmOld }, lastUnitId: bmOld.unitId };
+      store.putBookmarks(bookmarksRec); // persist the seed once
+    }
+    setBookmarks(bookmarksRec);
   }
 
   useEffect(() => {
@@ -131,14 +139,19 @@ export function ReaderApp({
   const store = () => storeRef.current;
   const item = currentId ? itemById[currentId] : null;
 
-  // Bookmark tracks the currently shown item in linear Read mode, so an abrupt
-  // exit resumes exactly there. Smart/retry/browse never move the reading spot.
+  // Each unit remembers its own last Read-mode question, so "Continue revising"
+  // and each unit card resume exactly where you left off in that unit. Only Read
+  // mode moves a bookmark; smart / revise / notes never do.
   useEffect(() => {
     if (view !== "reader" || mode !== "read" || !currentId) return;
     const loc = index.itemLoc[currentId];
-    const bm = { unitId: loc?.unitId, sectionId: loc?.sectionId, itemId: currentId, indexInSection: loc?.indexInSection, mode: "read" };
-    setBookmark(bm);
-    if (storeRef.current) storeRef.current.putBookmark(bm);
+    if (!loc || loc.unitId == null) return;
+    const bm = { unitId: loc.unitId, sectionId: loc.sectionId, itemId: currentId, indexInSection: loc.indexInSection, mode: "read" };
+    setBookmarks((prev) => {
+      const next = { byUnit: { ...prev.byUnit, [loc.unitId]: bm }, lastUnitId: loc.unitId };
+      if (storeRef.current) storeRef.current.putBookmarks(next);
+      return next;
+    });
   }, [currentId, view, mode]);
 
   function loadItem(id) {
@@ -181,9 +194,17 @@ export function ReaderApp({
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(ids[0]);
   }
-  function resume() {
-    if (bookmark && index.sections[bookmark.sectionId]) startRead(bookmark.sectionId, Math.max(0, bookmark.indexInSection || 0));
-    else startRead(index.sectionIds[0], 0);
+  // Resume a specific unit at its own last spot (no arg → the last-touched unit).
+  // NB: takes an argument, so never pass it directly as an event handler — wrap it
+  // (onClick={() => resume(...)}), or a click event lands in unitId.
+  function resume(unitId) {
+    const uid = unitId != null ? unitId : bookmarks.lastUnitId;
+    const u = index.units.find((x) => x.unitId === uid) || index.units[0];
+    if (!u) return;
+    const bm = bookmarks.byUnit[u.unitId];
+    const secOk = bm && index.sections[bm.sectionId] && index.sections[bm.sectionId].unitId === u.unitId;
+    if (secOk) startRead(bm.sectionId, Math.max(0, bm.indexInSection || 0));
+    else startRead(u.sectionIds[0], 0); // never visited this unit → its first section, q1
   }
   function startBrowse(ids, title) { setBrowse({ ids, pos: 0, title }); setView("browse"); }
 
@@ -304,7 +325,7 @@ export function ReaderApp({
       <aside className="rl-sidebar">
         <div className="rl-brand">Marine Science · IGCSE 0697</div>
         <nav className="rl-nav" aria-label="Primary">
-          {nav("read", "📖 Revise a unit", resume, view === "reader" && mode === "read")}
+          {nav("read", "📖 Revise a unit", () => resume(), view === "reader" && mode === "read")}
           {nav("smart", "🎲 Smart practice", startSmart, view === "reader" && mode === "smart")}
           {nav("notes", "👁 Read", () => setView("notes"), view === "notes")}
           <div className="rl-nav-group">Explore</div>
@@ -336,10 +357,11 @@ export function ReaderApp({
 
   // ---------- Library ----------
   function renderLibrary() {
-    const bmSec = bookmark && index.sections[bookmark.sectionId];
+    const lastUid = bookmarks.lastUnitId;
+    const lastBm = lastUid != null ? bookmarks.byUnit[lastUid] : null;
     const unitIdsOf = (u) => u.sectionIds.flatMap((s) => index.sections[s].orderedItemIds);
-    // Focus = the unit you're mid-way through (bookmark's unit), else Unit 1.
-    const focusUnit = index.units.find((u) => u.unitId === (bmSec ? bmSec.unitId : index.units[0]?.unitId)) || index.units[0];
+    // Focus = the unit you last touched, else Unit 1.
+    const focusUnit = index.units.find((u) => u.unitId === (lastBm ? lastBm.unitId : index.units[0]?.unitId)) || index.units[0];
     const fIds = unitIdsOf(focusUnit);
     const fCov = coverage(fIds, progressMap);
     const fRev = reviseIds(fIds, progressMap);
@@ -368,7 +390,7 @@ export function ReaderApp({
           </div>
           <div style={{ marginTop: 12 }}>{revisePill(fCov.attempted, fRev.length)}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 14 }}>
-            <button style={primaryBtn(C)} onClick={resume}>{bmSec ? "Continue revising ›" : "Revise ›"}</button>
+            <button style={primaryBtn(C)} onClick={() => resume(focusUnit.unitId)}>{bookmarks.byUnit[focusUnit.unitId] ? "Continue revising ›" : "Revise ›"}</button>
             {fRev.length > 0 && (
               <button style={{ ...primaryBtn(C), background: C.coral, color: "#fff" }} onClick={() => startRevise(fRev, `Unit ${focusUnit.unitId} to revise`)}>Revise these {fRev.length} →</button>
             )}
@@ -412,10 +434,11 @@ export function ReaderApp({
           const ids = unitIdsOf(u);
           const cov = coverage(ids, progressMap);
           const rev = reviseIds(ids, progressMap);
-          const here = bmSec && bmSec.unitId === u.unitId;
+          const bm = bookmarks.byUnit[u.unitId];   // this unit's own resume point
+          const here = bm != null;
           return (
             <div key={u.unitId} className="rl-unit-card" style={{ ...card(C), marginTop: 14, border: here ? `1.5px solid ${C.glow}` : `1px solid ${C.line}55` }}>
-              <button onClick={() => startRead(u.sectionIds[0], 0)}
+              <button onClick={() => resume(u.unitId)}
                 style={{ display: "flex", gap: 14, alignItems: "center", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
                 <Donut C={C} pct={cov.pct} size={52} color={cov.pct === 100 ? C.ok : C.glow} />
                 <span style={{ flex: 1, minWidth: 0 }}>
@@ -423,6 +446,9 @@ export function ReaderApp({
                   <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, marginTop: 2 }}>
                     {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${cov.total} questions`}
                   </span>
+                  {bm && (
+                    <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 2 }}>Resume {bm.sectionId} · Q{(bm.indexInSection || 0) + 1}</span>
+                  )}
                 </span>
                 <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
               </button>
@@ -926,7 +952,7 @@ export function ReaderApp({
   async function doReset() {
     if (store()) await store().clearAll();
     await loadAll();
-    setBookmark(null); setConfirmReset(false); setView("library");
+    setBookmarks({ byUnit: {}, lastUnitId: null }); setConfirmReset(false); setView("library");
   }
 
   function renderSettings() {
