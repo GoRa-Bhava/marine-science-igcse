@@ -36,11 +36,29 @@ function answerText(item) {
   return "";
 }
 
+// True on wide (desktop web) viewports only. The Capacitor APK is always phone
+// width, so this stays false there and the desktop shell is never rendered.
+function useIsDesktop() {
+  const Q = "(min-width: 861px)";
+  const read = () => (typeof window !== "undefined" && window.matchMedia ? window.matchMedia(Q).matches : false);
+  const [desktop, setDesktop] = useState(read);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia(Q);
+    const on = () => setDesktop(mq.matches);
+    on();
+    mq.addEventListener ? mq.addEventListener("change", on) : mq.addListener(on);
+    return () => { mq.removeEventListener ? mq.removeEventListener("change", on) : mq.removeListener(on); };
+  }, []);
+  return desktop;
+}
+
 export function ReaderApp({
   content, C, theme, onSetTheme, renderItemBody, grade, canSubmit, initAnswer,
   CreatureArt, creatures, InteractiveLab, ComparisonCard, ComparisonSelector,
   comparisonCards = [], UpdatesControl, flashcards = [],
 }) {
+  const desktop = useIsDesktop();
   const index = useMemo(() => buildContentIndex(content.items, content.figures || {}), [content]);
   const itemById = useMemo(() => Object.fromEntries(content.items.map((i) => [i.id, i])), [content]);
 
@@ -245,18 +263,76 @@ export function ReaderApp({
   if (!ready) {
     return <Shell C={C}><div style={{ padding: 40, fontFamily: FONT_UI, color: C.mist }}>Loading your progress…</div></Shell>;
   }
-  if (view === "reader") return <Shell C={C}>{renderReader()}{revealOverlay()}{celebrateOverlay()}</Shell>;
-  if (view === "checkpoint") return <Shell C={C}>{renderCheckpoint()}{celebrateOverlay()}</Shell>;
-  if (view === "summary") return <Shell C={C}>{renderSummary()}</Shell>;
-  if (view === "browse") return <Shell C={C}>{renderBrowse()}</Shell>;
-  if (view === "interactives") return <Shell C={C}>{renderInteractives()}</Shell>;
-  if (view === "concepts") return <Shell C={C}>{renderConcepts()}</Shell>;
-  if (view === "flashcards") return <Shell C={C}>{renderFlashcards()}</Shell>;
-  if (view === "collection") return <Shell C={C}>{renderCollection()}{revealOverlay()}</Shell>;
-  if (view === "settings") return <Shell C={C}>{renderSettings()}</Shell>;
-  return <Shell C={C}>{renderLibrary()}{revealOverlay()}</Shell>;
+  let viewContent;
+  if (view === "reader") viewContent = <>{renderReader()}{revealOverlay()}{celebrateOverlay()}</>;
+  else if (view === "checkpoint") viewContent = <>{renderCheckpoint()}{celebrateOverlay()}</>;
+  else if (view === "summary") viewContent = renderSummary();
+  else if (view === "browse") viewContent = renderBrowse();
+  else if (view === "interactives") viewContent = renderInteractives();
+  else if (view === "concepts") viewContent = renderConcepts();
+  else if (view === "flashcards") viewContent = renderFlashcards();
+  else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
+  else if (view === "settings") viewContent = renderSettings();
+  else viewContent = <>{renderLibrary()}{revealOverlay()}</>;
+  // Desktop-only shell (sidebar + top bar). On phone/APK these are null, so Shell
+  // renders exactly today's single <main> — the layout is byte-for-byte unchanged.
+  return (
+    <Shell C={C} sidebar={desktop ? renderSidebar() : null} topBar={desktop ? renderTopBar() : null}>
+      {viewContent}
+    </Shell>
+  );
 
   function backToLibrary() { setView("library"); }
+
+  // ---------- desktop shell: sidebar + top bar ----------
+  function overallReadyPct() {
+    if (!index.units.length) return 0;
+    const sum = index.units.reduce((s, u) => s + unitReadiness(u.sectionIds.map((x) => index.sections[x].orderedItemIds), progressMap), 0);
+    return Math.round((sum / index.units.length) * 100);
+  }
+  function browseFromBookmark() {
+    const sid = bookmark ? bookmark.sectionId : index.sectionIds[0];
+    startBrowse(index.sections[sid].orderedItemIds, `${sid}`);
+  }
+  function renderSidebar() {
+    const dte = daysToExam(settings.examDate);
+    const nav = (key, label, onClick, active) => (
+      <button key={key} className="rl-nav-item" onClick={onClick} aria-current={active ? "page" : undefined}>{label}</button>
+    );
+    return (
+      <aside className="rl-sidebar">
+        <div className="rl-brand">Marine Science · IGCSE 0697</div>
+        <nav className="rl-nav" aria-label="Primary">
+          {nav("read", "📖 Read a unit", resume, view === "reader" && mode === "read")}
+          {nav("smart", "🎲 Smart practice", startSmart, view === "reader" && mode === "smart")}
+          {nav("browse", "👁 Browse", browseFromBookmark, view === "browse")}
+          <div className="rl-nav-group">Explore</div>
+          {EXPLORE_ENTRIES.map((e) => nav(e.key, `${e.icon} ${e.title.split(" · ")[0]}`, () => setView(e.view), view === e.view))}
+          {nav("collection", "🐚 Ocean Discoveries", () => setView("collection"), view === "collection")}
+        </nav>
+        <div className="rl-side-foot">
+          <div className="rl-ready-chip">{overallReadyPct()}% exam ready{dte != null ? ` · ${dte} days left` : ""}</div>
+          {nav("home", "Home", () => setView("library"), view === "library")}
+          {nav("settings", "Settings", () => setView("settings"), view === "settings")}
+        </div>
+      </aside>
+    );
+  }
+  function renderTopBar() {
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Reading", browse: "Browse", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section complete", summary: "Session summary" };
+    return (
+      <header className="rl-topbar">
+        <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
+        <div className="rl-topbar-right">
+          <div className="rl-ready-meter">{overallReadyPct()}% exam ready</div>
+          <div className="rl-theme-toggle">
+            <button type="button" aria-pressed={theme === "dark"} onClick={() => onSetTheme && onSetTheme("dark")}>Dark</button>
+            <button type="button" aria-pressed={theme === "light"} onClick={() => onSetTheme && onSetTheme("light")}>Light</button>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   // ---------- Library ----------
   function renderLibrary() {
@@ -266,14 +342,14 @@ export function ReaderApp({
     const dte = daysToExam(settings.examDate);
     const bmSec = bookmark && index.sections[bookmark.sectionId];
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad rl-pad--home">
         <TopBar C={C} left="Library" />
         <p style={kicker(C)}>MARINE SCIENCE IGCSE 0697</p>
         <h1 style={h1(C)}>Your revision</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Pick up where you left off, or choose anywhere.</p>
 
         {bmSec && (
-          <div style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
+          <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
             <p style={kicker(C)}>RESUME</p>
             <div style={{ fontFamily: FONT_DISPLAY, fontSize: 24, fontWeight: 600, color: C.foam, margin: "4px 0 8px" }}>
               Unit {bmSec.unitId} · {index.units.find((u) => u.unitId === bmSec.unitId)?.title}
@@ -293,7 +369,7 @@ export function ReaderApp({
 
         <div style={{ marginTop: 22 }}>
           <p style={kicker(C)}>EXPLORE</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
+          <div className="rl-tile-row" style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
             {EXPLORE_ENTRIES.map((e) => (
               <button key={e.key} onClick={() => setView(e.view)}
                 style={{ display: "flex", alignItems: "center", gap: 14, width: "100%", textAlign: "left", ...card(C), border: `1px solid ${C.line}55`, cursor: "pointer" }}>
@@ -326,6 +402,7 @@ export function ReaderApp({
           <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
         </button>
 
+        <div className="rl-unit-grid">
         {index.units.map((u) => (
           <div key={u.unitId} style={{ ...card(C), marginTop: 14 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
@@ -350,6 +427,7 @@ export function ReaderApp({
             })}
           </div>
         ))}
+        </div>
 
         <div style={{ textAlign: "center", marginTop: 24 }}>
           <button onClick={() => setView("settings")} style={linkBtn(C)}>Settings</button>
@@ -364,8 +442,12 @@ export function ReaderApp({
     const loc = index.itemLoc[it.id];
     const wrongFlag = progressMap[it.id]?.wrongFlag;
     const total = queue.length;
+    const railSec = loc?.sectionId;
+    const railReady = railSec ? Math.round(readiness(index.sections[railSec].orderedItemIds, progressMap).value * 100) : null;
+    const railState = railSec ? masteryState(index.sections[railSec].orderedItemIds, progressMap) : null;
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
+        <div className="rl-reader-col">
         <TopBar C={C} left={mode === "smart" ? "Smart practice" : `Reading · Unit ${loc?.unitId}`} />
         <p style={kicker(C)}>{mode === "smart" ? "SMART PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
@@ -394,6 +476,22 @@ export function ReaderApp({
             {locked ? "Next ›" : "Check"}
           </button>
         </div>
+        </div>
+        {desktop && (
+          <aside className="rl-rail" aria-label="Session stats">
+            <h3>This session</h3>
+            <div className="rl-rail-stat"><b>{session.count}</b><span>answered</span></div>
+            <div className="rl-rail-stat"><b>{session.correct}</b><span>correct</span></div>
+            <div className="rl-rail-stat"><b>{session.wrong.length}</b><span>to revisit</span></div>
+            {railSec && (
+              <>
+                <h3 style={{ marginTop: 18 }}>This topic</h3>
+                <div className="rl-rail-stat"><b>{railReady}%</b><span>ready</span></div>
+                <div style={{ marginTop: 10 }}><StatusPill C={C} state={railState} /></div>
+              </>
+            )}
+          </aside>
+        )}
       </div>
     );
   }
@@ -404,7 +502,7 @@ export function ReaderApp({
     const st = masteryState(sec.orderedItemIds, progressMap);
     const nextSec = index.nextSectionId(checkpointSec);
     return (
-      <div style={{ ...pad, textAlign: "center" }}>
+      <div style={{ ...pad, textAlign: "center" }} className="rl-pad rl-pad--reader">
         <TopBar C={C} left="Section end" />
         <div style={{ width: 84, height: 84, borderRadius: "50%", background: "rgba(79,216,196,.16)", display: "grid", placeItems: "center", margin: "40px auto 16px", color: C.ok, fontSize: 34 }}>✓</div>
         <p style={{ ...kicker(C), textAlign: "center" }}>SECTION COMPLETE</p>
@@ -430,7 +528,7 @@ export function ReaderApp({
   function renderSummary() {
     const wrongIds = session.wrong;
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad rl-pad--reader">
         <TopBar C={C} left="Session paused" />
         <p style={kicker(C)}>SESSION PAUSED</p>
         <h1 style={h1(C)}>How that went</h1>
@@ -464,9 +562,9 @@ export function ReaderApp({
   function renderBrowse() {
     const id = browse.ids[browse.pos];
     const it = id ? itemById[id] : null;
-    if (!it) return <div style={pad}><TopBar C={C} left="Browse" /><p style={sub(C)}>Nothing to browse.</p><button style={ghostBtn(C)} onClick={() => setView("library")}>‹ Library</button></div>;
+    if (!it) return <div style={pad} className="rl-pad"><TopBar C={C} left="Browse" /><p style={sub(C)}>Nothing to browse.</p><button style={ghostBtn(C)} onClick={() => setView("library")}>‹ Library</button></div>;
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad">
         <TopBar C={C} left="Browse" />
         <p style={kicker(C)}>👁 BROWSE · READ-ONLY</p>
         <p style={{ ...sub(C), marginTop: 2 }}>Question and answer together, nothing to attempt — just to jog the memory.</p>
@@ -493,7 +591,7 @@ export function ReaderApp({
   // ---------- Interactive Lab (learn/explore surface) ----------
   function renderInteractives() {
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad">
         <TopBar C={C} left="Interactive Lab" />
         {InteractiveLab ? <InteractiveLab onBack={backToLibrary} theme={theme} /> : (
           <div>
@@ -510,7 +608,7 @@ export function ReaderApp({
     const cards = comparisonCards;
     const card = cards[conceptIndex] || cards[0];
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad">
         <TopBar C={C} left="Concept Cards" />
         <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
         <div style={{ marginTop: 8 }}>
@@ -552,7 +650,7 @@ export function ReaderApp({
     // ----- unit picker -----
     if (fcUnit == null) {
       return (
-        <div style={pad}>
+        <div style={pad} className="rl-pad">
           <TopBar C={C} left="Flashcards" />
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>FLASHCARDS · REVISION</p>
@@ -582,14 +680,14 @@ export function ReaderApp({
     const deck = fcUnit === "all" ? flashcards : flashcards.filter((c) => c.unit === fcUnit);
     const fcCard = deck[fcPos];
     if (!fcCard) {
-      return <div style={pad}><TopBar C={C} left="Flashcards" /><button onClick={fcBackToUnits} style={linkBtn(C)}>‹ Units</button><p style={sub(C)}>This deck is empty.</p></div>;
+      return <div style={pad} className="rl-pad"><TopBar C={C} left="Flashcards" /><button onClick={fcBackToUnits} style={linkBtn(C)}>‹ Units</button><p style={sub(C)}>This deck is empty.</p></div>;
     }
     const seenCount = deck.filter((c) => fcSeen.has(c.id)).length;
     const rm = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const testItem = retrievalToItem(fcCard);
 
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad">
         <TopBar C={C} left={fcUnit === "all" ? "Flashcards · Mixed" : `Flashcards · Unit ${fcUnit}`} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <button onClick={fcBackToUnits} style={linkBtn(C)}>‹ Units</button>
@@ -655,7 +753,7 @@ export function ReaderApp({
   function renderCollection() {
     const coll = content.collection || {};
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad">
         <TopBar C={C} left="Discoveries" />
         <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
         <h1 style={{ ...h1(C), marginTop: 8 }}>{coll.title || "Ocean discoveries"}</h1>
@@ -740,7 +838,7 @@ export function ReaderApp({
 
   function renderSettings() {
     return (
-      <div style={pad}>
+      <div style={pad} className="rl-pad">
         <TopBar C={C} left="Settings" />
         <button onClick={() => setView("library")} style={linkBtn(C)}>‹ Back</button>
         <h1 style={{ ...h1(C), marginTop: 8 }}>Settings</h1>
@@ -852,11 +950,23 @@ export function ReaderApp({
 
 /* ------------------------------ presentational bits ------------------------ */
 const pad = { maxWidth: 480, margin: "0 auto", padding: "0 18px 40px" };
-function Shell({ C, children }) {
-  return <main style={{ minHeight: "100dvh", background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam, fontFamily: FONT_UI }}>{children}</main>;
+function Shell({ C, children, sidebar = null, topBar = null }) {
+  const bg = { minHeight: "100dvh", background: `linear-gradient(${C.bg0} 0%, ${C.bg1} 60%)`, color: C.foam, fontFamily: FONT_UI };
+  // Phone / APK: no sidebar → exactly today's single <main> (byte-for-byte).
+  if (!sidebar) return <main style={bg}>{children}</main>;
+  // Desktop: sidebar + framed content column (all layout via responsive.css).
+  return (
+    <main className="rl-app" style={bg}>
+      {sidebar}
+      <div className="rl-frame">
+        {topBar}
+        <div className="rl-content">{children}</div>
+      </div>
+    </main>
+  );
 }
 function TopBar({ C, left }) {
-  return <div style={{ display: "flex", justifyContent: "space-between", padding: "16px 2px 6px", fontFamily: FONT_UI, fontSize: 14, color: C.mist }}><span>{left}</span><span>{" "}</span></div>;
+  return <div className="rl-inline-topbar" style={{ display: "flex", justifyContent: "space-between", padding: "16px 2px 6px", fontFamily: FONT_UI, fontSize: 14, color: C.mist }}><span>{left}</span><span>{" "}</span></div>;
 }
 const kicker = (C) => ({ fontFamily: FONT_UI, fontSize: 11, fontWeight: 700, letterSpacing: ".14em", color: C.accent, margin: "10px 0 0", textTransform: "uppercase" });
 const h1 = (C) => ({ fontFamily: FONT_DISPLAY, fontSize: 32, fontWeight: 600, color: C.foam, marginTop: 2, marginBottom: 0, marginLeft: 0, marginRight: 0, lineHeight: 1.08 });

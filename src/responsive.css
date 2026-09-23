@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Desktop web layout (responsive layer) — LAYOUT ONLY.
+
+   Everything here is gated behind @media (min-width: 861px). Below that width
+   this file contributes NOTHING, so the phone view and the Capacitor APK render
+   exactly as before. Colours come from the --rl-* CSS variables that App.jsx
+   sets from the active theme palette (one source of truth); no colour literals.
+
+   The desktop DOM (sidebar / top bar / stats rail) is only rendered when
+   useIsDesktop() is true, so the phone/APK path never even includes these nodes.
+   ========================================================================== */
+
+/* The stats rail is desktop-only; hidden by default so a brief resize transient
+   never flashes it on a narrow viewport (it is also only rendered ≥861px). */
+.rl-rail { display: none; }
+
+@media (min-width: 861px) {
+  /* ---- shell: sidebar + frame ------------------------------------------- */
+  .rl-app {
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .rl-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px 14px;
+    border-right: 1px solid color-mix(in srgb, var(--rl-line) 55%, transparent);
+    overflow-y: auto;
+  }
+  .rl-brand {
+    font-family: Fraunces, Georgia, serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--rl-ink);
+    padding: 6px 10px 14px;
+    line-height: 1.25;
+  }
+  .rl-nav { display: flex; flex-direction: column; gap: 2px; }
+  .rl-nav-group {
+    font-family: Karla, system-ui, sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--rl-accent);
+    padding: 16px 10px 6px;
+  }
+  .rl-nav-item {
+    appearance: none;
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; text-align: left;
+    padding: 10px 12px; border-radius: 10px;
+    border: 1px solid transparent; background: transparent;
+    color: var(--rl-ink);
+    font-family: Karla, system-ui, sans-serif; font-size: 14.5px; font-weight: 500;
+    cursor: pointer;
+    transition: background .12s, border-color .12s;
+  }
+  .rl-nav-item:hover { background: color-mix(in srgb, var(--rl-ink) 8%, transparent); }
+  .rl-nav-item[aria-current="page"] {
+    background: color-mix(in srgb, var(--rl-glow) 14%, transparent);
+    border-color: color-mix(in srgb, var(--rl-glow) 60%, transparent);
+    color: var(--rl-accent);
+    font-weight: 700;
+  }
+  .rl-side-foot { margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; gap: 2px; }
+  .rl-ready-chip {
+    font-family: Karla, system-ui, sans-serif; font-size: 12.5px; color: var(--rl-mist);
+    padding: 10px 12px; border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--rl-line) 55%, transparent);
+    background: var(--rl-panel);
+    margin-bottom: 6px;
+  }
+
+  .rl-frame { min-width: 0; display: flex; flex-direction: column; }
+
+  /* ---- top bar ---------------------------------------------------------- */
+  .rl-topbar {
+    position: sticky; top: 0; z-index: 20;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 14px clamp(16px, 3vw, 40px);
+    border-bottom: 1px solid color-mix(in srgb, var(--rl-line) 55%, transparent);
+    background: color-mix(in srgb, var(--rl-bg0) 88%, transparent);
+    backdrop-filter: blur(8px);
+  }
+  .rl-topbar-title {
+    font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 20px; color: var(--rl-ink);
+  }
+  .rl-topbar-right { display: flex; align-items: center; gap: 16px; }
+  .rl-ready-meter { font-family: Karla, system-ui, sans-serif; font-size: 13px; color: var(--rl-mist); }
+  .rl-theme-toggle { display: inline-flex; gap: 4px; border: 1px solid color-mix(in srgb, var(--rl-line) 60%, transparent); border-radius: 10px; padding: 3px; }
+  .rl-theme-toggle button {
+    appearance: none; cursor: pointer; border: none; background: transparent;
+    color: var(--rl-mist); font-family: Karla, system-ui, sans-serif; font-size: 13px; font-weight: 600;
+    padding: 6px 12px; border-radius: 8px;
+  }
+  .rl-theme-toggle button[aria-pressed="true"] { background: color-mix(in srgb, var(--rl-glow) 16%, transparent); color: var(--rl-accent); }
+
+  /* ---- content column: cap width, hide the per-view inline top bar ------ */
+  .rl-content { padding: 8px clamp(16px, 3vw, 40px) 40px; }
+  .rl-inline-topbar { display: none !important; }   /* beats the inline flex; shell top bar carries the title on desktop */
+
+  /* The inline `pad` object caps content at 480px on phone; lift that on desktop.
+     !important is required to beat the inline max-width; only ever applied >=861px. */
+  .rl-pad { max-width: 1180px !important; }
+  .rl-pad--reader { max-width: 1060px !important; }
+
+  /* ---- Library: unit grid + Explore tiles ------------------------------ */
+  .rl-unit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .rl-unit-grid > * { margin-top: 0 !important; }   /* grid gap replaces the stacked margins */
+
+  .rl-tile-row { flex-direction: row !important; flex-wrap: wrap; }
+  .rl-tile-row > * { flex: 1 1 260px; }
+
+  .rl-hero { margin-top: 16px; }
+
+  /* ---- Reader two-pane (Phase 2) --------------------------------------- */
+  .rl-pad--reader.rl-two-pane {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 28px;
+    align-items: start;
+  }
+  .rl-reader-col { min-width: 0; }
+  .rl-rail {
+    display: block;
+    position: sticky; top: 84px;
+    box-sizing: border-box;
+    border: 1px solid color-mix(in srgb, var(--rl-line) 55%, transparent);
+    background: var(--rl-panel);
+    border-radius: 18px;
+    padding: 18px;
+  }
+  .rl-rail h3 {
+    font-family: Karla, system-ui, sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--rl-accent);
+    margin: 0 0 12px;
+  }
+  .rl-rail-stat { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-top: 1px solid color-mix(in srgb, var(--rl-line) 40%, transparent); }
+  .rl-rail-stat:first-of-type { border-top: none; }
+  .rl-rail-stat b { font-family: Fraunces, Georgia, serif; font-size: 22px; color: var(--rl-ink); }
+  .rl-rail-stat span { font-family: Karla, system-ui, sans-serif; font-size: 12.5px; color: var(--rl-mist); }
+}
+
+/* Respect reduced-motion for any layer we add. */
+@media (prefers-reduced-motion: reduce) {
+  .rl-nav-item, .rl-theme-toggle button { transition: none !important; }
+}

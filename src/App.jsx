@@ -917,6 +917,17 @@ export default function App() {
     root.dataset.theme = theme;      // drives the light/dark tokens in comparison-card.css
     root.style.colorScheme = theme;
     document.body.style.background = C.bg1;
+    // Bridge the active palette to CSS custom properties so responsive.css (the
+    // desktop layout layer) has one source of truth for colour. Layout only —
+    // nothing here changes the phone view. See src/responsive.css.
+    const tokens = {
+      "--rl-ink": C.foam, "--rl-mist": C.mist, "--rl-line": C.line,
+      "--rl-glow": C.glow, "--rl-accent": C.accent, "--rl-bg0": C.bg0, "--rl-bg1": C.bg1,
+      "--rl-panel": C.panel || "rgba(255,255,255,.03)", "--rl-shelf": C.shelf || "rgba(255,255,255,.03)",
+      "--rl-raise": C.raise || C.shelf || "rgba(255,255,255,.05)",
+      "--rl-ok": C.ok, "--rl-gold": C.gold, "--rl-coral": C.coral, "--rl-abyss": C.abyss,
+    };
+    for (const [k, v] of Object.entries(tokens)) if (v) root.style.setProperty(k, v);
   }, [theme]);
 
   return (

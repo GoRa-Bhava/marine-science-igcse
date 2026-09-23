@@ -7,6 +7,9 @@ import "@fontsource-variable/fraunces";
 import "@fontsource/karla/400.css";
 import "@fontsource/karla/500.css";
 import "@fontsource/karla/600.css";
+// Desktop web layout (≥861px). Additive, layout-only; below the breakpoint it
+// contributes nothing, so the phone view and the Capacitor APK are unchanged.
+import "./responsive.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
