@@ -197,17 +197,43 @@ export function ReaderApp({
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(ids[0]);
   }
-  // Resume a specific unit at its own last spot (no arg → the last-touched unit).
+  const isAttempted = (id) => (progressMap[id]?.timesSeen || 0) > 0;
+  // Scan units in book order starting at startUnitId (then the units after it, then
+  // wrapping to earlier units), returning the first unattempted item's location, or
+  // null if everything is attempted.
+  function nextUnattemptedFrom(startUnitId) {
+    const order = index.units;
+    const s = Math.max(0, order.findIndex((u) => u.unitId === startUnitId));
+    const rotated = [...order.slice(s), ...order.slice(0, s)];
+    for (const u of rotated) {
+      for (const sid of u.sectionIds) {
+        for (const id of index.sections[sid].orderedItemIds) {
+          if (!isAttempted(id)) return { unitId: u.unitId, sectionId: sid, itemId: id };
+        }
+      }
+    }
+    return null;
+  }
+
+  // Resume = the next UNATTEMPTED question in book order from `unitId` (advancing
+  // into later units when this one is done); if everything is attempted, fall back
+  // to this unit's saved spot. No arg → continue from the last unit worked on.
   // NB: takes an argument, so never pass it directly as an event handler — wrap it
   // (onClick={() => resume(...)}), or a click event lands in unitId.
   function resume(unitId) {
-    const uid = unitId != null ? unitId : bookmarks.lastUnitId;
-    const u = index.units.find((x) => x.unitId === uid) || index.units[0];
-    if (!u) return;
-    const bm = bookmarks.byUnit[u.unitId];
-    const secOk = bm && index.sections[bm.sectionId] && index.sections[bm.sectionId].unitId === u.unitId;
-    if (secOk) startRead(bm.sectionId, Math.max(0, bm.indexInSection || 0));
-    else startRead(u.sectionIds[0], 0); // never visited this unit → its first section, q1
+    const startU = unitId != null ? unitId : (bookmarks.lastUnitId ?? index.units[0]?.unitId);
+    if (startU == null) return;
+    const target = nextUnattemptedFrom(startU);
+    if (target) {
+      const idx = index.itemLoc[target.itemId]?.indexInSection || 0;
+      startRead(target.sectionId, idx);
+      return;
+    }
+    // Everything attempted — nothing new to cover. Fall back to this unit's saved spot (else its start).
+    const bm = bookmarks.byUnit[startU];
+    const u = index.units.find((x) => x.unitId === startU) || index.units[0];
+    if (bm && index.sections[bm.sectionId]) startRead(bm.sectionId, Math.max(0, bm.indexInSection || 0));
+    else if (u) startRead(u.sectionIds[0], 0);
   }
   function startBrowse(ids, title) { setBrowse({ ids, pos: 0, title }); setView("browse"); }
 
@@ -355,8 +381,12 @@ export function ReaderApp({
     const lastUid = bookmarks.lastUnitId;
     const lastBm = lastUid != null ? bookmarks.byUnit[lastUid] : null;
     const unitIdsOf = (u) => u.sectionIds.flatMap((s) => index.sections[s].orderedItemIds);
-    // Focus = the unit you last touched, else Unit 1.
-    const focusUnit = index.units.find((u) => u.unitId === (lastBm ? lastBm.unitId : index.units[0]?.unitId)) || index.units[0];
+    // Focus = the unit that holds the next thing to do (so the card and its Continue
+    // button agree); if everything is attempted, the last unit worked on, else Unit 1.
+    const nextDo = nextUnattemptedFrom(lastUid ?? index.units[0]?.unitId);
+    const focusUnit =
+      index.units.find((u) => u.unitId === (nextDo ? nextDo.unitId : (lastBm ? lastBm.unitId : index.units[0]?.unitId)))
+      || index.units[0];
     const fIds = unitIdsOf(focusUnit);
     const fCov = coverage(fIds, progressMap);
     const fRev = reviseIds(fIds, progressMap);
@@ -457,11 +487,11 @@ export function ReaderApp({
               {/* Expanded panel — resume row (if any) + one row per section. */}
               {open && (
                 <div style={{ marginTop: 12, borderTop: `1px solid ${C.line}55`, paddingTop: 6 }}>
-                  {bm && (
+                  {(nextUnattemptedFrom(u.unitId)?.unitId === u.unitId || bm) && (
                     <button onClick={() => resume(u.unitId)}
                       style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", background: "transparent", border: "none", borderRadius: 10, padding: "10px 8px", cursor: "pointer" }}>
                       <span style={{ color: C.glow, fontSize: 15 }}>▸</span>
-                      <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, color: C.foam }}>Continue · {bm.sectionId} Q{(bm.indexInSection || 0) + 1}</span>
+                      <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, color: C.foam }}>Continue where you left off</span>
                       <span aria-hidden="true" style={{ color: C.accent, fontSize: 18 }}>›</span>
                     </button>
                   )}
