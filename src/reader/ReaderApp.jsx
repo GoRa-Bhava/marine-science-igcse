@@ -427,31 +427,7 @@ export function ReaderApp({
           <button style={entryBtn(C)} onClick={() => setView("notes")}>👁 Read</button>
         </div>
 
-        <div style={{ marginTop: 22 }}>
-          <p style={kicker(C)}>EXPLORE</p>
-          <div className="rl-tile-row" style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
-            {EXPLORE_ENTRIES.map((e) => (
-              <button key={e.key} onClick={() => setView(e.view)}
-                style={{ display: "flex", alignItems: "center", gap: 14, width: "100%", textAlign: "left", ...card(C), border: `1px solid ${C.line}55`, cursor: "pointer" }}>
-                <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>{e.icon}</span>
-                <span style={{ flex: 1 }}>
-                  <span style={{ display: "block", fontFamily: FONT_UI, fontWeight: 700, fontSize: 16, color: C.foam }}>{e.title}</span>
-                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 2 }}>{e.blurb}</span>
-                </span>
-                <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <button onClick={() => setView(DISCOVERIES_ENTRY.view)}
-          style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", ...card(C), marginTop: 12, cursor: "pointer" }}>
-          <span aria-hidden="true" style={{ fontSize: 22, lineHeight: 1 }}>{DISCOVERIES_ENTRY.icon}</span>
-          <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 15.5, fontWeight: 700, color: C.foam }}>{DISCOVERIES_ENTRY.title}</span>
-          <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>{owned.length}/{creatures.length} found</span>
-          <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
-        </button>
-
+        <p style={{ ...kicker(C), marginTop: 22 }}>YOUR UNITS</p>
         {/* Unit grid: compact card per unit (ring + % covered + revise link). Tap a
             card to expand its section list; tap a section to study it. */}
         <div className="rl-unit-grid">
@@ -519,6 +495,31 @@ export function ReaderApp({
           );
         })}
         </div>
+
+        <div style={{ marginTop: 22 }}>
+          <p style={kicker(C)}>EXPLORE</p>
+          <div className="rl-tile-row" style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
+            {EXPLORE_ENTRIES.map((e) => (
+              <button key={e.key} onClick={() => setView(e.view)}
+                style={{ display: "flex", alignItems: "center", gap: 14, width: "100%", textAlign: "left", ...card(C), border: `1px solid ${C.line}55`, cursor: "pointer" }}>
+                <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>{e.icon}</span>
+                <span style={{ flex: 1 }}>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontWeight: 700, fontSize: 16, color: C.foam }}>{e.title}</span>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 2 }}>{e.blurb}</span>
+                </span>
+                <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button onClick={() => setView(DISCOVERIES_ENTRY.view)}
+          style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", ...card(C), marginTop: 12, cursor: "pointer" }}>
+          <span aria-hidden="true" style={{ fontSize: 22, lineHeight: 1 }}>{DISCOVERIES_ENTRY.icon}</span>
+          <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 15.5, fontWeight: 700, color: C.foam }}>{DISCOVERIES_ENTRY.title}</span>
+          <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>{owned.length}/{creatures.length} found</span>
+          <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+        </button>
 
         <div style={{ textAlign: "center", marginTop: 24 }}>
           <button onClick={() => setView("settings")} style={linkBtn(C)}>Settings</button>
