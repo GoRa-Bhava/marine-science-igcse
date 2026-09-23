@@ -347,7 +347,7 @@ export function ReaderApp({
         <div className="rl-brand">Marine Science · IGCSE 0697</div>
         <nav className="rl-nav" aria-label="Primary">
           {nav("read", "📖 Revise a unit", () => resume(), view === "reader" && mode === "read")}
-          {nav("smart", "🎲 Smart practice", startSmart, view === "reader" && mode === "smart")}
+          {nav("smart", "🔀 Mixed Practice", startSmart, view === "reader" && mode === "smart")}
           {nav("notes", "👁 Read", () => setView("notes"), view === "notes")}
           <div className="rl-nav-group">Explore</div>
           {EXPLORE_ENTRIES.map((e) => nav(e.key, `${e.icon} ${e.title.split(" · ")[0]}`, () => setView(e.view), view === e.view))}
@@ -362,7 +362,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Revision", notes: "Read", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Read", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -423,7 +423,7 @@ export function ReaderApp({
         </div>
 
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-          <button style={entryBtn(C)} onClick={startSmart}>🎲 Smart practice</button>
+          <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice</button>
           <button style={entryBtn(C)} onClick={() => setView("notes")}>👁 Read</button>
         </div>
 
@@ -537,8 +537,8 @@ export function ReaderApp({
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
-        <TopBar C={C} left={mode === "smart" ? "Smart practice" : `Revision · Unit ${loc?.unitId}`} />
-        <p style={kicker(C)}>{mode === "smart" ? "SMART PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
+        <TopBar C={C} left={mode === "smart" ? "Mixed Practice" : `Revision · Unit ${loc?.unitId}`} />
+        <p style={kicker(C)}>{mode === "smart" ? "MIXED PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
           <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}`}</span>
