@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createProgressStore } from "./progressStore.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
-import { boxAfter, pickNext, masteryState, readiness, unitReadiness, coverage, reviseIds } from "./scoring.js";
+import { boxAfter, pickNext, unitReadiness, coverage, reviseIds } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 
@@ -84,7 +84,6 @@ export function ReaderApp({
   const [checkpointSec, setCheckpointSec] = useState(null);
   const [browse, setBrowse] = useState({ ids: [], pos: 0, title: "" });
   const [reveal, setReveal] = useState(null);
-  const [celebrate, setCelebrate] = useState(null);
 
   // Concept-cards state lives here so the chosen comparison + learn/self-check
   // mode persist while you flip between cards (as they did in the classic screen).
@@ -252,14 +251,6 @@ export function ReaderApp({
         }
       }
     }
-
-    // weak → mastered celebration
-    if (sec) {
-      const ids = index.sections[sec].orderedItemIds;
-      const before = masteryState(ids, progressMap);
-      const after = masteryState(ids, nextMap);
-      if (after === "mastered" && before !== "mastered") setCelebrate(sec);
-    }
   }
 
   function onPrimary() {
@@ -298,8 +289,8 @@ export function ReaderApp({
     return <Shell C={C}><div style={{ padding: 40, fontFamily: FONT_UI, color: C.mist }}>Loading your progress…</div></Shell>;
   }
   let viewContent;
-  if (view === "reader") viewContent = <>{renderReader()}{revealOverlay()}{celebrateOverlay()}</>;
-  else if (view === "checkpoint") viewContent = <>{renderCheckpoint()}{celebrateOverlay()}</>;
+  if (view === "reader") viewContent = <>{renderReader()}{revealOverlay()}</>;
+  else if (view === "checkpoint") viewContent = renderCheckpoint();
   else if (view === "summary") viewContent = renderSummary();
   else if (view === "browse") viewContent = renderBrowse();
   else if (view === "notes") viewContent = renderNotes();
@@ -345,7 +336,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Revision", notes: "Read", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section complete", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Revision", notes: "Read", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -513,8 +504,6 @@ export function ReaderApp({
     const wrongFlag = progressMap[it.id]?.wrongFlag;
     const total = queue.length;
     const railSec = loc?.sectionId;
-    const railReady = railSec ? Math.round(readiness(index.sections[railSec].orderedItemIds, progressMap).value * 100) : null;
-    const railState = railSec ? masteryState(index.sections[railSec].orderedItemIds, progressMap) : null;
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
@@ -553,13 +542,15 @@ export function ReaderApp({
             <div className="rl-rail-stat"><b>{session.count}</b><span>answered</span></div>
             <div className="rl-rail-stat"><b>{session.correct}</b><span>correct</span></div>
             <div className="rl-rail-stat"><b>{session.wrong.length}</b><span>to revisit</span></div>
-            {railSec && (
-              <>
-                <h3 style={{ marginTop: 18 }}>This topic</h3>
-                <div className="rl-rail-stat"><b>{railReady}%</b><span>ready</span></div>
-                <div style={{ marginTop: 10 }}><StatusPill C={C} state={railState} /></div>
-              </>
-            )}
+            {railSec && (() => {
+              const c = coverage(index.sections[railSec].orderedItemIds, progressMap);
+              return (
+                <>
+                  <h3 style={{ marginTop: 18 }}>This topic</h3>
+                  <div className="rl-rail-stat"><b>{c.pct}%</b><span>covered</span></div>
+                </>
+              );
+            })()}
           </aside>
         )}
       </div>
@@ -569,26 +560,24 @@ export function ReaderApp({
   // ---------- Section checkpoint ----------
   function renderCheckpoint() {
     const sec = index.sections[checkpointSec];
-    const st = masteryState(sec.orderedItemIds, progressMap);
     const nextSec = index.nextSectionId(checkpointSec);
+    const secRev = reviseIds(sec.orderedItemIds, progressMap);
     return (
       <div style={{ ...pad, textAlign: "center" }} className="rl-pad rl-pad--reader">
         <TopBar C={C} left="Section end" />
-        <div style={{ width: 84, height: 84, borderRadius: "50%", background: "rgba(79,216,196,.16)", display: "grid", placeItems: "center", margin: "40px auto 16px", color: C.ok, fontSize: 34 }}>✓</div>
-        <p style={{ ...kicker(C), textAlign: "center" }}>SECTION COMPLETE</p>
-        <h1 style={{ ...h1(C), fontSize: 30 }}>You've finished {sec.sectionId} {sec.title}</h1>
-        <div style={{ display: "flex", justifyContent: "center", gap: 40, margin: "22px 0" }}>
-          <Stat C={C} n={session.count} label="QUESTIONS" />
-          <Stat C={C} n={session.correct} label="CORRECT" />
-          <Stat C={C} n={session.count ? Math.round((session.correct / session.count) * 100) + "%" : "—"} label="THIS SESSION" />
-        </div>
-        <p style={{ ...sub(C), textAlign: "center" }}>{sec.sectionId} is now <strong style={{ color: statusColor(C, st) }}>{st}</strong>.</p>
+        <div style={{ width: 64, height: 64, borderRadius: "50%", background: `${C.line}33`, display: "grid", placeItems: "center", margin: "40px auto 14px", color: C.mist, fontSize: 26 }}>✓</div>
+        <h1 style={{ ...h1(C), fontSize: 26 }}>End of {sec.sectionId} {sec.title}</h1>
+        {secRev.length > 0 && (
+          <p style={{ ...sub(C), textAlign: "center" }}>{secRev.length} question{secRev.length > 1 ? "s" : ""} in this section to revise.</p>
+        )}
         <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+          {secRev.length > 0 && (
+            <button style={{ ...primaryBtn(C), background: C.coral, color: "#fff" }} onClick={() => startRevise(secRev, `${sec.sectionId} to revise`)}>Revise these {secRev.length} →</button>
+          )}
           {nextSec
             ? <button style={primaryBtn(C)} onClick={() => continueSection(nextSec)}>Continue to {nextSec} {index.sections[nextSec].title} ›</button>
-            : <button style={primaryBtn(C)} onClick={() => setView("summary")}>Finish ›</button>}
-          <button style={ghostBtn(C)} onClick={() => setView("summary")}>Stop for now</button>
-          <button style={ghostBtn(C)} onClick={() => startBrowse(sec.orderedItemIds, `${sec.sectionId} ${sec.title}`)}>Review this section</button>
+            : null}
+          <button style={ghostBtn(C)} onClick={() => setView("library")}>Back to home</button>
         </div>
       </div>
     );
@@ -1087,18 +1076,6 @@ export function ReaderApp({
       </div>
     );
   }
-  function celebrateOverlay() {
-    if (!celebrate) return null;
-    const sec = index.sections[celebrate];
-    return (
-      <div style={overlay(C)} onClick={() => setCelebrate(null)}>
-        <div style={{ fontSize: 44 }}>🎉</div>
-        <h2 style={{ fontFamily: FONT_DISPLAY, fontSize: 26, color: C.ok, margin: "8px 0" }}>Mastered!</h2>
-        <p style={{ fontFamily: FONT_UI, color: C.foam, maxWidth: 340, textAlign: "center" }}>{sec.sectionId} {sec.title} just crossed into mastered.</p>
-        <button style={primaryBtn(C)} onClick={() => setCelebrate(null)}>Nice</button>
-      </div>
-    );
-  }
 }
 
 /* ------------------------------ presentational bits ------------------------ */
@@ -1132,12 +1109,6 @@ const linkBtn = (C) => ({ background: "none", border: "none", color: C.accent, f
 const tierPill = (C, tier) => ({ display: "inline-block", padding: "6px 12px", borderRadius: 999, background: tier === 3 ? "rgba(255,122,92,.16)" : "rgba(15,120,110,.9)", color: tier === 3 ? C.coral : "#eafffb", fontFamily: FONT_UI, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" });
 const refChip = (C) => ({ flex: "0 0 auto", padding: "3px 9px", borderRadius: 999, background: "rgba(79,216,196,.12)", color: C.accent, fontFamily: FONT_UI, fontSize: 11, fontWeight: 700, letterSpacing: ".03em", whiteSpace: "nowrap" });
 const overlay = (C) => ({ position: "fixed", inset: 0, background: "rgba(4,20,31,.94)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, padding: 30, zIndex: 50 });
-function statusColor(C, st) { return st === "mastered" ? C.ok : st === "improving" ? C.gold : st === "weak" ? C.coral : C.line; }
-function StatusPill({ C, state }) {
-  const map = { here: ["YOU'RE HERE", C.glow, C.abyss, C.glow], mastered: ["MASTERED", "transparent", C.ok, C.ok], improving: ["IMPROVING", "transparent", C.gold, C.gold], weak: ["WEAK", "transparent", C.coral, C.coral], unstarted: ["NOT STARTED", "transparent", C.line, C.line] };
-  const [label, bg, fg, bd] = map[state] || map.unstarted;
-  return <span style={{ padding: "5px 10px", borderRadius: 999, background: bg, color: fg, border: `1px solid ${bd}`, fontFamily: FONT_UI, fontSize: 10.5, fontWeight: 700, letterSpacing: ".04em", whiteSpace: "nowrap" }}>{label}</span>;
-}
 function Stat({ C, n, label }) {
   return <div style={{ textAlign: "center" }}><div style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, color: C.foam }}>{n}</div><div style={{ fontFamily: FONT_UI, fontSize: 11, letterSpacing: ".08em", color: C.mist }}>{label}</div></div>;
 }
