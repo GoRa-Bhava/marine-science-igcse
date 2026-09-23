@@ -298,9 +298,9 @@ export function ReaderApp({
       <aside className="rl-sidebar">
         <div className="rl-brand">Marine Science · IGCSE 0697</div>
         <nav className="rl-nav" aria-label="Primary">
-          {nav("read", "📖 Read a unit", resume, view === "reader" && mode === "read")}
+          {nav("read", "📖 Revise a unit", resume, view === "reader" && mode === "read")}
           {nav("smart", "🎲 Smart practice", startSmart, view === "reader" && mode === "smart")}
-          {nav("browse", "👁 Browse", browseFromBookmark, view === "browse")}
+          {nav("browse", "👁 Read", browseFromBookmark, view === "browse")}
           <div className="rl-nav-group">Explore</div>
           {EXPLORE_ENTRIES.map((e) => nav(e.key, `${e.icon} ${e.title.split(" · ")[0]}`, () => setView(e.view), view === e.view))}
           {nav("collection", "🐚 Ocean Discoveries", () => setView("collection"), view === "collection")}
@@ -314,7 +314,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Reading", browse: "Browse", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section complete", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Smart practice" : "Revision", browse: "Read", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section complete", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -349,7 +349,7 @@ export function ReaderApp({
         <h1 style={h1(C)}>Your revision</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Pick up where you left off, or choose anywhere.</p>
 
-        {bmSec && (
+        {bmSec ? (
           <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
             <p style={kicker(C)}>RESUME</p>
             <div style={{ fontFamily: FONT_DISPLAY, fontSize: 24, fontWeight: 600, color: C.foam, margin: "4px 0 8px" }}>
@@ -358,14 +358,27 @@ export function ReaderApp({
             <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 15, marginBottom: 14 }}>
               {bmSec.sectionId} {bmSec.title} — question {(bookmark.indexInSection || 0) + 1} of {bmSec.total}
             </div>
-            <button style={primaryBtn(C)} onClick={resume}>Continue reading ›</button>
+            <button style={primaryBtn(C)} onClick={resume}>Continue revising ›</button>
           </div>
-        )}
+        ) : (() => {
+          const firstSec = index.sections[index.sectionIds[0]];
+          return (
+            <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
+              <p style={kicker(C)}>START</p>
+              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 24, fontWeight: 600, color: C.foam, margin: "4px 0 8px" }}>
+                Unit {firstSec.unitId} · {index.units.find((u) => u.unitId === firstSec.unitId)?.title}
+              </div>
+              <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 15, marginBottom: 14 }}>
+                {firstSec.sectionId} {firstSec.title}
+              </div>
+              <button style={primaryBtn(C)} onClick={resume}>Revise ›</button>
+            </div>
+          );
+        })()}
 
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-          <button style={entryBtn(C)} onClick={resume}>📖 Read</button>
           <button style={entryBtn(C)} onClick={startSmart}>🎲 Smart practice</button>
-          <button style={entryBtn(C)} onClick={() => startBrowse(bookmark ? index.sections[bookmark.sectionId].orderedItemIds : index.sections[index.sectionIds[0]].orderedItemIds, bookmark ? `${bookmark.sectionId}` : `${index.sectionIds[0]}`)}>👁 Browse</button>
+          <button style={entryBtn(C)} onClick={() => startBrowse(bookmark ? index.sections[bookmark.sectionId].orderedItemIds : index.sections[index.sectionIds[0]].orderedItemIds, bookmark ? `${bookmark.sectionId}` : `${index.sectionIds[0]}`)}>👁 Read</button>
         </div>
 
         <div style={{ marginTop: 22 }}>
@@ -449,7 +462,7 @@ export function ReaderApp({
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
-        <TopBar C={C} left={mode === "smart" ? "Smart practice" : `Reading · Unit ${loc?.unitId}`} />
+        <TopBar C={C} left={mode === "smart" ? "Smart practice" : `Revision · Unit ${loc?.unitId}`} />
         <p style={kicker(C)}>{mode === "smart" ? "SMART PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
@@ -563,11 +576,11 @@ export function ReaderApp({
   function renderBrowse() {
     const id = browse.ids[browse.pos];
     const it = id ? itemById[id] : null;
-    if (!it) return <div style={pad} className="rl-pad"><TopBar C={C} left="Browse" /><p style={sub(C)}>Nothing to browse.</p><button style={ghostBtn(C)} onClick={() => setView("library")}>‹ Library</button></div>;
+    if (!it) return <div style={pad} className="rl-pad"><TopBar C={C} left="Read" /><p style={sub(C)}>Nothing to read.</p><button style={ghostBtn(C)} onClick={() => setView("library")}>‹ Library</button></div>;
     return (
       <div style={pad} className="rl-pad">
-        <TopBar C={C} left="Browse" />
-        <p style={kicker(C)}>👁 BROWSE · READ-ONLY</p>
+        <TopBar C={C} left="Read" />
+        <p style={kicker(C)}>👁 READ-ONLY</p>
         <p style={{ ...sub(C), marginTop: 2 }}>Question and answer together, nothing to attempt — just to jog the memory.</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "10px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
