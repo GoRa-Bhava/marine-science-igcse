@@ -6,7 +6,28 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'Public Sans',sans-serif}main{max-width:1160px;margin:auto;padding:30px 24px 45px}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600}h1{font-size:clamp(36px,5.5vw,64px);letter-spacing:-.04em;line-height:1.1;margin:20px 0 12px}h2{font-size:29px;line-height:1.2}h3{font-size:22px}.eyebrow,.mono{font:500 12px/1.6 'IBM Plex Mono',monospace}.eyebrow{text-transform:uppercase;letter-spacing:.04em;color:var(--deep)}.top{display:flex;justify-content:space-between;gap:15px;align-items:start}.intro{color:var(--soft);margin-bottom:24px}button{font:600 15px/1.4 'Public Sans',sans-serif;padding:12px 16px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);cursor:pointer}button:hover{border-color:var(--deep)}:focus-visible{outline:3px solid var(--coral);outline-offset:4px}.theme{font-size:12px;white-space:nowrap;padding:8px 11px}.card{border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}.hero{max-width:960px;margin:auto}.scene-head{padding:20px 24px 10px;display:flex;justify-content:space-between;align-items:center;gap:14px}.state-name{color:var(--deep);font-weight:700}.scene-head .mono{color:var(--soft)}.directions{display:flex;justify-content:space-between;gap:16px;padding:0 24px 7px}.directions p{font-size:15px;line-height:1.4}.directions p:last-child{text-align:right}.directions strong{display:block;color:var(--deep);font:500 12px/1.6 'IBM Plex Mono',monospace;text-transform:uppercase}.scene{display:block;width:100%;max-height:570px;background:var(--panel2)}.scene text{font-family:'Public Sans',sans-serif;font-size:26px;font-weight:600;fill:var(--ink)}.scene .move{transition:transform .65s ease-in-out,opacity .65s ease-in-out}.scene .fade{transition:opacity .65s ease-in-out}.toggle-wrap{padding:16px 24px 20px;border-top:1px solid var(--line)}.toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-radius:13px;background:var(--panel2);padding:5px}.toggle button{border-color:transparent;background:transparent}.toggle #normal[aria-pressed=true]{background:var(--deep);color:var(--panel)}.toggle #elnino[aria-pressed=true]{background:var(--coral);color:#0d2a37}.signals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.signal{border-left:3px solid var(--line);padding-left:10px;font-size:14px}.signal span{display:block;font-size:12px;color:var(--soft);margin-bottom:3px}.signal b{font-weight:600}.signals .accent{border-color:var(--teal)}.hero[data-state=elnino] .signals .accent{border-color:var(--coral)}.below{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-top:22px}.reading,.check{padding:25px}.reading h2{margin:8px 0 14px}.reading>p{color:var(--soft)}.regions{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}.regions section{border-top:1px solid var(--line);padding-top:16px}.regions h3{font:600 14px/1.5 'Public Sans',sans-serif;margin-bottom:8px;color:var(--deep)}.regions p{font-size:15px;color:var(--soft)}.trap{background:var(--panel2);border-left:3px solid var(--coral);padding:15px 17px;margin-top:22px;border-radius:0 10px 10px 0;font-size:14px}.trap strong{color:var(--warning)}.check h2{font-size:25px;margin:9px 0 19px}.options{display:grid;gap:10px}.options button{text-align:left}.options button[aria-pressed=true]{border:2px solid var(--warning)}.options button.correct{border-color:var(--deep)}.feedback{font-size:14px;color:var(--soft);margin-top:15px}.note{font-size:12px;color:var(--soft);margin-top:18px}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 @media(max-width:760px){main{padding:20px 14px 30px}.eyebrow{font-size:11px}.intro{font-size:15px}.scene-head{padding:15px 15px 10px;align-items:start}.scene-head .mono{font-size:10px;max-width:150px;text-align:right}.directions{padding:0 15px 10px}.directions p{font-size:13px}.directions strong{font-size:11px}.toggle-wrap{padding:12px 13px 16px}.signals{grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}.signal{font-size:13px}.signal span{font-size:11px}.below{grid-template-columns:1fr}.reading,.check{padding:21px}.regions{grid-template-columns:1fr;gap:16px}.theme{padding:8px}.scene text{font-size:28px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
-#theme{display:none}
+
+/* --- gated self-check --- */
+:root{--gate-accent:#6d4ba0;--gate-accent-deep:#503877;}
+.gate-btn{display:flex;width:100%;justify-content:center;align-items:center;gap:9px;margin-top:16px;
+ font-family:inherit;font-weight:700;font-size:16px;color:#fff;background:var(--gate-accent);border:none;
+ border-radius:14px;padding:15px 20px;cursor:pointer;box-shadow:0 2px 0 var(--gate-accent-deep)}
+.gate-btn:hover{filter:brightness(1.07)} .gate-btn:active{transform:translateY(1px)}
+.gate-btn[hidden]{display:none!important}
+.gate-overlay{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:18px;
+ background:rgba(4,14,20,.55);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);animation:gateFade .18s ease}
+.gate-overlay[hidden]{display:none!important}
+@keyframes gateFade{from{opacity:0}to{opacity:1}}
+.gate-modal{width:100%;max-width:460px;max-height:88vh;overflow:auto;background:var(--panel);color:var(--ink);
+ border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.32);
+ -webkit-overflow-scrolling:touch}
+.gate-modal .check,.gate-modal .quiz{border:none!important;background:none!important;padding:0!important;
+ margin:0!important;box-shadow:none!important;max-width:none!important}
+.gate-close{margin-top:16px;width:100%;font-family:inherit;font-weight:700;font-size:14px;color:#fff;
+ background:var(--gate-accent);border:none;border-radius:12px;padding:12px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.gate-overlay{animation:none}}
+
+#theme{display:none!important}
 </style></head><body><main>
 <header><div class="top"><p class="eyebrow">Marine Science IGCSE · 2.6 Upwelling &amp; El Niño</p><button class="theme" id="theme" aria-label="Change colour theme">Theme: system</button></div><h1>Normal year vs El Niño</h1><p class="intro">Change the winds. Follow the warm water, the rain and the fish.</p></header>
 <section class="card hero" id="hero" data-state="normal" aria-label="Pacific cross-section comparison"><div class="scene-head"><span class="state-name" id="state-name">Normal year</span><span class="mono">Pacific cross-section · not to scale</span></div><div class="directions"><p><strong>West</strong>Australia / Asia</p><p><strong>East</strong>South America / Peru</p></div>
@@ -29,7 +50,7 @@
 <div class="toggle-wrap"><div class="toggle" role="group" aria-label="Choose Pacific conditions"><button id="normal" aria-pressed="true">Normal year</button><button id="elnino" aria-pressed="false">El Niño</button></div><div class="signals"><div class="signal accent"><span>TRADE WINDS</span><b id="wind-summary">Strong · east → west</b></div><div class="signal accent"><span>WARM WATER &amp; RAIN</span><b id="rain-summary">Concentrated west</b></div><div class="signal accent"><span>EASTERN UPWELLING</span><b id="up-summary">Strong ↑</b></div><div class="signal accent"><span>EASTERN FISH CATCH</span><b id="catch-summary">High</b></div></div></div></section>
 <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" id="status"></p>
 <div class="below"><article class="card reading"><p class="eyebrow">Follow the chain</p><h2 id="reading-title">Normal year</h2><p id="summary"></p><div class="regions"><section><h3>WEST · Australia &amp; Asia</h3><p id="west"></p></section><section><h3>EAST · South America / eastern Pacific</h3><p id="east"></p></section></div><div class="trap"><strong>Common traps</strong><br>El Niño is a <b>Pacific</b> event, not Atlantic; the trade winds <b>weaken or reverse</b> (they don’t strengthen); and eastern-Pacific upwelling <b>falls</b> (it doesn’t rise).</div></article>
-<section class="card check"><p class="eyebrow">Check your understanding</p><h2>In an El Niño year, upwelling off the coast of South America…</h2><div class="options"><button id="reduced" aria-pressed="false">is reduced</button><button id="increases" aria-pressed="false">increases</button><button id="same" aria-pressed="false">stays the same</button></div><p id="feedback" class="feedback" role="status">Choose an answer for feedback.</p></section></div>
+<button class="gate-btn" id="gateBtn" type="button" aria-haspopup="dialog"><span aria-hidden="true">🔒</span> Check your understanding</button><div class="gate-overlay" id="gateOverlay" hidden><div class="gate-modal" role="dialog" aria-modal="true" aria-label="Check your understanding" tabindex="-1"><section class="card check"><p class="eyebrow">Check your understanding</p><h2>In an El Niño year, upwelling off the coast of South America…</h2><div class="options"><button id="reduced" aria-pressed="false">is reduced</button><button id="increases" aria-pressed="false">increases</button><button id="same" aria-pressed="false">stays the same</button></div><p id="feedback" class="feedback" role="status">Choose an answer for feedback.</p></section><button class="gate-close" id="gateClose" type="button">Back to the diagram</button></div></div></div>
 <p class="note">A simplified equatorial Pacific slice. Arrows show direction and relative strength, not measured speeds. Explore freely — nothing is scored or saved.</p><noscript><p>Enable JavaScript to switch states. In El Niño, trade winds weaken or reverse, warm water shifts east, eastern upwelling falls and rain shifts east.</p></noscript></main>
 <script>
 const $=id=>document.getElementById(id);const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');let progress=0,animation=null,current='normal';
@@ -40,4 +61,25 @@ function setState(key,initial=false){current=key;const n=key==='elnino',s=states
 $('normal').onclick=()=>setState('normal');$('elnino').onclick=()=>setState('elnino');reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches){if(animation!==null)cancelAnimationFrame(animation);animation=null;draw(current==='elnino'?1:0)}});
 function answer(id){for(const key of ['reduced','increases','same']){ $(key).setAttribute('aria-pressed',String(key===id));$(key).classList.toggle('correct',key===id&&id==='reduced')}const correct=id==='reduced';$('feedback').textContent=correct?'Correct. Trade winds weaken or reverse, warm surface water shifts east, and cold, nutrient-rich upwelling off South America is reduced.':id==='increases'?'Not quite — upwelling falls, not rises. Weaker or reversed trade winds let warm surface water shift east, reducing the cold, nutrient-rich water reaching the surface.':'Not quite — upwelling changes. It is reduced as the trade winds weaken or reverse and warm surface water shifts east.';$('feedback').style.color=correct?'var(--deep)':'var(--warning)'}for(const id of ['reduced','increases','same'])$(id).onclick=()=>answer(id);
 let theme=0;$('theme').onclick=()=>{theme=(theme+1)%3;const mode=['system','light','dark'][theme];if(mode==='system')delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=mode;$('theme').textContent='Theme: '+mode};setState('normal',true);
-</script></body></html>
+</script>
+<script>(function(){
+ var b=document.getElementById('gateBtn'),ov=document.getElementById('gateOverlay');
+ if(!b||!ov)return;var m=ov.querySelector('.gate-modal'),last=null;
+ function open(){last=document.activeElement;ov.hidden=false;document.body.style.overflow='hidden';
+  var f=m.querySelector('button:not([disabled])');(f||m).focus();document.addEventListener('keydown',onk);}
+ function close(){ov.hidden=true;document.body.style.overflow='';document.removeEventListener('keydown',onk);
+  if(last&&last.focus)last.focus();}
+ function onk(e){if(e.key==='Escape'){e.preventDefault();close();return;}if(e.key!=='Tab')return;
+  var f=[].slice.call(m.querySelectorAll('button:not([disabled])')).filter(function(el){return el.offsetParent!==null;});
+  if(!f.length)return;var a=f[0],z=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}
+  else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}
+ b.addEventListener('click',open);
+ ov.addEventListener('click',function(e){if(e.target===ov)close();});
+ var c=document.getElementById('gateClose');if(c)c.addEventListener('click',close);
+ var src=b.getAttribute('data-src');
+ if(src){var el=document.getElementById(src);
+  if(el){var sync=function(){b.hidden=el.hasAttribute('hidden');if(b.hidden&&!ov.hidden)close();};
+   new MutationObserver(sync).observe(el,{attributes:true,attributeFilter:['hidden']});sync();}}
+})();</script>
+</body></html>
