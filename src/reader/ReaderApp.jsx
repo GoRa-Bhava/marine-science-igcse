@@ -333,7 +333,13 @@ export function ReaderApp({
   function renderLibrary() {
     const started = index.units.map((u) => ({ u, r: unitReadiness(u.sectionIds.map((x) => index.sections[x].orderedItemIds), progressMap) }));
     const attempted = started.filter((x) => index.units.find((y) => y.unitId === x.u.unitId).sectionIds.some((s) => (index.sections[s].orderedItemIds).some((id) => progressMap[id])));
-    const weakest = (attempted.length ? attempted : started).slice().sort((a, b) => a.r - b.r)[0];
+    // "Weakest" is only meaningful once ≥2 topics have been attempted to compare.
+    // 1 attempted → a progress nudge (never "weakest"); 0 → no focus card at all.
+    const attemptedSorted = attempted.slice().sort((a, b) => a.r - b.r);
+    const focus =
+      attempted.length >= 2 ? { ...attemptedSorted[0], label: "your weakest topic" } :
+      attempted.length === 1 ? { ...attempted[0], label: "keep building your first topic" } :
+      null;
     const dte = daysToExam(settings.examDate);
     const bmSec = bookmark && index.sections[bookmark.sectionId];
     return (
@@ -379,12 +385,12 @@ export function ReaderApp({
           </div>
         </div>
 
-        {weakest && (
+        {focus && (
           <div style={{ ...card(C), display: "flex", gap: 16, alignItems: "center", marginTop: 22 }}>
-            <Donut C={C} pct={Math.round(weakest.r * 100)} />
+            <Donut C={C} pct={Math.round(focus.r * 100)} />
             <div style={{ fontFamily: FONT_UI, flex: 1 }}>
-              <div style={{ color: C.foam, fontWeight: 700, fontSize: 16 }}>{index.units.find((u) => u.unitId === weakest.u.unitId)?.title} — {Math.round(weakest.r * 100)}% ready</div>
-              <div style={{ color: C.mist, fontSize: 13, marginTop: 2 }}>{dte != null ? `${dte} days to exam · ` : ""}your weakest topic</div>
+              <div style={{ color: C.foam, fontWeight: 700, fontSize: 16 }}>{index.units.find((u) => u.unitId === focus.u.unitId)?.title} — {Math.round(focus.r * 100)}% ready</div>
+              <div style={{ color: C.mist, fontSize: 13, marginTop: 2 }}>{dte != null ? `${dte} days to exam · ` : ""}{focus.label}</div>
             </div>
           </div>
         )}
