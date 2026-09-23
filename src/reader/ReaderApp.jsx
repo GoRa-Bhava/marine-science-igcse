@@ -101,6 +101,10 @@ export function ReaderApp({
   const [notesUnit, setNotesUnit] = useState(null); // null = unit picker; 1..6 = a unit
   const [notesSec, setNotesSec] = useState(null);   // section id string within the unit
 
+  // Home unit cards expand to show their section list (ephemeral UI state, not saved).
+  const [expandedUnits, setExpandedUnits] = useState({}); // { [unitId]: true }
+  const toggleUnit = (uid) => setExpandedUnits((m) => ({ ...m, [uid]: !m[uid] }));
+
   // Settings: back up / restore / reset (against this device's Reader store).
   const [backupMsg, setBackupMsg] = useState("");
   const [restoreText, setRestoreText] = useState("");
@@ -427,8 +431,8 @@ export function ReaderApp({
           <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
         </button>
 
-        {/* Unit grid: one compact card per unit — coverage ring + % covered, and a
-            revise-this-unit link. Tap the card to start reading the unit. */}
+        {/* Unit grid: compact card per unit (ring + % covered + revise link). Tap a
+            card to expand its section list; tap a section to study it. */}
         <div className="rl-unit-grid">
         {index.units.map((u) => {
           const ids = unitIdsOf(u);
@@ -436,9 +440,11 @@ export function ReaderApp({
           const rev = reviseIds(ids, progressMap);
           const bm = bookmarks.byUnit[u.unitId];   // this unit's own resume point
           const here = bm != null;
+          const open = !!expandedUnits[u.unitId];
           return (
             <div key={u.unitId} className="rl-unit-card" style={{ ...card(C), marginTop: 14, border: here ? `1.5px solid ${C.glow}` : `1px solid ${C.line}55` }}>
-              <button onClick={() => resume(u.unitId)}
+              {/* Header — tap toggles the section list. */}
+              <button onClick={() => toggleUnit(u.unitId)} aria-expanded={open}
                 style={{ display: "flex", gap: 14, alignItems: "center", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
                 <Donut C={C} pct={cov.pct} size={52} color={cov.pct === 100 ? C.ok : C.glow} />
                 <span style={{ flex: 1, minWidth: 0 }}>
@@ -446,11 +452,8 @@ export function ReaderApp({
                   <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, marginTop: 2 }}>
                     {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${cov.total} questions`}
                   </span>
-                  {bm && (
-                    <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 2 }}>Resume {bm.sectionId} · Q{(bm.indexInSection || 0) + 1}</span>
-                  )}
                 </span>
-                <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+                <span aria-hidden="true" style={{ color: C.accent, fontSize: 18, transform: open ? "rotate(90deg)" : "none", transition: "transform .15s" }}>›</span>
               </button>
               {(rev.length > 0 || cov.attempted > 0) && (
                 <div style={{ marginTop: 10 }}>
@@ -458,6 +461,37 @@ export function ReaderApp({
                     ? <button onClick={() => startRevise(rev, `Unit ${u.unitId} to revise`)}
                         style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.coral, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>● Revise {rev.length} →</button>
                     : <span style={{ color: C.ok, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>✓ all clear</span>}
+                </div>
+              )}
+              {/* Expanded panel — resume row (if any) + one row per section. */}
+              {open && (
+                <div style={{ marginTop: 12, borderTop: `1px solid ${C.line}55`, paddingTop: 6 }}>
+                  {bm && (
+                    <button onClick={() => resume(u.unitId)}
+                      style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", background: "transparent", border: "none", borderRadius: 10, padding: "10px 8px", cursor: "pointer" }}>
+                      <span style={{ color: C.glow, fontSize: 15 }}>▸</span>
+                      <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, color: C.foam }}>Continue · {bm.sectionId} Q{(bm.indexInSection || 0) + 1}</span>
+                      <span aria-hidden="true" style={{ color: C.accent, fontSize: 18 }}>›</span>
+                    </button>
+                  )}
+                  {u.sectionIds.map((sid) => {
+                    const sec = index.sections[sid];
+                    const scov = coverage(sec.orderedItemIds, progressMap);
+                    const srev = reviseIds(sec.orderedItemIds, progressMap).length;
+                    return (
+                      <button key={sid} onClick={() => startRead(sid, 0)}
+                        style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left", background: "transparent", border: "none", borderRadius: 10, padding: "10px 8px", cursor: "pointer" }}>
+                        <span style={{ flex: 1, minWidth: 0, fontFamily: FONT_UI, fontSize: 14.5, color: C.foam }}>
+                          <b style={{ fontWeight: 700 }}>{sid}</b> {sec.title}
+                        </span>
+                        {srev > 0 && <span aria-label={`${srev} to revise`} title={`${srev} to revise`} style={{ color: C.coral, fontSize: 13, fontWeight: 700 }}>● {srev}</span>}
+                        <span style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, minWidth: 44, textAlign: "right" }}>
+                          {scov.attempted > 0 ? `${scov.attempted}/${scov.total}` : `0/${scov.total}`}
+                        </span>
+                        <span aria-hidden="true" style={{ color: C.accent, fontSize: 18 }}>›</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
