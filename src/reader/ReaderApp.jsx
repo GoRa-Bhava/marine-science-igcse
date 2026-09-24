@@ -920,6 +920,25 @@ export function ReaderApp({
           </div>
         ) : null}
 
+        {/* Examiner tip (all sections) + optional worked example (calculation sections).
+            Authored HTML (<b> only), same as note.body. Tinted callouts via 8-digit
+            hex alpha on the theme tokens (themes automatically; no color-mix, which the
+            APK WebView never exercises). Coral = tip, teal = worked example. */}
+        {active.tip && (
+          <aside style={{ marginTop: 16, padding: "12px 14px", borderRadius: 12, background: `${C.coral}1f`, border: `1px solid ${C.coral}66` }}>
+            <p style={{ ...kicker(C), color: C.coral, margin: "0 0 4px" }}>◎ EXAMINER TIP</p>
+            <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}
+                 dangerouslySetInnerHTML={{ __html: active.tip }} />
+          </aside>
+        )}
+        {active.example && (
+          <aside style={{ marginTop: 10, padding: "12px 14px", borderRadius: 12, background: `${C.glow}1a`, border: `1px solid ${C.glow}55` }}>
+            <p style={{ ...kicker(C), color: C.accent, margin: "0 0 4px" }}>✎ WORKED EXAMPLE</p>
+            <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}
+                 dangerouslySetInnerHTML={{ __html: active.example }} />
+          </aside>
+        )}
+
         {/* revise nudge — the one explicit hop into the practice loop */}
         {hasPractice && (
           <button style={{ ...primaryBtn(C), marginTop: 18 }} onClick={() => startRead(active.id, 0)}>Revise {active.id} ›</button>

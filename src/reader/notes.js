@@ -1,7 +1,9 @@
 // Marine Science IGCSE 0697 — Read section: syllabus notes (Units 1–6).
 // Authored from the per-unit Curriculum Knowledge Models, plain English at IGCSE level,
 // every note tagged to its syllabus outcome. STATUS: human_review — vet before going live.
-// Shape: NOTES[unit] = { title, sections:[ { id, title, intro, notes:[{h, ref, body, linked?}], terms:[[term,def],...] } ] }
+// Shape: NOTES[unit] = { title, sections:[ { id, title, intro, tip?, example?, notes:[{h, ref, body, linked?}], terms:[[term,def],...] } ] }
+//   tip     = a short EXAMINER TIP (mark-scheme/technique nugget) for the section — HTML with <b>; render as a callout.
+//   example = an optional WORKED EXAMPLE (calculation sections only) — HTML with <b>; render as a callout.
 export const NOTES = {
  "1": {
   "title": "Earth Processes",
@@ -10,6 +12,7 @@ export const NOTES = {
     "id": "1.1",
     "title": "Earth in space and structure",
     "intro": "Where the Earth and Moon sit in space, what holds them there, and what the Earth is made of inside.",
+    "tip": "Get the layer order right from the centre out — inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. The inner core is solid despite being the hottest, because the pressure squeezes it solid.",
     "notes": [
      {
       "h": "Earth, Moon and the Sun",
@@ -64,6 +67,7 @@ export const NOTES = {
     "id": "1.2",
     "title": "Plate tectonics",
     "intro": "The crust is broken into moving plates. Where they meet, we get earthquakes, volcanoes and tsunamis.",
+    "tip": "The cause of plate movement you need is <b>convection currents in the mantle</b>. Don't write 'slab pull' or 'ridge push' — they're not required for 0697.",
     "notes": [
      {
       "h": "The crust is made of plates",
@@ -129,6 +133,7 @@ export const NOTES = {
     "id": "1.3",
     "title": "Oceans and the sea floor",
     "intro": "The world's oceans, how they connect, how big and deep they are, and the shape of the sea floor.",
+    "tip": "Name sea-floor features precisely — continental shelf, continental slope, abyssal plain, trench, mid-ocean ridge — and remember the shallow, sunlit continental shelf is the most productive zone.",
     "notes": [
      {
       "h": "The five oceans",
@@ -189,6 +194,8 @@ export const NOTES = {
     "id": "1.4",
     "title": "Tides and currents",
     "intro": "Why the sea rises and falls, and how ocean water keeps moving around the planet.",
+    "tip": "Tidal amplitude = (high − low) ÷ 2 — always halve. The formula is given, so the marks are for using it correctly: subtract, then ÷ 2, with the right units.",
+    "example": "High water 4.8 m, low water 1.0 m → range = 3.8 m → amplitude = 3.8 ÷ 2 = <b>1.9 m</b>.",
     "notes": [
      {
       "h": "High and low tides",
@@ -259,6 +266,7 @@ export const NOTES = {
     "id": "2.1",
     "title": "The water cycle",
     "intro": "How water moves between the sea, the air and the land, and the particle ideas that explain the changes it goes through.",
+    "tip": "For melting ice and sea level, only ice resting on <b>land</b> raises the sea level when it melts; floating sea ice does not, because it already displaces its own weight.",
     "notes": [
      {
       "h": "Solids, liquids and gases",
@@ -332,6 +340,7 @@ export const NOTES = {
     "id": "2.2",
     "title": "pH and salinity",
     "intro": "What sea water is made of, how acidic or alkaline it is, and why some seas are saltier than others.",
+    "tip": "Salinity is in parts per thousand (ppt), not percent, and the open ocean is about 35 ppt. For the named seas always give the <b>reason</b> (evaporation, run-off), never just 'hot' or 'cold'.",
     "notes": [
      {
       "h": "Element, compound, mixture",
@@ -419,6 +428,7 @@ export const NOTES = {
     "id": "2.3",
     "title": "Dissolved gases",
     "intro": "How oxygen and carbon dioxide get into sea water, how much of each there is, and why warming changes it.",
+    "tip": "Watch the direction trap: gases dissolve <b>less</b> as water warms — the opposite of solids. So warm sea water holds less oxygen for organisms.",
     "notes": [
      {
       "h": "Where dissolved gases come from",
@@ -460,6 +470,8 @@ export const NOTES = {
     "id": "2.4",
     "title": "Density",
     "intro": "What density means, how to calculate it, and how differences in density make sea water move and form layers.",
+    "tip": "You must recall density = mass ÷ volume (it isn't given). Colder water and saltier water are both denser.",
+    "example": "A 1000 cm³ sample of sea water has a mass of 1030 g → density = 1030 ÷ 1000 = <b>1.03 g/cm³</b> (fresh water is 1.00).",
     "notes": [
      {
       "h": "Calculating density",
@@ -511,6 +523,7 @@ export const NOTES = {
     "id": "2.5",
     "title": "Effects of increasing depth",
     "intro": "The conditions in the sea that change as you go deeper, and why each one changes.",
+    "tip": "Learn the five conditions that change with depth — light, pressure, temperature, salinity, dissolved oxygen. Light doesn't stop suddenly; it fades, and is gone by about 1000 m.",
     "notes": [
      {
       "h": "What changes with depth",
@@ -566,6 +579,7 @@ export const NOTES = {
     "id": "2.6",
     "title": "Upwelling",
     "intro": "How wind brings deep nutrient-rich water to the surface, and how the El Niño event disrupts it in the Pacific.",
+    "tip": "For upwelling, link the whole chain: deep nutrient-rich water rises → more producers → more fish. If upwelling is reduced, fish catches fall.",
     "notes": [
      {
       "h": "Wind-driven upwelling",
@@ -611,6 +625,8 @@ export const NOTES = {
     "id": "3.1",
     "title": "Cell structure and function",
     "intro": "What the parts of plant, animal and bacterial cells look like, and the job each part does.",
+    "tip": "Plant cells have a wall <b>in addition to</b> a membrane, not instead of it. Magnification = image size ÷ actual size — convert both to the same units first.",
+    "example": "An image is 30 mm across; the real cell is 0.5 mm → magnification = 30 ÷ 0.5 = <b>×60</b> (convert to the same units first).",
     "notes": [
      {
       "h": "Animal and plant cells",
@@ -664,6 +680,7 @@ export const NOTES = {
     "id": "3.2",
     "title": "Reproduction",
     "intro": "The two ways organisms make new offspring, and how the offspring differ.",
+    "tip": "External fertilisation releases eggs and sperm into the water, so huge numbers of gametes are needed because many are lost. Always link the fact to the reason.",
     "notes": [
      {
       "h": "Asexual reproduction",
@@ -695,6 +712,7 @@ export const NOTES = {
     "id": "3.3",
     "title": "Classification",
     "intro": "How scientists sort living things into groups and give each one a worldwide name.",
+    "tip": "Write the binomial name correctly: Genus with a capital, species lowercase (e.g. Homo sapiens). Classification runs kingdom → … → species.",
     "notes": [
      {
       "h": "Grouping by shared features",
@@ -748,6 +766,7 @@ export const NOTES = {
     "id": "3.4",
     "title": "The animal kingdom",
     "intro": "How vertebrates and invertebrates are sorted into groups, the outside parts of a fish, and the practical skills of drawing, comparing and using keys.",
+    "tip": "Sort invertebrates by a defining feature — body segments, jointed legs, radial symmetry — not by 'has a hard bit'. A crab is a crustacean because of jointed legs and an exoskeleton.",
     "notes": [
      {
       "h": "Sorting vertebrates into groups",
@@ -825,6 +844,7 @@ export const NOTES = {
     "id": "3.5",
     "title": "Plant and protoctist kingdoms",
     "intro": "The one true marine plant, and the protoctists: kelp, dinoflagellates and diatoms.",
+    "tip": "Kelp and other seaweeds are <b>protoctists</b>, not plants. Don't call algae 'plants' in an answer.",
     "notes": [
      {
       "h": "Seagrass, a true plant",
@@ -878,6 +898,7 @@ export const NOTES = {
     "id": "3.6",
     "title": "Animal life cycles",
     "intro": "How leatherback turtles and coral polyps reproduce and grow.",
+    "tip": "Planktonic larvae aid dispersal and reduce competition with the adults — state the benefit, not just the stage name.",
     "notes": [
      {
       "h": "The leatherback turtle life cycle",
@@ -913,6 +934,7 @@ export const NOTES = {
     "id": "3.7",
     "title": "Migration",
     "intro": "Why marine animals travel, the shapes their journeys take, and how they find their way.",
+    "tip": "Keep 'why' and 'how' apart: reasons to migrate (find food, breed in safe areas, avoid predators) versus the cues used (magnetic field, Sun and stars, smell).",
     "notes": [
      {
       "h": "What migration is and why",
@@ -972,6 +994,7 @@ export const NOTES = {
     "id": "4.1",
     "title": "Nutrients",
     "intro": "What nutrients are, how you test for them, what each type does, the key elements organisms need, and how nutrients are recycled in the sea.",
+    "tip": "The food-test colours cross-wire easily: iodine → blue-black (starch), heated Benedict's → brick-red (reducing sugar), biuret → purple (protein), ethanol emulsion → white (lipid). State BOTH the starting and the result colour.",
     "notes": [
      {
       "h": "What a nutrient is",
@@ -1046,6 +1069,7 @@ export const NOTES = {
     "id": "4.2",
     "title": "Respiration",
     "intro": "How every living cell releases energy from nutrients, why this differs from gas exchange, and how you can measure the energy in food.",
+    "tip": "All living cells respire all the time — including plants at night, which is why dissolved oxygen falls and CO₂ rises after dark. Respiration <b>releases</b> energy, it doesn't make it.",
     "notes": [
      {
       "h": "What respiration is",
@@ -1110,6 +1134,7 @@ export const NOTES = {
     "id": "4.3",
     "title": "Photosynthesis",
     "intro": "How producers make their own food using light, which marine organisms can do it, and why upwellings make some seas so productive.",
+    "tip": "Word equation: carbon dioxide + water → glucose + oxygen. Oxygen is the by-product (not starch), and because it needs light, photosynthesis only adds oxygen to the water in daylight.",
     "notes": [
      {
       "h": "What photosynthesis is",
@@ -1179,6 +1204,8 @@ export const NOTES = {
     "id": "4.4",
     "title": "Feeding relationships",
     "intro": "How energy moves from the Sun through producers and consumers, the words used to describe who eats what, why energy is lost along the way, and how pyramids show it.",
+    "tip": "Food-chain arrows point the way energy flows (prey → predator). Only about 10% passes to the next level, so give a reason for the loss — respiration, movement, not all of it eaten.",
+    "example": "Biomass at one level 5.000 kg, the next 0.052 kg → transfer = 0.052 ÷ 5.000 × 100 = <b>1.04%</b>.",
     "notes": [
      {
       "h": "The Sun and food chains",
@@ -1257,6 +1284,7 @@ export const NOTES = {
     "id": "5.1",
     "title": "Ecology terms, population growth, ecosystem types",
     "intro": "The basic words ecologists use, what makes a population grow or shrink, and the main kinds of marine ecosystem.",
+    "tip": "Use the exact term: population (one species), community (all the species), habitat (where they live). The population-growth factors you need are food, disease, competition and predation, always for a named organism.",
     "notes": [
      {
       "h": "Species, population, community",
@@ -1320,6 +1348,8 @@ export const NOTES = {
     "id": "5.2",
     "title": "Sampling and shore measurements",
     "intro": "Practical ways to count organisms, follow how they change across a shore, and measure the shape and sediment of the ground.",
+    "tip": "Quadrats are placed at <b>random</b> (for population size); transects use <b>set intervals</b> (for distribution). 'Random' means random numbers, not evenly spread by eye.",
+    "example": "Fresh sediment 100 g, dried to a constant 82 g → water lost 18 g → % water = 18 ÷ 100 × 100 = <b>18%</b>.",
     "notes": [
      {
       "h": "Random sampling with quadrats",
@@ -1383,6 +1413,7 @@ export const NOTES = {
     "id": "5.3",
     "title": "Open-ocean zones, plankton, adaptations",
     "intro": "How the open ocean is divided by depth, the drifting plankton, and how animals are suited to each zone.",
+    "tip": "Learn the zone depths — sunlight 0–200 m, twilight 200–1000 m, midnight below 1000 m — and don't use 'photic/aphotic' as the required terms.",
     "notes": [
      {
       "h": "Pelagic and benthic zones",
@@ -1461,6 +1492,7 @@ export const NOTES = {
     "id": "5.4",
     "title": "Rocky shores",
     "intro": "The zones of a rocky shore and how living and non-living factors decide where each organism can survive.",
+    "tip": "For rocky-shore zonation, link each adaptation to its stress: higher up the shore means longer exposure to air, so organisms need ways to avoid drying out.",
     "notes": [
      {
       "h": "Zones of a rocky shore",
@@ -1514,6 +1546,7 @@ export const NOTES = {
     "id": "5.5",
     "title": "Sandy and muddy shores",
     "intro": "How sandy and muddy shores differ, and how animals cope with a loose, low-oxygen ground.",
+    "tip": "On sandy and muddy shores most organisms burrow to escape drying out and predators. Muddy shores trap more organic food but hold less oxygen than sandy shores.",
     "notes": [
      {
       "h": "Zones of sandy and muddy shores",
@@ -1563,6 +1596,7 @@ export const NOTES = {
     "id": "5.6",
     "title": "Mangrove forests and estuaries",
     "intro": "How mangrove forests are set up, how estuary conditions swing with the tide, and the special features of mangrove life.",
+    "tip": "Match each mangrove feature to the problem it solves: salt-excreting/filtering roots (salt), aerial roots (low-oxygen mud), and support against shifting tides.",
     "notes": [
      {
       "h": "Structure of a mangrove forest",
@@ -1612,6 +1646,7 @@ export const NOTES = {
     "id": "5.7",
     "title": "Coral reefs",
     "intro": "What corals are, how they live with tiny algae, what controls where reefs grow, and why reefs are so rich in life.",
+    "tip": "Coral and zooxanthellae are <b>mutualistic</b> — both benefit. Bleaching is the loss of the algae when the water is too warm; say what each partner gives.",
     "notes": [
      {
       "h": "Corals are animals",
@@ -1690,6 +1725,7 @@ export const NOTES = {
     "id": "6.1",
     "title": "Human interactions with marine ecosystems",
     "intro": "Why the sea matters to people, how our activities damage it, and what it means for a species or a way of using the sea to be safe for the future.",
+    "tip": "When a question says 'evaluate' or 'discuss', give a benefit AND a drawback, then a judgement — don't argue only one side.",
     "notes": [
      {
       "h": "What the sea gives us",
@@ -1749,6 +1785,7 @@ export const NOTES = {
     "id": "6.2",
     "title": "Tourism",
     "intro": "How tourism brings money and jobs to coastal areas, the harm it can do, and the ways this harm can be reduced.",
+    "tip": "For reducing tourist impact, name the method (education / legislation / planning) AND its limitation (cost, relies on cooperation, needs enforcement).",
     "notes": [
      {
       "h": "Why tourism matters to people",
@@ -1813,6 +1850,7 @@ export const NOTES = {
     "id": "6.3",
     "title": "Fisheries",
     "intro": "How we catch fish, the aids that help boats navigate, and how fishing can be kept sustainable so stocks last.",
+    "tip": "Overfishing answers need the chain: fewer adults → less breeding → stock collapse. Then name a management method (quotas, net mesh size, no-take zones) and say how it helps.",
     "notes": [
      {
       "h": "Food and income from fish",
@@ -1882,6 +1920,7 @@ export const NOTES = {
     "id": "6.4",
     "title": "Aquaculture",
     "intro": "Farming marine species for food, how it takes pressure off wild stocks yet causes its own problems, and how it can even help endangered habitats.",
+    "tip": "Know open vs closed aquaculture: open = cages in the sea (waste, disease and escapes pass both ways); closed = tanks (isolated but costly). Give a benefit and an impact.",
     "notes": [
      {
       "h": "Why aquaculture matters",
@@ -1946,6 +1985,7 @@ export const NOTES = {
     "id": "6.5",
     "title": "Energy from the seas",
     "intro": "Oil from beneath the seabed, the pollution it can cause, and how energy from the sea can also be renewable.",
+    "tip": "For each energy source give a benefit and a drawback — 'renewable' does not mean 'no impact'.",
     "notes": [
      {
       "h": "Oil under the seabed",
@@ -2019,6 +2059,7 @@ export const NOTES = {
     "id": "6.6",
     "title": "Plastic pollution",
     "intro": "Why plastic lasts so long in the sea, the harm it does to animals, and how it gathers into giant patches.",
+    "tip": "Be specific about plastic harm: entanglement, blocked guts from ingestion, and microplastics passing up the food chain — not just 'it's bad'.",
     "notes": [
      {
       "h": "Plastic does not rot",
@@ -2073,6 +2114,7 @@ export const NOTES = {
     "id": "6.7",
     "title": "Eutrophication",
     "intro": "How fertilisers and sewage add nutrients to the sea, and why this can end up killing the animals that need oxygen.",
+    "tip": "Learn the eutrophication chain in order: extra nutrients → algal bloom → light blocked / algae die → decomposers use up the oxygen → animals suffocate. The marks are for the sequence.",
     "notes": [
      {
       "h": "Fertilisers raise crop yields",
@@ -2127,6 +2169,7 @@ export const NOTES = {
     "id": "6.8",
     "title": "Understanding climate change",
     "intro": "How adding greenhouse gases warms the planet, changes the sea water, raises sea level, and affects marine life.",
+    "tip": "Keep the two effects apart: more CO₂ → warming (greenhouse effect), and CO₂ dissolving → lower pH (ocean acidification). Warming bleaches coral; acidification weakens shells.",
     "notes": [
      {
       "h": "Climate has changed before",
@@ -2186,6 +2229,7 @@ export const NOTES = {
     "id": "6.9",
     "title": "Conservation",
     "intro": "Measuring how many species live in an area, and the projects that protect them.",
+    "tip": "Name a real strategy — marine protected areas / no-take zones, legislation, habitat restoration — and say how it works. 'Protect the animals' alone won't score.",
     "notes": [
      {
       "h": "Species richness",
