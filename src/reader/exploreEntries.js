@@ -30,6 +30,13 @@ export const EXPLORE_ENTRIES = [
     blurb: "Flip to learn · by unit",
     icon: "🎴",
   },
+  {
+    key: "practicals",
+    view: "practicals",
+    title: "Practicals",
+    blurb: "Learn and test the required lab procedures — starting with the food tests.",
+    icon: "🔬",
+  },
 ];
 
 // The Ocean Discoveries collection — a small entry by the readiness card.
