@@ -174,6 +174,81 @@ export function ReaderApp({
     setWasRight(false);
   }
 
+  // ---- device / browser BACK button → pop the app's own screen history ----
+  // The app navigates with React state, not routes; this auto-captures a screen
+  // history so hardware back (Android), browser back and iOS edge-swipe step back
+  // one screen instead of exiting. Moving between questions inside the reader is
+  // NOT a new screen; overlays close before any screen navigation.
+  const snapshot = () => ({
+    view, mode, sectionId, queue, pos, currentId,
+    browse, notesUnit, notesSec, practicalOpen, fcUnit, checkpointSec,
+  });
+  function applySnapshot(s) {
+    setView(s.view); setMode(s.mode); setSectionId(s.sectionId);
+    setQueue(s.queue); setPos(s.pos); setCurrentId(s.currentId);
+    setBrowse(s.browse); setNotesUnit(s.notesUnit); setNotesSec(s.notesSec);
+    setPracticalOpen(s.practicalOpen); setFcUnit(s.fcUnit); setCheckpointSec(s.checkpointSec);
+  }
+  // Two snapshots with the same key are the SAME screen (question-to-question in the
+  // reader is one screen), so back leaves the reader in one press.
+  const screenKey = (s) => [
+    s.view, s.notesUnit, s.notesSec, s.practicalOpen, s.fcUnit, s.checkpointSec,
+    s.view === "reader" ? `${s.mode}:${s.sectionId}` : "",
+    s.view === "browse" ? s.browse?.title : "",
+  ].join("|");
+
+  const histRef = useRef([]);    // stack of prior screen snapshots
+  const prevRef = useRef(null);  // last snapshot seen
+  const backing = useRef(false); // true while applying a back()
+
+  // Capture forward navigation: on a screen-key change that wasn't a back(), push
+  // the previous screen. Runs after every render (cheap; no deps).
+  useEffect(() => {
+    const cur = snapshot();
+    const prev = prevRef.current;
+    if (prev && screenKey(prev) !== screenKey(cur)) {
+      if (backing.current) backing.current = false;      // this change WAS the back()
+      else {
+        histRef.current.push(prev);
+        if (!IS_NATIVE) { try { window.history.pushState({ n: histRef.current.length }, ""); } catch {} }
+      }
+    }
+    prevRef.current = cur;
+  });
+
+  // Returns true if it handled a back, false at the root.
+  function goBackScreen() {
+    if (reveal) { setReveal(null); return true; }         // close overlays first
+    if (confirmReset) { setConfirmReset(false); return true; }
+    const st = histRef.current;
+    if (st.length) { backing.current = true; const s = st.pop(); applySnapshot(s); prevRef.current = s; return true; }
+    return false;
+  }
+  // Keep the latest goBackScreen for the once-registered listeners (avoid stale closures).
+  const backFnRef = useRef(goBackScreen);
+  backFnRef.current = goBackScreen;
+
+  // Android hardware back (Capacitor).
+  useEffect(() => {
+    if (!IS_NATIVE) return;
+    let handle;
+    import("@capacitor/app").then(({ App }) => {
+      App.addListener("backButton", () => {
+        if (!backFnRef.current()) App.exitApp();          // root → exit the app
+      }).then((h) => { handle = h; });
+    });
+    return () => { handle && handle.remove && handle.remove(); };
+  }, []);
+
+  // Browser / PWA back + iOS edge-swipe (best-effort).
+  useEffect(() => {
+    if (IS_NATIVE) return;
+    const onPop = () => { if (backFnRef.current()) { try { window.history.pushState({}, ""); } catch {} } };
+    try { window.history.pushState({}, ""); } catch {}    // sentinel so the first back is captured
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   // ---- start / navigate ----
   function startRead(secId, startIndex = 0) {
     const q = index.sections[secId]?.orderedItemIds || [];
