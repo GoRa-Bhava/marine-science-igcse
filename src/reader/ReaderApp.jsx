@@ -4,6 +4,12 @@ import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, pickNext, unitReadiness, coverage, reviseIds } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
+import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
+
+// Practical items grade + persist through the normal machinery (they're keyed in
+// itemById below), but are deliberately kept OUT of the content index, so they
+// never count toward a unit's home "% covered".
+const PRACTICAL_ITEMS = PRACTICALS.flatMap((p) => p.items);
 
 /* The Units 1–6 Reader — the whole app. A self-paced, book-style flow with
    durable device-local progress (IndexedDB) and a wrong-weighted smart-practice
@@ -60,7 +66,7 @@ export function ReaderApp({
 }) {
   const desktop = useIsDesktop();
   const index = useMemo(() => buildContentIndex(content.items, content.figures || {}), [content]);
-  const itemById = useMemo(() => Object.fromEntries(content.items.map((i) => [i.id, i])), [content]);
+  const itemById = useMemo(() => Object.fromEntries([...content.items, ...PRACTICAL_ITEMS].map((i) => [i.id, i])), [content]);
 
   const storeRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -104,6 +110,9 @@ export function ReaderApp({
   // Home unit cards expand to show their section list (ephemeral UI state, not saved).
   const [expandedUnits, setExpandedUnits] = useState({}); // { [unitId]: true }
   const toggleUnit = (uid) => setExpandedUnits((m) => ({ ...m, [uid]: !m[uid] }));
+
+  // Practicals section: null = index, or an open practical id (ephemeral UI state).
+  const [practicalOpen, setPracticalOpen] = useState(null);
 
   // Settings: back up / restore / reset (against this device's Reader store).
   const [backupMsg, setBackupMsg] = useState("");
@@ -195,6 +204,15 @@ export function ReaderApp({
   function startRevise(ids, label) {
     if (!ids.length) return;
     setMode("revise"); setSectionId(null); setQueue(ids); setPos(0); setMaxPos(0);
+    setSession({ answered: [], wrong: [], count: 0, correct: 0 });
+    setView("reader"); loadItem(ids[0]);
+  }
+  // Run a practical's items through the graded loop (mirrors startRevise). Not
+  // "read" mode, so it never moves a unit bookmark and ends at the session summary.
+  function startPractical(id) {
+    const ids = practicalItemIds(id);
+    if (!ids.length) return;
+    setMode("practical"); setSectionId(null); setQueue(ids); setPos(0); setMaxPos(0);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(ids[0]);
   }
@@ -336,6 +354,7 @@ export function ReaderApp({
   else if (view === "interactives") viewContent = renderInteractives();
   else if (view === "concepts") viewContent = renderConcepts();
   else if (view === "flashcards") viewContent = renderFlashcards();
+  else if (view === "practicals") viewContent = renderPracticals();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else viewContent = <>{renderLibrary()}{revealOverlay()}</>;
@@ -375,7 +394,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -554,8 +573,8 @@ export function ReaderApp({
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
-        <TopBar C={C} left={mode === "smart" ? "Mixed Practice" : `Revision · Unit ${loc?.unitId}`} />
-        <p style={kicker(C)}>{mode === "smart" ? "MIXED PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
+        <TopBar C={C} left={mode === "smart" ? "Mixed Practice" : mode === "practical" ? "Practicals" : `Revision · Unit ${loc?.unitId}`} />
+        <p style={kicker(C)}>{mode === "smart" ? "MIXED PRACTICE · INTERLEAVED" : mode === "practical" ? `PRACTICAL · ${it.ref || ""}` : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
           <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${reviewing ? " · reviewing" : ""}`}</span>
@@ -957,6 +976,126 @@ export function ReaderApp({
           <button style={ghostBtn(C)} onClick={() => setFcFlipped((f) => !f)}>{fcFlipped ? "Show term" : "Show definition"}</button>
           <button style={{ ...primaryBtn(C), flex: 1 }} disabled={fcPos + 1 >= deck.length} onClick={() => fcNext(deck)}>Next ›</button>
         </div>
+      </div>
+    );
+  }
+
+  // ---------- Practicals (required lab procedures — learn + graded practice) ----------
+  function renderPracticals() {
+    // ----- index -----
+    if (practicalOpen == null) {
+      return (
+        <div style={pad} className="rl-pad">
+          <TopBar C={C} left="Practicals" />
+          <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
+          <p style={kicker(C)}>PRACTICALS · REQUIRED PROCEDURES</p>
+          <h1 style={{ ...h1(C), marginTop: 2 }}>Practicals</h1>
+          <p style={{ ...sub(C), marginTop: 4 }}>Learn a required syllabus practical, then test yourself — the questions feed the same revise loop as the rest of the app.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
+            {practicalsList().map((p) => {
+              const ids = practicalItemIds(p.id);
+              const cov = coverage(ids, progressMap);
+              const rev = reviseIds(ids, progressMap);
+              return (
+                <div key={p.id} style={{ ...card(C), border: `1px solid ${C.line}55` }}>
+                  <button onClick={() => setPracticalOpen(p.id)}
+                    style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
+                    <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>🔬</span>
+                    <span style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                        <span style={{ fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>{p.title}</span>
+                        {p.ref && <span style={refChip(C)}>{p.ref}</span>}
+                      </span>
+                      <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, marginTop: 2 }}>{p.subtitle}</span>
+                      <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 6 }}>
+                        {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${cov.total} questions`}
+                      </span>
+                    </span>
+                    <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+                  </button>
+                  {rev.length > 0 && (
+                    <div style={{ marginTop: 10 }}>
+                      <button onClick={() => startRevise(rev, `${p.title} to revise`)}
+                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.coral, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>● Revise {rev.length} →</button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ----- one practical: procedure card + practise -----
+    const p = practicalById(practicalOpen);
+    if (!p) { setPracticalOpen(null); return null; }
+    const ids = practicalItemIds(p.id);
+    const cov = coverage(ids, progressMap);
+    const rev = reviseIds(ids, progressMap);
+    const swatch = (color) => <span style={{ display: "inline-block", width: 26, height: 18, borderRadius: 5, background: color, border: `1px solid ${C.line}`, verticalAlign: "middle" }} />;
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Practicals" />
+        <button onClick={() => setPracticalOpen(null)} style={linkBtn(C)}>‹ All practicals</button>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginTop: 6 }}>
+          <h1 style={{ ...h1(C), fontSize: 28 }}>{p.title}</h1>
+          {p.ref && <span style={refChip(C)}>{p.ref}</span>}
+        </div>
+        {p.aim && <p style={{ ...sub(C), marginTop: 6 }}>{p.aim}</p>}
+
+        {/* tests / procedure steps — each a labelled result, optional colour swatch(es) */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
+          {(p.tests || []).map((t, i) => (
+            <div key={i} style={{ ...card(C) }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                <h3 style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.foam, margin: 0 }}>{t.nutrient}</h3>
+                {t.reagent && <span style={refChip(C)}>{t.reagent}</span>}
+              </div>
+              {t.method && <p style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.mist, lineHeight: 1.55, margin: "8px 0 0" }}>{t.method}</p>}
+              {t.scale?.length ? (
+                <div style={{ display: "flex", marginTop: 10, borderRadius: 6, overflow: "hidden", width: "fit-content", border: `1px solid ${C.line}` }}>
+                  {t.scale.map((c, j) => <span key={j} style={{ width: 24, height: 16, background: c }} />)}
+                </div>
+              ) : null}
+              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.foam }}>
+                  {t.posColor && swatch(t.posColor)}<span><b style={{ color: C.ok }}>Positive:</b> {t.positive}</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.mist }}>
+                  {t.negColor && swatch(t.negColor)}<span><b>Negative:</b> {t.negative}</span>
+                </div>
+              </div>
+              {t.why && <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, lineHeight: 1.5, margin: "10px 0 0", fontStyle: "italic" }}>Why it works: {t.why}</p>}
+            </div>
+          ))}
+        </div>
+
+        {p.safety?.length ? (
+          <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.coral}55` }}>
+            <p style={{ ...kicker(C), color: C.coral, marginTop: 0 }}>⚠ SAFETY</p>
+            <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+              {p.safety.map((s, i) => <li key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, lineHeight: 1.5, marginTop: i ? 6 : 0 }}>{s}</li>)}
+            </ul>
+          </div>
+        ) : null}
+
+        {p.technique?.length ? (
+          <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.glow}55` }}>
+            <p style={{ ...kicker(C), marginTop: 0 }}>EXAM TECHNIQUE</p>
+            <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+              {p.technique.map((s, i) => <li key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, lineHeight: 1.5, marginTop: i ? 6 : 0 }}>{s}</li>)}
+            </ul>
+          </div>
+        ) : null}
+
+        <button style={{ ...primaryBtn(C), marginTop: 18 }} onClick={() => startPractical(p.id)}>Practise these {ids.length} →</button>
+        <div style={{ marginTop: 10, textAlign: "center", fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>
+          {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${ids.length} questions`}
+        </div>
+        {rev.length > 0 && (
+          <button style={{ ...primaryBtn(C), background: C.coral, color: "#fff", marginTop: 10 }} onClick={() => startRevise(rev, `${p.title} to revise`)}>Revise these {rev.length} →</button>
+        )}
       </div>
     );
   }
