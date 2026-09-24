@@ -1053,6 +1053,15 @@ export function ReaderApp({
           <h1 style={{ ...h1(C), fontSize: 28 }}>{p.title}</h1>
           {p.ref && <span style={refChip(C)}>{p.ref}</span>}
         </div>
+        {/* Optional animated diagram — rendered ISOLATED via a data-URI <img> so its
+            self-contained <style> (which redefines the app's --bg/--ink token names)
+            can't leak into the app's global theme. It carries its own light/dark and
+            reduced-motion handling via prefers-color-scheme. */}
+        {p.diagram && (
+          <img alt={`${p.title} diagram`}
+            style={{ width: "100%", height: "auto", borderRadius: 12, marginTop: 12, display: "block", border: `1px solid ${C.line}55` }}
+            src={`data:image/svg+xml;utf8,${encodeURIComponent(p.diagram)}`} />
+        )}
         {p.aim && <p style={{ ...sub(C), marginTop: 6 }}>{p.aim}</p>}
 
         {p.tests?.length ? (

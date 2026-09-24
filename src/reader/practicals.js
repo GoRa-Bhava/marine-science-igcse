@@ -239,6 +239,81 @@ export const PRACTICALS = [
     title: "Measuring tidal amplitude",
     subtitle: "Use tide readings to work out the tidal amplitude",
     aim: "Measure the tidal amplitude at a shore from readings of high and low water.",
+    diagram: `<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" viewBox="0 0 880 560"
+     role="img" aria-labelledby="title description">
+  <title id="title">Measuring tidal amplitude</title>
+  <desc id="description">
+    A fixed tide gauge is marked from zero to five metres.
+    Regular readings record high water at 4.8 metres and low water at 1.0 metre.
+    The tidal range is 3.8 metres. Tidal amplitude is half the range: 1.9 metres.
+    Once revealed, all readings and the final answer remain on screen
+    while the tide continues to rise and fall.
+  </desc>
+  <style>
+    :root { --bg:#e9f1f2; --panel:#ffffff; --ink:#0d2a37; --soft:#4d6c77; --line:#d2e0e3; --teal:#12a7bb; --deep:#0b6b79; --coral:#ff6a4d; --good:#1a9b6c; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#071820; --panel:#0e2733; --ink:#e9f4f5; --soft:#9dbcc5; --line:#1c3d49; --teal:#3ac6d8; --deep:#8fdce7; --coral:#ff7d63; } }
+    :root[data-theme="dark"] { --bg:#071820; --panel:#0e2733; --ink:#e9f4f5; --soft:#9dbcc5; --line:#1c3d49; --teal:#3ac6d8; --deep:#8fdce7; --coral:#ff7d63; }
+    svg { display:block; height:auto; background:var(--bg); font-family:system-ui, sans-serif; }
+    text { fill:var(--ink); font-variant-numeric:tabular-nums; }
+    .soft{fill:var(--soft);} .accent{fill:var(--coral);}
+    .heading{font-size:34px;font-weight:700;} .label{font-size:30px;font-weight:600;}
+    .number{font-size:25px;font-weight:600;} .small{font-size:23px;} .result{font-size:36px;font-weight:750;}
+    .reference{fill:none;stroke:var(--soft);stroke-width:2.5;stroke-dasharray:9 7;}
+    .range-stroke{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;}
+    .amplitude-stroke{fill:none;stroke:var(--coral);stroke-width:5;stroke-linecap:round;}
+    .water{animation:tide 9s linear infinite;}
+    @keyframes tide{0%,100%{transform:translateY(0);}6.25%{transform:translateY(-43.63px);}12.5%{transform:translateY(-80.61px);}18.75%{transform:translateY(-105.32px);}25%{transform:translateY(-114px);}31.25%{transform:translateY(-105.32px);}37.5%{transform:translateY(-80.61px);}43.75%{transform:translateY(-43.63px);}50%{transform:translateY(0);}56.25%{transform:translateY(43.63px);}62.5%{transform:translateY(80.61px);}68.75%{transform:translateY(105.32px);}75%{transform:translateY(114px);}81.25%{transform:translateY(105.32px);}87.5%{transform:translateY(80.61px);}93.75%{transform:translateY(43.63px);}}
+    .high{animation:reveal .36s ease-out 2.25s both;} .low{animation:reveal .27s ease-out 6.75s both;}
+    .range{animation:reveal .27s ease-out 7.02s both;} .halving{animation:reveal .18s ease-out 7.29s both;} .answer{animation:reveal .30s ease-out 8.01s both;}
+    @keyframes reveal{from{opacity:0;}to{opacity:1;}}
+    .half-line{transform-box:view-box;transform-origin:642px 112px;animation:halve-line .54s ease-in-out 7.47s both;}
+    .moving-cap{animation:halve-cap .54s ease-in-out 7.47s both;}
+    @keyframes halve-line{from{transform:scaleY(1);}to{transform:scaleY(.5);}}
+    @keyframes halve-cap{from{transform:translateY(0);}to{transform:translateY(-114px);}}
+    .clock-hand{transform-box:view-box;transform-origin:640px 39px;animation:intervals 9s steps(12, end) infinite;}
+    @keyframes intervals{to{transform:rotate(360deg);}}
+    @media (prefers-reduced-motion: reduce){ .water,.high,.low,.range,.halving,.answer,.half-line,.moving-cap,.clock-hand{animation:none;} .water{transform:translateY(0);} .high,.low,.range,.halving,.answer{opacity:1;} .half-line{transform:scaleY(.5);} .moving-cap{transform:translateY(-114px);} }
+  </style>
+  <defs>
+    <linearGradient id="water-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--teal)" stop-opacity=".35"/><stop offset="1" stop-color="var(--deep)" stop-opacity=".65"/></linearGradient>
+    <clipPath id="scene-clip"><rect x="16" y="76" width="848" height="350" rx="14"/></clipPath>
+  </defs>
+  <rect width="880" height="560" fill="var(--bg)"/>
+  <text x="26" y="43" class="heading">Measuring tidal amplitude</text>
+  <g aria-hidden="true">
+    <circle cx="640" cy="39" r="21" fill="var(--panel)" stroke="var(--soft)" stroke-width="2"/>
+    <path d="M640 21v4 M658 39h-4 M640 57v-4 M622 39h4" stroke="var(--soft)" stroke-width="2"/>
+    <path class="clock-hand" d="M640 39V25" stroke="var(--deep)" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="640" cy="39" r="3" fill="var(--deep)"/>
+    <text x="675" y="33" class="small soft">Regular</text>
+    <text x="675" y="59" class="small soft">readings</text>
+  </g>
+  <g clip-path="url(#scene-clip)">
+    <rect x="16" y="76" width="848" height="350" fill="var(--panel)"/>
+    <path d="M16 86H864" stroke="var(--line)" stroke-width="2"/>
+    <g class="water">
+      <path d="M16 226 Q94 222 172 226 Q251 230 330 226 Q409 222 488 226 Q582 230 676 226 Q770 222 864 226 V560H16Z" fill="url(#water-fill)"/>
+      <path d="M16 226 Q94 222 172 226 Q251 230 330 226 Q409 222 488 226 Q582 230 676 226 Q770 222 864 226" fill="none" stroke="var(--deep)" stroke-width="3"/>
+    </g>
+    <path d="M16 150H278V166H16Z" fill="var(--line)" stroke="var(--soft)" stroke-width="2"/>
+    <path d="M47 166V426 M190 166V426" stroke="var(--soft)" stroke-width="10"/>
+    <rect x="36" y="190" width="197" height="77" rx="10" fill="var(--panel)" fill-opacity=".95"/>
+    <text x="53" y="220" class="label">Fixed tide</text>
+    <text x="53" y="254" class="label">gauge</text>
+    <path d="M235 226H275" stroke="var(--soft)" stroke-width="2"/>
+    <rect x="278" y="89" width="52" height="323" rx="5" fill="var(--panel)" stroke="var(--ink)" stroke-width="2.5"/>
+    <text x="298" y="80" text-anchor="middle" class="small soft">m</text>
+    <path d="M312 100H330 M312 160H330 M312 220H330 M312 280H330 M312 340H330 M312 400H330" stroke="var(--ink)" stroke-width="2.5"/>
+    <g class="number" text-anchor="middle"><text x="295" y="109">5</text><text x="295" y="169">4</text><text x="295" y="229">3</text><text x="295" y="289">2</text><text x="295" y="349">1</text><text x="295" y="409">0</text></g>
+    <g class="high"><path class="reference" d="M330 112H842"/><circle cx="330" cy="112" r="4" fill="var(--ink)"/><text x="354" y="101" class="label">High water 4.8 m</text></g>
+    <g class="low"><path class="reference" d="M330 340H842"/><circle cx="330" cy="340" r="4" fill="var(--ink)"/><text x="354" y="378" class="label">Low water 1.0 m</text></g>
+    <g class="range"><path class="range-stroke" d="M413 112H435 M424 112V340 M413 340H435"/><text x="448" y="281" class="label">Range =</text><text x="448" y="321" class="result">3.8 m</text></g>
+    <g class="halving"><path class="amplitude-stroke half-line" d="M642 112V340"/><path class="amplitude-stroke" d="M630 112H654"/><g class="moving-cap"><path class="amplitude-stroke" d="M630 340H654"/><circle cx="642" cy="340" r="5" fill="var(--coral)"/></g></g>
+    <g class="answer"><path d="M330 226H642" fill="none" stroke="var(--coral)" stroke-width="2" stroke-dasharray="4 7"/><text x="662" y="173" class="label accent">Amplitude</text><text x="662" y="214" class="result accent">= 1.9 m</text></g>
+  </g>
+  <g class="answer"><rect x="24" y="443" width="832" height="101" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="481" text-anchor="middle" class="label accent">amplitude = (high − low) ÷ 2</text><text x="440" y="523" text-anchor="middle" class="result accent">Half the range = 1.9 m</text></g>
+</svg>`,
     apparatus: ["A fixed marked scale (or a recording tide gauge)", "A clock or timer", "A results table"],
     steps: [
       "Fix a marked scale vertically where the water rises and falls",
