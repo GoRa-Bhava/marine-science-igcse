@@ -982,8 +982,44 @@ export function ReaderApp({
 
   // ---------- Practicals (required lab procedures — learn + graded practice) ----------
   function renderPracticals() {
-    // ----- index -----
+    const swatch = (color) => <span style={{ display: "inline-block", width: 26, height: 18, borderRadius: 5, background: color, border: `1px solid ${C.line}`, verticalAlign: "middle" }} />;
+    const liBase = { fontFamily: FONT_UI, fontSize: 14, color: C.mist, lineHeight: 1.5 };
+
+    // ----- index (grouped by unit) -----
     if (practicalOpen == null) {
+      const list = practicalsList();
+      const units = [...new Set(list.map((p) => p.unit))].sort((a, b) => a - b);
+      const unitTitle = (u) => index.units.find((x) => x.unitId === u)?.title;
+      const practicalCard = (p) => {
+        const ids = practicalItemIds(p.id);
+        const cov = coverage(ids, progressMap);
+        const rev = reviseIds(ids, progressMap);
+        return (
+          <div key={p.id} style={{ ...card(C), border: `1px solid ${C.line}55` }}>
+            <button onClick={() => setPracticalOpen(p.id)}
+              style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
+              <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>🔬</span>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                  <span style={{ fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>{p.title}</span>
+                  {p.ref && <span style={refChip(C)}>{p.ref}</span>}
+                </span>
+                <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, marginTop: 2 }}>{p.subtitle}</span>
+                <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 6 }}>
+                  {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${cov.total} questions`}
+                </span>
+              </span>
+              <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
+            </button>
+            {rev.length > 0 && (
+              <div style={{ marginTop: 10 }}>
+                <button onClick={() => startRevise(rev, `${p.title} to revise`)}
+                  style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.coral, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>● Revise {rev.length} →</button>
+              </div>
+            )}
+          </div>
+        );
+      };
       return (
         <div style={pad} className="rl-pad">
           <TopBar C={C} left="Practicals" />
@@ -991,38 +1027,14 @@ export function ReaderApp({
           <p style={kicker(C)}>PRACTICALS · REQUIRED PROCEDURES</p>
           <h1 style={{ ...h1(C), marginTop: 2 }}>Practicals</h1>
           <p style={{ ...sub(C), marginTop: 4 }}>Learn a required syllabus practical, then test yourself — the questions feed the same revise loop as the rest of the app.</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
-            {practicalsList().map((p) => {
-              const ids = practicalItemIds(p.id);
-              const cov = coverage(ids, progressMap);
-              const rev = reviseIds(ids, progressMap);
-              return (
-                <div key={p.id} style={{ ...card(C), border: `1px solid ${C.line}55` }}>
-                  <button onClick={() => setPracticalOpen(p.id)}
-                    style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
-                    <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>🔬</span>
-                    <span style={{ flex: 1, minWidth: 0 }}>
-                      <span style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-                        <span style={{ fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>{p.title}</span>
-                        {p.ref && <span style={refChip(C)}>{p.ref}</span>}
-                      </span>
-                      <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, marginTop: 2 }}>{p.subtitle}</span>
-                      <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 6 }}>
-                        {cov.attempted > 0 ? `${cov.pct}% covered · ${cov.attempted}/${cov.total}` : `Not started · ${cov.total} questions`}
-                      </span>
-                    </span>
-                    <span aria-hidden="true" style={{ color: C.accent, fontSize: 20 }}>›</span>
-                  </button>
-                  {rev.length > 0 && (
-                    <div style={{ marginTop: 10 }}>
-                      <button onClick={() => startRevise(rev, `${p.title} to revise`)}
-                        style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: C.coral, fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 700 }}>● Revise {rev.length} →</button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          {units.map((u) => (
+            <div key={u} style={{ marginTop: 18 }}>
+              <p style={kicker(C)}>UNIT {u}{unitTitle(u) ? ` · ${unitTitle(u)}` : ""}</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+                {list.filter((p) => p.unit === u).map(practicalCard)}
+              </div>
+            </div>
+          ))}
         </div>
       );
     }
@@ -1033,7 +1045,6 @@ export function ReaderApp({
     const ids = practicalItemIds(p.id);
     const cov = coverage(ids, progressMap);
     const rev = reviseIds(ids, progressMap);
-    const swatch = (color) => <span style={{ display: "inline-block", width: 26, height: 18, borderRadius: 5, background: color, border: `1px solid ${C.line}`, verticalAlign: "middle" }} />;
     return (
       <div style={pad} className="rl-pad">
         <TopBar C={C} left="Practicals" />
@@ -1044,32 +1055,88 @@ export function ReaderApp({
         </div>
         {p.aim && <p style={{ ...sub(C), marginTop: 6 }}>{p.aim}</p>}
 
-        {/* tests / procedure steps — each a labelled result, optional colour swatch(es) */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
-          {(p.tests || []).map((t, i) => (
-            <div key={i} style={{ ...card(C) }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-                <h3 style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.foam, margin: 0 }}>{t.nutrient}</h3>
-                {t.reagent && <span style={refChip(C)}>{t.reagent}</span>}
+        {p.tests?.length ? (
+          /* Reagent shape (food tests): one block per test, with colour swatches. */
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
+            {p.tests.map((t, i) => (
+              <div key={i} style={{ ...card(C) }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+                  <h3 style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: C.foam, margin: 0 }}>{t.nutrient}</h3>
+                  {t.reagent && <span style={refChip(C)}>{t.reagent}</span>}
+                </div>
+                {t.method && <p style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.mist, lineHeight: 1.55, margin: "8px 0 0" }}>{t.method}</p>}
+                {t.scale?.length ? (
+                  <div style={{ display: "flex", marginTop: 10, borderRadius: 6, overflow: "hidden", width: "fit-content", border: `1px solid ${C.line}` }}>
+                    {t.scale.map((c, j) => <span key={j} style={{ width: 24, height: 16, background: c }} />)}
+                  </div>
+                ) : null}
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.foam }}>
+                    {t.posColor && swatch(t.posColor)}<span><b style={{ color: C.ok }}>Positive:</b> {t.positive}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.mist }}>
+                    {t.negColor && swatch(t.negColor)}<span><b>Negative:</b> {t.negative}</span>
+                  </div>
+                </div>
+                {t.why && <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, lineHeight: 1.5, margin: "10px 0 0", fontStyle: "italic" }}>Why it works: {t.why}</p>}
               </div>
-              {t.method && <p style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.mist, lineHeight: 1.55, margin: "8px 0 0" }}>{t.method}</p>}
-              {t.scale?.length ? (
-                <div style={{ display: "flex", marginTop: 10, borderRadius: 6, overflow: "hidden", width: "fit-content", border: `1px solid ${C.line}` }}>
-                  {t.scale.map((c, j) => <span key={j} style={{ width: 24, height: 16, background: c }} />)}
-                </div>
-              ) : null}
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.foam }}>
-                  {t.posColor && swatch(t.posColor)}<span><b style={{ color: C.ok }}>Positive:</b> {t.positive}</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.mist }}>
-                  {t.negColor && swatch(t.negColor)}<span><b>Negative:</b> {t.negative}</span>
+            ))}
+          </div>
+        ) : (
+          /* Procedure shape: apparatus, numbered method, result, colours, controls, improvements. */
+          <>
+            {p.apparatus?.length ? (
+              <div style={{ ...card(C), marginTop: 16 }}>
+                <p style={{ ...kicker(C), marginTop: 0 }}>APPARATUS</p>
+                <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+                  {p.apparatus.map((a, i) => <li key={i} style={{ ...liBase, marginTop: i ? 4 : 0 }}>{a}</li>)}
+                </ul>
+              </div>
+            ) : null}
+            {p.steps?.length ? (
+              <div style={{ ...card(C), marginTop: 14 }}>
+                <p style={{ ...kicker(C), marginTop: 0 }}>METHOD</p>
+                <ol style={{ margin: "8px 0 0", paddingLeft: 20 }}>
+                  {p.steps.map((s, i) => <li key={i} style={{ ...liBase, marginTop: i ? 8 : 0 }}>{s}</li>)}
+                </ol>
+              </div>
+            ) : null}
+            {p.result ? (
+              <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.glow}55` }}>
+                <p style={{ ...kicker(C), color: C.ok, marginTop: 0 }}>WHAT IT SHOWS</p>
+                <p style={{ fontFamily: FONT_UI, fontSize: 15, color: C.foam, lineHeight: 1.5, margin: "6px 0 0" }}>{p.result}</p>
+              </div>
+            ) : null}
+            {p.swatches?.length ? (
+              <div style={{ ...card(C), marginTop: 14 }}>
+                <p style={{ ...kicker(C), marginTop: 0 }}>COLOURS</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>
+                  {p.swatches.map((s, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: FONT_UI, fontSize: 14, color: C.foam }}>
+                      {swatch(s.color)}<span>{s.label}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              {t.why && <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, lineHeight: 1.5, margin: "10px 0 0", fontStyle: "italic" }}>Why it works: {t.why}</p>}
-            </div>
-          ))}
-        </div>
+            ) : null}
+            {p.controls?.length ? (
+              <div style={{ ...card(C), marginTop: 14 }}>
+                <p style={{ ...kicker(C), marginTop: 0 }}>FOR RELIABLE RESULTS</p>
+                <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+                  {p.controls.map((s, i) => <li key={i} style={{ ...liBase, marginTop: i ? 6 : 0 }}>{s}</li>)}
+                </ul>
+              </div>
+            ) : null}
+            {p.improvements?.length ? (
+              <div style={{ ...card(C), marginTop: 14 }}>
+                <p style={{ ...kicker(C), marginTop: 0 }}>IMPROVEMENTS</p>
+                <ul style={{ margin: "8px 0 0", paddingLeft: 18 }}>
+                  {p.improvements.map((s, i) => <li key={i} style={{ ...liBase, marginTop: i ? 6 : 0 }}>{s}</li>)}
+                </ul>
+              </div>
+            ) : null}
+          </>
+        )}
 
         {p.safety?.length ? (
           <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.coral}55` }}>
