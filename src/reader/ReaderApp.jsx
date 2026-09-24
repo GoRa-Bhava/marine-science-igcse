@@ -74,6 +74,7 @@ export function ReaderApp({
   const [mode, setMode] = useState("read");       // read | smart | retry
   const [queue, setQueue] = useState([]);          // itemIds for read/retry
   const [pos, setPos] = useState(0);
+  const [maxPos, setMaxPos] = useState(0);         // furthest position reached this run (earlier = reviewable)
   const [sectionId, setSectionId] = useState(null);
   const [currentId, setCurrentId] = useState(null);
   const [answer, setAnswer] = useState(null);
@@ -167,24 +168,24 @@ export function ReaderApp({
   // ---- start / navigate ----
   function startRead(secId, startIndex = 0) {
     const q = index.sections[secId]?.orderedItemIds || [];
-    setMode("read"); setSectionId(secId); setQueue(q); setPos(startIndex);
+    setMode("read"); setSectionId(secId); setQueue(q); setPos(startIndex); setMaxPos(startIndex);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(q[startIndex]);
   }
   function continueSection(secId) { // keep the running session (checkpoint → next section)
     const q = index.sections[secId]?.orderedItemIds || [];
-    setMode("read"); setSectionId(secId); setQueue(q); setPos(0);
+    setMode("read"); setSectionId(secId); setQueue(q); setPos(0); setMaxPos(0);
     setView("reader"); loadItem(q[0]);
   }
   function startSmart() {
-    setMode("smart"); setSectionId(null); setQueue([]); setPos(0); setRecent([]);
+    setMode("smart"); setSectionId(null); setQueue([]); setPos(0); setMaxPos(0); setRecent([]);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     const first = pickNext(index.flatOrder, progressMap, []);
     setRecent(first ? [first] : []);
     setView("reader"); loadItem(first);
   }
   function startRetry(wrongIds) {
-    setMode("retry"); setSectionId(null); setQueue(wrongIds); setPos(0);
+    setMode("retry"); setSectionId(null); setQueue(wrongIds); setPos(0); setMaxPos(0);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(wrongIds[0]);
   }
@@ -193,9 +194,21 @@ export function ReaderApp({
   // clears wrongFlag and the item leaves the revise list next time. Ends at summary.
   function startRevise(ids, label) {
     if (!ids.length) return;
-    setMode("revise"); setSectionId(null); setQueue(ids); setPos(0);
+    setMode("revise"); setSectionId(null); setQueue(ids); setPos(0); setMaxPos(0);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(ids[0]);
+  }
+  // Step back to review the previous question (read-only; never re-scores). Forward
+  // walks back toward the live question. maxPos is unchanged by goBack.
+  function goBack() {
+    if (pos <= 0) return;
+    const np = pos - 1;
+    setPos(np); loadItem(queue[np]); // maxPos unchanged — reviewing, not advancing
+  }
+  function goForward() {
+    const np = pos + 1;
+    if (np >= queue.length) return;
+    setPos(np); if (np > maxPos) setMaxPos(np); loadItem(queue[np]);
   }
   const isAttempted = (id) => (progressMap[id]?.timesSeen || 0) > 0;
   // Scan units in book order starting at startUnitId (then the units after it, then
@@ -301,7 +314,7 @@ export function ReaderApp({
       else setView("summary"); // retry finished
       return;
     }
-    setPos(np); loadItem(queue[np]);
+    setPos(np); if (np > maxPos) setMaxPos(np); loadItem(queue[np]);
   }
 
   async function markSectionComplete(sec) {
@@ -535,6 +548,9 @@ export function ReaderApp({
     const wrongFlag = progressMap[it.id]?.wrongFlag;
     const total = queue.length;
     const railSec = loc?.sectionId;
+    // A linear run (not Mixed Practice) is "reviewing" when the shown position is
+    // behind the furthest reached — i.e. an already-answered earlier question.
+    const reviewing = mode !== "smart" && pos < maxPos;
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
@@ -542,29 +558,52 @@ export function ReaderApp({
         <p style={kicker(C)}>{mode === "smart" ? "MIXED PRACTICE · INTERLEAVED" : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
-          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}`}</span>
+          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${reviewing ? " · reviewing" : ""}`}</span>
         </div>
         {mode === "smart" && wrongFlag && !locked && (
           <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.no, marginBottom: 8 }}>↻ you missed this last time</div>
         )}
-        <div style={{ marginTop: 6 }}>
-          {renderItemBody(it, { locked, answer, setAnswer })}
-        </div>
-        {locked && (
-          <div aria-live="polite" style={{ ...card(C), marginTop: 16 }}>
-            <div style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: wasRight ? C.ok : C.no, marginBottom: 6 }}>
-              {wasRight ? "Correct" : "Not quite"}
+        {reviewing ? (
+          <>
+            <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>Reviewing an earlier question — not scored.</div>
+            <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, lineHeight: 1.25, margin: "6px 0 14px", whiteSpace: "pre-line" }}>{it.q}</div>
+            <div style={{ ...card(C), border: `1px solid ${C.ok}55` }}>
+              <p style={{ ...kicker(C), color: C.ok }}>ANSWER</p>
+              {answerText(it) && <div style={{ fontFamily: FONT_UI, fontSize: 16, color: C.foam, fontWeight: 600, lineHeight: 1.5 }}>{answerText(it)}</div>}
+              <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }}>{it.why}</div>
             </div>
-            <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}>{it.why}</div>
-            <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 8 }}>Ref: syllabus {secOf(it)}.</div>
-          </div>
+          </>
+        ) : (
+          <>
+            <div style={{ marginTop: 6 }}>
+              {renderItemBody(it, { locked, answer, setAnswer })}
+            </div>
+            {locked && (
+              <div aria-live="polite" style={{ ...card(C), marginTop: 16 }}>
+                <div style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: wasRight ? C.ok : C.no, marginBottom: 6 }}>
+                  {wasRight ? "Correct" : "Not quite"}
+                </div>
+                <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}>{it.why}</div>
+                <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 8 }}>Ref: syllabus {secOf(it)}.</div>
+              </div>
+            )}
+          </>
         )}
         <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-          <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
-          <button onClick={onPrimary} disabled={!locked && !canSubmit(item, answer)}
-            style={{ ...primaryBtn(C), flex: 1, opacity: !locked && !canSubmit(item, answer) ? 0.5 : 1 }}>
-            {locked ? "Next ›" : "Check"}
-          </button>
+          {mode !== "smart" && pos > 0 && (
+            <button onClick={goBack} style={ghostBtn(C)} aria-label="Previous question">‹ Back</button>
+          )}
+          {reviewing ? (
+            <button onClick={goForward} style={{ ...primaryBtn(C), flex: 1 }}>Next ›</button>
+          ) : (
+            <>
+              <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
+              <button onClick={onPrimary} disabled={!locked && !canSubmit(item, answer)}
+                style={{ ...primaryBtn(C), flex: 1, opacity: !locked && !canSubmit(item, answer) ? 0.5 : 1 }}>
+                {locked ? "Next ›" : "Check"}
+              </button>
+            </>
+          )}
         </div>
         </div>
         {desktop && (
