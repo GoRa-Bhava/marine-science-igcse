@@ -361,7 +361,7 @@ export function ReaderApp({
         <nav className="rl-nav" aria-label="Primary">
           {nav("read", "📖 Revise a unit", () => resume(), view === "reader" && mode === "read")}
           {nav("smart", "🔀 Mixed Practice", startSmart, view === "reader" && mode === "smart")}
-          {nav("notes", "👁 Read", () => setView("notes"), view === "notes")}
+          {nav("notes", "📖 Syllabus Notes", () => setView("notes"), view === "notes")}
           <div className="rl-nav-group">Explore</div>
           {EXPLORE_ENTRIES.map((e) => nav(e.key, `${e.icon} ${e.title.split(" · ")[0]}`, () => setView(e.view), view === e.view))}
           {nav("collection", "🐚 Ocean Discoveries", () => setView("collection"), view === "collection")}
@@ -375,7 +375,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Read", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -437,7 +437,7 @@ export function ReaderApp({
 
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
           <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice</button>
-          <button style={entryBtn(C)} onClick={() => setView("notes")}>👁 Read</button>
+          <button style={entryBtn(C)} onClick={() => setView("notes")}>📖 Syllabus Notes</button>
         </div>
 
         <p style={{ ...kicker(C), marginTop: 22 }}>YOUR UNITS</p>
@@ -729,10 +729,10 @@ export function ReaderApp({
     if (notesUnit == null) {
       return (
         <div style={pad} className="rl-pad">
-          <TopBar C={C} left="Read" />
+          <TopBar C={C} left="Syllabus Notes" />
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>READ · SYLLABUS NOTES</p>
-          <h1 style={{ ...h1(C), marginTop: 2 }}>Read the unit</h1>
+          <h1 style={{ ...h1(C), marginTop: 2 }}>Syllabus notes</h1>
           <p style={{ ...sub(C), marginTop: 4 }}>Plain-English notes for every syllabus point, unit by unit. Just to read — nothing here is graded or tracked.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
             {notesUnits.map((u) => {
@@ -762,7 +762,7 @@ export function ReaderApp({
     if (!unit || !active) {
       return (
         <div style={pad} className="rl-pad">
-          <TopBar C={C} left="Read" />
+          <TopBar C={C} left="Syllabus Notes" />
           <button onClick={notesBackToUnits} style={linkBtn(C)}>‹ Units</button>
           <p style={sub(C)}>No notes for this unit yet.</p>
         </div>
@@ -771,7 +771,7 @@ export function ReaderApp({
     const hasPractice = !!index.sections[active.id];
     return (
       <div style={pad} className="rl-pad">
-        <TopBar C={C} left={`Read · Unit ${notesUnit}`} />
+        <TopBar C={C} left={`Syllabus Notes · Unit ${notesUnit}`} />
         <button onClick={notesBackToUnits} style={linkBtn(C)}>‹ Units</button>
         <p style={{ ...kicker(C), marginTop: 8 }}>UNIT {notesUnit}</p>
         <h1 style={{ ...h1(C), marginTop: 2 }}>{unit.title}</h1>
