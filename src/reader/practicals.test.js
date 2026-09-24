@@ -22,7 +22,7 @@ test("practicals expose the pilot food-tests entry with a full procedure card", 
 
 test("practical items are well-formed and helpers resolve them", () => {
   const ids = practicalItemIds("P4.1");
-  assert.equal(ids.length, 11, "11 pilot items");
+  assert.equal(ids.length, 13, "13 pilot items");
   const seen = new Set();
   for (const it of practicalById("P4.1").items) {
     assert.ok(it.id?.startsWith("P4.1-"), `namespaced id: ${it.id}`);
@@ -35,7 +35,7 @@ test("practical items are well-formed and helpers resolve them", () => {
   assert.equal(practicalsList().length, PRACTICALS.length);
 });
 
-test("the full set: 19 practicals across units 1–5, 104 items, both card shapes, all vetted", () => {
+test("the full set: 19 practicals across units 1–5, 106 items, both card shapes, all vetted", () => {
   assert.equal(PRACTICALS.length, 19, "19 practicals authored");
   const byUnit = {};
   let items = 0;
@@ -52,7 +52,7 @@ test("the full set: 19 practicals across units 1–5, 104 items, both card shape
       items++;
     }
   }
-  assert.equal(items, 104, "104 items total");
+  assert.equal(items, 106, "106 items total");
   assert.deepEqual(byUnit, { 1: 1, 2: 7, 3: 3, 4: 3, 5: 5 }, "unit distribution");
   // Procedure shape present (e.g. the pH practical carries labelled colour swatches).
   const ph = PRACTICALS.find((p) => p.swatches?.length);
