@@ -89,6 +89,8 @@ export const PRACTICALS = [
       "Benedict's only reacts when heated; it stays blue if you test it cold.",
       "Judge each colour against an untested (control) sample.",
       "The white emulsion in the lipid test is lipid, not protein.",
+      "In the exam, give BOTH colours — the starting colour and the positive one (e.g. 'orange-brown → blue-black', 'blue → brick-red'), not just the final colour.",
+      "Use a separate sample of the food for each test, with equal volumes of sample and reagent, so the tests don't interfere and comparisons are fair.",
     ],
 
     // Auto-graded run — recall (tier 1) → application (tier 2) → one exam-style (tier 3).
@@ -226,6 +228,32 @@ export const PRACTICALS = [
           "a cloudy white emulsion shows reducing sugar",
         ],
         why: "The reducing-sugar test is Benedict's solution heated in a water bath: blue → brick-red shows sugar (redder = more), and it stays blue if none is present. Iodine, testing cold, purple and the white emulsion all belong to other tests. (4.1/LO2)",
+        status: "human_review",
+      },
+      {
+        id: "P4.1-12", type: "multi", tier: 2, ref: "4.1/LO2", family: "ft-fairtest",
+        q: "You test one food for several nutrients. Which make it a fair, valid test? Select all that apply.",
+        options: [
+          "Use a separate sample of the food for each test",
+          "Use equal volumes of sample and reagent",
+          "Add all the reagents to the same sample at once",
+          "Heat every test in a water bath",
+        ],
+        a: [0, 1],
+        why: "Use a fresh sample for each test (so reagents don't interfere) and equal volumes for a fair comparison. Mixing all reagents in one sample confuses the results, and only the Benedict's test is heated — the others are done cold. (4.1/LO2)",
+        status: "human_review",
+      },
+      {
+        id: "P4.1-13", type: "choice", tier: 2, ref: "4.1/LO2", family: "ft-both-colours",
+        q: "In an exam, which is the most complete way to record a positive starch test?",
+        options: [
+          "Orange-brown → blue-black",
+          "It goes black",
+          "It goes dark",
+          "A colour change happens",
+        ],
+        a: 0,
+        why: "State BOTH colours — the starting orange-brown and the positive blue-black. 'Black', 'dark' or just 'a colour change' can lose the mark; name the actual colours. (4.1/LO2)",
         status: "human_review",
       },
     ],
@@ -1185,9 +1213,9 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same volume of water", "Same distance from food to tube", "Same starting temperature", "Compare energy per gram of food"],
     improvements: ["Shield the apparatus to cut heat loss", "Relight the food if it goes out", "Repeat and take a mean"],
     technique: [
-      "The temperature rise shows the energy released; burning doesn't destroy energy.",
+      "The energy from the burning food heats the water, so the temperature rise measures the energy released — burning transfers energy, it doesn't destroy it.",
       "Compare foods per gram, not per piece.",
-      "Heat lost to the surroundings makes the measured value too low.",
+      "Heat lost to the air and the glass means the water warms less than it should, so the energy you calculate from the temperature rise is an underestimate (too low).",
     ],
     items: [
       { id: "P4.2-01", type: "choice", tier: 1, ref: "4.2/LO5", family: "burn-measure",
@@ -1349,9 +1377,9 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     result: "An estimate of population size (mean per quadrat × area) and species richness (number of different species).",
     controls: ["Random placement to remove sampler bias", "More quadrats for a more reliable mean", "Same size quadrat throughout"],
     technique: [
-      "'Random' means chosen by random numbers, not spread out evenly by eye.",
+      "'Random' means chosen by random numbers, not spread out evenly by eye — that is what removes the sampler's bias.",
       "Species richness = the number of different species, not the total count.",
-      "More quadrats → a more reliable estimate.",
+      "More quadrats → a more reliable estimate, because the mean of many is closer to the true average.",
     ],
     items: [
       { id: "P5.2a-01", type: "choice", tier: 1, ref: "5.2/LO1", family: "quad-random",
@@ -1461,7 +1489,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     subtitle: "Measure the slope of a shore",
     aim: "Measure the profile (slope) of a shore or slope.",
     diagram: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 880 560" role="img" aria-labelledby="title desc">
-<title id="title">Measuring a shore profile</title><desc id="desc">Two ranging poles use matching height marks. The clinometer measures the angle and a tape measures the distance of each section. The profile builds as the slope changes. Matching marks keep the sight line parallel to the ground.</desc>
+<title id="title">Measuring a shore profile</title><desc id="desc">Measure section A to B with a clinometer and a ground tape, sighting between marks exactly the same height above the feet of the two ranging poles. Keep the pole at B and move the other pole to C where the next section ends. Repeat the angle and distance measurement. A profile graph builds using the same scale factor for horizontal and vertical distances. Matching marks keep each sight line parallel to its ground section. The completed profile stays visible.</desc>
 <style>:root{--bg:#e9f1f2;--panel:#ffffff;--ink:#0d2a37;--soft:#4d6c77;--line:#d2e0e3;--teal:#12a7bb;--deep:#0b6b79;--coral:#ff6a4d;--good:#1a9b6c;--amber:#f0a63c;--violet:#7a5bb0}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#071820;--panel:#0e2733;--ink:#e9f4f5;--soft:#9dbcc5;--line:#1c3d49;--teal:#3ac6d8;--deep:#8fdce7;--coral:#ff7d63;--good:#57c98b;--amber:#f3b75e;--violet:#b79be6}}
 :root[data-theme="dark"]{--bg:#071820;--panel:#0e2733;--ink:#e9f4f5;--soft:#9dbcc5;--line:#1c3d49;--teal:#3ac6d8;--deep:#8fdce7;--coral:#ff7d63;--good:#57c98b;--amber:#f3b75e;--violet:#b79be6}
@@ -1486,13 +1514,25 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 @keyframes dissolve{0%,18%{opacity:1}55%,94%{opacity:0}100%{opacity:1}}
 @keyframes bubble{0%,15%{opacity:0;transform:translateY(0)}20%{opacity:1}65%{opacity:1;transform:translateY(-145px)}70%,99%{opacity:0;transform:translateY(-165px)}100%{opacity:0;transform:translateY(0)}}
 
+.sight{fill:none;stroke:var(--coral);stroke-width:3;stroke-dasharray:7 5}
+.tape-line{fill:none;stroke:var(--deep);stroke-width:3;stroke-dasharray:9 4}
+.profile-one,.profile-two{fill:none;stroke:var(--coral);stroke-width:4;stroke-linecap:round}
+.moving-pole{transform:translate(450px,397px);animation:move-pole 8s ease-in-out both}
+.observer{transform:translate(290px,225px);animation:move-observer 8s ease-in-out both}
+.section-one{opacity:0;animation:section-one 8s linear both}
+.section-two{opacity:1;animation:section-two 8s linear both}
+@keyframes move-pole{0%,43%{transform:translate(110px,300px);opacity:1}47%{transform:translate(110px,300px);opacity:0}52%{transform:translate(450px,397px);opacity:0}57%,100%{transform:translate(450px,397px);opacity:1}}
+@keyframes move-observer{0%,43%{transform:translate(110px,190px);opacity:1}47%{transform:translate(110px,190px);opacity:0}52%{transform:translate(290px,225px);opacity:0}57%,100%{transform:translate(290px,225px);opacity:1}}
+@keyframes section-one{0%,7%{opacity:0}12%,43%{opacity:1}47%,100%{opacity:0}}
+@keyframes section-two{0%,57%{opacity:0}62%,100%{opacity:1}}
+
 @media(prefers-reduced-motion:reduce){svg *{animation:none!important;transition:none!important}.reveal,.late{opacity:1!important}.early,.dissolve,.bubble{opacity:0!important}.grow{transform:none!important}.shrink{transform:scaleY(.22)!important}}
 </style>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L10 5 0 10Z" fill="var(--coral)"/></marker></defs>
 <rect width="880" height="560" fill="var(--bg)"/>
 <text x="24" y="43" class="title">Measuring a shore profile</text>
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
-<path d="M35 290L231 329 396 408H425V428H35Z" class="" fill="var(--line)"/><path d="M35 290L231 329 396 408" class="apparatus" /><path d="M45 292V134" class="apparatus" /><rect x="38" y="185" width="14" height="10" rx="0" fill="var(--coral)" /><path d="M231 329V171" class="apparatus" /><rect x="224" y="222" width="14" height="10" rx="0" fill="var(--coral)" /><g class="late" ><path d="M231 329V171" class="apparatus" /><path d="M396 408V250" class="apparatus" /><rect x="224" y="222" width="14" height="10" rx="0" fill="var(--coral)" /><rect x="389" y="301" width="14" height="10" rx="0" fill="var(--coral)" /></g><g class="early" ><path d="M45 190L231 227" class="arrow" /><text x="138" y="164" class="small">Angle</text><path d="M46 190H125" class="rule" stroke-dasharray="5 5"/></g><g class="late" ><path d="M231 227L396 306" class="arrow" /><text x="309" y="209" class="small">Angle</text><path d="M231 227H314" class="rule" stroke-dasharray="5 5"/></g><g class="" transform="translate(44 296)"><g class="early" ><circle cx="24" cy="-117" r="12" fill="var(--soft)" /><path d="M23-103V-57m0-31 23-13M23-57l-12 41m12-41 16 46" class="rule" /><path d="M45-106l15-6v13Z" class="" fill="var(--coral)"/></g></g><g class="" transform="translate(230 333)"><g class="late" ><circle cx="24" cy="-117" r="12" fill="var(--soft)" /><path d="M23-103V-57m0-31 23-13M23-57l-12 41m12-41 16 46" class="rule" /><path d="M45-106l15-6v13Z" class="" fill="var(--coral)"/></g></g><path d="M47 307L224 342M235 345L387 421" class="rule" stroke-dasharray="7 4"/><text x="79" y="369" class="small">Distance</text><text x="631" y="103" class="small" text-anchor="middle">Build a scale profile</text><path d="M475 125V380" class="rule" opacity=".3"/><path d="M519 125V380" class="rule" opacity=".3"/><path d="M563 125V380" class="rule" opacity=".3"/><path d="M607 125V380" class="rule" opacity=".3"/><path d="M651 125V380" class="rule" opacity=".3"/><path d="M695 125V380" class="rule" opacity=".3"/><path d="M739 125V380" class="rule" opacity=".3"/><path d="M783 125V380" class="rule" opacity=".3"/><path d="M827 125V380" class="rule" opacity=".3"/><path d="M475 125H827" class="rule" opacity=".3"/><path d="M475 167H827" class="rule" opacity=".3"/><path d="M475 209H827" class="rule" opacity=".3"/><path d="M475 251H827" class="rule" opacity=".3"/><path d="M475 293H827" class="rule" opacity=".3"/><path d="M475 335H827" class="rule" opacity=".3"/><path d="M475 377H827" class="rule" opacity=".3"/><g class="reveal" style="--delay:3s"><path d="M490 189L657.4 222.3" class="" fill="none" stroke="var(--coral)" stroke-width="4"/></g><g class="reveal" style="--delay:5s"><path d="M657.4 222.3L805.9 293.4" class="" fill="none" stroke="var(--coral)" stroke-width="4"/></g><text x="468" y="418" class="small">Record angle + distance</text><g class="reveal" style="--delay:5.5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Sight between the SAME height marks.</text><text x="440" y="514" class="accent" text-anchor="middle">Measure each section where the slope changes.</text></g>
+<text x="27" y="92" class="">1  Measure each section</text><text x="529" y="92" class="">2  Draw the profile</text><path d="M27 283.86L110 300L290 335L450 397H480V429H27Z" class="" fill="var(--line)"/><path d="M27 283.86L110 300L290 335L450 397H480" class="apparatus" /><path d="M501 111V425" class="rule" stroke-dasharray="4 8" opacity=".4"/><g class="" transform="translate(290 335)"><rect x="-5" y="-156" width="10" height="156" rx="1" fill="var(--panel)" stroke="var(--deep)" stroke-width="2"/><rect x="-4" y="-156" width="8" height="24" rx="0" fill="var(--deep)" /><rect x="-4" y="-108" width="8" height="24" rx="0" fill="var(--deep)" /><rect x="-4" y="-60" width="8" height="24" rx="0" fill="var(--deep)" /><rect x="-10" y="-114" width="20" height="8" rx="2" fill="var(--coral)" /></g><g class="moving-pole" ><rect x="-5" y="-156" width="10" height="156" rx="1" fill="var(--panel)" stroke="var(--deep)" stroke-width="2"/><rect x="-4" y="-156" width="8" height="24" rx="0" fill="var(--deep)" /><rect x="-4" y="-108" width="8" height="24" rx="0" fill="var(--deep)" /><rect x="-4" y="-60" width="8" height="24" rx="0" fill="var(--deep)" /><rect x="-10" y="-114" width="20" height="8" rx="2" fill="var(--coral)" /></g><text x="265" y="155" class="small">Ranging poles</text><path d="M340 164L296 186" class="rule" /><g class="observer" ><circle cx="-43" cy="-2" r="12" fill="var(--ink)" /><path d="M-53-10Q-45-22-31-10" class="" fill="var(--deep)"/><path d="M-51 14Q-39 11-32 21L-28 55H-55Z" class="" fill="var(--teal)" stroke="var(--deep)" stroke-width="2"/><path d="M-48 54L-54 97M-34 55L-25 103M-53 25L-37 38-15 9" class="" fill="none" stroke="var(--ink)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M-60 99H-48M-30 105H-17" class="" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/><rect x="-26" y="-7" width="25" height="15" rx="3" fill="var(--coral)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="-13" cy="0" r="4" fill="var(--panel)" /></g><g class="section-one" ><path d="M110 190L290 225" class="sight" /><path d="M110 190H210" class="rule" stroke-dasharray="5 5"/><path d="M179 190A69 69 0 0 1 177.7 203.2" class="" fill="none" stroke="var(--coral)" stroke-width="3"/><text x="167" y="178" class="small">Angle</text></g><g class="section-two" ><path d="M290 225L450 287" class="sight" /><path d="M290 225H414" class="rule" stroke-dasharray="5 5"/><path d="M361 225A71 71 0 0 1 356.2 250.7" class="" fill="none" stroke="var(--coral)" stroke-width="3"/><text x="361" y="212" class="small">Angle</text></g><path d="M111 313L285 347M296 350L444 407" class="tape-line" /><circle cx="110" cy="300" r="5" fill="var(--deep)" /><text x="125" y="309" class="small">A</text><circle cx="290" cy="335" r="5" fill="var(--deep)" /><text x="305" y="344" class="small">B</text><circle cx="450" cy="397" r="5" fill="var(--deep)" /><text x="465" y="406" class="small">C</text><text x="42" y="380" class="small">Clinometer → angle</text><text x="42" y="413" class="small">Tape → distance</text><rect x="523" y="122" width="334" height="244" rx="12" fill="var(--panel)" /><path d="M540 156V343" class="rule" opacity=".22"/><path d="M570 156V343" class="rule" opacity=".22"/><path d="M600 156V343" class="rule" opacity=".22"/><path d="M630 156V343" class="rule" opacity=".22"/><path d="M660 156V343" class="rule" opacity=".22"/><path d="M690 156V343" class="rule" opacity=".22"/><path d="M720 156V343" class="rule" opacity=".22"/><path d="M750 156V343" class="rule" opacity=".22"/><path d="M780 156V343" class="rule" opacity=".22"/><path d="M810 156V343" class="rule" opacity=".22"/><path d="M840 156V343" class="rule" opacity=".22"/><path d="M540 163H837" class="rule" opacity=".22"/><path d="M540 193H837" class="rule" opacity=".22"/><path d="M540 223H837" class="rule" opacity=".22"/><path d="M540 253H837" class="rule" opacity=".22"/><path d="M540 283H837" class="rule" opacity=".22"/><path d="M540 313H837" class="rule" opacity=".22"/><path d="M540 343H837" class="rule" opacity=".22"/><path d="M540 153V343H839" class="rule" /><text x="540" y="144" class="small">Height</text><text x="689" y="394" class="small" text-anchor="middle">Distance along profile</text><g class="reveal" style="--delay:2.5s"><path d="M553 218L688 244.25" class="profile-one" /><circle cx="553" cy="218" r="5" fill="var(--coral)" /><text x="551" y="201" class="small">A</text></g><g class="reveal" style="--delay:5.7s"><path d="M688 244.25L808 290.75" class="profile-two" /><circle cx="688" cy="244.25" r="5" fill="var(--coral)" /><text x="688" y="227" class="small">B</text><circle cx="808" cy="290.75" r="5" fill="var(--coral)" /><text x="808" y="277" class="small">C</text></g><g class="reveal" style="--delay:6s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Sight between the SAME height marks.</text><text x="440" y="514" class="accent" text-anchor="middle">Record angle + distance for each section.</text></g>
 </svg>`,
     apparatus: ["A tape measure", "Two ranging poles", "A clinometer"],
     steps: [
@@ -1504,7 +1544,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     result: "A scale drawing of the shore's slope (its profile).",
     controls: ["Sight the clinometer between the same height mark on both poles", "Measure a new section wherever the slope changes", "Keep the line of sight parallel to the ground"],
     technique: [
-      "Sight between the same height mark on both poles, not from the ground.",
+      "Sight between the same height mark on both poles (not from the ground) so the line of sight is parallel to the ground and the angle is correct.",
       "Measure a new section whenever the slope changes.",
       "A clinometer measures the angle of the slope.",
     ],
@@ -1656,7 +1696,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     result: "The mass (and percentage) of water the sediment contained.",
     controls: ["Same mass, depth and tide/time for each sample", "Random sampling of each site", "Repeat and take a mean"],
     technique: [
-      "Heat until the mass is constant, not for a fixed time.",
+      "Heat until the mass stops changing, not for a fixed time — a constant mass is how you know all the water has gone.",
       "% water = water lost ÷ starting mass × 100.",
       "Heat gently so organic matter isn't burned away.",
     ],
