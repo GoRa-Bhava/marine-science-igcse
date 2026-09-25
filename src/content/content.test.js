@@ -179,10 +179,15 @@ test("true/false bank is integrated (recall/application tier, boolean answer, q 
   }
 });
 
-test('"mark which are true" multi bank is integrated (tier 2, 8 options, exact true set)', () => {
+test('"mark which are true" multi bank is integrated (tier 2, 8 options except MT-U2-01, exact true set)', () => {
   const mt = items.filter((i) => i.type === "multi" && /^MT-/.test(i.id));
   assert.ok(mt.length >= 20, `expected the mark-true bank, got ${mt.length}`);
   for (const it of mt) {
+    if (it.id === "MT-U2-01") { // salinity option removed in vetting: 7 statements, 3 true
+      assert.equal(it.options.length, 7, `${it.id}: 7 statements`);
+      assert.ok(Array.isArray(it.a) && it.a.length === 3, `${it.id}: 3 true`);
+      continue;
+    }
     assert.equal(it.options.length, 8, `${it.id}: 8 statements`);
     assert.ok(Array.isArray(it.a) && it.a.length === 4, `${it.id}: 4 true`);
   }

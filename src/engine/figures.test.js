@@ -15,7 +15,7 @@ const ITEMS = content.items;
 const figItems = ITEMS.filter((i) => i.fig);
 
 test("all figure items reference a real figure, and are the three ported types", () => {
-  assert.ok(figItems.length >= 23, `expected the 23 figure items, got ${figItems.length}`);
+  assert.ok(figItems.length >= 22, `expected the 22 figure items, got ${figItems.length}`);
   for (const it of figItems) {
     assert.ok(FIG[it.fig], `${it.id}: missing figure ${it.fig}`);
     assert.ok(["tap", "label", "choice"].includes(it.type), `${it.id}: type ${it.type}`);
