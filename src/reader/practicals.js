@@ -807,7 +807,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <rect width="880" height="560" fill="var(--bg)"/>
 <text x="24" y="43" class="title">Salinity and the density of water</text>
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
-<text x="239" y="105" class="" text-anchor="middle">Fresh water</text><text x="626" y="105" class="" text-anchor="middle">Salty water</text><rect x="118" y="200" width="240" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M113 135V357Q113 375 131 375H345Q363 375 363 357V135" class="apparatus" /><path d="M118 200H358" class="rule" /><rect x="506" y="200" width="240" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M501 135V357Q501 375 519 375H733Q751 375 751 357V135" class="apparatus" /><path d="M506 200H746" class="rule" /><g class="" transform="translate(238 331)"><ellipse cx="0" cy="0" rx="28" ry="39" fill="var(--panel)" stroke="var(--soft)" stroke-width="3"/></g><g class="" transform="translate(626 331)"><g class="floating-egg" ><ellipse cx="0" cy="0" rx="28" ry="39" fill="var(--panel)" stroke="var(--soft)" stroke-width="3"/></g></g><text x="557" y="407" class="accent">Density rises ↑</text><text x="100" y="407" class="small">Egg sinks</text><rect x="785" y="209" width="24" height="158" rx="8" fill="var(--line)" /><g class="" transform="translate(785 367)"><g class="grow" ><rect x="0" y="-158" width="24" height="158" rx="8" fill="var(--teal)" /></g></g><circle cx="567" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.0s"/><circle cx="582" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.09s"/><circle cx="597" cy="183" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.18s"/><circle cx="612" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.27s"/><circle cx="627" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.36s"/><circle cx="642" cy="183" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.44999999999999996s"/><circle cx="657" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.54s"/><circle cx="672" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.63s"/><path d="M567 116l70 10-24 27-60-20Z" class="rule" fill="var(--panel)"/><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">More salt → denser water → floats higher</text><text x="440" y="514" class="accent" text-anchor="middle">Dissolved salt adds mass to the water.</text></g>
+<text x="239" y="105" class="" text-anchor="middle">Fresh water</text><text x="626" y="105" class="" text-anchor="middle">Salty water</text><rect x="118" y="200" width="240" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M113 135V357Q113 375 131 375H345Q363 375 363 357V135" class="apparatus" /><path d="M118 200H358" class="rule" /><rect x="506" y="200" width="240" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M501 135V357Q501 375 519 375H733Q751 375 751 357V135" class="apparatus" /><path d="M506 200H746" class="rule" /><g class="" transform="translate(238 331)"><ellipse cx="0" cy="0" rx="28" ry="39" fill="var(--panel)" stroke="var(--soft)" stroke-width="3"/></g><g class="" transform="translate(626 331)"><g class="floating-egg" ><ellipse cx="0" cy="0" rx="28" ry="39" fill="var(--panel)" stroke="var(--soft)" stroke-width="3"/></g></g><text x="557" y="407" class="accent">Density rises ↑</text><text x="100" y="407" class="small">Egg sinks</text><rect x="785" y="209" width="24" height="158" rx="8" fill="var(--line)" /><g class="" transform="translate(785 367)"><g class="grow" ><rect x="0" y="-158" width="24" height="158" rx="8" fill="var(--teal)" /></g></g><circle cx="567" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.0s"/><circle cx="582" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.09s"/><circle cx="597" cy="183" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.18s"/><circle cx="612" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.27s"/><circle cx="627" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.36s"/><circle cx="642" cy="183" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.44999999999999996s"/><circle cx="657" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.54s"/><circle cx="672" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.63s"/><path d="M567 116l70 10-24 27-60-20Z" class="rule" fill="var(--panel)"/><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">More salt → denser water → egg floats higher</text><text x="440" y="514" class="accent" text-anchor="middle">Dissolved salt adds mass to the water.</text></g>
 </svg>`,
     apparatus: ["Solutions of different known salinity", "Measuring cylinder (fixed volume)", "Balance (or float an egg/object; or layer coloured solutions)"],
     steps: [
@@ -1725,6 +1725,50 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         check: ["weigh a known mass of the fresh (wet) sediment", "heat it gently until its mass stops changing", "weigh the dried sediment", "water lost = starting mass − dried mass", "percentage water = water lost ÷ starting mass × 100"],
         distractors: ["weigh only the dried sediment", "heat it for exactly five minutes", "the colour change gives the water content", "add water and measure the volume"],
         why: "Weigh wet, dry to constant mass, weigh dry, find the loss, and express it as a percentage of the starting mass. (5.2/LO5)", status: "human_review" },
+    ],
+    status: "human_review",
+  },
+  {
+    id: "P6.1", ref: "6/AO3", unit: 6,
+    title: "Data handling and experimental design",
+    subtitle: "Tables, graphs, fair tests and reliable recording",
+    aim: "Present and interpret results clearly: draw good tables and graphs, plan a fair test, and record data reliably.",
+    apparatus: ["A ruled results table", "Graph paper, a sharp pencil and a ruler", "The raw readings to plot"],
+    steps: [
+      "Record the readings in a ruled table, with units in the column headings",
+      "Plot the results as a graph with labelled axes",
+      "Join or fit the points and describe the pattern shown",
+      "Keep all other variables the same so the test is fair",
+    ],
+    result: "A clear table and graph that make the pattern easy to see, describe and trust.",
+    controls: ["Keep every other variable the same (a fair test)", "Repeat readings and take a mean", "Use the same instrument each time"],
+    technique: [
+      "In a results table the unit goes once in the column heading, never beside every number.",
+      "A good graph uses a scale that fills at least half the grid, with both axes labelled.",
+      "A fair test changes one variable and keeps all the others the same.",
+      "An automatic data logger records more often and removes human reading error, but it does not interpret the results for you.",
+    ],
+    items: [
+      { id: "P6.1-01", type: "multi", tier: 2, ref: "6/AO3", family: "dh-results-table",
+        q: "A student is designing a table to record how the water level in two tanks changes over time. Tick the features of a good results table.",
+        options: ["The table is drawn as a ruled box with separate columns.", "Each column has a heading that names what was measured.", "The unit is written once, in the column heading, not beside every reading.", "The readings are entered in a sensible order, such as increasing time.", "The unit is written next to every number in the body of the table.", "The values are written down in whatever order they were noticed.", "Each reading is given a sentence of explanation inside its cell."],
+        a: [0,1,2,3],
+        why: "A good results table is a ruled box with columns; each column is headed with what was measured and its unit (unit in the heading only, numbers in the body); and the readings are entered in a sensible order such as increasing time. Repeating the unit beside every value, recording readings in no order, or writing sentences inside the cells all lose marks. (AO3)", status: "human_review" },
+      { id: "P6.1-02", type: "multi", tier: 2, ref: "6/AO3", family: "dh-line-graph",
+        q: "A student is plotting a line graph of a set of readings taken over time. Tick the features of a good line graph.",
+        options: ["Each axis has a scale that rises in equal steps.", "The plotted points spread across at least half of the grid.", "Both axes are labelled with the quantity and its unit.", "The points are joined with straight, ruled lines.", "A key is given if more than one line is drawn.", "The scale is squeezed into one corner so the points sit close together.", "A smooth curve is sketched freehand as a rough guess through the points."],
+        a: [0,1,2,3,4],
+        why: "A good line graph uses a linear scale (equal steps) that fills at least half the grid, labels both axes with the quantity and its unit, joins the plotted points with straight ruled lines, and includes a key when there is more than one line. Cramming the points into a corner, or sketching a freehand curve, lose marks. (AO3)", status: "human_review" },
+      { id: "P6.1-03", type: "multi", tier: 2, ref: "6/AO3", family: "dh-fair-test",
+        q: "A student compares the number of coral species on two different reefs. Tick the variables that must be kept the same for this to be a fair test.",
+        options: ["the water temperature", "the salinity of the water", "the size of the area sampled at each reef", "the light level (water clarity)", "the number of coral species found", "the name of the student recording the data", "the day of the week the reefs are visited"],
+        a: [0,1,2,3],
+        why: "For a fair test, every condition that could affect the result — temperature, salinity, the size of the area sampled, and the light level/clarity — must be kept the same at both reefs, so that any difference in the number of species is due to the reef itself. The number of species is the outcome being measured, not a control variable; the recorder's name and the day are irrelevant. (AO3)", status: "human_review" },
+      { id: "P6.1-04", type: "multi", tier: 2, ref: "6/AO3", family: "dh-data-logger",
+        q: "A scientist can record the tide height with a data logger (an automatic sensor) instead of reading a ruler by hand. Tick the advantages of using the data logger.",
+        options: ["It can take readings more often, at smaller time intervals.", "It is less likely to miss a brief high or low point.", "It removes the human error of reading a scale.", "It can record continuously without someone being present.", "It always gives readings with no possible error of any kind.", "It interprets the results and writes the conclusion for you.", "It is always cheaper than using a ruler."],
+        a: [0,1,2,3],
+        why: "A data logger records automatically and often, at small time intervals, so it is less likely to miss a brief peak or trough; it removes the human error of reading a scale; and it can run unattended. It is not free of all error, it does not interpret the data or draw the conclusion, and it is not necessarily cheaper — those are wrong ideas. (AO3)", status: "human_review" },
     ],
     status: "human_review",
   },
