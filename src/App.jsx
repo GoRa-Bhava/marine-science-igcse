@@ -94,16 +94,17 @@ const reorder = (arr, key = (x) => x) => {
   return [...arr.slice(1), arr[0]];
 };
 
-/* For matching: shuffle both columns, but never leave a term sitting directly
-   opposite its own description. */
-const matchColumns = (pairs) => {
+/* For matching: shuffle both columns. `extra` (optional) are distractor rights
+   that pair with nothing — they get synthetic ids at/after pairs.length so they
+   can never equal a left's id, i.e. picking one is always graded wrong. The two
+   columns can now differ in length (more rights than lefts), so the renderer
+   lays them out as two independent stacks. */
+const matchColumns = (pairs, extra = []) => {
   const L = reorder(pairs.map((p, i) => ({ t: p[0], i })), (x) => x.i);
   const rights = pairs.map((p, i) => ({ t: p[1], i }));
-  for (let t = 0; t < 60; t++) {
-    const R = shuffle(rights);
-    if (R.every((r, idx) => r.i !== L[idx].i)) return { L, R };
-  }
-  const R = L.map((_, idx) => rights[L[(idx + 1) % L.length].i]);
+  const extras = (extra || []).map((t, k) => ({ t, i: pairs.length + k, extra: true }));
+  const pool = [...rights, ...extras];
+  const R = reorder(pool, (x) => x.i);
   return { L, R };
 };
 
@@ -470,7 +471,7 @@ function GapQ({ item, locked, filled, setFilled }) {
 }
 
 function MatchQ({ item, locked, state, setState }) {
-  const { L, R } = useMemo(() => matchColumns(item.pairs), [item.id]);
+  const { L, R } = useMemo(() => matchColumns(item.pairs, item.extra), [item.id]);
   const { links, order, sel } = state;
 
   const rightOwner = {};
@@ -539,27 +540,34 @@ function MatchQ({ item, locked, state, setState }) {
   return (
     <>
       <Prompt>{item.q}</Prompt>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 8 }}>
-        {L.map((left, row) => {
-          const right = R[row];
-          const lv = verdictFor(left.i);
-          const owner = rightOwner[right.i];
-          const rv = owner !== undefined ? verdictFor(owner) : null;
-          return (
-            <React.Fragment key={row}>
-              <div onClick={() => tapLeft(left.i)}
+      {/* Two independent stacks so the right column can hold more entries than
+          the left (the distractor `extra` options). Grading is untouched. */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: 8, alignItems: "start" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {L.map((left) => {
+            const lv = verdictFor(left.i);
+            return (
+              <div key={left.i} onClick={() => tapLeft(left.i)}
                 style={look(links[left.i] !== undefined, sel === left.i, lv)}>
                 {left.t}
                 {links[left.i] !== undefined && badge(numberOf(left.i), lv)}
               </div>
-              <div onClick={() => tapRight(right.i)}
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {R.map((right) => {
+            const owner = rightOwner[right.i];
+            const rv = owner !== undefined ? verdictFor(owner) : null;
+            return (
+              <div key={right.i} onClick={() => tapRight(right.i)}
                 style={look(owner !== undefined, false, rv)}>
                 {right.t}
                 {owner !== undefined && badge(numberOf(owner), rv)}
               </div>
-            </React.Fragment>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, marginTop: 12, minHeight: 20 }}>

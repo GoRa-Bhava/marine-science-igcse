@@ -88,6 +88,12 @@ test("every item has the fields its type needs", () => {
       assert.ok(it.pairs.length >= 2 && it.pairs.length <= 6, `${where}: match needs 2-6 pairs`);
       assert.equal(new Set(it.pairs.map((p) => p[1])).size, it.pairs.length, `${where}: repeated description`);
       for (const p of it.pairs) assert.equal(p.length, 2, `${where}: pair shape`);
+      if (it.extra !== undefined) {
+        assert.ok(Array.isArray(it.extra) && it.extra.length >= 1, `${where}: extra is a non-empty array`);
+        for (const e of it.extra) assert.ok(typeof e === "string" && e.trim(), `${where}: extra is a non-empty string`);
+        const rights = new Set(it.pairs.map((p) => p[1]));
+        for (const e of it.extra) assert.ok(!rights.has(e), `${where}: extra "${e.slice(0, 30)}" duplicates a real right (would be a second-correct)`);
+      }
     } else if (it.type === "chain") {
       assert.ok(it.chunks.length >= 3 && it.chunks.length <= 6, `${where}: chain needs 3-6 steps`);
       assert.equal(new Set(it.chunks).size, it.chunks.length, `${where}: repeated step`);
