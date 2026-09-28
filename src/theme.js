@@ -6,6 +6,7 @@ export const PALETTES = {
     abyss: "#04141F", deep: "#0A2A3D", shelf: "#12455F", raise: "#17546F", line: "#1E6A87",
     foam: "#EAF6F5", mist: "#A9C7D2", glow: "#4FD8C4", accent: "#4FD8C4", glowDim: "#2A9C90",
     coral: "#FF7A5C", sand: "#F2D9A8", gold: "#F3C34E", ok: "#4FD8C4", no: "#FF9E7D",
+    amber: "#F0A63C",
     bg0: "#0A2A3D", bg1: "#04141F", inset: "#04141F",
   },
   // Independent light palette (not the dark one lightened). Text is near-black /
@@ -19,6 +20,7 @@ export const PALETTES = {
     abyss: "#04141F", deep: "#0A2A3D", shelf: "#FBFDFD", raise: "#EEF5F6", line: "#4A6672",
     foam: "#12242F", mist: "#46606C", glow: "#4FD8C4", accent: "#0C7C6F", glowDim: "#7FB8AE",
     coral: "#C2502E", sand: "#8A6410", gold: "#8A6410", ok: "#0C7C6F", no: "#C2502E",
+    amber: "#9A5B12",
     bg0: "#F4FBFB", bg1: "#E4F1F2", inset: "#FFFFFF",
   },
 };

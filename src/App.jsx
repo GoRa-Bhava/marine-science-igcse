@@ -363,24 +363,45 @@ function MultiQ({ item, locked, picked, setPicked }) {
       {order.map((i) => {
         const on = picked.includes(i);
         const right = item.a.includes(i);
+        // Four distinct locked states so a MISSED true answer (correct but not
+        // ticked) never looks the same as a correct tick. Colour + icon + label
+        // + aria (never colour alone). Grading is untouched — display only.
         let bg = C.shelf, bd = C.line, col = C.foam;
+        let box = null, label = null, aria = null;
         if (locked) {
-          if (right) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
-          else if (on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }
-          else col = C.mist;
+          if (right && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; box = "✓"; label = "Correct"; aria = "Correct — you selected this correct answer"; }
+          else if (right && !on) { bg = "rgba(240,166,60,.16)"; bd = C.amber; col = C.amber; box = "○"; label = "Missed"; aria = "Missed — this was a correct answer you did not select"; }
+          else if (!right && on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; box = "✗"; label = "Not correct"; aria = "Incorrect — this is not a correct answer"; }
+          else { col = C.mist; aria = "Correctly left out"; }
         } else if (on) { bg = C.raise; bd = C.glow; }
         return (
           <button key={i} onClick={() => !locked && toggle(i)} disabled={locked}
+            aria-label={locked && aria ? `${item.options[i]} — ${aria}` : undefined}
             style={{ ...btnBase, background: bg, borderColor: bd, color: col, display: "flex", gap: 12, alignItems: "center" }}>
-            <span style={{
+            <span aria-hidden="true" style={{
               width: 20, height: 20, flexShrink: 0, borderRadius: 6,
-              border: `2px solid ${on || (locked && right) ? bd : C.line}`,
-              background: on || (locked && right) ? bd : "transparent",
-            }} />
-            <span>{item.options[i]}</span>
+              border: `2px solid ${on ? bd : (locked && right ? C.amber : C.line)}`,
+              background: on ? bd : "transparent",
+              color: C.abyss, display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 13, fontWeight: 700, lineHeight: 1,
+            }}>{locked && on ? box : ""}</span>
+            <span style={{ flex: 1, textAlign: "left" }}>{item.options[i]}</span>
+            {locked && label && (
+              <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: FONT_UI, fontSize: 12, fontWeight: 600, color: col, whiteSpace: "nowrap" }}>
+                {box} {label}
+              </span>
+            )}
           </button>
         );
       })}
+      {locked && (
+        <div role="note" aria-label="Colour key"
+          style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px", margin: "10px 2px 0", fontFamily: FONT_UI, fontSize: 12, color: C.mist }}>
+          <span style={{ color: C.ok }}>✓ Correct</span>
+          <span style={{ color: C.amber }}>○ Missed (a correct answer you didn't pick)</span>
+          <span style={{ color: C.no }}>✗ Your incorrect pick</span>
+        </div>
+      )}
     </>
   );
 }
