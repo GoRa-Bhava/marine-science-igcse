@@ -26,6 +26,61 @@ test("getAllItemProgress returns everything written", async () => {
   assert.deepEqual(all.map((r) => r.id).sort(), ["Q1", "Q2"]);
 });
 
+test("deleteItemProgress wipes one item to never-attempted", async () => {
+  const s = createMemoryStore();
+  await s.putItemProgress({ id: "Q1", box: 3, seen: true });
+  await s.putItemProgress({ id: "Q2", box: 1 });
+  await s.deleteItemProgress("Q1");
+  assert.equal(await s.getItemProgress("Q1"), null, "deleted item reads as null (unseen)");
+  const all = await s.getAllItemProgress();
+  assert.deepEqual(all.map((r) => r.id), ["Q2"], "only the deleted item is gone");
+  // deleting an absent id is a safe no-op
+  await s.deleteItemProgress("nope");
+  assert.equal((await s.getAllItemProgress()).length, 1);
+});
+
+test("deleteItemProgressMany removes every listed item in one pass", async () => {
+  const s = createMemoryStore();
+  await s.putItemProgress({ id: "A", box: 1 });
+  await s.putItemProgress({ id: "B", box: 2 });
+  await s.putItemProgress({ id: "C", box: 3 });
+  await s.deleteItemProgressMany(["A", "B"]);
+  assert.equal(await s.getItemProgress("A"), null);
+  assert.equal(await s.getItemProgress("B"), null);
+  assert.equal((await s.getItemProgress("C")).box, 3, "unlisted item survives");
+  await s.deleteItemProgressMany(); // no args → safe no-op
+  assert.equal((await s.getAllItemProgress()).length, 1);
+});
+
+test("deleteSectionState removes one section record", async () => {
+  const s = createMemoryStore();
+  await s.putSectionState({ id: "3.1", status: "in_progress" });
+  await s.putSectionState({ id: "3.2", status: "in_progress" });
+  await s.deleteSectionState("3.1");
+  assert.equal(await s.getSectionState("3.1"), null);
+  assert.equal((await s.getAllSectionState()).length, 1, "3.2 remains");
+});
+
+test("delete methods are throw-safe (degrade to memory, never crash)", async () => {
+  const s = createMemoryStore();
+  await s.ready();
+  await s.putItemProgress({ id: "Q1", box: 1 });
+  s.backend = { memory: false, get: () => { throw new Error("boom"); }, put: () => { throw new Error("boom"); }, getAll: () => { throw new Error("boom"); }, delete: () => { throw new Error("boom"); }, clear: () => {} };
+  await s.deleteItemProgress("Q1"); // must not throw
+  assert.equal(s.isMemoryFallback, true, "degraded to memory after a throwing delete");
+});
+
+test("IndexedDB backend: delete persists across reopen", async () => {
+  const idb = new IDBFactory();
+  const s1 = await createProgressStore({ indexedDB: idb });
+  await s1.putItemProgress({ id: "Q1", box: 3 });
+  await s1.putItemProgress({ id: "Q2", box: 2 });
+  await s1.deleteItemProgress("Q1");
+  const s2 = await createProgressStore({ indexedDB: idb });
+  assert.equal(await s2.getItemProgress("Q1"), null, "delete persisted (nothing comes back)");
+  assert.equal((await s2.getItemProgress("Q2")).box, 2);
+});
+
 test("bookmark, section state and settings persist and merge", async () => {
   const s = createMemoryStore();
   await s.putBookmark({ mode: "read", sectionId: "1.1", itemId: "Q3", index: 4 });

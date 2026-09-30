@@ -170,6 +170,30 @@ class ProgressStore {
   }
   async getAllItemProgress() { await this._ready; return this._safe(() => this.backend.getAll("items"), []); }
 
+  // FUTURE-SYNC: a raw delete is NOT reconcilable — once a sync backend lands,
+  // a reset from this device could be resurrected by an older ItemProgress from
+  // another device (last-write-wins keeps the newer *record*, and a deletion is
+  // not a record). When sync lands, resets must instead write a *tombstoned*
+  // record — a zeroed ItemProgress with a fresh updatedAt (box:0, timesSeen:0,
+  // timesCorrect:0, timesWrong:0, wrongFlag:false, lastResult:null) — rather than
+  // a hard delete. There is no sync backend today (and clearAll has the same
+  // property), so a raw delete is fine for now. Do not build tombstones yet.
+  // Wipe one item's progress (reset to never-attempted).
+  async deleteItemProgress(id) {
+    await this._ready;
+    return this._safe(async () => { await this.backend.delete("items", id); }, undefined);
+  }
+  // Wipe many items in one pass (e.g. a whole unit).
+  async deleteItemProgressMany(ids = []) {
+    await this._ready;
+    return this._safe(async () => { for (const id of ids) await this.backend.delete("items", id); }, undefined);
+  }
+  // Remove a section's saved state (used when a unit is reset, so its sections read as unstarted).
+  async deleteSectionState(id) {
+    await this._ready;
+    return this._safe(async () => { await this.backend.delete("sections", id); }, undefined);
+  }
+
   // ---- bookmark ----
   async getBookmark() { await this._ready; return this._safe(() => this.backend.get("kv", "bookmark"), null); }
   async putBookmark(rec) {
