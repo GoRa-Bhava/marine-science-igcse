@@ -120,6 +120,8 @@ export function ReaderApp({
   const [restoreMsg, setRestoreMsg] = useState("");
   const [restoreErr, setRestoreErr] = useState("");
   const [confirmReset, setConfirmReset] = useState(false);
+  const [resetDoneId, setResetDoneId] = useState(null);      // shows a tiny "reset" ack on that item
+  const [confirmResetUnit, setConfirmResetUnit] = useState(null); // unitId pending its confirm on the card
 
   // ---- load persisted state (also re-run after restore / reset) ----
   async function loadAll() {
@@ -172,6 +174,7 @@ export function ReaderApp({
     setAnswer(initAnswer(itemById[id]));
     setLocked(false);
     setWasRight(false);
+    setResetDoneId(null);
   }
 
   // ---- device / browser BACK button → pop the app's own screen history ----
@@ -382,6 +385,32 @@ export function ReaderApp({
           setTimeout(() => setReveal(pick), 480);
         }
       }
+    }
+  }
+
+  // Reset ONE question to never-attempted. Optimistic local update + persisted delete.
+  async function resetItem(id) {
+    const s = store();
+    setProgressMap((m) => { const n = { ...m }; delete n[id]; return n; });
+    if (s) await s.deleteItemProgress(id);
+  }
+
+  // Reset a WHOLE unit's questions to never-attempted; also clear the unit's section
+  // states and its resume bookmark so the card reads "Not started".
+  async function resetUnit(u) {
+    const s = store();
+    const ids = u.sectionIds.flatMap((sid) => index.sections[sid].orderedItemIds);
+    setProgressMap((m) => { const n = { ...m }; for (const id of ids) delete n[id]; return n; });
+    setSectionStates((m) => { const n = { ...m }; for (const sid of u.sectionIds) delete n[sid]; return n; });
+    setBookmarks((prev) => {
+      const byUnit = { ...prev.byUnit }; delete byUnit[u.unitId];
+      const next = { ...prev, byUnit, lastUnitId: prev.lastUnitId === u.unitId ? null : prev.lastUnitId };
+      if (s) s.putBookmarks(next);
+      return next;
+    });
+    if (s) {
+      await s.deleteItemProgressMany(ids);
+      for (const sid of u.sectionIds) await s.deleteSectionState(sid);
     }
   }
 
@@ -596,6 +625,29 @@ export function ReaderApp({
                       </button>
                     );
                   })}
+                  <div style={{ marginTop: 8, borderTop: `1px solid ${C.line}55`, paddingTop: 8 }}>
+                    {confirmResetUnit === u.unitId ? (
+                      <div>
+                        <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 8 }}>
+                          Reset all {cov.total} questions in Unit {u.unitId}? Your progress for this unit will be erased.
+                        </div>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button onClick={async () => { await resetUnit(u); setConfirmResetUnit(null); }}
+                            style={{ ...ghostBtn(C), flex: 1, border: `1px solid ${C.coral}`, color: C.coral }}>
+                            Erase Unit {u.unitId}
+                          </button>
+                          <button onClick={() => setConfirmResetUnit(null)} style={{ ...ghostBtn(C), flex: 1 }}>Cancel</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button onClick={() => setConfirmResetUnit(u.unitId)} disabled={cov.attempted === 0}
+                        aria-label={`Reset all progress in Unit ${u.unitId}`}
+                        style={{ ...linkBtn(C), color: cov.attempted === 0 ? C.line : C.coral,
+                                 opacity: cov.attempted === 0 ? 0.5 : 1, padding: 0 }}>
+                        ↺ Reset unit progress
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -679,6 +731,17 @@ export function ReaderApp({
                 </div>
                 <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}>{it.why}</div>
                 <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 8 }}>Ref: syllabus {secOf(it)}.</div>
+                {resetDoneId === it.id ? (
+                  <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 10 }}>
+                    ↺ Reset — this question is fresh again.
+                  </div>
+                ) : (
+                  <button onClick={async () => { await resetItem(it.id); setResetDoneId(it.id); }}
+                    aria-label="Reset this question to never attempted"
+                    style={{ ...linkBtn(C), color: C.mist, marginTop: 10, display: "block", padding: 0 }}>
+                    ↺ Reset this question
+                  </button>
+                )}
               </div>
             )}
           </>
@@ -801,6 +864,17 @@ export function ReaderApp({
           {answerText(it) && <div style={{ fontFamily: FONT_UI, fontSize: 16, color: C.foam, fontWeight: 600, lineHeight: 1.5 }}>{answerText(it)}</div>}
           <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }}>{it.why}</div>
         </div>
+        {resetDoneId === it.id ? (
+          <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "4px 0 10px" }}>
+            ↺ Reset — this question is fresh again.
+          </div>
+        ) : (
+          <button onClick={async () => { await resetItem(it.id); setResetDoneId(it.id); }}
+            aria-label="Reset this question to never attempted"
+            style={{ ...linkBtn(C), color: C.mist, margin: "4px 0 10px", display: "block", padding: 0 }}>
+            ↺ Reset this question
+          </button>
+        )}
         <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
           <button style={ghostBtn(C)} onClick={() => setView("library")}>‹ Library</button>
           <button style={{ ...primaryBtn(C), flex: 1, background: "transparent", color: C.foam, border: `1px solid ${C.line}` }}
