@@ -717,6 +717,17 @@ export function ReaderApp({
               <p style={{ ...kicker(C), color: C.ok }}>ANSWER</p>
               {answerText(it) && <div style={{ fontFamily: FONT_UI, fontSize: 16, color: C.foam, fontWeight: 600, lineHeight: 1.5 }}>{answerText(it)}</div>}
               <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }}>{it.why}</div>
+              {resetDoneId === it.id ? (
+                <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 10 }}>
+                  ↺ Reset — this question is fresh again.
+                </div>
+              ) : (
+                <button onClick={async () => { await resetItem(it.id); setResetDoneId(it.id); }}
+                  aria-label="Reset this question to never attempted"
+                  style={{ ...linkBtn(C), color: C.mist, marginTop: 10, display: "block", padding: 0 }}>
+                  ↺ Reset this question
+                </button>
+              )}
             </div>
           </>
         ) : (
