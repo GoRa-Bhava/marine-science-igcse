@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { createProgressStore } from "./progressStore.js";
+import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, pickNext, unitReadiness, coverage, reviseIds } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
@@ -122,6 +122,13 @@ export function ReaderApp({
   const [confirmReset, setConfirmReset] = useState(false);
   const [resetDoneId, setResetDoneId] = useState(null);      // shows a tiny "reset" ack on that item
   const [confirmResetUnit, setConfirmResetUnit] = useState(null); // unitId pending its confirm on the card
+  // Local learner profiles (device-level). maxProfiles comes from the licence
+  // entitlement (free/single 1, family 3); the licence-gate PR fills it in.
+  const [profiles, setProfiles] = useState([]);
+  const [activeProfileId, setActiveProfileId] = useState(null);
+  const [maxProfiles, setMaxProfiles] = useState(1);
+  const [newProfileName, setNewProfileName] = useState("");
+  const [confirmDeleteProfile, setConfirmDeleteProfile] = useState(null);
 
   // ---- load persisted state (also re-run after restore / reset) ----
   async function loadAll() {
@@ -143,11 +150,22 @@ export function ReaderApp({
       store.putBookmarks(bookmarksRec); // persist the seed once
     }
     setBookmarks(bookmarksRec);
+    // Profiles + the entitlement-driven profile cap (device-level).
+    const dev = await store.getDeviceSettings();
+    setMaxProfiles((dev && dev.entitlement && dev.entitlement.maxProfiles) || 1);
+    setProfiles(store.listProfiles());
+    setActiveProfileId(store.getActiveProfileId());
   }
 
   useEffect(() => {
     let live = true;
-    (async () => { await loadAll(); if (live) setReady(true); })();
+    (async () => {
+      await loadAll();
+      if (!live) return;
+      // "Who's studying?" on launch only when more than one learner exists.
+      if (storeRef.current && storeRef.current.listProfiles().length > 1) setView("profiles");
+      setReady(true);
+    })();
     return () => { live = false; };
   }, []);
 
@@ -414,6 +432,38 @@ export function ReaderApp({
     }
   }
 
+  // ---- learner profiles ----
+  async function switchProfile(id) {
+    const s = store();
+    if (!s || id === activeProfileId) { setView("library"); return; }
+    await s.setActiveProfile(id);
+    await loadAll();                         // reloads the chosen profile's data
+    setSession({ answered: [], wrong: [], count: 0, correct: 0 });
+    setView("library");
+  }
+  async function addProfile() {
+    const s = store();
+    if (!s || profiles.length >= maxProfiles) return;
+    const name = newProfileName.trim() || `Learner ${profiles.length + 1}`;
+    await s.createProfile(name);
+    setProfiles(s.listProfiles());
+    setNewProfileName("");
+  }
+  async function renameProfile(id, patch) {
+    const s = store();
+    if (!s) return;
+    await s.renameProfile(id, patch);
+    setProfiles(s.listProfiles());
+  }
+  async function deleteProfileLocal(id) {
+    const s = store();
+    if (!s) return;
+    await s.deleteProfile(id);
+    setConfirmDeleteProfile(null);
+    await loadAll();                         // active may have changed
+    setView("library");
+  }
+
   function onPrimary() {
     if (locked) { next(); return; }
     if (!canSubmit(item, answer)) return;
@@ -461,6 +511,7 @@ export function ReaderApp({
   else if (view === "practicals") viewContent = renderPracticals();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
+  else if (view === "profiles") viewContent = renderProfilePicker();
   else viewContent = <>{renderLibrary()}{revealOverlay()}</>;
   // Desktop-only shell (sidebar + top bar). On phone/APK these are null, so Shell
   // renders exactly today's single <main> — the layout is byte-for-byte unchanged.
@@ -538,6 +589,16 @@ export function ReaderApp({
         <p style={kicker(C)}>MARINE SCIENCE IGCSE 0697</p>
         <h1 style={h1(C)}>Your revision</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Pick up where you left off, or choose anywhere.</p>
+        {profiles.length > 1 && (() => {
+          const ap = profiles.find((p) => p.id === activeProfileId);
+          return (
+            <button onClick={() => setView("profiles")} aria-label="Switch learner profile"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 10, padding: "6px 12px", borderRadius: 999, border: `1px solid ${C.line}`, background: C.shelf, cursor: "pointer", fontFamily: FONT_UI, fontSize: 13, color: C.foam }}>
+              <span aria-hidden="true" style={{ width: 16, height: 16, borderRadius: "50%", background: (ap && ap.color) || C.glow }} />
+              {ap ? ap.name : "Profile"} · <span style={{ color: C.accent }}>Switch</span>
+            </button>
+          );
+        })()}
 
         {/* Focus card = the resume hero + this unit's coverage & to-revise. */}
         <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
@@ -1442,6 +1503,29 @@ export function ReaderApp({
     setBookmarks({ byUnit: {}, lastUnitId: null }); setConfirmReset(false); setView("library");
   }
 
+  // ---------- Profile picker ("Who's studying?") ----------
+  function renderProfilePicker() {
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Profiles" />
+        <p style={kicker(C)}>WHO'S STUDYING?</p>
+        <h1 style={{ ...h1(C), marginTop: 2 }}>Choose your profile</h1>
+        <p style={{ ...sub(C), marginTop: 4 }}>Each learner keeps their own progress, exam date and discoveries.</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
+          {profiles.map((p) => (
+            <button key={p.id} onClick={() => switchProfile(p.id)}
+              style={{ ...card(C), display: "flex", alignItems: "center", gap: 14, cursor: "pointer", textAlign: "left", border: `1px solid ${p.id === activeProfileId ? C.glow : `${C.line}55`}` }}>
+              <span aria-hidden="true" style={{ width: 30, height: 30, borderRadius: "50%", background: p.color || C.glow, flexShrink: 0 }} />
+              <span style={{ flex: 1, fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>{p.name}</span>
+              {p.id === activeProfileId && <span style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent }}>active</span>}
+            </button>
+          ))}
+        </div>
+        <button onClick={() => setView("settings")} style={{ ...linkBtn(C), marginTop: 16, display: "block", padding: 0 }}>Manage profiles ›</button>
+      </div>
+    );
+  }
+
   function renderSettings() {
     return (
       <div style={pad} className="rl-pad">
@@ -1463,6 +1547,57 @@ export function ReaderApp({
               }}>{l}</button>
             ))}
           </div>
+        </div>
+
+        {/* Learner profiles */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Learner profiles</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Each profile keeps its own progress, exam date and Ocean discoveries. Saved on this device.</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {profiles.map((p) => (
+              <div key={p.id} style={{ border: `1px solid ${p.id === activeProfileId ? C.glow : C.line}55`, borderRadius: 12, padding: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span aria-hidden="true" style={{ width: 22, height: 22, borderRadius: "50%", background: p.color || C.glow, flexShrink: 0 }} />
+                  <input value={p.name} aria-label="Profile name"
+                    onChange={(e) => { const v = e.target.value; setProfiles((ps) => ps.map((x) => x.id === p.id ? { ...x, name: v } : x)); }}
+                    onBlur={() => renameProfile(p.id, { name: p.name })}
+                    style={{ flex: 1, minWidth: 0, fontFamily: FONT_UI, fontSize: 15, fontWeight: 700, padding: "8px 10px", borderRadius: 8, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
+                  {p.id === activeProfileId
+                    ? <span style={{ fontFamily: FONT_UI, fontSize: 12, color: C.accent, whiteSpace: "nowrap" }}>active</span>
+                    : <button onClick={() => switchProfile(p.id)} style={{ ...linkBtn(C), padding: 0, whiteSpace: "nowrap" }}>Switch</button>}
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+                  {PROFILE_COLORS.map((c) => (
+                    <button key={c} aria-label={`Colour ${c}`} onClick={() => renameProfile(p.id, { color: c })}
+                      style={{ width: 20, height: 20, borderRadius: "50%", background: c, cursor: "pointer", border: p.color === c ? `2px solid ${C.foam}` : `1px solid ${C.line}` }} />
+                  ))}
+                  {profiles.length > 1 && (
+                    confirmDeleteProfile === p.id ? (
+                      <span style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center" }}>
+                        <span style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist }}>Erase {p.name}'s progress?</span>
+                        <button onClick={() => deleteProfileLocal(p.id)} style={{ ...linkBtn(C), color: C.coral, padding: 0 }}>Delete</button>
+                        <button onClick={() => setConfirmDeleteProfile(null)} style={{ ...linkBtn(C), padding: 0 }}>Cancel</button>
+                      </span>
+                    ) : (
+                      <button onClick={() => setConfirmDeleteProfile(p.id)} style={{ ...linkBtn(C), color: C.coral, padding: 0, marginLeft: "auto" }}>Delete</button>
+                    )
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          {profiles.length < maxProfiles ? (
+            <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+              <input value={newProfileName} onChange={(e) => setNewProfileName(e.target.value)} placeholder="New learner's name"
+                aria-label="New learner's name"
+                style={{ flex: 1, minWidth: 0, fontFamily: FONT_UI, fontSize: 15, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
+              <button onClick={addProfile} style={{ ...ghostBtn(C), border: `1px solid ${C.glow}`, color: C.accent, whiteSpace: "nowrap" }}>Add profile</button>
+            </div>
+          ) : (
+            <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 12, lineHeight: 1.5 }}>
+              {maxProfiles <= 1 ? "The Family plan lets you add up to 3 learners, each with their own progress." : "You've added the maximum number of learners for your plan."}
+            </p>
+          )}
         </div>
 
         {/* Exam date */}
