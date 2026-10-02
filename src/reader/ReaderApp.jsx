@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
+import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
+import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, pickNext, unitReadiness, coverage, reviseIds } from "./scoring.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
@@ -129,6 +131,11 @@ export function ReaderApp({
   const [maxProfiles, setMaxProfiles] = useState(1);
   const [newProfileName, setNewProfileName] = useState("");
   const [confirmDeleteProfile, setConfirmDeleteProfile] = useState(null);
+  // Licence entitlement (device-level). null = free (Unit 1 only).
+  const [entitlement, setEntitlement] = useState(null);
+  const [keyInput, setKeyInput] = useState("");
+  const [licenceMsg, setLicenceMsg] = useState("");
+  const [licenceBusy, setLicenceBusy] = useState(false);
 
   // ---- load persisted state (also re-run after restore / reset) ----
   async function loadAll() {
@@ -152,9 +159,22 @@ export function ReaderApp({
     setBookmarks(bookmarksRec);
     // Profiles + the entitlement-driven profile cap (device-level).
     const dev = await store.getDeviceSettings();
-    setMaxProfiles((dev && dev.entitlement && dev.entitlement.maxProfiles) || 1);
+    const ent = (dev && dev.entitlement) || null;
+    setEntitlement(ent);
+    setMaxProfiles(maxProfilesOf(ent));
     setProfiles(store.listProfiles());
     setActiveProfileId(store.getActiveProfileId());
+    // Re-validate on launch (honours refunds/disables without a webhook). On any
+    // network failure the cached entitlement is kept — never hard-lock offline.
+    if (ent && ent.key) {
+      lsValidate(ent).then(async (r) => {
+        if (r && r.ok && r.entitlement) {
+          await store.putDeviceSettings({ entitlement: r.entitlement });
+          setEntitlement(r.entitlement);
+          setMaxProfiles(maxProfilesOf(r.entitlement));
+        }
+      }).catch(() => { /* keep cached */ });
+    }
   }
 
   useEffect(() => {
@@ -272,6 +292,7 @@ export function ReaderApp({
 
   // ---- start / navigate ----
   function startRead(secId, startIndex = 0) {
+    if (!isUnlockedUnit(index.sections[secId]?.unitId, entitlement)) { setView("unlock"); return; }
     const q = index.sections[secId]?.orderedItemIds || [];
     setMode("read"); setSectionId(secId); setQueue(q); setPos(startIndex); setMaxPos(startIndex);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
@@ -283,6 +304,7 @@ export function ReaderApp({
     setView("reader"); loadItem(q[0]);
   }
   function startSmart() {
+    if (!isEntitled(entitlement)) { setView("unlock"); return; }   // Mixed Practice spans all units
     setMode("smart"); setSectionId(null); setQueue([]); setPos(0); setMaxPos(0); setRecent([]);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     const first = pickNext(index.flatOrder, progressMap, []);
@@ -299,6 +321,7 @@ export function ReaderApp({
   // clears wrongFlag and the item leaves the revise list next time. Ends at summary.
   function startRevise(ids, label) {
     if (!ids.length) return;
+    if (!isUnlockedUnit(index.itemLoc?.[ids[0]]?.unitId, entitlement)) { setView("unlock"); return; }
     setMode("revise"); setSectionId(null); setQueue(ids); setPos(0); setMaxPos(0);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(ids[0]);
@@ -350,6 +373,7 @@ export function ReaderApp({
   function resume(unitId) {
     const startU = unitId != null ? unitId : (bookmarks.lastUnitId ?? index.units[0]?.unitId);
     if (startU == null) return;
+    if (!isUnlockedUnit(startU, entitlement)) { setView("unlock"); return; }
     const target = nextUnattemptedFrom(startU);
     if (target) {
       const idx = index.itemLoc[target.itemId]?.indexInSection || 0;
@@ -464,6 +488,36 @@ export function ReaderApp({
     setView("library");
   }
 
+  // ---- licence / unlock ----
+  async function activateKey() {
+    const s = store();
+    if (!s || licenceBusy) return;
+    setLicenceBusy(true); setLicenceMsg("");
+    const deviceId = (await s.getMeta())?.deviceId || "device";
+    const r = await lsActivate(keyInput, deviceId);
+    if (r.ok) {
+      await s.putDeviceSettings({ entitlement: r.entitlement });
+      setEntitlement(r.entitlement);
+      setMaxProfiles(maxProfilesOf(r.entitlement));
+      setKeyInput(""); setLicenceBusy(false);
+      setLicenceMsg("Unlocked — thank you! All six units are now available.");
+      setView("library");
+    } else {
+      setLicenceMsg(r.code === "limit" ? `${r.error} You can remove a device in Settings, or email ${LICENCE_CONFIG.supportEmail}.` : r.error);
+      setLicenceBusy(false);
+    }
+  }
+  async function removeDevice() {
+    const s = store();
+    if (!s || licenceBusy) return;
+    setLicenceBusy(true);
+    await lsDeactivate(entitlement);
+    await s.putDeviceSettings({ entitlement: null });
+    setEntitlement(null); setMaxProfiles(1);
+    setLicenceBusy(false);
+    setLicenceMsg("This device has been removed. Units 2–6 are locked again.");
+  }
+
   function onPrimary() {
     if (locked) { next(); return; }
     if (!canSubmit(item, answer)) return;
@@ -512,6 +566,7 @@ export function ReaderApp({
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else if (view === "profiles") viewContent = renderProfilePicker();
+  else if (view === "unlock") viewContent = renderUnlock();
   else viewContent = <>{renderLibrary()}{revealOverlay()}</>;
   // Desktop-only shell (sidebar + top bar). On phone/APK these are null, so Shell
   // renders exactly today's single <main> — the layout is byte-for-byte unchanged.
@@ -635,6 +690,21 @@ export function ReaderApp({
           const bm = bookmarks.byUnit[u.unitId];   // this unit's own resume point
           const here = bm != null;
           const open = !!expandedUnits[u.unitId];
+          const locked = !isUnlockedUnit(u.unitId, entitlement);
+          if (locked) {
+            // Locked unit: a lock badge + CTA; tapping it goes to the Unlock screen.
+            return (
+              <button key={u.unitId} className="rl-unit-card" onClick={() => setView("unlock")}
+                aria-label={`Unit ${u.unitId} ${u.title} — locked. Unlock all units.`}
+                style={{ ...card(C), marginTop: 14, width: "100%", textAlign: "left", cursor: "pointer", border: `1px dashed ${C.line}`, display: "flex", gap: 14, alignItems: "center" }}>
+                <span aria-hidden="true" style={{ width: 52, height: 52, flexShrink: 0, borderRadius: "50%", border: `1px solid ${C.line}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: C.mist }}>🔒</span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: "block", fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Unit {u.unitId} · {u.title}</span>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.accent, marginTop: 2, fontWeight: 700 }}>Unlock all units — £20 ›</span>
+                </span>
+              </button>
+            );
+          }
           return (
             <div key={u.unitId} className="rl-unit-card" style={{ ...card(C), marginTop: 14, border: here ? `1.5px solid ${C.glow}` : `1px solid ${C.line}55` }}>
               {/* Header — tap toggles the section list. */}
@@ -1503,6 +1573,50 @@ export function ReaderApp({
     setBookmarks({ byUnit: {}, lastUnitId: null }); setConfirmReset(false); setView("library");
   }
 
+  // ---------- Unlock screen (the paywall) ----------
+  function renderUnlock() {
+    const planCard = (title, price, line, url, key) => (
+      <div key={key} style={{ ...card(C), display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
+          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 20, fontWeight: 600, color: C.foam }}>{title}</span>
+          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 700, color: C.accent }}>{price}</span>
+        </div>
+        <div style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, lineHeight: 1.5 }}>{line}</div>
+        <a href={CHECKOUT_READY ? url : undefined} target="_blank" rel="noopener noreferrer"
+          onClick={(e) => { if (!CHECKOUT_READY) { e.preventDefault(); setLicenceMsg("Checkout opens once the store is live — if you already have a key, enter it below."); } }}
+          style={{ ...primaryBtn(C), textAlign: "center", textDecoration: "none", marginTop: 4, opacity: CHECKOUT_READY ? 1 : 0.6 }}>
+          {CHECKOUT_READY ? `Buy ${title} — ${price}` : "Checkout coming soon"}
+        </a>
+      </div>
+    );
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Unlock" />
+        <button onClick={() => setView("library")} style={linkBtn(C)}>‹ Back</button>
+        <p style={kicker(C)}>UNLOCK ALL SIX UNITS</p>
+        <h1 style={{ ...h1(C), marginTop: 2 }}>One payment, lifetime access</h1>
+        <p style={{ ...sub(C), marginTop: 4 }}>Unit 1 is free forever. Unlock Units 2–6 and every premium feature with a one-off purchase — no subscription, keep it for good.</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
+          {planCard("Single", "£20", "All six units + premium, for one learner. Lifetime access.", LICENCE_CONFIG.checkoutUrlSingle, "single")}
+          {planCard("Family", "£40", "All six units + premium, with up to 3 learner profiles — each with its own progress. Lifetime access.", LICENCE_CONFIG.checkoutUrlFamily, "family")}
+        </div>
+        <div style={{ ...card(C), marginTop: 16 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>I already bought — enter my licence key</div>
+          <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>Lemon Squeezy emailed your key after purchase. It unlocks this device.</div>
+          <input value={keyInput} onChange={(e) => { setKeyInput(e.target.value); setLicenceMsg(""); }}
+            placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" aria-label="Licence key"
+            style={{ width: "100%", boxSizing: "border-box", fontFamily: "monospace", fontSize: 13, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
+          <button onClick={activateKey} disabled={licenceBusy || !keyInput.trim()}
+            style={{ ...primaryBtn(C), width: "100%", marginTop: 10, opacity: (licenceBusy || !keyInput.trim()) ? 0.5 : 1 }}>
+            {licenceBusy ? "Checking…" : "Unlock this device"}
+          </button>
+          {licenceMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{licenceMsg}</p>}
+        </div>
+        <p style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, marginTop: 14, lineHeight: 1.5 }}>Lifetime access · one payment · no subscription. Prices include tax, handled by Lemon Squeezy.</p>
+      </div>
+    );
+  }
+
   // ---------- Profile picker ("Who's studying?") ----------
   function renderProfilePicker() {
     return (
@@ -1598,6 +1712,35 @@ export function ReaderApp({
               {maxProfiles <= 1 ? "The Family plan lets you add up to 3 learners, each with their own progress." : "You've added the maximum number of learners for your plan."}
             </p>
           )}
+        </div>
+
+        {/* Licence */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Licence</div>
+          {isEntitled(entitlement) ? (
+            <>
+              <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>
+                ✓ Unlocked · {entitlement.tier === "family" ? "Family" : "Single"} plan — all six units, lifetime.
+                {graceExpired(entitlement) ? " Reconnect to the internet soon to keep your unlock verified." : ""}
+              </div>
+              <button onClick={removeDevice} disabled={licenceBusy} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.coral}`, color: C.coral }}>
+                {licenceBusy ? "Removing…" : "Remove this device"}
+              </button>
+            </>
+          ) : (
+            <>
+              <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>Free — Unit 1 only. Unlock all six units with a one-off purchase (no subscription).</div>
+              <button onClick={() => setView("unlock")} style={{ ...primaryBtn(C), width: "100%" }}>Unlock all units — £20</button>
+              <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "12px 0 8px", lineHeight: 1.5 }}>Already bought? Restore on this device with your licence key:</div>
+              <input value={keyInput} onChange={(e) => { setKeyInput(e.target.value); setLicenceMsg(""); }}
+                placeholder="Licence key" aria-label="Licence key"
+                style={{ width: "100%", boxSizing: "border-box", fontFamily: "monospace", fontSize: 13, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
+              <button onClick={activateKey} disabled={licenceBusy || !keyInput.trim()} style={{ ...ghostBtn(C), width: "100%", marginTop: 8, opacity: (licenceBusy || !keyInput.trim()) ? 0.5 : 1 }}>
+                {licenceBusy ? "Checking…" : "Restore purchase"}
+              </button>
+            </>
+          )}
+          {licenceMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{licenceMsg}</p>}
         </div>
 
         {/* Exam date */}
