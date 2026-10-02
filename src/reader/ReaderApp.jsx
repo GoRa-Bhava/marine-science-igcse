@@ -189,6 +189,15 @@ export function ReaderApp({
     return () => { live = false; };
   }, []);
 
+  // Navigation scrolls the page back to the top. The app changes screens with
+  // React state (not routes), so without this a new screen inherits the previous
+  // scroll position — e.g. opening a practical from a scrolled list landed at the
+  // bottom. Covers view switches, opening/closing a practical, each new question
+  // and each browse card.
+  useEffect(() => {
+    try { window.scrollTo(0, 0); } catch (_) { /* SSR / no window */ }
+  }, [view, practicalOpen, currentId, browse.pos]);
+
   const store = () => storeRef.current;
   const item = currentId ? itemById[currentId] : null;
 
