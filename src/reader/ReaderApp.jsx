@@ -344,17 +344,13 @@ export function ReaderApp({
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(ids[0]);
   }
-  // Step back to review the previous question (read-only; never re-scores). Forward
-  // walks back toward the live question. maxPos is unchanged by goBack.
+  // Step back to the previous question (never re-scores). maxPos is unchanged, so
+  // the furthest-reached position is remembered. Forward uses next() (which also
+  // advances maxPos and handles the end of the queue).
   function goBack() {
     if (pos <= 0) return;
     const np = pos - 1;
-    setPos(np); loadItem(queue[np]); // maxPos unchanged — reviewing, not advancing
-  }
-  function goForward() {
-    const np = pos + 1;
-    if (np >= queue.length) return;
-    setPos(np); if (np > maxPos) setMaxPos(np); loadItem(queue[np]);
+    setPos(np); loadItem(queue[np]);
   }
   const isAttempted = (id) => (progressMap[id]?.timesSeen || 0) > 0;
   // Scan units in book order starting at startUnitId (then the units after it, then
@@ -834,9 +830,13 @@ export function ReaderApp({
     const wrongFlag = progressMap[it.id]?.wrongFlag;
     const total = queue.length;
     const railSec = loc?.sectionId;
-    // A linear run (not Mixed Practice) is "reviewing" when the shown position is
-    // behind the furthest reached — i.e. an already-answered earlier question.
-    const reviewing = mode !== "smart" && pos < maxPos;
+    // Free back/forward navigation. A question shows its read-only answer only if
+    // it was actually ANSWERED this run (reviewed); a question that was skipped
+    // (moved past without answering) stays attemptable when you come back to it.
+    const behind = mode !== "smart" && pos < maxPos;
+    const answeredThisRun = session.answered.includes(it.id);
+    const reviewed = mode !== "smart" && !locked && answeredThisRun;
+    const atEnd = mode !== "smart" && pos >= total - 1;
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
@@ -844,12 +844,12 @@ export function ReaderApp({
         <p style={kicker(C)}>{mode === "smart" ? "MIXED PRACTICE · INTERLEAVED" : mode === "practical" ? `PRACTICAL · ${it.ref || ""}` : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
-          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${reviewing ? " · reviewing" : ""}`}</span>
+          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${behind ? (reviewed ? " · reviewing" : locked ? "" : " · skipped") : ""}`}</span>
         </div>
         {mode === "smart" && wrongFlag && !locked && (
           <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.no, marginBottom: 8 }}>↻ you missed this last time</div>
         )}
-        {reviewing ? (
+        {reviewed ? (
           <>
             <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>Reviewing an earlier question — not scored.</div>
             <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, lineHeight: 1.25, margin: "6px 0 14px", whiteSpace: "pre-line" }}>{it.q}</div>
@@ -901,14 +901,23 @@ export function ReaderApp({
           {mode !== "smart" && pos > 0 && (
             <button onClick={goBack} style={ghostBtn(C)} aria-label="Previous question">‹ Back</button>
           )}
-          {reviewing ? (
-            <button onClick={goForward} style={{ ...primaryBtn(C), flex: 1 }}>Next ›</button>
+          {reviewed ? (
+            // Answered earlier and navigated back to: just move forward.
+            <button onClick={next} style={{ ...primaryBtn(C), flex: 1 }}>{atEnd ? "Finish ›" : "Next ›"}</button>
+          ) : locked ? (
+            <>
+              <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
+              <button onClick={onPrimary} style={{ ...primaryBtn(C), flex: 1 }}>{atEnd ? "Finish ›" : "Next ›"}</button>
+            </>
           ) : (
             <>
               <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
-              <button onClick={onPrimary} disabled={!locked && !canSubmit(item, answer)}
-                style={{ ...primaryBtn(C), flex: 1, opacity: !locked && !canSubmit(item, answer) ? 0.5 : 1 }}>
-                {locked ? "Next ›" : "Check"}
+              {mode !== "smart" && (
+                <button onClick={next} style={ghostBtn(C)} aria-label="Skip this question">Skip ›</button>
+              )}
+              <button onClick={onPrimary} disabled={!canSubmit(item, answer)}
+                style={{ ...primaryBtn(C), flex: 1, opacity: !canSubmit(item, answer) ? 0.5 : 1 }}>
+                Check
               </button>
             </>
           )}
