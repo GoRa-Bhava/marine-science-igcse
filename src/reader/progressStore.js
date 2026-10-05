@@ -304,6 +304,21 @@ class ProgressStore {
     return this._safe(async () => { await this.backend.put("kv", out); return out; }, out);
   }
 
+  // ---- spaced-repetition map (Mixed Practice only, per profile) ----
+  // Kept entirely separate from ItemProgress/box-ladder: one kv record per
+  // profile holding { itemId: fsrsRecord }. Fed only by Mixed-Practice answers.
+  async getSRMap() {
+    await this._ready;
+    const id = keyOf("sr", this._pid());
+    return this._safe(async () => ((await this.backend.get("kv", id)) || {}).map || {}, {});
+  }
+  async putSRMap(map) {
+    await this._ready;
+    const id = keyOf("sr", this._pid());
+    const out = { id, map: map || {}, updatedAt: now() };
+    return this._safe(async () => { await this.backend.put("kv", out); return out; }, out);
+  }
+
   // ---- device-level settings (shared across profiles: licence entitlement…) ----
   async getDeviceSettings() {
     await this._ready;
@@ -367,7 +382,7 @@ class ProgressStore {
       const rows = await this.backend.getAll(store);
       for (const r of rows) if (String(r.id).startsWith(pre)) await this.backend.delete(store, r.id);
     }
-    for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("psettings", id)]) await this.backend.delete("kv", k);
+    for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("psettings", id), keyOf("sr", id)]) await this.backend.delete("kv", k);
   }
 
   async deleteProfile(id) {
@@ -399,7 +414,7 @@ class ProgressStore {
         const rows = await this.backend.getAll(store);
         for (const r of rows) if (String(r.id).startsWith(pre)) await this.backend.delete(store, r.id);
       }
-      for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id)]) await this.backend.delete("kv", k);
+      for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("sr", id)]) await this.backend.delete("kv", k);
     }, undefined);
   }
 

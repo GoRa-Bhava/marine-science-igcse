@@ -113,6 +113,25 @@ test("rename and delete a profile; delete removes only its data and never leaves
   assert.ok(s.getActiveProfileId());
 });
 
+test("SR map is per-profile, separate from ItemProgress, and persists", async () => {
+  const s = createMemoryStore();
+  await s.ready();
+  assert.deepEqual(await s.getSRMap(), {}, "empty by default");
+  await s.putItemProgress({ id: "Q1", box: 2 }); // box ladder, independent
+  await s.putSRMap({ Q1: { seen: true, due: "2026-10-07" } });
+  assert.equal((await s.getSRMap()).Q1.due, "2026-10-07");
+  assert.equal((await s.getItemProgress("Q1")).box, 2, "ItemProgress untouched by SR");
+  // isolation: a second profile has its own (empty) SR map
+  const other = await s.createProfile("Kid");
+  await s.setActiveProfile(other.id);
+  assert.deepEqual(await s.getSRMap(), {}, "new profile's SR map is empty");
+  await s.putSRMap({ Q2: { seen: true, due: "2026-10-09" } });
+  // back to the first profile — its SR map is intact and separate
+  await s.setActiveProfile(s.listProfiles()[0].id);
+  assert.equal((await s.getSRMap()).Q1.due, "2026-10-07");
+  assert.ok(!(await s.getSRMap()).Q2, "the other profile's SR entry does not leak");
+});
+
 test("deviceSettings are shared and separate from per-profile settings (entitlement lives here)", async () => {
   const s = createMemoryStore();
   await s.ready();
