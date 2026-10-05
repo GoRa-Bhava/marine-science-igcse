@@ -1,27 +1,25 @@
 /* Lemon Squeezy configuration for the licence gate.
  *
- * ⚠️ PLACEHOLDERS — fill these in once the Lemon Squeezy store exists. No secret
- * API key lives here (or anywhere in the client): the licence activate/validate/
- * deactivate endpoints authenticate with the LICENCE KEY itself, which the buyer
- * supplies. The only values below are public (hosted-checkout URLs + variant ids).
+ * Live values (store created). No secret API key lives here (or anywhere in the
+ * client): the licence activate/validate/deactivate endpoints authenticate with
+ * the LICENCE KEY itself, which the buyer supplies. Everything below is public
+ * (hosted-checkout URLs + variant ids).
  *
- * Store-setup checklist (owner):
- *  1. Create two one-time products in Lemon Squeezy: "Single" (£20) and
- *     "Family" (£40). Enable "License keys" on each.
- *  2. Set the activation limit: Single = 2, Family = 6.
- *  3. Copy each product's hosted-checkout URL into checkoutUrlSingle / …Family.
- *  4. Copy each variant id into variantIdSingle / variantIdFamily (used to tell
- *     Single from Family in the validate response → maxProfiles 1 vs 3).
- *  5. Enable the native affiliate programme in store settings (no app change;
- *     ?aff= links point at these same checkout URLs).
+ * Mapping confirmed from the live checkout pages: be005b8b… = Single, 62c04385… =
+ * Family. variant → maxProfiles is set in licence.js: Single (2209640) → 1,
+ * Family (2209839) → 3; free/no-key → 1.
+ *
+ * ⚠️ Before go-live (post-KYC store activation): re-check in the LS dashboard that
+ * these variant IDs and checkout URLs are unchanged — if LS issued different live
+ * values, update them here. Don't ship with stale pre-activation IDs.
  */
 export const LICENCE_CONFIG = {
-  storeDomain: "marine-science.lemonsqueezy.com", // PLACEHOLDER
-  checkoutUrlSingle: "https://marine-science.lemonsqueezy.com/buy/REPLACE-SINGLE", // PLACEHOLDER
-  checkoutUrlFamily: "https://marine-science.lemonsqueezy.com/buy/REPLACE-FAMILY", // PLACEHOLDER
-  variantIdSingle: "REPLACE_SINGLE_VARIANT_ID", // PLACEHOLDER
-  variantIdFamily: "REPLACE_FAMILY_VARIANT_ID", // PLACEHOLDER
-  supportEmail: "support@example.com", // PLACEHOLDER — shown on activation-limit errors
+  storeDomain: "wildcateducation.lemonsqueezy.com",
+  checkoutUrlSingle: "https://wildcateducation.lemonsqueezy.com/checkout/buy/be005b8b-8353-4f78-894d-0bda8bc6746e",
+  checkoutUrlFamily: "https://wildcateducation.lemonsqueezy.com/checkout/buy/62c04385-2349-44ea-bdc9-77b5911053f3",
+  variantIdSingle: "2209640",
+  variantIdFamily: "2209839",
+  supportEmail: "support@wildcateducation.co.uk", // shown on activation-limit errors
 };
 
 // True once the owner has filled in real checkout URLs (used only to show a
