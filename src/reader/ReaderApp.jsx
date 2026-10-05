@@ -3,7 +3,9 @@ import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
-import { boxAfter, pickNext, unitReadiness, coverage, reviseIds } from "./scoring.js";
+import { boxAfter, unitReadiness, coverage, reviseIds } from "./scoring.js";
+import { answer as schedAnswer } from "../engine/scheduler.js";
+import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
@@ -89,6 +91,7 @@ export function ReaderApp({
   const [locked, setLocked] = useState(false);
   const [wasRight, setWasRight] = useState(false);
   const [recent, setRecent] = useState([]);
+  const [srMap, setSrMap] = useState({}); // spaced-repetition schedule (Mixed Practice only)
   const [session, setSession] = useState({ answered: [], wrong: [], count: 0, correct: 0 });
   const [checkpointSec, setCheckpointSec] = useState(null);
   const [browse, setBrowse] = useState({ ids: [], pos: 0, title: "" });
@@ -164,6 +167,8 @@ export function ReaderApp({
     setMaxProfiles(maxProfilesOf(ent));
     setProfiles(store.listProfiles());
     setActiveProfileId(store.getActiveProfileId());
+    setSrMap(await store.getSRMap()); // Mixed-Practice spaced-repetition schedule
+
     // Re-validate on launch (honours refunds/disables without a webhook). On any
     // network failure the cached entitlement is kept — never hard-lock offline.
     if (ent && ent.key) {
@@ -314,11 +319,14 @@ export function ReaderApp({
   }
   function startSmart() {
     if (!isEntitled(entitlement)) { setView("unlock"); return; }   // Mixed Practice spans all units
-    setMode("smart"); setSectionId(null); setQueue([]); setPos(0); setMaxPos(0); setRecent([]);
+    // Spaced-repetition session: due items first (oldest-due), then new fill,
+    // topics interleaved, one item per session, never empty.
+    const topicOf = (id) => itemById[id]?.topic;
+    const sessionIds = buildMixedSession(index.flatOrder, srMap, topicOf, MIXED_SESSION_SIZE);
+    if (!sessionIds.length) return; // defensive; the bank is never empty
+    setMode("smart"); setSectionId(null); setQueue(sessionIds); setPos(0); setMaxPos(0); setRecent([]);
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
-    const first = pickNext(index.flatOrder, progressMap, []);
-    setRecent(first ? [first] : []);
-    setView("reader"); loadItem(first);
+    setView("reader"); loadItem(sessionIds[0]);
   }
   function startRetry(wrongIds) {
     setMode("retry"); setSectionId(null); setQueue(wrongIds); setPos(0); setMaxPos(0);
@@ -400,6 +408,15 @@ export function ReaderApp({
     const np = boxAfter(prev, right, it.id);
     setProgressMap((m) => ({ ...m, [it.id]: np }));
     if (s) await s.putItemProgress(np);
+
+    // Spaced repetition — Mixed Practice ONLY. Additive and isolated: the unit
+    // flow never reads or writes the SR map. scheduler.answer handles first-attempt
+    // rules (early-correct is a no-op; early-wrong is a lapse).
+    if (mode === "smart") {
+      const nextSr = { ...srMap, [it.id]: schedAnswer(srMap[it.id], right) };
+      setSrMap(nextSr);
+      if (s) await s.putSRMap(nextSr);
+    }
 
     const sec = index.sectionOf(it.id);
     const nextMap = { ...progressMap, [it.id]: np };
@@ -533,10 +550,10 @@ export function ReaderApp({
 
   function next() {
     if (mode === "smart") {
-      const nextRecent = [...recent, currentId];
-      const pick = pickNext(index.flatOrder, progressMap, nextRecent);
-      setRecent(nextRecent.slice(-8));
-      loadItem(pick);
+      // Step through the pre-built spaced-repetition session; end at the summary.
+      const np = pos + 1;
+      if (np >= queue.length) { setView("summary"); return; }
+      setPos(np); if (np > maxPos) setMaxPos(np); loadItem(queue[np]);
       return;
     }
     const np = pos + 1;
