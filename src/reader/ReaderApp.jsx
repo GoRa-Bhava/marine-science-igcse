@@ -3,7 +3,7 @@ import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
-import { boxAfter, unitReadiness, coverage, reviseIds } from "./scoring.js";
+import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
 import { answer as schedAnswer } from "../engine/scheduler.js";
 import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
@@ -858,7 +858,7 @@ export function ReaderApp({
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
         <TopBar C={C} left={mode === "smart" ? "Mixed Practice" : mode === "practical" ? "Practicals" : `Revision · Unit ${loc?.unitId}`} />
-        <p style={kicker(C)}>{mode === "smart" ? "MIXED PRACTICE · INTERLEAVED" : mode === "practical" ? `PRACTICAL · ${it.ref || ""}` : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
+        <p style={kicker(C)}>{mode === "smart" ? `MIXED PRACTICE · UNIT ${loc?.unitId} · ${index.sections[loc?.sectionId]?.title?.toUpperCase() || ""}` : mode === "practical" ? `PRACTICAL · ${it.ref || ""}` : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
           <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${behind ? (reviewed ? " · reviewing" : locked ? "" : " · skipped") : ""}`}</span>
@@ -946,7 +946,7 @@ export function ReaderApp({
             <div className="rl-rail-stat"><b>{session.count}</b><span>answered</span></div>
             <div className="rl-rail-stat"><b>{session.correct}</b><span>correct</span></div>
             <div className="rl-rail-stat"><b>{session.wrong.length}</b><span>to revisit</span></div>
-            {railSec && (() => {
+            {railSec && mode !== "smart" && (() => {
               const c = coverage(index.sections[railSec].orderedItemIds, progressMap);
               return (
                 <>
@@ -1001,6 +1001,35 @@ export function ReaderApp({
           <Stat C={C} n={session.correct} label="CORRECT" />
           <Stat C={C} n={wrongIds.length} label="TO REVISIT" />
         </div>
+        {(() => {
+          const band = { mastered: C.ok, improving: C.amber || C.glow, weak: C.no, unstarted: `${C.line}66` };
+          const rows = index.units.map((u) => {
+            const ids = u.sectionIds.flatMap((sid) => index.sections[sid].orderedItemIds);
+            return { unitId: u.unitId, title: u.title, pct: coverage(ids, progressMap).pct, state: masteryState(ids, progressMap) };
+          });
+          const reduce = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          return (
+            <div style={{ ...card(C), marginTop: 4 }}>
+              <p style={kicker(C)}>COVERAGE BY UNIT</p>
+              {rows.map((r) => (
+                <div key={r.unitId} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", fontFamily: FONT_UI }}>
+                  <span style={{ width: 150, flexShrink: 0, fontSize: 13.5, color: C.mist }}>Unit {r.unitId} · {r.title}</span>
+                  <div style={{ flex: 1, height: 12, borderRadius: 6, background: `${C.line}33`, overflow: "hidden" }} aria-label={`Unit ${r.unitId} ${r.title}: ${r.pct}% covered, ${r.state}`}>
+                    <div style={{ height: "100%", width: `${r.pct}%`, borderRadius: 6, background: band[r.state], transition: reduce ? "none" : "width 0.6s ease" }} />
+                  </div>
+                  <span style={{ width: 42, flexShrink: 0, textAlign: "right", fontSize: 13, fontWeight: 700, color: C.foam }}>{r.pct}%</span>
+                </div>
+              ))}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 14, marginTop: 10, fontFamily: FONT_UI, fontSize: 12, color: C.mist }}>
+                {[["Mastered", band.mastered], ["Improving", band.improving], ["Weak", band.weak], ["Not started", band.unstarted]].map(([lbl, col]) => (
+                  <span key={lbl} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                    <span style={{ width: 11, height: 11, borderRadius: 3, background: col, display: "inline-block" }} />{lbl}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
         {wrongIds.length > 0 && (
           <div style={{ ...card(C) }}>
             <p style={kicker(C)}>THE {wrongIds.length} YOU MISSED</p>
