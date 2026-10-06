@@ -26,3 +26,12 @@ export const LICENCE_CONFIG = {
 // "coming soon" note on the buy buttons during the placeholder phase — never
 // gates the activate flow, which works against a real key regardless).
 export const CHECKOUT_READY = !/REPLACE/.test(LICENCE_CONFIG.checkoutUrlSingle + LICENCE_CONFIG.checkoutUrlFamily);
+
+/* Owner comp access (private). Entering a key whose SHA-256 matches the hash
+ * below unlocks every unit on that device as a Family entitlement, WITHOUT
+ * contacting Lemon Squeezy — so the owner can use the full app before the store
+ * is live, and on any device. Only the hash ships in the bundle: the plaintext
+ * key is never present, so it can't be lifted from the JS and shared. This is
+ * not a public bypass (a real buyer still activates a real LS key as normal).
+ * Set to "" to disable. */
+export const OWNER_KEY_SHA256 = "b63d13c7a94a338f6a98fcab4dd328bb54a3e5500a5ea7422a8f2875a71be2c6";
