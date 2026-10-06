@@ -7,10 +7,37 @@
  * "locked") on any failure. The licence key never leaves the device except in the
  * body of a POST to api.lemonsqueezy.com.
  */
-import { LICENCE_CONFIG } from "./config.js";
+import { LICENCE_CONFIG, OWNER_KEY_SHA256 } from "./config.js";
 
 const LS_BASE = "https://api.lemonsqueezy.com/v1/licenses";
 export const GRACE_MS = 30 * 24 * 60 * 60 * 1000; // 30-day offline grace
+
+/* ---- Owner comp access ---------------------------------------------------
+ * A key whose SHA-256 matches config.OWNER_KEY_SHA256 unlocks the whole app on
+ * this device without any Lemon Squeezy call. The resulting entitlement carries
+ * `owner: true`, which validate() honours so a reload never re-locks it. */
+async function sha256Hex(s) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+async function isOwnerKey(key) {
+  if (!OWNER_KEY_SHA256) return false;
+  try { return (await sha256Hex(String(key || "").trim())) === OWNER_KEY_SHA256; }
+  catch (_) { return false; } // crypto.subtle needs a secure context (HTTPS/localhost)
+}
+function ownerEntitlement(key) {
+  return {
+    key: String(key || "").trim(),
+    instanceId: null,
+    tier: "family",
+    maxProfiles: 3,
+    variantName: "Owner (comp)",
+    status: "active",
+    valid: true,
+    owner: true,
+    lastValidatedAt: Date.now(),
+  };
+}
 
 // variant → profile cap. Family unlocks up to 3 learners; single/free = 1.
 export function maxProfilesForVariant(variantId, variantName) {
@@ -76,6 +103,7 @@ function entitlementFrom(json, key, instanceId) {
 export async function activate(key, deviceId) {
   const k = String(key || "").trim();
   if (!k) return { ok: false, error: "Enter your licence key." };
+  if (await isOwnerKey(k)) return { ok: true, entitlement: ownerEntitlement(k) };
   try {
     const { ok, json } = await lsPost("activate", { license_key: k, instance_name: deviceId || "device" });
     if (ok && json.activated) {
@@ -95,6 +123,10 @@ export async function activate(key, deviceId) {
 // returns { offline:true } and the caller keeps the cached entitlement.
 export async function validate(entitlement) {
   if (!entitlement || !entitlement.key) return { ok: false };
+  // Owner comp entitlement: never hits LS, never re-locks on reload.
+  if (entitlement.owner) {
+    return { ok: true, entitlement: { ...entitlement, valid: true, lastValidatedAt: Date.now() } };
+  }
   try {
     const params = { license_key: entitlement.key };
     if (entitlement.instanceId) params.instance_id = entitlement.instanceId;
