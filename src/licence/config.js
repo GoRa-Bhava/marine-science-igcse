@@ -6,19 +6,19 @@
  * (hosted-checkout URLs + variant ids).
  *
  * Mapping confirmed from the live checkout pages: be005b8b… = Single, 62c04385… =
- * Family. variant → maxProfiles is set in licence.js: Single (2209640) → 1,
- * Family (2209839) → 3; free/no-key → 1.
+ * Family. variant → maxProfiles is set in licence.js: Single (2217452) → 1,
+ * Family (2217451) → 3; free/no-key → 1.
  *
- * ⚠️ Before go-live (post-KYC store activation): re-check in the LS dashboard that
- * these variant IDs and checkout URLs are unchanged — if LS issued different live
- * values, update them here. Don't ship with stale pre-activation IDs.
+ * Store switched test → live (2026-10-07): the live store reissued the variant
+ * IDs (old test IDs 2209640/2209839 → live 2217452/2217451). Checkout URLs were
+ * unchanged. If LS reissues IDs again, update the two variantId lines below.
  */
 export const LICENCE_CONFIG = {
   storeDomain: "wildcateducation.lemonsqueezy.com",
   checkoutUrlSingle: "https://wildcateducation.lemonsqueezy.com/checkout/buy/be005b8b-8353-4f78-894d-0bda8bc6746e",
   checkoutUrlFamily: "https://wildcateducation.lemonsqueezy.com/checkout/buy/62c04385-2349-44ea-bdc9-77b5911053f3",
-  variantIdSingle: "2209640",
-  variantIdFamily: "2209839",
+  variantIdSingle: "2217452",
+  variantIdFamily: "2217451",
   supportEmail: "support@wildcateducation.co.uk", // shown on activation-limit errors
 };
 
