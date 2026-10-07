@@ -98,6 +98,10 @@ export default function MarineInteractive({
       // host can read contentDocument to size/theme it. The content is first-party.
       sandbox="allow-scripts allow-same-origin"
       loading="lazy"
+      // Auto-sized to content, so it never needs to scroll. Suppressing its own
+      // scrollbar stops a one-frame overflow during a resize flicking a scrollbar
+      // in (~15px) and reflowing the two-column layout sideways.
+      scrolling="no"
       style={{
         width: "100%",
         height: h,
