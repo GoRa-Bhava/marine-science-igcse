@@ -5,18 +5,19 @@
  * the LICENCE KEY itself, which the buyer supplies. Everything below is public
  * (hosted-checkout URLs + variant ids).
  *
- * Mapping confirmed from the live checkout pages: be005b8b… = Single, 62c04385… =
+ * Mapping confirmed from the live checkout pages: 93e672c7… = Single, 725e4f77… =
  * Family. variant → maxProfiles is set in licence.js: Single (2217452) → 1,
  * Family (2217451) → 3; free/no-key → 1.
  *
- * Store switched test → live (2026-10-07): the live store reissued the variant
- * IDs (old test IDs 2209640/2209839 → live 2217452/2217451). Checkout URLs were
- * unchanged. If LS reissues IDs again, update the two variantId lines below.
+ * Store switched test → live (2026-10-07): the live store reissued BOTH the
+ * variant IDs (test 2209640/2209839 → live 2217452/2217451) and the hosted
+ * checkout URLs (the test URLs be005b8b…/62c04385… opened the test checkout).
+ * If LS reissues any of these again, update the four fields below.
  */
 export const LICENCE_CONFIG = {
   storeDomain: "wildcateducation.lemonsqueezy.com",
-  checkoutUrlSingle: "https://wildcateducation.lemonsqueezy.com/checkout/buy/be005b8b-8353-4f78-894d-0bda8bc6746e",
-  checkoutUrlFamily: "https://wildcateducation.lemonsqueezy.com/checkout/buy/62c04385-2349-44ea-bdc9-77b5911053f3",
+  checkoutUrlSingle: "https://wildcateducation.lemonsqueezy.com/checkout/buy/93e672c7-0a58-4034-96d8-fe2f4e05ce67",
+  checkoutUrlFamily: "https://wildcateducation.lemonsqueezy.com/checkout/buy/725e4f77-569e-4271-b4f5-4e4267843d67",
   variantIdSingle: "2217452",
   variantIdFamily: "2217451",
   supportEmail: "support@wildcateducation.co.uk", // shown on activation-limit errors
