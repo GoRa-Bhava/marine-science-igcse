@@ -3,9 +3,7 @@ import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
-import UnitCelebration from "../UnitCelebration.jsx";
-import { paletteFor } from "../theme.js";
-import { boxAfter, unitReadiness, readiness as earnedReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
+import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
 import { answer as schedAnswer } from "../engine/scheduler.js";
 import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
@@ -574,7 +572,7 @@ export function ReaderApp({
     }
     const np = pos + 1;
     if (np >= queue.length) {
-      if (mode === "read") { markSectionComplete(sectionId); setCheckpointSec(sectionId); const unit = index.units.find(u => u.unitId === index.sections[sectionId].unitId); const ids = unit.sectionIds.flatMap(s => index.sections[s].orderedItemIds); const nextSec = index.nextSectionId(sectionId); setView(coverage(ids, progressMap).attempted === ids.length && (!nextSec || index.sections[nextSec].unitId !== unit.unitId) ? "unit-complete" : "checkpoint"); }
+      if (mode === "read") { markSectionComplete(sectionId); setCheckpointSec(sectionId); setView("checkpoint"); }
       else setView("summary"); // retry finished
       return;
     }
@@ -591,24 +589,6 @@ export function ReaderApp({
   if (!ready) {
     return <Shell C={C}><div style={{ padding: 40, fontFamily: FONT_UI, color: C.mist }}>Loading your progress…</div></Shell>;
   }
-  const preview = new URLSearchParams(window.location.search);
-  function celebration(uid, settled = false, colours = C) {
-    const unit = index.units.find(u => u.unitId === Number(uid)) || index.units[0];
-    const ids = unit.sectionIds.flatMap(s => index.sections[s].orderedItemIds);
-    const stats = earnedReadiness(ids, progressMap);
-    const nextUnit = index.units.find(u => u.unitId === unit.unitId + 1);
-    return <UnitCelebration key={unit.unitId} unitId={unit.unitId} unitTitle={unit.title}
-      readiness={stats.attempted ? stats.value * 100 : undefined} accuracy={stats.attempted ? stats.accuracy * 100 : undefined}
-      mastery={stats.attempted ? masteryState(ids, progressMap) : undefined} C={colours} settled={settled}
-      nextUnitTitle={nextUnit?.title} onBack={() => preview.has('preview') ? window.location.assign(window.location.pathname) : backToLibrary()}
-      onNext={() => { if (preview.has('preview')) { window.location.assign(window.location.pathname); return; }
-        if (!nextUnit) startSmart(); else if (isUnlockedUnit(nextUnit.unitId, entitlement)) continueSection(nextUnit.sectionIds[0]); else setView('unlock'); }}/ >;
-  }
-  if (preview.get('preview') === 'unit-complete') {
-    const previewC = paletteFor(preview.get('theme') || theme);
-    return <><nav className="uc-preview" aria-label="Celebration previews">{index.units.map(u => <a key={u.unitId} href={`?preview=unit-complete&unit=${u.unitId}&theme=${preview.get('theme') || theme}`}>Unit {u.unitId}</a>)}<a href="?preview=unit-complete&all=1">All six · settled</a><a href={`?preview=unit-complete&unit=${preview.get('unit') || 1}&theme=${preview.get('theme') === 'light' ? 'dark' : 'light'}`}>Switch theme</a></nav>{preview.has('all') ? <div className="uc-gallery">{index.units.map(u => celebration(u.unitId, true, previewC))}</div> : celebration(preview.get('unit') || 1, preview.has('settled'), previewC)}</>;
-  }
-  if (view === 'unit-complete') return celebration(index.sections[checkpointSec].unitId);
   let viewContent;
   if (view === "reader") viewContent = <>{renderReader()}{revealOverlay()}</>;
   else if (view === "checkpoint") viewContent = renderCheckpoint();
@@ -1980,4 +1960,3 @@ function Donut({ C, pct, size = 72, color }) {
 }
 
 export default ReaderApp;
-
