@@ -123,6 +123,13 @@
 
   .rl-hero { margin-top: 16px; }
 
+  /* ---- Unit artwork ----------------------------------------------------- */
+  /* Grid thumbnails step up from 64px (phone, set inline) to 80px on desktop.
+     Explicit width+height still reserve the box, so no layout shift. */
+  .rl-unit-thumb { width: 80px !important; height: 80px !important; }
+  /* The hero card's larger image is desktop-only (hidden inline below 861px). */
+  .rl-hero-img { display: block !important; }
+
   /* ---- Reader two-pane (Phase 2) --------------------------------------- */
   .rl-pad--reader.rl-two-pane {
     display: grid;

@@ -3,7 +3,9 @@ import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
-import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
+import UnitCelebration from "../UnitCelebration.jsx";
+import { paletteFor } from "../theme.js";
+import { boxAfter, unitReadiness, readiness as earnedReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
 import { answer as schedAnswer } from "../engine/scheduler.js";
 import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
@@ -25,6 +27,20 @@ const PRACTICAL_ITEMS = PRACTICALS.flatMap((p) => p.items);
 const FONT_UI = "Karla, system-ui, sans-serif";
 const FONT_DISPLAY = "Fraunces, Georgia, serif";
 const TIER = { 1: "RECALL", 2: "APPLICATION", 3: "EXAM" };
+
+// Decorative unit artwork (under public/images/units/). Relative paths — the app
+// is built with base "./". Grid cards use the 256px thumbs; the desktop hero card
+// uses the 512px copy. See public/images/units/.
+const UNIT_IMG = {
+  1: "unit-1-earth-processes",
+  2: "unit-2-sea-water",
+  3: "unit-3-marine-organisms",
+  4: "unit-4-nutrients-and-energy",
+  5: "unit-5-marine-ecosystems",
+  6: "unit-6-human-influences",
+};
+const unitThumb = (id) => (UNIT_IMG[id] ? `images/units/${UNIT_IMG[id]}.jpg` : null);
+const unitHero = (id) => (UNIT_IMG[id] ? `images/units/${UNIT_IMG[id]}-512.jpg` : null);
 const IS_NATIVE = typeof window !== "undefined" && !!window.Capacitor?.isNativePlatform?.();
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
@@ -558,7 +574,7 @@ export function ReaderApp({
     }
     const np = pos + 1;
     if (np >= queue.length) {
-      if (mode === "read") { markSectionComplete(sectionId); setCheckpointSec(sectionId); setView("checkpoint"); }
+      if (mode === "read") { markSectionComplete(sectionId); setCheckpointSec(sectionId); const unit = index.units.find(u => u.unitId === index.sections[sectionId].unitId); const ids = unit.sectionIds.flatMap(s => index.sections[s].orderedItemIds); const nextSec = index.nextSectionId(sectionId); setView(coverage(ids, progressMap).attempted === ids.length && (!nextSec || index.sections[nextSec].unitId !== unit.unitId) ? "unit-complete" : "checkpoint"); }
       else setView("summary"); // retry finished
       return;
     }
@@ -575,6 +591,24 @@ export function ReaderApp({
   if (!ready) {
     return <Shell C={C}><div style={{ padding: 40, fontFamily: FONT_UI, color: C.mist }}>Loading your progress…</div></Shell>;
   }
+  const preview = new URLSearchParams(window.location.search);
+  function celebration(uid, settled = false, colours = C) {
+    const unit = index.units.find(u => u.unitId === Number(uid)) || index.units[0];
+    const ids = unit.sectionIds.flatMap(s => index.sections[s].orderedItemIds);
+    const stats = earnedReadiness(ids, progressMap);
+    const nextUnit = index.units.find(u => u.unitId === unit.unitId + 1);
+    return <UnitCelebration key={unit.unitId} unitId={unit.unitId} unitTitle={unit.title}
+      readiness={stats.attempted ? stats.value * 100 : undefined} accuracy={stats.attempted ? stats.accuracy * 100 : undefined}
+      mastery={stats.attempted ? masteryState(ids, progressMap) : undefined} C={colours} settled={settled}
+      nextUnitTitle={nextUnit?.title} onBack={() => preview.has('preview') ? window.location.assign(window.location.pathname) : backToLibrary()}
+      onNext={() => { if (preview.has('preview')) { window.location.assign(window.location.pathname); return; }
+        if (!nextUnit) startSmart(); else if (isUnlockedUnit(nextUnit.unitId, entitlement)) continueSection(nextUnit.sectionIds[0]); else setView('unlock'); }}/ >;
+  }
+  if (preview.get('preview') === 'unit-complete') {
+    const previewC = paletteFor(preview.get('theme') || theme);
+    return <><nav className="uc-preview" aria-label="Celebration previews">{index.units.map(u => <a key={u.unitId} href={`?preview=unit-complete&unit=${u.unitId}&theme=${preview.get('theme') || theme}`}>Unit {u.unitId}</a>)}<a href="?preview=unit-complete&all=1">All six · settled</a><a href={`?preview=unit-complete&unit=${preview.get('unit') || 1}&theme=${preview.get('theme') === 'light' ? 'dark' : 'light'}`}>Switch theme</a></nav>{preview.has('all') ? <div className="uc-gallery">{index.units.map(u => celebration(u.unitId, true, previewC))}</div> : celebration(preview.get('unit') || 1, preview.has('settled'), previewC)}</>;
+  }
+  if (view === 'unit-complete') return celebration(index.sections[checkpointSec].unitId);
   let viewContent;
   if (view === "reader") viewContent = <>{renderReader()}{revealOverlay()}</>;
   else if (view === "checkpoint") viewContent = renderCheckpoint();
@@ -680,6 +714,11 @@ export function ReaderApp({
         {/* Focus card = the resume hero + this unit's coverage & to-revise. */}
         <div className="rl-hero" style={{ ...card(C), border: `1.5px solid ${C.glow}`, marginTop: 16 }}>
           <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+            {/* Larger unit artwork — desktop only (hidden below 861px via responsive.css). */}
+            {unitHero(focusUnit.unitId) && (
+              <img className="rl-hero-img" src={unitHero(focusUnit.unitId)} alt="" width={140} height={140}
+                style={{ display: "none", width: 140, height: 140, flexShrink: 0, objectFit: "cover", borderRadius: 14 }} />
+            )}
             <Donut C={C} pct={fCov.pct} color={fCov.pct === 100 ? C.ok : C.glow} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ ...kicker(C), marginTop: 0 }}>UNIT {focusUnit.unitId}</p>
@@ -705,9 +744,15 @@ export function ReaderApp({
         {/* Unit grid: compact card per unit (ring + % covered + revise link). Tap a
             card to expand its section list; tap a section to study it. */}
         <div className="rl-unit-grid">
-        {index.units.map((u) => {
+        {index.units.map((u, ui) => {
           const ids = unitIdsOf(u);
           const cov = coverage(ids, progressMap);
+          const thumb = unitThumb(u.unitId);
+          const thumbImg = thumb ? (
+            <img className="rl-unit-thumb" src={thumb} alt="" width={64} height={64}
+              loading={ui === 0 ? "eager" : "lazy"}
+              style={{ width: 64, height: 64, flexShrink: 0, objectFit: "cover", borderRadius: 11 }} />
+          ) : null;
           const rev = reviseIds(ids, progressMap);
           const bm = bookmarks.byUnit[u.unitId];   // this unit's own resume point
           const here = bm != null;
@@ -719,6 +764,7 @@ export function ReaderApp({
               <button key={u.unitId} className="rl-unit-card" onClick={() => setView("unlock")}
                 aria-label={`Unit ${u.unitId} ${u.title} — locked. Unlock all units.`}
                 style={{ ...card(C), marginTop: 14, width: "100%", textAlign: "left", cursor: "pointer", border: `1px dashed ${C.line}`, display: "flex", gap: 14, alignItems: "center" }}>
+                {thumbImg}
                 <span aria-hidden="true" style={{ width: 52, height: 52, flexShrink: 0, borderRadius: "50%", border: `1px solid ${C.line}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: C.mist }}>🔒</span>
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: "block", fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Unit {u.unitId} · {u.title}</span>
@@ -732,6 +778,7 @@ export function ReaderApp({
               {/* Header — tap toggles the section list. */}
               <button onClick={() => toggleUnit(u.unitId)} aria-expanded={open}
                 style={{ display: "flex", gap: 14, alignItems: "center", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
+                {thumbImg}
                 <Donut C={C} pct={cov.pct} size={52} color={cov.pct === 100 ? C.ok : C.glow} />
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: "block", fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Unit {u.unitId} · {u.title}</span>
@@ -1933,3 +1980,4 @@ function Donut({ C, pct, size = 72, color }) {
 }
 
 export default ReaderApp;
+
