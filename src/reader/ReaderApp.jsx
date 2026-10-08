@@ -716,7 +716,7 @@ export function ReaderApp({
         </div>
 
         <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-          <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice</button>
+          <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice / Spaced Repetition</button>
           <button style={entryBtn(C)} onClick={() => setView("notes")}>📖 Syllabus Notes</button>
         </div>
 
