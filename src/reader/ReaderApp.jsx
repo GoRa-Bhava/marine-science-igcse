@@ -715,11 +715,6 @@ export function ReaderApp({
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-          <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice / Spaced Repetition</button>
-          <button style={entryBtn(C)} onClick={() => setView("notes")}>📖 Syllabus Notes</button>
-        </div>
-
         <p style={{ ...kicker(C), marginTop: 22 }}>YOUR UNITS</p>
         {/* Unit grid: compact card per unit (ring + % covered + revise link). Tap a
             card to expand its section list; tap a section to study it. */}
@@ -833,6 +828,11 @@ export function ReaderApp({
             </div>
           );
         })}
+        </div>
+
+        <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
+          <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice / Spaced Repetition</button>
+          <button style={entryBtn(C)} onClick={() => setView("notes")}>📖 Syllabus Notes</button>
         </div>
 
         <div style={{ marginTop: 22 }}>
