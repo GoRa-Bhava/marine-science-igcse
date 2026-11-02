@@ -37,11 +37,11 @@ test("topic lead order is randomised — not always topic A (Unit 1) first", () 
   assert.ok(firstTopics.size > 1, "the leading topic varies across sessions");
 });
 
-test("due items come before fresh; within a topic, oldest-due first", () => {
+test("all due items precede all fresh items (due pool shuffled, not ordered)", () => {
   const now = new Date("2026-10-10");
   const srMap = {
-    a1: { seen: true, due: "2026-10-07" }, // topic A, older
-    a2: { seen: true, due: "2026-10-09" }, // topic A, newer
+    a1: { seen: true, due: "2026-10-07" }, // topic A, due
+    a2: { seen: true, due: "2026-10-09" }, // topic A, due
     b1: { seen: true, due: "2026-10-10" }, // topic B, due today
     c1: { seen: true, due: "2026-10-20" }, // not due → excluded
   };
@@ -50,8 +50,23 @@ test("due items come before fresh; within a topic, oldest-due first", () => {
   const firstFresh = s.findIndex((x) => !srMap[x]);
   const dueIdx = ["a1", "a2", "b1"].map((id) => s.indexOf(id));
   assert.ok(dueIdx.every((i) => i !== -1 && i < firstFresh), "all due before any fresh");
-  assert.ok(s.indexOf("a1") < s.indexOf("a2"), "within topic A, oldest-due first");
   assert.equal(new Set(s).size, s.length, "no repeats");
+});
+
+test("selection spreads across a topic's range, not just the earliest items", () => {
+  const flat = Array.from({ length: 10 }, (_, i) => "a" + (i + 1)); // a1..a10, one topic
+  const picked = new Set();
+  for (let seed = 1; seed <= 12; seed++) {
+    buildMixedSession(flat, {}, () => "A", 3, new Date("2026-10-06"), mulberry32(seed)).forEach((id) => picked.add(id));
+  }
+  // if it only ever took the first 3 (a1,a2,a3) in book order, this set would be 3
+  assert.ok(picked.size > 3, "picks span more than the earliest few questions");
+});
+
+test("two different rngs produce different sessions", () => {
+  const s1 = buildMixedSession(FLAT, {}, topicOf, 5, new Date("2026-10-06"), mulberry32(1));
+  const s2 = buildMixedSession(FLAT, {}, topicOf, 5, new Date("2026-10-06"), mulberry32(2));
+  assert.notDeepEqual(s1, s2, "different seeds give a different session");
 });
 
 test("a day with nothing due runs entirely on new items; never empty", () => {

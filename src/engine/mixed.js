@@ -2,11 +2,13 @@
  *
  * The SR schedule lives in its own map (see progressStore `sr::<profile>`), fed
  * only by Mixed-Practice answers. A session is built once at the start:
- *   1. DUE first — items whose SR record isDue (due today or overdue), oldest-due
- *      first within each topic, interleaved by topic (topic lead order shuffled).
- *   2. Fill to `size` with NEW items — never scheduled in Mixed Practice — in book
- *      (flat) order within each topic, interleaved by topic (lead order shuffled),
- *      so a session doesn't always open on Unit 1.
+ *   1. DUE first — items whose SR record isDue (due today or overdue), shuffled and
+ *      interleaved by topic (topic order reshuffled each round so none clumps).
+ *   2. Fill to `size` with NEW items — never scheduled in Mixed Practice — also
+ *      shuffled and interleaved by topic, so selection and order are random (not
+ *      book order, and not always opening on Unit 1).
+ * All due items still precede all new items, so the spaced-repetition priority (due
+ * before new) holds; only the order among due items is randomised.
  * Due and new are disjoint, so no item appears twice. Items that have an SR record
  * but aren't due are held back until their due day. The session is never empty: a
  * day with nothing due runs entirely on new items; a brand-new user's first
@@ -15,12 +17,14 @@
 import { isDue } from "./scheduler.js";
 
 // Fisher–Yates shuffle (in place). `rng` is injectable so tests stay deterministic.
+// Fisher–Yates; rng defaults to Math.random. Returns a new array (pure).
 function shuffle(arr, rng = Math.random) {
-  for (let i = arr.length - 1; i > 0; i--) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [a[i], a[j]] = [a[j], a[i]];
   }
-  return arr;
+  return a;
 }
 
 // Round-robin by topic, preserving each topic's internal order, so one topic
@@ -34,12 +38,11 @@ function interleaveByTopic(ids, topicOf, rng = Math.random) {
     if (!buckets.has(t)) buckets.set(t, []);
     buckets.get(t).push(id);
   }
-  const keys = shuffle([...buckets.keys()], rng); // randomise which topic leads, each session
   const out = [];
   let added = true;
   while (added) {
     added = false;
-    for (const k of keys) {
+    for (const k of shuffle([...buckets.keys()], rng)) {   // shuffle topic order each round
       const b = buckets.get(k);
       if (b.length) { out.push(b.shift()); added = true; }
     }
@@ -47,16 +50,13 @@ function interleaveByTopic(ids, topicOf, rng = Math.random) {
   return out;
 }
 
+// Randomised + interleaved. Shuffle both pools so question SELECTION and ORDER are
+// random (not book-order Q1-of-each then Q2-of-each); the due group still precedes
+// new, so the spaced-repetition priority (due before new) holds — only the order
+// among due items changes. interleaveByTopic keeps any one topic from clumping.
 export function buildMixedSession(flatOrder, srMap = {}, topicOf = () => "?", size = 20, now = new Date(), rng = Math.random) {
-  const due = flatOrder.filter((id) => isDue(srMap[id], now));
-  // oldest-due first (earliest due date), stable for equal dates — kept within
-  // each topic bucket; only the topic lead order is randomised.
-  due.sort((a, b) => {
-    const da = srMap[a]?.due || "";
-    const db = srMap[b]?.due || "";
-    return da < db ? -1 : da > db ? 1 : 0;
-  });
-  const fresh = flatOrder.filter((id) => !srMap[id]); // never scheduled in Mixed Practice
+  const due = shuffle(flatOrder.filter((id) => isDue(srMap[id], now)), rng);
+  const fresh = shuffle(flatOrder.filter((id) => !srMap[id]), rng); // never scheduled in Mixed Practice
   const ordered = [...interleaveByTopic(due, topicOf, rng), ...interleaveByTopic(fresh, topicOf, rng)];
   return ordered.slice(0, size); // due are disjoint from fresh → no duplicates
 }
