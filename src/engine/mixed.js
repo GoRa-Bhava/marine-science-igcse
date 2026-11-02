@@ -16,7 +16,6 @@
  */
 import { isDue } from "./scheduler.js";
 
-// Fisher–Yates shuffle (in place). `rng` is injectable so tests stay deterministic.
 // Fisher–Yates; rng defaults to Math.random. Returns a new array (pure).
 function shuffle(arr, rng = Math.random) {
   const a = arr.slice();
