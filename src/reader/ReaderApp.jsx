@@ -374,7 +374,14 @@ export function ReaderApp({
     const np = pos - 1;
     setPos(np); loadItem(queue[np]);
   }
-  const isAttempted = (id) => (progressMap[id]?.timesSeen || 0) > 0;
+  // Reading-only "attempted" for the Continue resume. A question counts as seen for
+  // resume once met in a reading mode, not in Mixed Practice. Legacy records (no
+  // readSeen) fall back to timesSeen so existing resume points never regress.
+  const isAttempted = (id) => {
+    const p = progressMap[id];
+    if (!p) return false;
+    return p.readSeen !== undefined ? p.readSeen : (p.timesSeen || 0) > 0;
+  };
   // Scan units in book order starting at startUnitId (then the units after it, then
   // wrapping to earlier units), returning the first unattempted item's location, or
   // null if everything is attempted.
@@ -420,8 +427,16 @@ export function ReaderApp({
     const s = store();
     const prev = progressMap[it.id];
     const np = boxAfter(prev, right, it.id);
+    // ── middle-path resume: readSeen gates the Reading "Continue". It is set by
+    // reading modes (read/retry/revise) only, never by Mixed Practice (smart), so
+    // mixed practice can't skip the first read. Legacy records (no readSeen) are
+    // treated as read-seen if they were ever attempted, so nothing regresses.
+    const prevRead = prev
+      ? (prev.readSeen !== undefined ? prev.readSeen : (prev.timesSeen || 0) > 0)
+      : false;
+    np.readSeen = prevRead || (mode !== "smart");
     setProgressMap((m) => ({ ...m, [it.id]: np }));
-    if (s) await s.putItemProgress(np);
+    if (s) await s.putItemProgress(np);   // np.readSeen persists with the record
 
     // Spaced repetition — Mixed Practice ONLY. Additive and isolated: the unit
     // flow never reads or writes the SR map. scheduler.answer handles first-attempt
