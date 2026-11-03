@@ -71,6 +71,11 @@ test("every item has the fields its type needs", () => {
     } else if (it.type === "label") {
       assert.ok(figures[it.fig], `${where}: unknown figure ${it.fig}`);
       assert.ok(figures[it.fig].hotspots.length >= 2, `${where}: label figure needs hotspots`);
+      if (it.extra !== undefined) {
+        assert.ok(Array.isArray(it.extra) && it.extra.every((e) => typeof e === "string" && e.trim()), `${where}: extra are non-empty strings`);
+        const labels = new Set(figures[it.fig].hotspots.map((h) => h.label));
+        for (const e of it.extra) assert.ok(!labels.has(e), `${where}: extra "${e}" equals a real hotspot label (could grade as correct)`);
+      }
     } else if (it.type === "gap") {
       assert.equal(it.segments.length, it.answers.length + 1, `${where}: segments must be answers + 1`);
       assert.ok(it.answers.length >= 1, `${where}: needs at least one blank`);
@@ -187,15 +192,11 @@ test("true/false bank is integrated (recall/application tier, boolean answer, q 
   }
 });
 
-test('"mark which are true" multi bank is integrated (tier 2, 8 options except MT-U2-01, exact true set)', () => {
+test('"mark which are true" multi bank is integrated (tier 2, 8 options, 4 true)', () => {
   const mt = items.filter((i) => i.type === "multi" && /^MT-/.test(i.id));
   assert.ok(mt.length >= 20, `expected the mark-true bank, got ${mt.length}`);
   for (const it of mt) {
-    if (it.id === "MT-U2-01") { // salinity option removed in vetting: 7 statements, 3 true
-      assert.equal(it.options.length, 7, `${it.id}: 7 statements`);
-      assert.ok(Array.isArray(it.a) && it.a.length === 3, `${it.id}: 3 true`);
-      continue;
-    }
+    // MT-U2-01 was reframed in the 2026-11 pass to the standard 8 statements / 4 true.
     assert.equal(it.options.length, 8, `${it.id}: 8 statements`);
     assert.ok(Array.isArray(it.a) && it.a.length === 4, `${it.id}: 4 true`);
   }
