@@ -316,11 +316,6 @@ const ITEMS = [
     options: ["A mid-ocean ridge forms at a divergent (constructive) boundary, where two plates move apart.", "A mid-ocean ridge is an underwater mountain chain.", "An ocean trench forms at a convergent boundary, where two plates move towards each other.", "At an ocean trench, one plate is forced (subducted) beneath the other.", "A mid-ocean ridge forms where one plate is forced beneath another.", "An ocean trench forms where two plates move apart.", "A mid-ocean ridge is a deep, narrow depression in the sea floor.", "A mid-ocean ridge forms where two plates slide past each other at a transform boundary."],
     a: [0, 1, 2, 3],
     why: "A mid-ocean ridge is a raised underwater mountain chain forming where plates move apart (a divergent/constructive boundary). An ocean trench is a deep, narrow depression forming where plates move together and one is subducted beneath the other (a convergent boundary). Do not swap the two features or their boundary types." },
-  { id: "U1-103", topic: "floor", type: "choice", tier: 2, ref: "1.3/LO6", family: "echo-sounding-depth",
-    q: "A survey ship sends a sound pulse straight down to map the seabed. The pulse returns 0.8 s after it was sent, and sound travels at 1500 m/s in sea water. How deep is the seabed below the ship?",
-    options: ["1200 m", "600 m", "1875 m", "2400 m"],
-    a: 1,
-    why: "The pulse travels down to the seabed and back, so the total distance is speed × time = 1500 × 0.8 = 1200 m. That is the round trip, so the depth is half of it: 1200 ÷ 2 = 600 m. 1200 m forgets the sound goes down and back. 1875 m divides the speed by the time instead of multiplying. 2400 m doubles the distance instead of halving it." },
   { id: "U1-99", topic: "oceans", type: "multi", tier: 2, ref: "1.3/LO3", family: "world-ocean",
     q: "The Earth's five oceans are described as a single 'World Ocean'. Tick the statements that are true.",
     options: ["The Earth has five named oceans.", "The oceans are all joined to one another.", "There are no complete barriers of land separating them.", "Sea water can flow from one ocean into another.", "Together they form one continuous body of water that encircles the Earth.", "Together the oceans form one band of water that runs around the equator.", "They are called one ocean only because they all happen to contain salt water.", "The seas are joined to the oceans, but the oceans are not joined to each other."],
@@ -1954,15 +1949,6 @@ const ITEMS = [
     options: ["Predators such as starfish live on the lower, submerged shore, where they eat mussels.", "Mussels are removed from the lower shore wherever the predators can reach them.", "Higher up the shore the predators are left exposed at low tide and cannot feed, so mussels survive better there and predation limits them down-shore.", "Mussels are kept low on the shore because they eat the Fucus that grows there.", "The starfish and the mussels are competing for the same food.", "Mussels move up the shore to find food at low tide."],
     a: [0, 1, 2],
     why: "Predators like starfish live on the lower, submerged shore and eat mussels, so mussels are removed wherever the starfish can reach them. Higher up, the predators are left exposed at low tide and can't feed, so mussels survive better there. Predation therefore limits mussels down the shore. Watch out for these mistakes: mussels are filter feeders, not Fucus-eaters; the starfish eat the mussels rather than 'compete' with them; and the mussels don't move up the shore to find food." },
-  { id: "U5-113", topic: "u5-rockyshore", type: "match", tier: 2, ref: "5.4/LO3", family: "u5-shore-zone-names",
-    q: "Match each part of a rocky shore to its zone name.",
-    pairs: [
-      ["the splash zone above the high-tide mark, wetted only by spray", "supralittoral zone"],
-      ["the shore between the high- and low-tide marks, covered and uncovered each tide", "littoral (intertidal) zone"],
-      ["below the low-tide mark, almost always underwater", "sublittoral zone"]
-    ],
-    extra: ["upper shore", "lower shore"],
-    why: "Rocky-shore zones are named by how long they are exposed to air. The supralittoral (splash) zone is above the high-tide mark and is only wetted by spray. The littoral, or intertidal, zone lies between the tide marks and is covered and uncovered twice a day. The sublittoral zone is below the low-tide mark and stays under water almost all the time. The upper shore and lower shore are both parts of the intertidal zone. The upper shore is still below the high-tide mark, and the lower shore is still uncovered at low tide." },
   /* ---------------------------------------------- 5.5 Sedimentary shores */
   { id: "U5-56", topic: "u5-sediment", type: "choice", tier: 1, ref: "5.5/LO1",
     q: "Which zone of a sandy shore is always covered by the sea?",
