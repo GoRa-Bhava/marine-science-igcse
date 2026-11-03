@@ -482,10 +482,26 @@ export function ReaderApp({
   }
 
   // Reset ONE question to never-attempted. Optimistic local update + persisted delete.
+  // Reset ONE question to never-attempted: progress record + Mixed-Practice SR entry,
+  // and forget it in the current run so Back/Next don't show it as answered.
   async function resetItem(id) {
     const s = store();
     setProgressMap((m) => { const n = { ...m }; delete n[id]; return n; });
+    setSession((se) => ({ ...se, answered: se.answered.filter((x) => x !== id), wrong: se.wrong.filter((x) => x !== id) }));
+    if (srMap[id]) {
+      const nextSr = { ...srMap }; delete nextSr[id];
+      setSrMap(nextSr);
+      if (s) await s.putSRMap(nextSr);
+    }
     if (s) await s.deleteItemProgress(id);
+  }
+
+  // Reader reset: wipe, then reopen the SAME question attemptable, with an ack.
+  // (loadItem clears resetDoneId, so set it AFTER — React batches both; last write wins.)
+  async function resetAndRetry(id) {
+    await resetItem(id);
+    loadItem(id);
+    setResetDoneId(id);
   }
 
   // Reset a WHOLE unit's questions to never-attempted; also clear the unit's section
@@ -494,6 +510,10 @@ export function ReaderApp({
     const s = store();
     const ids = u.sectionIds.flatMap((sid) => index.sections[sid].orderedItemIds);
     setProgressMap((m) => { const n = { ...m }; for (const id of ids) delete n[id]; return n; });
+    setSession((se) => ({ ...se, answered: se.answered.filter((x) => !ids.includes(x)), wrong: se.wrong.filter((x) => !ids.includes(x)) }));
+    const nextSr = { ...srMap }; let srChanged = false;
+    for (const id of ids) if (nextSr[id]) { delete nextSr[id]; srChanged = true; }
+    if (srChanged) { setSrMap(nextSr); if (s) await s.putSRMap(nextSr); }
     setSectionStates((m) => { const n = { ...m }; for (const sid of u.sectionIds) delete n[sid]; return n; });
     setBookmarks((prev) => {
       const byUnit = { ...prev.byUnit }; delete byUnit[u.unitId];
@@ -893,8 +913,12 @@ export function ReaderApp({
     // it was actually ANSWERED this run (reviewed); a question that was skipped
     // (moved past without answering) stays attemptable when you come back to it.
     const behind = mode !== "smart" && pos < maxPos;
+    // Answered = answered this run, OR (Read mode) answered in an earlier session.
+    // It stays answered (read-only, never re-scored) until the student resets it.
+    // Revise/retry/practical runs exist to RE-answer, so only this run counts there.
     const answeredThisRun = session.answered.includes(it.id);
-    const reviewed = mode !== "smart" && !locked && answeredThisRun;
+    const answeredBefore = mode === "read" && isAttempted(it.id);
+    const reviewed = mode !== "smart" && !locked && (answeredThisRun || answeredBefore);
     const atEnd = mode !== "smart" && pos >= total - 1;
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
@@ -903,14 +927,19 @@ export function ReaderApp({
         <p style={kicker(C)}>{mode === "smart" ? `MIXED PRACTICE · UNIT ${loc?.unitId} · ${index.sections[loc?.sectionId]?.title?.toUpperCase() || ""}` : mode === "practical" ? `PRACTICAL · ${it.ref || ""}` : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
-          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${behind ? (reviewed ? " · reviewing" : locked ? "" : " · skipped") : ""}`}</span>
+          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${reviewed ? " · answered" : (behind && !locked ? " · skipped" : "")}`}</span>
         </div>
         {mode === "smart" && wrongFlag && !locked && (
           <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.no, marginBottom: 8 }}>↻ you missed this last time</div>
         )}
         {reviewed ? (
           <>
-            <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>Reviewing an earlier question — not scored.</div>
+            <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>
+              Already answered — shown read-only, not scored.{" "}
+              {progressMap[it.id] && (progressMap[it.id].wrongFlag
+                ? <b style={{ color: C.no }}>Last time: not quite — it's in your Revise list</b>
+                : <b style={{ color: C.ok }}>Last time: correct ✓</b>)}
+            </div>
             <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, lineHeight: 1.25, margin: "6px 0 14px", whiteSpace: "pre-line" }}>{it.q}</div>
             <div style={{ ...card(C), border: `1px solid ${C.ok}55` }}>
               <p style={{ ...kicker(C), color: C.ok }}>ANSWER</p>
@@ -921,7 +950,7 @@ export function ReaderApp({
                   ↺ Reset — this question is fresh again.
                 </div>
               ) : (
-                <button onClick={async () => { await resetItem(it.id); setResetDoneId(it.id); }}
+                <button onClick={() => resetAndRetry(it.id)}
                   aria-label="Reset this question to never attempted"
                   style={{ ...linkBtn(C), color: C.mist, marginTop: 10, display: "block", padding: 0 }}>
                   ↺ Reset this question
@@ -931,6 +960,11 @@ export function ReaderApp({
           </>
         ) : (
           <>
+            {resetDoneId === it.id && !locked && (
+              <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>
+                ↺ Reset — this question is fresh again. Have another go.
+              </div>
+            )}
             <div style={{ marginTop: 6 }}>
               {renderItemBody(it, { locked, answer, setAnswer })}
             </div>
@@ -946,7 +980,7 @@ export function ReaderApp({
                     ↺ Reset — this question is fresh again.
                   </div>
                 ) : (
-                  <button onClick={async () => { await resetItem(it.id); setResetDoneId(it.id); }}
+                  <button onClick={() => resetAndRetry(it.id)}
                     aria-label="Reset this question to never attempted"
                     style={{ ...linkBtn(C), color: C.mist, marginTop: 10, display: "block", padding: 0 }}>
                     ↺ Reset this question
@@ -961,8 +995,11 @@ export function ReaderApp({
             <button onClick={goBack} style={ghostBtn(C)} aria-label="Previous question">‹ Back</button>
           )}
           {reviewed ? (
-            // Answered earlier and navigated back to: just move forward.
-            <button onClick={next} style={{ ...primaryBtn(C), flex: 1 }}>{atEnd ? "Finish ›" : "Next ›"}</button>
+            // Answered earlier and navigated back to: stop, or move forward.
+            <>
+              <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
+              <button onClick={next} style={{ ...primaryBtn(C), flex: 1 }}>{atEnd ? "Finish ›" : "Next ›"}</button>
+            </>
           ) : locked ? (
             <>
               <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
