@@ -354,9 +354,9 @@ export const PRACTICALS = [
     ],
     items: [
       { id: "P1.4-01", type: "choice", tier: 1, ref: "1.4/LO2", family: "tide-formula",
-        q: "Tidal amplitude is calculated as:",
-        options: ["(high water − low water) ÷ 2", "high water − low water", "high water ÷ 2", "(high water + low water) ÷ 2"],
-        a: 0, why: "Amplitude is half the difference between high and low water: (high − low) ÷ 2. Forgetting the ÷ 2 gives high − low, which is the tidal range, not the amplitude. Halving the high water alone ignores the low-water reading. Adding the two and halving gives the average water level, not the amplitude. (1.4/LO2)", status: "human_review" },
+        q: "Tidal amplitude = (high water − low water) ÷ 2. A student works out high water − low water and forgets to divide by 2. What has the student calculated?",
+        options: ["Twice the tidal amplitude", "The tidal amplitude", "The average height of the water", "Half the tidal amplitude"],
+        a: 0, why: "The formula halves the difference between high and low water. If you leave out the ÷ 2, your answer is twice as big as the amplitude. It isn't the amplitude itself, because the halving step is missing. It isn't the average height of the water, which would mean adding the two heights and halving. And it isn't half the amplitude, which would need dividing by 4. (1.4/LO2)", status: "human_review" },
       { id: "P1.4-02", type: "truefalse", tier: 1, ref: "1.4/LO2", family: "tide-accuracy",
         q: "Taking tide readings more frequently gives a more accurate value for high and low water.",
         answer: true, why: "True. Frequent readings are more likely to catch the real highest and lowest points, so the amplitude is more accurate. (1.4/LO2)", status: "human_review" },

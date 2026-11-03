@@ -84,6 +84,8 @@ test("every item has the fields its type needs", () => {
       assert.ok(it.a.length >= 2, `${where}: at least two correct`);
       assert.ok(it.options.length - it.a.length >= 1, `${where}: at least one incorrect`);
       for (const i of it.a) assert.ok(i >= 0 && i < it.options.length, `${where}: a out of range`);
+      assert.equal(new Set(it.a).size, it.a.length, `${where}: repeated correct index`);
+      assert.equal(new Set(it.options).size, it.options.length, `${where}: duplicate options`);
     } else if (it.type === "match") {
       assert.ok(it.pairs.length >= 2 && it.pairs.length <= 6, `${where}: match needs 2-6 pairs`);
       assert.equal(new Set(it.pairs.map((p) => p[1])).size, it.pairs.length, `${where}: repeated description`);

@@ -59,3 +59,46 @@ test("the full set: 20 practicals across units 1–6, 110 items, both card shape
   assert.ok(ph && ph.steps?.length && ph.apparatus?.length, "a procedure practical with swatches exists");
   assert.ok(ph.swatches.every((s) => s.label && /^#[0-9a-f]{3,8}$/i.test(s.color)), "swatches are {label,color-hex}");
 });
+
+// Standing invariants: rules that must hold for EVERY practicals item, so new
+// questions are checked automatically. These deliberately assert no item counts.
+test("every practicals item obeys the standing invariants", () => {
+  const seen = new Set();
+  for (const p of PRACTICALS) {
+    for (const it of p.items) {
+      const where = it.id;
+      assert.ok(it.id && !seen.has(it.id), `unique id: ${it.id}`);
+      seen.add(it.id);
+      assert.ok(ITEM_TYPES.has(it.type), `${where}: known type ${it.type}`);
+      assert.ok(typeof it.why === "string" && it.why.trim().length > 0, `${where}: non-empty why`);
+
+      if (it.type === "choice") {
+        assert.ok(Array.isArray(it.options) && it.options.length >= 2, `${where}: choice needs options`);
+        assert.equal(it.a, 0, `${where}: choice must stay correct-first (a === 0)`);
+        assert.equal(new Set(it.options).size, it.options.length, `${where}: duplicate options`);
+      } else if (it.type === "truefalse") {
+        assert.equal(typeof it.answer, "boolean", `${where}: truefalse answer must be a boolean`);
+      } else if (it.type === "multi") {
+        assert.ok(Array.isArray(it.options) && it.options.length >= 2, `${where}: multi needs options`);
+        assert.ok(Array.isArray(it.a) && it.a.length >= 1, `${where}: multi needs correct indexes`);
+        assert.equal(new Set(it.a).size, it.a.length, `${where}: repeated correct index`);
+        for (const i of it.a) assert.ok(Number.isInteger(i) && i >= 0 && i < it.options.length, `${where}: a index out of range`);
+        assert.equal(new Set(it.options).size, it.options.length, `${where}: duplicate options`);
+      } else if (it.type === "match") {
+        assert.ok(Array.isArray(it.pairs) && it.pairs.length >= 2, `${where}: match needs pairs`);
+        for (const pr of it.pairs) assert.equal(pr.length, 2, `${where}: pair shape`);
+        const rights = it.pairs.map((pr) => pr[1]);
+        assert.equal(new Set(rights).size, rights.length, `${where}: repeated pair answer`);
+        if (it.extra !== undefined) {
+          assert.ok(Array.isArray(it.extra) && it.extra.every((e) => typeof e === "string" && e.trim()), `${where}: extra are non-empty strings`);
+          assert.equal(new Set(it.extra).size, it.extra.length, `${where}: repeated extra decoy`);
+          const rset = new Set(rights);
+          for (const e of it.extra) assert.ok(!rset.has(e), `${where}: extra "${e.slice(0, 30)}" duplicates a pair answer (second-correct)`);
+        }
+      } else if (it.type === "chain") {
+        assert.ok(Array.isArray(it.chunks) && it.chunks.length >= 2, `${where}: chain needs steps`);
+        assert.equal(new Set(it.chunks).size, it.chunks.length, `${where}: repeated step`);
+      }
+    }
+  }
+});
