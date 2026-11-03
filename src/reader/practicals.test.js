@@ -4,6 +4,18 @@ import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./p
 
 const ITEM_TYPES = new Set(["match", "chain", "choice", "multi", "truefalse", "exam", "best", "gap"]);
 
+// Floors, not exact counts — lower only if practicals are deliberately retired.
+// They guard against accidental mass loss (a practical or a whole unit going
+// missing in a bad merge) without breaking when a single question is added or
+// retired.
+const FLOORS = {
+  practicals: 18,        // 20 authored
+  totalItems: 100,       // 110 authored
+  itemsPerPractical: 3,
+  pilotItems: 10,        // P4.1 has 13
+  units: [1, 2, 3, 4, 5, 6],
+};
+
 test("practicals expose the pilot food-tests entry with a full procedure card", () => {
   assert.ok(PRACTICALS.length >= 1, "at least one practical");
   const p = practicalById("P4.1");
@@ -22,7 +34,7 @@ test("practicals expose the pilot food-tests entry with a full procedure card", 
 
 test("practical items are well-formed and helpers resolve them", () => {
   const ids = practicalItemIds("P4.1");
-  assert.equal(ids.length, 13, "13 pilot items");
+  assert.ok(ids.length >= FLOORS.pilotItems, `P4.1 has >= ${FLOORS.pilotItems} items, got ${ids.length}`);
   const seen = new Set();
   for (const it of practicalById("P4.1").items) {
     assert.ok(it.id?.startsWith("P4.1-"), `namespaced id: ${it.id}`);
@@ -35,8 +47,8 @@ test("practical items are well-formed and helpers resolve them", () => {
   assert.equal(practicalsList().length, PRACTICALS.length);
 });
 
-test("the full set: 20 practicals across units 1–6, 110 items, both card shapes, all vetted", () => {
-  assert.equal(PRACTICALS.length, 20, "20 practicals authored");
+test("the full set: practicals across units 1–6 (floors, not exact counts), both card shapes, all vetted", () => {
+  assert.ok(PRACTICALS.length >= FLOORS.practicals, `>= ${FLOORS.practicals} practicals authored, got ${PRACTICALS.length}`);
   const byUnit = {};
   let items = 0;
   const seenIds = new Set();
@@ -46,14 +58,15 @@ test("the full set: 20 practicals across units 1–6, 110 items, both card shape
     assert.ok(p.technique?.length, `${p.id} has exam technique`);
     // Exactly one card shape: reagent tests[] OR procedure steps[].
     assert.ok(!!p.tests?.length !== !!p.steps?.length, `${p.id} is one shape (tests xor steps)`);
+    assert.ok(p.items.length >= FLOORS.itemsPerPractical, `${p.id}: >= ${FLOORS.itemsPerPractical} items, got ${p.items.length}`);
     for (const it of p.items) {
       assert.ok(!seenIds.has(it.id), `globally unique item id: ${it.id}`); seenIds.add(it.id);
       assert.equal(it.status, "human_review", `${it.id} awaits vetting`);
       items++;
     }
   }
-  assert.equal(items, 110, "110 items total");
-  assert.deepEqual(byUnit, { 1: 1, 2: 7, 3: 3, 4: 3, 5: 5, 6: 1 }, "unit distribution");
+  assert.ok(items >= FLOORS.totalItems, `>= ${FLOORS.totalItems} items total, got ${items}`);
+  for (const u of FLOORS.units) assert.ok((byUnit[u] || 0) >= 1, `unit ${u} has at least one practical`);
   // Procedure shape present (e.g. the pH practical carries labelled colour swatches).
   const ph = PRACTICALS.find((p) => p.swatches?.length);
   assert.ok(ph && ph.steps?.length && ph.apparatus?.length, "a procedure practical with swatches exists");
