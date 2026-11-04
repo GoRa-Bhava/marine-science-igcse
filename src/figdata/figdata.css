@@ -1,0 +1,72 @@
+/* Figures & data — figure + figure-input styling. Ported from the EnviroReady
+   0680 figs.css (2026-11). Only the figure internals live here; the section shell
+   (cards, buttons, feedback, end screen) is styled inline in FiguresPractice.jsx
+   from the active palette. Everything is scoped under .figroot, and every colour
+   is a CSS custom property set on .figroot from theme.js (see figVars). */
+
+/* ---- the SVG figure ---- */
+.figroot .figsvg{width:100%;max-width:620px;margin:0 auto;height:auto;display:block;color:var(--ink);font-family:inherit;font-size:15px}
+.figroot .figsvg text{fill:currentColor}
+.figroot .figsvg .gmin{stroke:var(--line);stroke-width:.6;opacity:.55}
+.figroot .figsvg .gmaj{stroke:var(--mut);stroke-width:.8;opacity:.55}
+.figroot .figsvg .axis{stroke:currentColor;stroke-width:1.4}
+.figroot .figsvg .fbar{fill:color-mix(in srgb,var(--ink) 30%,transparent);stroke:currentColor;stroke-width:1}
+.figroot .figsvg .fbar.hl{fill:color-mix(in srgb,var(--app) 70%,transparent)}
+.figroot .figsvg .fbar.plotted{fill:color-mix(in srgb,var(--accent) 45%,transparent);stroke:var(--accent);stroke-width:2}
+.figroot .figsvg .fline{fill:none;stroke:currentColor;stroke-width:2}
+.figroot .figsvg .fdot{fill:currentColor}
+.figroot .figsvg .fdot.hl{fill:var(--app);stroke:currentColor;stroke-width:1.5}
+.figroot .figsvg .pbar{stroke:currentColor;stroke-width:.8}
+.figroot .figsvg .pbar.m{fill:color-mix(in srgb,var(--ink) 38%,transparent)}
+.figroot .figsvg .pbar.f{fill:color-mix(in srgb,var(--ink) 16%,transparent)}
+.figroot .figsvg .pbar.hl{fill:color-mix(in srgb,var(--app) 70%,transparent)}
+.figroot .figsvg .agel{font-size:13.5px;font-weight:600}
+.figroot .figsvg .vlab{font-size:12.5px;opacity:.85}
+.figroot .figsvg .plothit{cursor:crosshair}
+
+/* ---- figure frame + zoom ---- */
+.figroot .figthumb{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px}
+.figroot .figwrap{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:14px}
+.figroot .figwrap.zoom{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.figroot .figwrap.zoom .figsvg{width:200%;min-width:720px;max-width:none}
+.figroot .figwrap.html{padding:10px;overflow-x:auto}
+
+/* ---- typed-number input ---- */
+.figroot .numrow{display:flex;align-items:center;gap:10px}
+.figroot .numrow input{width:140px;font:inherit;font-size:18px;font-weight:700;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink)}
+.figroot .numrow input:focus{outline:2px solid var(--recall);outline-offset:1px}
+.figroot .numrow input:disabled{opacity:.7}
+.figroot .numrow .unit{font-weight:700;color:var(--soft)}
+
+/* ---- plot / tap hint + nudge buttons ---- */
+.figroot .plothint{color:var(--soft);font-size:14px;margin:6px 2px 0}
+.figroot .plotnudge{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.figroot .fignudge{font:inherit;font-weight:800;font-size:15px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);cursor:pointer}
+.figroot .fignudge:disabled{opacity:.5;cursor:default}
+
+/* ---- tap selection + marked states (applied to [data-tap] elements) ---- */
+.figroot .tapel{cursor:pointer}
+.figroot .figsvg .tapel.sel,.figroot .figsvg .tapel.tapno{fill:color-mix(in srgb,var(--accent) 35%,transparent)!important;stroke:var(--accent)!important;stroke-width:3px!important}
+.figroot .figsvg .tapel.tapok{fill:color-mix(in srgb,var(--ok) 40%,transparent)!important;stroke:var(--ok)!important;stroke-width:3px!important}
+.figroot .figsvg .tapel.tapmiss{stroke:var(--ok)!important;stroke-width:3px!important;stroke-dasharray:5 3}
+.figroot .figwrap :not(svg *).tapel.sel,.figroot .figwrap :not(svg *).tapel.tapno{background:color-mix(in srgb,var(--accent) 30%,transparent);outline:2px solid var(--accent);outline-offset:-2px}
+.figroot .figwrap :not(svg *).tapel.tapok{background:color-mix(in srgb,var(--ok) 30%,transparent);outline:2px solid var(--ok);outline-offset:-2px}
+.figroot .figwrap :not(svg *).tapel.tapmiss{outline:2px dashed var(--ok);outline-offset:-2px}
+
+/* ---- data table (template HTML) ---- */
+.figroot .ftable{border-collapse:collapse;width:100%;font-size:14px;color:var(--ink)}
+.figroot .ftable th,.figroot .ftable td{border:1px solid var(--mut);padding:7px 8px;text-align:center}
+.figroot .ftable th{font-weight:700;background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.figroot .ftable td.blank{background:repeating-linear-gradient(45deg,transparent 0 6px,color-mix(in srgb,var(--ink) 8%,transparent) 6px 8px)}
+
+/* ---- order (tap chips into a sequence) ---- */
+.figroot .ordlbl{font-size:13px;font-weight:700;color:var(--soft);margin:2px 2px 6px}
+.figroot .ordbuilt{min-height:48px;display:flex;flex-direction:column;gap:6px;padding:8px;border:1.5px dashed var(--line);border-radius:12px;margin-bottom:10px}
+.figroot .ordph{color:var(--mut);font-size:14px;padding:6px}
+.figroot .ordpool{display:flex;flex-wrap:wrap;gap:8px}
+.figroot .ochip{font:inherit;font-size:14.5px;text-align:left;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink);cursor:pointer;line-height:1.35}
+.figroot .ochip.on{border-color:var(--recall)}
+.figroot .ochip b{color:var(--recall);margin-right:6px}
+.figroot .ochip.good{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.figroot .ochip.bad{border-color:var(--no);background:color-mix(in srgb,var(--no) 12%,transparent)}
+.figroot .ochip:disabled{cursor:default}

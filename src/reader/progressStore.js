@@ -319,6 +319,20 @@ class ProgressStore {
     return this._safe(async () => { await this.backend.put("kv", out); return out; }, out);
   }
 
+  // ---- Figures & data practice stats (per profile): { templateKey: {best, of, runs} } ----
+  // One kv record per profile. Practice-only: never feeds the scheduler/mastery.
+  async getFigData() {
+    await this._ready;
+    const id = keyOf("figdata", this._pid());
+    return this._safe(async () => ((await this.backend.get("kv", id)) || {}).map || {}, {});
+  }
+  async putFigData(map) {
+    await this._ready;
+    const id = keyOf("figdata", this._pid());
+    const out = { id, map: map || {}, updatedAt: now() };
+    return this._safe(async () => { await this.backend.put("kv", out); return out; }, out);
+  }
+
   // ---- device-level settings (shared across profiles: licence entitlement…) ----
   async getDeviceSettings() {
     await this._ready;
@@ -382,7 +396,7 @@ class ProgressStore {
       const rows = await this.backend.getAll(store);
       for (const r of rows) if (String(r.id).startsWith(pre)) await this.backend.delete(store, r.id);
     }
-    for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("psettings", id), keyOf("sr", id)]) await this.backend.delete("kv", k);
+    for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("psettings", id), keyOf("sr", id), keyOf("figdata", id)]) await this.backend.delete("kv", k);
   }
 
   async deleteProfile(id) {
@@ -414,7 +428,7 @@ class ProgressStore {
         const rows = await this.backend.getAll(store);
         for (const r of rows) if (String(r.id).startsWith(pre)) await this.backend.delete(store, r.id);
       }
-      for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("sr", id)]) await this.backend.delete("kv", k);
+      for (const k of [keyOf("bookmark", id), keyOf("bookmarks", id), keyOf("sr", id), keyOf("figdata", id)]) await this.backend.delete("kv", k);
     }, undefined);
   }
 

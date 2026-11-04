@@ -37,6 +37,13 @@ export const EXPLORE_ENTRIES = [
     blurb: "Learn and test the required lab procedures — starting with the food tests.",
     icon: "🔬",
   },
+  {
+    key: "figdata",
+    view: "figdata",
+    title: "Figures & data",
+    blurb: "Graphs, tables and maps — new data every time",
+    icon: "📊",
+  },
 ];
 
 // The Ocean Discoveries collection — a small entry by the readiness card.

@@ -9,6 +9,7 @@ import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
+import FiguresPractice from "../figdata/FiguresPractice.jsx";
 
 // Practical items grade + persist through the normal machinery (they're keyed in
 // itemById below), but are deliberately kept OUT of the content index, so they
@@ -106,6 +107,7 @@ export function ReaderApp({
   const [wasRight, setWasRight] = useState(false);
   const [recent, setRecent] = useState([]);
   const [srMap, setSrMap] = useState({}); // spaced-repetition schedule (Mixed Practice only)
+  const [figData, setFigData] = useState({}); // Figures & data practice stats (per template key)
   const [session, setSession] = useState({ answered: [], wrong: [], count: 0, correct: 0 });
   const [checkpointSec, setCheckpointSec] = useState(null);
   const [browse, setBrowse] = useState({ ids: [], pos: 0, title: "" });
@@ -182,6 +184,7 @@ export function ReaderApp({
     setProfiles(store.listProfiles());
     setActiveProfileId(store.getActiveProfileId());
     setSrMap(await store.getSRMap()); // Mixed-Practice spaced-repetition schedule
+    setFigData(await store.getFigData()); // Figures & data practice stats
 
     // Re-validate on launch (honours refunds/disables without a webhook). On any
     // network failure the cached entitlement is kept — never hard-lock offline.
@@ -634,6 +637,7 @@ export function ReaderApp({
   else if (view === "concepts") viewContent = renderConcepts();
   else if (view === "flashcards") viewContent = renderFlashcards();
   else if (view === "practicals") viewContent = renderPracticals();
+  else if (view === "figdata") viewContent = renderFigData();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else if (view === "profiles") viewContent = renderProfilePicker();
@@ -675,7 +679,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", figdata: "Figures & data", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -1317,6 +1321,26 @@ export function ReaderApp({
             <p style={sub(C)}>The interactive lab isn't available.</p>
           </div>
         )}
+      </div>
+    );
+  }
+
+  // ---------- Figures & data (generated graphs/tables/maps — practice only) ----------
+  function saveFigRun(key, score, of) {
+    setFigData((prev) => {
+      const cur = prev[key] || { best: 0, of, runs: 0 };
+      const rec = { best: Math.max(cur.best, score), of: score >= cur.best ? of : cur.of, runs: cur.runs + 1 };
+      const nextMap = { ...prev, [key]: rec };
+      const s = store(); if (s) s.putFigData(nextMap);
+      return nextMap;
+    });
+  }
+  function renderFigData() {
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Figures & data" />
+        <FiguresPractice C={C} theme={theme} figData={figData} onBack={backToLibrary}
+          onFinish={saveFigRun} fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
       </div>
     );
   }
