@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 
-const ITEM_TYPES = new Set(["match", "chain", "choice", "multi", "truefalse", "exam", "best", "gap"]);
+const ITEM_TYPES = new Set(["match", "chain", "choice", "multi", "truefalse", "best", "gap"]);
 
 // Floors, not exact counts — lower only if practicals are deliberately retired.
 // They guard against accidental mass loss (a practical or a whole unit going
