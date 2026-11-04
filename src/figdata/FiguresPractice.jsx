@@ -29,6 +29,16 @@ function figVars(C, light) {
   };
 }
 
+// Display order for choice options / order chips. For `order`, never show the
+// chips already in the answer sequence (engine rule): re-shuffle if they land
+// in answer order.
+function shuffleForDisplay(q) {
+  const id = q.options.map((_, k) => k);
+  let o = shuffleR(Math.random, id);
+  for (let n = 0; n < 20 && q.kind === "order" && o.every((k, i) => k === q.a[i]); n++) o = shuffleR(Math.random, id);
+  return o;
+}
+
 const nudgeMsg = (q) =>
   q.kind === "num" ? "Type a number, then press Check."
     : q.kind === "choice" ? "Choose an answer, then press Check."
@@ -74,7 +84,7 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
   function resetForQuestion(q) {
     setState(q.kind === "plot" ? null : (q.kind === "tap" || q.kind === "order") ? [] : null);
     setNumVal(""); setChoiceVal(null); setMultiSet([]);
-    setOrd(q.kind === "choice" || q.kind === "order" ? shuffleR(Math.random, q.options.map((_, k) => k)) : null);
+    setOrd(q.kind === "choice" || q.kind === "order" ? shuffleForDisplay(q) : null);
     setChecked(false); setOk(false); setNudge("");
   }
   function startFig(key) {
