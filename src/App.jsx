@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { examPoints, examModel } from "./engine/exam.js";
 import { figureDims, labelPool } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
@@ -664,104 +663,6 @@ function ChainQ({ item, locked, order, setOrder }) {
   );
 }
 
-/* Exam-style (tier-3) item: a single auto-graded marking-point checklist, then
-   a read-only model answer for study. The learner ticks the points they'd
-   include; grading is content-only (the ticked set must equal the true mark
-   points). Answer ORDER is never authored, entered or graded. Grading helpers
-   live in engine/exam.js. */
-function ExamQ({ item, locked, state, setState }) {
-  const pts = useMemo(() => examPoints(item), [item.id]);
-  const model = useMemo(() => examModel(item), [item.id]);
-  const display = useMemo(() => reorder(pts.map((_, i) => i)), [item.id]);
-  const { checkSel } = state;
-
-  const toggle = (i) => {
-    if (locked) return;
-    setState({ checkSel: checkSel.includes(i) ? checkSel.filter((x) => x !== i) : [...checkSel, i] });
-  };
-
-  const totalCorrect = pts.filter((p) => p.correct).length;
-  const chosenCorrect = checkSel.filter((i) => pts[i].correct).length;
-  const wrongPicks = checkSel.filter((i) => !pts[i].correct).length;
-  const missed = totalCorrect - chosenCorrect;
-
-  const note = { fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: "0 0 14px", lineHeight: 1.45 };
-  const stepLabel = {
-    fontFamily: FONT_UI, fontSize: 12, letterSpacing: ".05em", textTransform: "uppercase",
-    color: C.accent, margin: "0 0 10px",
-  };
-
-  return (
-    <>
-      <p style={stepLabel}>Exam-type question</p>
-      <Prompt>{item.q}</Prompt>
-
-      {!locked && (
-        <p style={note}>
-          Tick every marking point you would include in your answer. The examiner awards the points, not the order.
-        </p>
-      )}
-
-      <p style={stepLabel}>Tick the points you would include</p>
-      {display.map((i) => {
-        const p = pts[i];
-        const on = checkSel.includes(i);
-        let bg = C.shelf, bd = C.line, col = C.foam, dash = "solid";
-        if (locked) {
-          if (p.correct && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }          // included, correct
-          else if (p.correct) { bd = C.ok; col = C.ok; dash = "dashed"; }                        // a mark point missed
-          else if (on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }                  // does not belong
-          else col = C.mist;
-        } else if (on) { bg = C.raise; bd = C.glow; }
-        return (
-          <div key={i}>
-            <button onClick={() => toggle(i)} disabled={locked}
-              style={{
-                ...btnBase, background: bg, borderColor: bd, borderStyle: dash, color: col,
-                display: "flex", gap: 12, alignItems: "center", cursor: locked ? "default" : "pointer",
-                marginBottom: locked && !p.correct && on && p.reason ? 2 : 10,
-              }}>
-              <span style={{
-                width: 20, height: 20, flexShrink: 0, borderRadius: 6,
-                border: `2px solid ${on || (locked && p.correct) ? bd : C.line}`,
-                background: on ? bd : "transparent",
-              }} />
-              <span>{p.text}</span>
-            </button>
-            {locked && on && !p.correct && p.reason && (
-              <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.no, margin: "0 0 10px 32px", lineHeight: 1.4 }}>
-                {p.reason}
-              </p>
-            )}
-          </div>
-        );
-      })}
-
-      {locked && (
-        <>
-          <p style={{ ...note, color: missed === 0 && wrongPicks === 0 ? C.ok : C.no, marginTop: 4 }}>
-            {missed === 0 && wrongPicks === 0
-              ? `All ${totalCorrect} mark points — nothing extra.`
-              : `You included ${chosenCorrect} of ${totalCorrect} mark points${wrongPicks ? `, and ${wrongPicks} that don’t belong` : ""}. Teal = correct, dashed = missed, coral = does not belong.`}
-          </p>
-
-          <p style={stepLabel}>Model answer &middot; for study</p>
-          <div style={{
-            borderRadius: 14, border: `1px solid ${C.line}`, padding: 16, marginBottom: 4,
-            background: "rgba(255,255,255,.02)",
-          }}>
-            {model.map((c, i) => (
-              <p key={i} style={{ fontFamily: FONT_UI, fontSize: 15, lineHeight: 1.5, color: C.foam, margin: i ? "8px 0 0" : 0 }}>
-                <span style={{ color: C.accent, fontWeight: 700 }}>{i + 1}.</span> {c}
-              </p>
-            ))}
-          </div>
-        </>
-      )}
-    </>
-  );
-}
-
 /* ------------------------------------------------------------- updates */
 /* Inside the Android app every file is baked into the APK, so new content
    only arrives with a new APK. The build workflow publishes each APK as a
@@ -911,7 +812,6 @@ export function ItemBody({ item, locked, answer, setAnswer }) {
       {item.type === "gap" && <GapQ item={item} locked={locked} filled={answer} setFilled={setAnswer} />}
       {item.type === "match" && <MatchQ item={item} locked={locked} state={answer} setState={setAnswer} />}
       {item.type === "chain" && <ChainQ item={item} locked={locked} order={answer} setOrder={setAnswer} />}
-      {item.type === "exam" && <ExamQ item={item} locked={locked} state={answer} setState={setAnswer} />}
       {item.type === "tap" && <FigureTapQ item={item} locked={locked} tappedId={answer} setTapped={setAnswer} />}
       {item.type === "label" && <FigureLabelQ item={item} locked={locked} state={answer} setState={setAnswer} />}
     </>

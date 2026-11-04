@@ -59,14 +59,11 @@ export function recordMiss(missed, id, right) {
 }
 
 /* Should a just-answered item be re-served at the end of the SAME free-study
-   lesson? Only a wrong answer is, and only once — EXCEPT an exam item, which is
-   graded once and then only rescheduled for a later day (re-serving a two-step
-   exam mid-session is confusing and could trap the learner on it, so it always
-   advances instead). Per-unit runs never requeue; they collect misses for the
-   end-of-run review. Keeping this pure makes the advance-after-wrong path
-   testable without a React renderer. */
+   lesson? Only a wrong answer is, and only once. Per-unit runs never requeue;
+   they collect misses for the end-of-run review. Keeping this pure makes the
+   advance-after-wrong path testable without a React renderer. */
 export function shouldRequeueAfterWrong(item, wasRight, { alreadyRequeued = false, inRun = false } = {}) {
   if (wasRight) return false;
-  if (!item || item.type === "exam") return false;
+  if (!item) return false;
   return !alreadyRequeued && !inRun;
 }

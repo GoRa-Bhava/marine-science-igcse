@@ -4,6 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { build } from "esbuild";
+import { PRACTICALS } from "../reader/practicals.js";
 
 async function loadContent() {
   const result = await build({
@@ -104,16 +105,19 @@ test("every item has the fields its type needs", () => {
     } else if (it.type === "chain") {
       assert.ok(it.chunks.length >= 3 && it.chunks.length <= 6, `${where}: chain needs 3-6 steps`);
       assert.equal(new Set(it.chunks).size, it.chunks.length, `${where}: repeated step`);
-    } else if (it.type === "exam") {
-      assert.ok(it.check.length >= 4 && it.check.length <= 6, `${where}: exam needs 4-6 check points`);
-      assert.ok(it.distractors.length >= 2 && it.distractors.length <= 3, `${where}: exam needs 2-3 distractors`);
-      assert.ok(it.build.length >= 4 && it.build.length <= 6, `${where}: exam needs 4-6 build phrases`);
-      const points = [...it.check, ...it.distractors];
-      assert.equal(new Set(points).size, points.length, `${where}: a point appears twice`);
-      assert.equal(new Set(it.build).size, it.build.length, `${where}: a build phrase appears twice`);
     } else {
       assert.fail(`${where}: unknown type ${it.type}`);
     }
+  }
+});
+
+test("the exam tier is retired: no item has tier 3 or type \"exam\"", () => {
+  // `items` already merges the main bank, figure questions and the true/false
+  // and mark-true banks (see content/index.js); practicals are a separate source.
+  const practicalItems = PRACTICALS.flatMap((p) => p.items);
+  for (const it of [...items, ...practicalItems]) {
+    assert.notEqual(it.tier, 3, `${it.id}: tier 3 is retired (recall=1, application=2 only)`);
+    assert.notEqual(it.type, "exam", `${it.id}: the "exam" item type is retired`);
   }
 });
 

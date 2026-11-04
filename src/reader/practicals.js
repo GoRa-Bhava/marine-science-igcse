@@ -3,13 +3,12 @@
  * a procedure card (aim, per-test method/result with colour swatches + a plain-English
  * "why it works", safety, exam-technique points) and a set of auto-gradable items that
  * flow through the SAME grade.js / boxAfter engine as the reader (types: match, chain,
- * choice, multi, truefalse, exam). Item shape is identical to the unit banks:
+ * choice, multi, truefalse). Item shape is identical to the unit banks:
  *   choice   { type:"choice", q, options:[correct-first], a:0, why }
  *   multi    { type:"multi",  q, options, a:[correct indices], why }
  *   match    { type:"match",  q, pairs:[[left,right],…], why }   // authored in correct correspondence
  *   chain    { type:"chain",  q, chunks:[…in correct order], why }
  *   truefalse{ type:"truefalse", q, answer:<bool>, why }
- *   exam     { type:"exam", tier:3, q, check:[correct mark points], distractors:[plausible-wrong], why }
  *
  * Content ceiling (per outcome's knowledge model): NO chemistry/equations beyond the
  * plain-English "why", NO forbidden extensions (see each entry). "why" lines are plain
@@ -93,7 +92,7 @@ export const PRACTICALS = [
       "Use a separate sample of the food for each test, with equal volumes of sample and reagent, so the tests don't interfere and comparisons are fair.",
     ],
 
-    // Auto-graded run — recall (tier 1) → application (tier 2) → one exam-style (tier 3).
+    // Auto-graded run — recall (tier 1) → application (tier 2).
     items: [
       {
         id: "P4.1-01", type: "match", tier: 1, ref: "4.1/LO2", family: "ft-reagent",

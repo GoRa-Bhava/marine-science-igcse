@@ -25,7 +25,7 @@ const PRACTICAL_ITEMS = PRACTICALS.flatMap((p) => p.items);
 
 const FONT_UI = "Karla, system-ui, sans-serif";
 const FONT_DISPLAY = "Fraunces, Georgia, serif";
-const TIER = { 1: "RECALL", 2: "APPLICATION", 3: "EXAM" };
+const TIER = { 1: "RECALL", 2: "APPLICATION" };
 
 // Decorative unit artwork (under public/images/units/). Relative paths — the app
 // is built with base "./". Grid cards use the 256px thumbs; the desktop hero card
@@ -57,7 +57,6 @@ function answerText(item) {
   if (t === "gap") return (item.answers || []).join(" · ");
   if (t === "match") return (item.pairs || []).map((p) => `${p[0]} → ${p[1]}`).join("; ");
   if (t === "chain") return (item.chunks || []).join(" → ");
-  if (t === "exam") return (item.build || item.modelAnswer || []).join("  ");
   return "";
 }
 
@@ -2027,7 +2026,7 @@ const primaryBtn = (C) => ({ width: "100%", padding: "16px", borderRadius: 14, b
 const ghostBtn = (C) => ({ padding: "14px 16px", borderRadius: 14, border: `1px solid ${C.line}`, background: "transparent", color: C.foam, fontFamily: FONT_UI, fontSize: 15, fontWeight: 700, cursor: "pointer" });
 const entryBtn = (C) => ({ flex: 1, padding: "16px 8px", borderRadius: 14, border: `1px solid ${C.line}`, background: C.shelf || "transparent", color: C.foam, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, cursor: "pointer" });
 const linkBtn = (C) => ({ background: "none", border: "none", color: C.accent, fontFamily: FONT_UI, fontSize: 14, cursor: "pointer", padding: 4 });
-const tierPill = (C, tier) => ({ display: "inline-block", padding: "6px 12px", borderRadius: 999, background: tier === 3 ? "rgba(255,122,92,.16)" : "rgba(15,120,110,.9)", color: tier === 3 ? C.coral : "#eafffb", fontFamily: FONT_UI, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" });
+const tierPill = (C, tier) => ({ display: "inline-block", padding: "6px 12px", borderRadius: 999, background: "rgba(15,120,110,.9)", color: "#eafffb", fontFamily: FONT_UI, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" });
 const refChip = (C) => ({ flex: "0 0 auto", padding: "3px 9px", borderRadius: 999, background: "rgba(79,216,196,.12)", color: C.accent, fontFamily: FONT_UI, fontSize: 11, fontWeight: 700, letterSpacing: ".03em", whiteSpace: "nowrap" });
 const overlay = (C) => ({ position: "fixed", inset: 0, background: "rgba(4,20,31,.94)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, padding: 30, zIndex: 50 });
 function Stat({ C, n, label }) {

@@ -82,12 +82,8 @@ test("missed set collects exactly the wrong answers, once each", () => {
   assert.deepEqual(missed, ["b", "c"]);
 });
 
-test("a wrong exam answer advances instead of being re-served in the same lesson", () => {
-  const exam = { id: "U1-90", topic: "inside", type: "exam" };
+test("a wrong answer is re-served once in a free-study lesson, never in a run", () => {
   const choice = { id: "Q1", topic: "inside", type: "choice" };
-  // The reported loop bug: a wrong exam item must NOT requeue (it advances and
-  // FSRS reschedules it for a later day).
-  assert.equal(shouldRequeueAfterWrong(exam, false, {}), false, "wrong exam does not requeue");
   // A wrong ordinary item does come back once in a free-study lesson.
   assert.equal(shouldRequeueAfterWrong(choice, false, {}), true, "wrong choice requeues once");
   // ...but never twice, and never a correct answer.

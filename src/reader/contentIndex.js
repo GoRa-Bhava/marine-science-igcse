@@ -4,7 +4,7 @@
  * syllabus subsection = the item's `sec` (spec Appendix A). The app's items carry
  * `ref` (e.g. "2.3/LO2"), so `sec` is the leading "N.N" of `ref`; the unit is the
  * leading digit. Within a section, items are ordered by `tier` (1 recall →
- * 2 application → 3 exam), preserving author order within a tier. This index is
+ * 2 application), preserving author order within a tier. This index is
  * the single source of truth for book order and section boundaries.
  */
 
