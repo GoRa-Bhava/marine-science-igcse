@@ -7,23 +7,27 @@
    multiplying instead of dividing for actual size · rounding upward. Drawing rules from the syllabus "Drawings" section
    and the examiner rubric: large (uses most of the space), sharp, clear unbroken lines, no shading or colour, correct
    proportions, ruled label lines that touch the feature (no arrowheads). */
-import { rng, pickR, shuffleR, fmt, pickMixed } from "../core.js";
+import { rng, pickR, shuffleR, fmt, pickMixed, FIG_IMG } from "../core.js";
 
 const KEY = "magnify", CM = 40, MM = CM / 10, W = 560, CY = 108;
 
-/* organisms: draw(x0, x1, cy) -> svg; what X–Y measures; actual-size range (mm) and the units used for the actual size */
+/* organisms: what X–Y measures; actual-size range (mm) and the units used for the actual size.
+   Each has a colour photograph (public/figdata-img/<img>.webp) and a line drawing (orgPath). The lanternfish and the
+   seagrass leaf are always photographs; the others are a photograph or a drawing, half each.
+   IMG: ar = height ÷ width of the photo; fa, fb = where the measured part starts and ends, as fractions of its width. */
+const IMG = {"lanternfish": {"ar": 0.3129, "fa": 0.0191, "fb": 0.9809}, "isopod": {"ar": 0.5478, "fa": 0.0193, "fb": 0.9807}, "copepod": {"ar": 0.7, "fa": 0.0192, "fb": 0.9808}, "seagrass": {"ar": 0.0902, "fa": 0.0192, "fb": 0.9808}, "limpet": {"ar": 0.3977, "fa": 0.0189, "fb": 0.9811}};
 const ORGS = [
-  { id: "lanternfish", name: "lanternfish", part: "from the tip of the snout to the end of the tail", what: "photograph", act: [30, 120], unit: "cm", Ms: [0.5, 2] },
-  { id: "isopod", name: "marine isopod", part: "from the front of the head to the end of the tail", what: "drawing", act: [8, 40], unit: "mm", Ms: [2, 4, 5] },
-  { id: "copepod", name: "copepod", part: "from the front of the head to the end of the tail", what: "drawing", act: [1, 4], unit: "mm", Ms: [20, 25, 40, 50] },
-  { id: "seagrass", name: "seagrass leaf", part: "from the base of the leaf to its tip", what: "photograph", act: [100, 300], unit: "cm", Ms: [0.25, 0.5] },
-  { id: "limpet", name: "limpet shell", part: "across the base of the shell", what: "drawing", act: [20, 50], unit: "mm", Ms: [2, 2.5, 4] },
+  { id: "lanternfish", name: "lanternfish", part: "from the tip of the snout to the end of the tail", photoOnly: true, act: [30, 120], unit: "cm", Ms: [0.5, 2] },
+  { id: "isopod", name: "marine isopod", part: "from the front of the head to the end of the tail", act: [8, 40], unit: "mm", Ms: [2, 4, 5] },
+  { id: "copepod", name: "copepod", part: "from the front of the head to the end of the tail", act: [1, 4], unit: "mm", Ms: [20, 25, 40, 50], phCap: "taken through a light microscope" },
+  { id: "seagrass", name: "seagrass leaf", part: "from the base of the leaf to its tip", photoOnly: true, act: [100, 300], unit: "cm", Ms: [0.25, 0.5] },
+  { id: "limpet", name: "limpet shell", part: "across the base of the shell", act: [20, 50], unit: "mm", Ms: [2, 2.5, 4] },
 ];
 
 function make(seed) {
   for (let tries = 0; ; tries++) {
     const r = rng(seed + tries * 6151);
-    const org = pickR(r, ORGS), off = pickR(r, [0, 0, 0, 1, 2]);           // ruler zero at X, or X lined up with the 1 or 2 cm mark
+    const org = pickR(r, ORGS), what = org.photoOnly || r() < 0.5 ? "photograph" : "drawing", off = pickR(r, [0, 0, 0, 1, 2]);           // ruler zero at X, or X lined up with the 1 or 2 cm mark
     const Lmax = 114 - 10 * off;                                              // image length (mm) whose ruler still fits
     const variant = r() < 0.5 ? "mag" : "act";
     let L, A, M;
@@ -39,7 +43,7 @@ function make(seed) {
       A = pickR(r, Ac); M = L / A;
       if (M < 0.2 || M > 80 || (M > 0.8 && M < 1.25)) continue;              // near ×1, dividing either way gives the same answer
     }
-    return { kind: KEY, seed, org, off, L, A, M, variant, faults: shuffleR(r, ["shading", "sketchy", "arrows", "small"]).slice(0, 2), goodPos: Math.floor(r() * 3) };
+    return { kind: KEY, seed, org, what, off, L, A, M, variant, faults: shuffleR(r, ["shading", "sketchy", "arrows", "small"]).slice(0, 2), goodPos: Math.floor(r() * 3) };
   }
 }
 
@@ -87,10 +91,17 @@ function orgPath(o, x0, x1, cy, cls) {
   return s;
 }
 
-function geo(F) { const X = 40 + F.off * CM, Y = X + F.L * MM; return { r0: 40, X, Y, len: Math.ceil(F.L / 10 + 0.6) + F.off }; }
+function geo(F) {
+  const X = 40 + F.off * CM, Y = X + F.L * MM, G = { r0: 40, X, Y, len: Math.ceil(F.L / 10 + 0.6) + F.off, ry: 196 };
+  if (F.what === "photograph") {                     // photo scaled so its measured part runs exactly from X to Y
+    const m = IMG[F.org.id], w = (Y - X) / (m.fb - m.fa), h = w * m.ar;
+    G.img = { x: X - m.fa * w, y: 28, w, h }; G.ry = Math.max(84, Math.ceil(28 + h + 12));
+  }
+  return G;
+}
 
 function rulerSVG(F, G) {
-  const y = 196; let s = `<rect x="${G.r0 - 10}" y="${y}" width="${G.len * CM + 20}" height="38" rx="3" class="mgruler"/>`;
+  const y = G.ry; let s = `<rect x="${G.r0 - 10}" y="${y}" width="${G.len * CM + 20}" height="38" rx="3" class="mgruler"/>`;
   for (let mm = 0; mm <= G.len * 10; mm++) { const x = G.r0 + mm * MM, h = mm % 10 === 0 ? 12 : mm % 5 === 0 ? 9 : 6; s += `<line x1="${x}" x2="${x}" y1="${y}" y2="${y + h}" class="mgtick"/>`; }
   for (let c = 0; c <= G.len; c++) s += `<text x="${G.r0 + c * CM}" y="${y + 27}" text-anchor="middle" class="mgnum">${c}</text>`;
   s += `<text x="${G.r0 + G.len * CM + 16}" y="${y + 27}" class="mgnum">cm</text>`;
@@ -128,15 +139,19 @@ function drawingsSVG(F, opt) {
 function svg(F, opt) {
   opt = opt || {};
   if (opt.mode === "drawings") return drawingsSVG(F, opt);
-  const G = geo(F), hl = opt.hl || {};
-  let s = orgPath(F.org, G.X, G.Y, CY);
-  for (const [x, t] of [[G.X, "X"], [G.Y, "Y"]]) s += `<line x1="${x}" x2="${x}" y1="22" y2="196" class="mgguide"/><text x="${x}" y="17" text-anchor="middle" class="mgxy">${t}</text>`;
-  if (hl.seg) s += `<line x1="${G.X}" x2="${G.Y}" y1="191" y2="191" class="mghl"/>`;
+  const G = geo(F), hl = opt.hl || {}, ph = G.img;
+  let s = ph ? `<image href="${FIG_IMG}mg-${F.org.id}.webp" x="${r2(ph.x)}" y="${ph.y}" width="${r2(ph.w)}" height="${r2(ph.h)}" preserveAspectRatio="none"/>` : orgPath(F.org, G.X, G.Y, CY);
+  for (const [x, t] of [[G.X, "X"], [G.Y, "Y"]]) {
+    s += `<line x1="${x}" x2="${x}" y1="22" y2="${G.ry}" class="mgguide"/><text x="${x}" y="17" text-anchor="middle" class="mgxy">${t}</text>`;
+    if (ph) s += `<line x1="${x}" x2="${x}" y1="${ph.y}" y2="${r2(ph.y + ph.h)}" class="mgguide-ph0"/><line x1="${x}" x2="${x}" y1="${ph.y}" y2="${r2(ph.y + ph.h)}" class="mgguide-ph"/>`;
+  }
+  if (hl.seg) s += `<line x1="${G.X}" x2="${G.Y}" y1="${G.ry - 5}" y2="${G.ry - 5}" class="mghl"/>`;
   s += rulerSVG(F, G);
-  const capt = `${F.org.what === "photograph" ? "Photograph" : "Drawing"} of a ${F.org.name}${F.variant === "act" ? ` · magnification ×${fmt(F.M)}` : ""}`;
-  s += `<text x="${W / 2}" y="262" text-anchor="middle" class="mgcap">${capt}</text>`;
-  return `<svg viewBox="0 0 ${W} 274" class="figsvg fig-${KEY}" role="img" aria-label="${capt} with points X and Y and a ruler">${s}</svg>`;
+  const capt = `${F.what === "photograph" ? "Photograph" : "Drawing"} of a ${F.org.name}${F.what === "photograph" && F.org.phCap ? " " + F.org.phCap : ""}${F.variant === "act" ? ` · magnification ×${fmt(F.M)}` : ""}`;
+  s += `<text x="${W / 2}" y="${G.ry + 66}" text-anchor="middle" class="mgcap">${capt}</text>`;
+  return `<svg viewBox="0 0 ${W} ${G.ry + 78}" class="figsvg fig-${KEY}" role="img" aria-label="${capt} with points X and Y and a ruler">${s}</svg>`;
 }
+const r2 = (v) => Math.round(v * 100) / 100;
 
 /* accepted-range checker: any v that rounds (to dp) from a true value within [lo, hi] */
 const rangeCheck = (lo, hi, dp) => (v) => { const h = 0.5 * Math.pow(10, -dp); return v - h <= hi + 1e-9 && v + h >= lo - 1e-9; };
@@ -146,19 +161,19 @@ function questions(F, r) {
   const qs = [], o = F.org, L = F.L, G = geo(F);
   const offTxt = F.off ? ` Careful: X is lined up with the ${F.off} cm mark, not with 0.` : "";
   // 1. measure the image length (mm), ±1 mm
-  qs.push({ kind: "num", q: `Use the ruler to measure the length of the ${o.what} between <b>X</b> and <b>Y</b>, in millimetres. <span class="mhint">(Tap ⤢ Zoom to read the ruler.)</span>`, ans: L, tol: 1, unit: "mm", hl: { seg: true },
+  qs.push({ kind: "num", q: `Use the ruler to measure the length of the ${F.what} between <b>X</b> and <b>Y</b>, in millimetres. <span class="mhint">(Tap ⤢ Zoom to read the ruler.)</span>`, ans: L, tol: 1, unit: "mm", hl: { seg: true },
     why: `${F.off ? `X is at ${F.off}.0 cm and Y is at ${fmt((F.off * 10 + L) / 10, 1)} cm on the ruler, so the length is ${fmt((F.off * 10 + L) / 10, 1)} − ${F.off}.0 = ${fmt(L / 10, 1)} cm` : `X is at 0 and Y is at ${fmt(L / 10, 1)} cm`} = <b>${L} mm</b> (each small division is 1 mm). Measurements within 1 mm are accepted.${offTxt}` });
   // 2. the calculation
   const Ashow = o.unit === "cm" ? `${fmt(F.A / 10, 1)} cm` : `${fmt(F.A)} mm`;
   if (F.variant === "mag") {
     const dp = F.M >= 10 ? 0 : 1, lo = (L - 1) / F.A, hi = (L + 1) / F.A, ans = rnd(F.M, dp);
-    qs.push({ kind: "num", q: `The actual length of the ${o.name} ${o.part} is <b>${Ashow}</b>.<br>Magnification = image size ÷ actual size. Calculate the magnification of the ${o.what}. Give your answer ${dp ? "to 1 decimal place" : "to the nearest whole number"}.`,
+    qs.push({ kind: "num", q: `The actual length of the ${o.name} ${o.part} is <b>${Ashow}</b>.<br>Magnification = image size ÷ actual size. Calculate the magnification of the ${F.what}. Give your answer ${dp ? "to 1 decimal place" : "to the nearest whole number"}.`,
       ans, tol: 0, unit: "×", check: rangeCheck(lo, hi, dp), ansTxt: `×${fmt(ans, dp)} (any value from ×${fmt(rnd(lo, dp), dp)} to ×${fmt(rnd(hi, dp), dp)} is accepted, from a measurement within 1 mm)`, hl: { seg: true },
       why: `Use the same units for both lengths. Image = ${L} mm; actual = ${o.unit === "cm" ? `${fmt(F.A / 10, 1)} cm = ${fmt(F.A)} mm` : `${fmt(F.A)} mm`}. Magnification = ${L} ÷ ${fmt(F.A)} = ${fmt(rnd(F.M, 3))} = <b>×${fmt(ans, dp)}</b>${dp ? " (1 d.p.)" : " (nearest whole number)"}.${o.unit === "cm" ? ` Dividing ${L} by ${fmt(F.A / 10, 1)} without changing cm to mm gives an answer ten times too big.` : ""}` });
   } else {
     const outCm = o.unit === "cm", dp = 1, lo = (L - 1) / F.M, hi = (L + 1) / F.M, ansMm = F.A, ans = outCm ? rnd(ansMm / 10, dp) : rnd(ansMm, dp);
     const k = outCm ? 0.1 : 1;
-    qs.push({ kind: "num", q: `The magnification of the ${o.what} is <b>×${fmt(F.M)}</b>.<br>Magnification = image size ÷ actual size. Calculate the actual length of the ${o.name} ${o.part}, in <b>${outCm ? "cm" : "mm"}</b>. Give your answer to 1 decimal place.`,
+    qs.push({ kind: "num", q: `The magnification of the ${F.what} is <b>×${fmt(F.M)}</b>.<br>Magnification = image size ÷ actual size. Calculate the actual length of the ${o.name} ${o.part}, in <b>${outCm ? "cm" : "mm"}</b>. Give your answer to 1 decimal place.`,
       ans, tol: 0, unit: outCm ? "cm" : "mm", check: rangeCheck(lo * k, hi * k, dp), ansTxt: `${fmt(ans, dp)} ${outCm ? "cm" : "mm"} (any value from ${fmt(rnd(lo * k, dp), dp)} to ${fmt(rnd(hi * k, dp), dp)} is accepted, from a measurement within 1 mm)`, hl: { seg: true },
       why: `Rearrange: actual size = image size ÷ magnification = ${L} mm ÷ ${fmt(F.M)} = ${fmt(rnd(ansMm, 2))} mm${outCm ? ` = <b>${fmt(ans, dp)} cm</b> (÷ 10 to change mm to cm)` : ` = <b>${fmt(ans, dp)} mm</b>`}. Multiplying by the magnification instead would give ${fmt(rnd(L * F.M, 1))} mm — far too ${F.M > 1 ? "large" : "small"}.` });
   }
@@ -211,7 +226,8 @@ function questions(F, r) {
 function selfTest(F, qs) {
   const bad = [], G = geo(F);
   if (G.Y > W - 20) bad.push("drawing runs off the figure");
-  { const sv = orgPath(F.org, G.X, G.Y, CY), ys = [...sv.matchAll(/-?\d+(?:\.\d+)?,(-?\d+(?:\.\d+)?)/g)].map((m) => +m[1]).concat([...sv.matchAll(/(?:y1|y2|cy)="(-?\d+(?:\.\d+)?)"/g)].map((m) => +m[1]));
+  if (G.img) { if (G.img.x < 2 || G.img.x + G.img.w > W - 2) bad.push("photo runs off the figure"); if (Math.abs(G.img.x + IMG[F.org.id].fa * G.img.w - G.X) > 0.01 || Math.abs(G.img.x + IMG[F.org.id].fb * G.img.w - G.Y) > 0.01) bad.push("photo not aligned with X–Y"); }
+  if (!G.img) { const sv = orgPath(F.org, G.X, G.Y, CY), ys = [...sv.matchAll(/-?\d+(?:\.\d+)?,(-?\d+(?:\.\d+)?)/g)].map((m) => +m[1]).concat([...sv.matchAll(/(?:y1|y2|cy)="(-?\d+(?:\.\d+)?)"/g)].map((m) => +m[1]));
     if (Math.min(...ys) < 20 || Math.max(...ys) > 192) bad.push(`drawing overlaps the labels or ruler (${Math.round(Math.min(...ys))}–${Math.round(Math.max(...ys))})`); }
   if (G.r0 + G.len * CM + 40 > W) bad.push("ruler runs off the figure");
   if (G.len * 10 < F.off * 10 + F.L) bad.push("ruler shorter than X–Y");
@@ -231,11 +247,11 @@ export default {
   key: KEY, group: "Tables and fieldwork", name: "Magnification and drawings", topics: "Unit 3 (3.4)", thumbSeed: 5,
   blurb: "Measure a drawing or photograph with the ruler, then use magnification = image size ÷ actual size.",
   tips: ["Magnification = image size ÷ actual size. Actual size = image size ÷ magnification.", "Put both lengths in the same units first: 1 cm = 10 mm.", "Read the ruler to the nearest millimetre. If X is not at 0, subtract the starting mark.", "A good drawing is large, with clear unbroken lines, no shading, and ruled label lines that touch the part."],
-  ctx: (F) => `${F.org.what} of a ${F.org.name}, and three student drawings`,
+  ctx: (F) => `${F.what} of a ${F.org.name}, and three student drawings`,
   make, svg, questions, selfTest,
   css: `.fig-magnify .mgline{fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}.fig-magnify .mgfill{fill:currentColor}.fig-magnify .mgthin{stroke-width:1.4}
 .fig-magnify .mgsketch{stroke-dasharray:9 4 3 5;stroke-width:1.6}.fig-magnify .mgshade{stroke:currentColor;stroke-width:1.8;opacity:.85}
-.fig-magnify .mgguide{stroke:var(--mut);stroke-width:1;stroke-dasharray:3 3}.fig-magnify .mgxy{font-weight:700;font-size:16px}
+.fig-magnify .mgguide{stroke:var(--mut);stroke-width:1;stroke-dasharray:3 3}.fig-magnify .mgguide-ph0{stroke:#fff;stroke-opacity:.75;stroke-width:3.2}.fig-magnify .mgguide-ph{stroke:#14202a;stroke-width:1.3;stroke-dasharray:4 3}.fig-magnify .mgxy{font-weight:700;font-size:16px}
 .fig-magnify .mgruler{fill:var(--surface2);stroke:currentColor;stroke-width:1.2}.fig-magnify .mgtick{stroke:currentColor;stroke-width:1}
 .fig-magnify .mgnum{font-size:13px}.fig-magnify .mgcap{font-size:13px;fill:var(--soft)}.fig-magnify .mghl{stroke:var(--app);stroke-width:5;stroke-linecap:round}
 .fig-magnify .mgpanel{fill:none;stroke:var(--mut);stroke-width:1.2}.fig-magnify .mglab{font-weight:700;font-size:20px}

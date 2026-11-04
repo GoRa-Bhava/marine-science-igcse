@@ -70,6 +70,9 @@ export function figOpt(q, phase, state, ok) {
 }
 
 /* ---- small SVG helpers shared by Marine templates ---- */
+/** Folder (relative to the page) holding the template photos, e.g. figdata-img/fd-crab.webp. In the app it is public/figdata-img/. */
+export const FIG_IMG = "figdata-img/";
+
 export const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 /** grid lines for a plotting area: cols×rows small squares, major line every `major` squares */
 export function gridLines(L, T, pw, ph, cols, rows, majorX = 5, majorY = 5) {

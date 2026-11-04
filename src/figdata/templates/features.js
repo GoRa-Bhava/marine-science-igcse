@@ -1,11 +1,11 @@
 /* ---------- FEATURE AND RESULT TABLES (0697 3.3/LO3, 3.4/LO4, 4.1/LO2) ----------
-   Panel A: a line drawing of a marine invertebrate + a "feature: present or absent?" table to complete (tap the cells),
+   Panel A: a colour photograph of a marine invertebrate + a "feature: present or absent?" table to complete (tap the cells),
    then its invertebrate group (3.4/LO4 features only), its domain (3.3/LO3: Bacteria, Archaea, Eukarya) and the feature
    that tells it apart from another group. Panel B: a food-test results table (4.1/LO2: iodine, Benedict's, biuret,
    ethanol emulsion) — which substances are present, a positive colour that is NOT shown in the table, and a method or
    safety step. Feature truth values follow the syllabus lists exactly; features that are ambiguous for a group (e.g. a
    crustacean's segments, a mollusc's "soft body", an echinoderm's "shell") are never asked for that group. */
-import { rng, pickR, shuffleR, pickMixed } from "../core.js";
+import { rng, pickR, shuffleR, pickMixed, FIG_IMG } from "../core.js";
 
 const KEY = "features";
 const FEAT = { bilat: "bilateral symmetry", radial: "radial symmetry", penta: "pentaradial symmetry (body in five parts)", exo: "exoskeleton", eyes: "compound eyes", ant: "two pairs of antennae",
@@ -21,50 +21,24 @@ const GROUPS = {
 const UNIQUE = { crustaceans: ["exo", "eyes", "ant", "legs"], cnidarians: ["radial", "tent"], echinoderms: ["penta", "spiny", "tube"], molluscs: ["shell", "unseg"], annelids: ["seg", "setae", "soft"] };
 const truth = (g, f) => (GROUPS[g].has.includes(f) ? true : GROUPS[g].not.includes(f) ? false : null);
 
-const S = 'class="fd-l"';
+/* organisms: a colour photograph each (public/figdata-img/fd-<img>.webp). Every feature row is answered from the
+   organism's GROUP, so features too small to see in a photograph (stinging cells, a crab's second pair of antennae)
+   are still fair. Organisms that would mislead are left out: scallop (visible simple eyes), cup coral (stony skeleton),
+   hermit crab (borrowed shell), chiton (plates look segmented), squid (internal shell), sea cucumber. */
 const ORGS = [
-  { name: "crab", group: "crustaceans", draw: () => {
-    let s = `<ellipse cx="110" cy="92" rx="46" ry="30" ${S}/>`;
-    for (let i = 0; i < 4; i++) { const y = 92 + (i - 1.5) * 12; s += `<polyline points="${68},${y} ${46 - i * 2},${y - 14 + i * 6} ${30 - i * 3},${y + 10 + i * 4}" ${S}/><polyline points="${152},${y} ${174 + i * 2},${y - 14 + i * 6} ${190 + i * 3},${y + 10 + i * 4}" ${S}/>`; }
-    s += `<polyline points="86,66 70,44 62,30" ${S}/><path d="M62 30 q-14 -6 -10 -16 q10 4 14 10 M62 30 q4 -12 14 -10" ${S}/><polyline points="134,66 150,44 158,30" ${S}/><path d="M158 30 q14 -6 10 -16 q-10 4 -14 10 M158 30 q-4 -12 -14 -10" ${S}/>`;
-    s += `<line x1="102" y1="64" x2="98" y2="52" ${S}/><circle cx="98" cy="50" r="3" ${S}/><line x1="118" y1="64" x2="122" y2="52" ${S}/><circle cx="122" cy="50" r="3" ${S}/><path d="M104 62 q-6 -18 -16 -24 M116 62 q6 -18 16 -24 M106 62 q-2 -10 -8 -16 M114 62 q2 -10 8 -16" ${S}/>`;
-    return s; } },
-  { name: "shrimp", group: "crustaceans", draw: () => {
-    let s = `<path d="M48 70 q20 -26 60 -22 q46 4 58 34 q6 22 -12 38" ${S}/><path d="M48 70 q22 6 60 2 q36 -2 50 22 q4 14 -6 26" ${S}/>`;
-    for (let i = 0; i < 6; i++) { const t = i / 6, x = 96 + t * 62, y = 48 + Math.sin(t * 2.6) * 30; s += `<line x1="${x}" y1="${y + 2}" x2="${x - 6}" y2="${y + 24}" ${S}/>`; }
-    s += `<path d="M154 120 l14 10 l-6 -16 z M154 120 l-4 16 l-8 -12 z" ${S}/><circle cx="56" cy="62" r="3" ${S}/><path d="M48 66 q-30 -20 -40 -50 M50 64 q-24 -34 -20 -58 M48 70 q-26 0 -40 12 M48 72 q-20 8 -30 24" ${S}/>`;
-    for (let i = 0; i < 5; i++) s += `<polyline points="${70 + i * 10},76 ${66 + i * 10},96 ${72 + i * 10},104" ${S}/>`;
-    return s; } },
-  { name: "jellyfish", group: "cnidarians", draw: () => {
-    let s = `<path d="M50 80 q60 -90 120 0 q-15 8 -30 0 q-15 8 -30 0 q-15 8 -30 0 q-15 8 -30 0 z" ${S}/>`;
-    for (let i = 0; i < 7; i++) { const x = 58 + i * 17; s += `<path d="M${x} 84 q8 18 0 34 q-8 16 0 30" ${S}/>`; }
-    s += `<path d="M100 84 q-6 30 6 58 M120 84 q8 28 -4 56" class="fd-l fd-thick"/>`; return s; } },
-  { name: "sea anemone", group: "cnidarians", draw: () => {
-    let s = `<path d="M80 150 L84 84 Q110 74 136 84 L140 150 Z" ${S}/><ellipse cx="110" cy="84" rx="26" ry="7" ${S}/>`;
-    for (let i = 0; i < 13; i++) { const a = Math.PI * (0.08 + 0.84 * i / 12), x = 110 - Math.cos(a) * 26, y = 82; s += `<path d="M${x.toFixed(1)} ${y} q${(-Math.cos(a) * 30).toFixed(1)} ${(-30 - Math.sin(a) * 10).toFixed(1)} ${(-Math.cos(a) * 40).toFixed(1)} ${(-58 * Math.sin(a) - 4).toFixed(1)}" ${S}/>`; }
-    return s; } },
-  { name: "starfish", group: "echinoderms", draw: () => {
-    const pts = []; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? 22 : 62; pts.push(`${(110 + Math.cos(a) * rr).toFixed(1)},${(88 + Math.sin(a) * rr).toFixed(1)}`); }
-    let s = `<polygon points="${pts.join(" ")}" ${S}/>`;
-    for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; for (let k = 1; k <= 4; k++) { const rr = 10 + k * 11; s += `<circle cx="${(110 + Math.cos(a) * rr).toFixed(1)}" cy="${(88 + Math.sin(a) * rr).toFixed(1)}" r="1.8" class="fd-dot"/>`; } }
-    return s; } },
-  { name: "sea urchin", group: "echinoderms", draw: () => {
-    let s = `<circle cx="110" cy="88" r="34" ${S}/>`;
-    for (let i = 0; i < 36; i++) { const a = i * Math.PI / 18, r1 = 34, r2 = i % 2 ? 60 : 54; s += `<line x1="${(110 + Math.cos(a) * r1).toFixed(1)}" y1="${(88 + Math.sin(a) * r1).toFixed(1)}" x2="${(110 + Math.cos(a) * r2).toFixed(1)}" y2="${(88 + Math.sin(a) * r2).toFixed(1)}" ${S}/>`; }
-    for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; s += `<line x1="110" y1="88" x2="${(110 + Math.cos(a) * 30).toFixed(1)}" y2="${(88 + Math.sin(a) * 30).toFixed(1)}" class="fd-l fd-thin"/>`; }
-    return s; } },
-  { name: "sea snail", group: "molluscs", draw: () => {
-    let d = "M110 86"; for (let i = 1; i <= 60; i++) { const a = i * 0.32, rr = 3 + i * 0.75; d += ` L${(110 + Math.cos(a) * rr).toFixed(1)} ${(86 + Math.sin(a) * rr * 0.9).toFixed(1)}`; }
-    return `<path d="${d}" ${S}/><path d="M64 120 q46 14 116 4 q6 -4 0 -8 q-40 -2 -70 -6" ${S}/><path d="M166 118 q14 -16 18 -34 M170 118 q20 -10 28 -24" ${S}/>`; } },
-  { name: "mussel", group: "molluscs", draw: () => {
-    let s = `<path d="M40 120 Q60 40 170 50 Q190 70 170 90 Q110 130 40 120 Z" ${S}/>`;
-    for (let k = 1; k <= 4; k++) { const f = 1 - k * 0.18; s += `<path d="M${40 + 10 * k} ${120 - 2 * k} Q${60 + 8 * k} ${40 + 14 * k} ${170 - 18 * k} ${50 + 9 * k}" class="fd-l fd-thin"/>`; void f; }
-    return s + `<path d="M40 120 q30 6 64 -4" ${S}/>`; } },
-  { name: "ragworm", group: "annelids", draw: () => {
-    const pts = []; for (let i = 0; i <= 40; i++) { const x = 20 + i * 4.6; pts.push([x, 88 + Math.sin(i / 5) * 16]); }
-    let s = `<polyline points="${pts.map((p) => `${p[0].toFixed(1)},${(p[1] - 7).toFixed(1)}`).join(" ")}" ${S}/><polyline points="${pts.map((p) => `${p[0].toFixed(1)},${(p[1] + 7).toFixed(1)}`).join(" ")}" ${S}/>`;
-    for (let i = 1; i < 40; i += 2) { const [x, y] = pts[i]; s += `<line x1="${x.toFixed(1)}" y1="${(y - 7).toFixed(1)}" x2="${x.toFixed(1)}" y2="${(y + 7).toFixed(1)}" class="fd-l fd-thin"/><path d="M${x.toFixed(1)} ${(y - 7).toFixed(1)} l-3 -7 M${x.toFixed(1)} ${(y - 7).toFixed(1)} l3 -7 M${x.toFixed(1)} ${(y + 7).toFixed(1)} l-3 7 M${x.toFixed(1)} ${(y + 7).toFixed(1)} l3 7" class="fd-l fd-thin"/>`; }
-    return s + `<path d="M20 81 q-8 -4 -12 -12 M20 81 q-10 2 -14 -4" ${S}/>`; } },
+  { name: "crab", group: "crustaceans", img: "crab" },
+  { name: "shrimp", group: "crustaceans", img: "shrimp" },
+  { name: "lobster", group: "crustaceans", img: "lobster" },
+  { name: "jellyfish", group: "cnidarians", img: "jellyfish" },
+  { name: "sea anemone", group: "cnidarians", img: "sea-anemone" },
+  { name: "starfish", group: "echinoderms", img: "starfish" },
+  { name: "sea urchin", group: "echinoderms", img: "sea-urchin" },
+  { name: "brittle star", group: "echinoderms", img: "brittle-star" },
+  { name: "sea snail", group: "molluscs", img: "sea-snail" },
+  { name: "mussel", group: "molluscs", img: "mussel" },
+  { name: "limpet", group: "molluscs", img: "limpet" },
+  { name: "ragworm", group: "annelids", img: "ragworm" },
+  { name: "bristle worm", group: "annelids", img: "bristle-worm" },
 ];
 
 const TESTS = [
@@ -109,7 +83,7 @@ function svg(F, opt) {
     return h + `</tbody></table></div>`;
   }
   const done = !!opt.reveal;
-  let h = `<div class="fig-${KEY}"><div class="fd-wrap"><svg viewBox="0 0 220 165" class="figsvg fd-draw" role="img" aria-label="Line drawing of a marine invertebrate">${F.org.draw()}</svg><p class="fd-cap">A marine invertebrate (not to scale)</p></div>`;
+  let h = `<div class="fig-${KEY}"><div class="fd-wrap"><img class="fd-photo" src="${FIG_IMG}fd-${F.org.img}.webp" width="720" height="720" alt="Photograph of a marine invertebrate" draggable="false"><p class="fd-cap">Photograph of a marine invertebrate (not to scale)</p></div>`;
   h += `<table class="ftable"><thead><tr><th>feature</th><th colspan="2">present or absent?</th></tr></thead><tbody>`;
   F.rows.forEach(([f, v], i) => {
     h += `<tr><th scope="row">${FEAT[f]}</th>`;
@@ -124,7 +98,7 @@ function questions(F, r) {
   const qs = [], G = F.g, cls = { panel: "class" }, food = { panel: "food" }, gName = (g) => g;
   const blankAns = F.blanks.map((i) => `b${i}${F.rows[i][1] ? "p" : "a"}`);
   // 1. complete the table (tap present/absent in each blank row)
-  qs.push({ kind: "tap", multi: true, q: `Look at the drawing and the table. Complete the table for this organism: tap <b>present</b> or <b>absent</b> in each empty row.`, a: blankAns, hint: "Tap one answer in each of the three empty rows.",
+  qs.push({ kind: "tap", multi: true, q: `Look at the photograph and the table. Use what you know about this organism's group to complete the table: tap <b>present</b> or <b>absent</b> in each empty row.`, a: blankAns, hint: "Tap one answer in each of the three empty rows.",
     ansTxt: F.blanks.map((i) => `${FEAT[F.rows[i][0]]}: ${F.rows[i][1] ? "present" : "absent"}`).join("; "),
     labelOf: (id) => { const i = +id.slice(1, -1); return `${FEAT[F.rows[i][0]]} ${id.endsWith("p") ? "present" : "absent"}`; },
     askOpt: cls, doneOpt: () => ({ panel: "class", reveal: true }),
@@ -176,5 +150,5 @@ export default {
   blurb: "Complete a present-or-absent feature table for a marine invertebrate, classify it, then read a table of food-test results.",
   tips: ["Crustaceans: bilateral symmetry, exoskeleton, compound eyes, two pairs of antennae, jointed legs.", "Cnidaria: radial symmetry, tentacles with stinging cells. Echinoderms: pentaradial symmetry, spiny skin, tube feet.", "Molluscs: bilateral symmetry, unsegmented body, a shell. Annelids: bilateral symmetry, segmented, soft body, setae.", "The three domains are Bacteria, Archaea and Eukarya. All animals are Eukarya.", "Food tests: iodine → blue-black (starch); Benedict's, heated → brick-red (reducing sugar); biuret → lilac (protein); ethanol then water → cloudy white emulsion (lipid)."],
   make, svg, questions, selfTest,
-  css: `.fig-${KEY} .fd-wrap{text-align:center;margin-bottom:8px}.fig-${KEY} .fd-draw{max-width:300px;margin:0 auto;display:block}.fig-${KEY} .fd-l{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.fig-${KEY} .fd-thin{stroke-width:1.2}.fig-${KEY} .fd-thick{stroke-width:3}.fig-${KEY} .fd-dot{fill:currentColor}.fig-${KEY} .fd-cap{margin:2px 0 8px;font-size:13px;color:var(--soft)}.fig-${KEY} .ftable th{text-align:left}.fig-${KEY} .fd-opt{cursor:pointer;min-width:70px}.fig-${KEY} .fd-given{font-weight:700}.fig-${KEY} .fd-right{font-weight:800}.fig-${KEY} tr.hl th,.fig-${KEY} tr.hl td{background:color-mix(in srgb,var(--app) 28%,transparent)}`,
+  css: `.fig-${KEY} .fd-wrap{text-align:center;margin-bottom:8px}.fig-${KEY} .fd-photo{display:block;width:100%;max-width:320px;height:auto;aspect-ratio:1;margin:0 auto;border-radius:10px;background:#8a8f93;-webkit-user-select:none;user-select:none}.fig-${KEY} .fd-cap{margin:2px 0 8px;font-size:13px;color:var(--soft)}.fig-${KEY} .ftable th{text-align:left}.fig-${KEY} .fd-opt{cursor:pointer;min-width:70px}.fig-${KEY} .fd-given{font-weight:700}.fig-${KEY} .fd-right{font-weight:800}.fig-${KEY} tr.hl th,.fig-${KEY} tr.hl td{background:color-mix(in srgb,var(--app) 28%,transparent)}`,
 };

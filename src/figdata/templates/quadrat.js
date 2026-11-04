@@ -1,14 +1,14 @@
 /* ---------- SAMPLING A ROCKY SHORE (0697 5.2/LO1–LO2) ----------
    Three panels share one generated shore:
    - "quadrat": a 0.5 m × 0.5 m quadrat with 25 squares. It shows a seaweed patch (each square either fully covered
-     or less than a quarter covered, so the half-covered rule is never ambiguous), barnacles (dots), limpets (cones)
-     and sometimes periwinkles (spirals).
+     or less than a quarter covered, so the half-covered rule is never ambiguous), barnacles, limpets and sometimes
+     periwinkles, drawn as small top-down colour photographs (public/figdata-img/qd-*.webp) on a seaweed texture.
    - "grid": the sampling area gridded into 1 m² squares, numbered across and up. It is used for random-coordinate
      tapping and the scale-up estimate (mean per quadrat × number of squares, which is exact by construction).
    - "transect": a shore profile from the top of the shore to the sea, with a line or belt transect.
    The knowledge model 5.2 terms are used throughout: random sampling, systematic sampling, line transect,
    belt transect, percentage cover, species richness. Kite diagrams and diversity indices are not used. */
-import { rng, pickR, shuffleR, fmt, pickMixed } from "../core.js";
+import { rng, pickR, shuffleR, fmt, pickMixed, FIG_IMG } from "../core.js";
 
 const KEY = "quadrat";
 const DIMS = [[10, 8], [10, 10], [12, 10], [10, 6]];
@@ -70,25 +70,26 @@ function make(seed) {
 }
 
 /* ---------- drawing ---------- */
+const icon = (name, cx, cy, d) => `<image href="${FIG_IMG}qd-${name}.webp" x="${(cx - d / 2).toFixed(1)}" y="${(cy - d / 2).toFixed(1)}" width="${d}" height="${d}"/>`;
 function quadratSVG(F, opt) {
   const hl = opt.hl || {}, W = 540, Q = 300, X0 = 120, Y0 = 18, s = Q / CW;
   const X = (x) => X0 + x * s, Y = (y) => Y0 + Q - y * s;                 // y measured up from the bottom
-  let g = `<defs><pattern id="quadrat-weed" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="6" class="qd-hatch"/></pattern></defs>`;
+  let g = `<defs><pattern id="quadrat-weed" width="240" height="240" patternUnits="userSpaceOnUse"><image href="${FIG_IMG}qd-seaweed.webp" width="240" height="240"/></pattern></defs>`;
   g += `<rect x="${X0}" y="${Y0}" width="${Q}" height="${Q}" class="qd-bg"/>`;
   for (const k of F.sea) { const [x, y] = k.split(",").map(Number); g += `<rect x="${X(x)}" y="${Y(y + 1)}" width="${s}" height="${s}" class="qd-weed${hl.weed ? " hl" : ""}"/>`; }
   for (const f of F.fringe) { const cx = f.side === "l" ? X(f.x) : f.side === "r" ? X(f.x + 1) : X(f.x) + f.p * s, cy = f.side === "b" ? Y(f.y) : f.side === "t" ? Y(f.y + 1) : Y(f.y) - f.p * s;
     const rr = f.f * s * 1.25; g += `<ellipse cx="${cx}" cy="${cy}" rx="${f.side === "l" || f.side === "r" ? rr : rr * 1.2}" ry="${f.side === "b" || f.side === "t" ? rr : rr * 1.2}" class="qd-weed${hl.weed ? " hl" : ""}" clip-path="url(#quadrat-clip)"/>`; }
   g += `<clipPath id="quadrat-clip"><rect x="${X0}" y="${Y0}" width="${Q}" height="${Q}"/></clipPath>`;
-  for (const [x, y] of F.bar) g += `<circle cx="${X(x)}" cy="${Y(y)}" r="4.2" class="qd-bar${hl.bar ? " hl" : ""}"/><circle cx="${X(x)}" cy="${Y(y)}" r="1.3" class="qd-in"/>`;
-  for (const [x, y] of F.lim) g += `<polygon points="${X(x)},${Y(y) - 10} ${X(x) + 10},${Y(y) + 7} ${X(x) - 10},${Y(y) + 7}" class="qd-lim"/>`;
-  for (const [x, y] of F.peri) g += `<circle cx="${X(x)}" cy="${Y(y)}" r="8" class="qd-lim"/><path d="M${X(x)} ${Y(y)} m-4 0 a4 4 0 1 1 4 4" class="qd-sp"/>`;
+  for (const [x, y] of F.bar) g += (hl.bar ? `<circle cx="${X(x)}" cy="${Y(y)}" r="8.4" class="qd-ring"/>` : "") + icon("barnacle", X(x), Y(y), 13);
+  for (const [x, y] of F.lim) g += icon("limpet", X(x), Y(y), 22);
+  for (const [x, y] of F.peri) g += icon("periwinkle", X(x), Y(y), 19);
   for (let i = 0; i <= CW; i++) g += `<line x1="${X0}" x2="${X0 + Q}" y1="${Y0 + i * s}" y2="${Y0 + i * s}" class="qd-grid"/><line y1="${Y0}" y2="${Y0 + Q}" x1="${X0 + i * s}" x2="${X0 + i * s}" class="qd-grid"/>`;
   g += `<rect x="${X0}" y="${Y0}" width="${Q}" height="${Q}" class="qd-frame"/>`;
   g += `<text x="${X0 + Q / 2}" y="${Y0 + Q + 20}" text-anchor="middle" class="qd-s">0.5 m</text><text transform="translate(${X0 - 12} ${Y0 + Q / 2}) rotate(-90)" text-anchor="middle" class="qd-s">0.5 m</text>`;
   // key
   const ky = Y0 + Q + 46;
-  const key = [[`<rect x="0" y="-11" width="22" height="14" class="qd-weed"/>`, "seaweed"], [`<circle cx="11" cy="-4" r="4.2" class="qd-bar"/>`, "barnacle"], [`<polygon points="11,-14 20,3 2,3" class="qd-lim"/>`, "limpet"]];
-  if (F.peri.length) key.push([`<circle cx="11" cy="-4" r="8" class="qd-lim"/><path d="M11 -4 m-4 0 a4 4 0 1 1 4 4" class="qd-sp"/>`, "periwinkle"]);
+  const key = [[`<rect x="0" y="-12" width="22" height="16" class="qd-weed"/>`, "seaweed"], [icon("barnacle", 11, -4, 15), "barnacle"], [icon("limpet", 11, -4, 22), "limpet"]];
+  if (F.peri.length) key.push([icon("periwinkle", 11, -4, 20), "periwinkle"]);
   key.forEach((k, i) => { g += `<g transform="translate(${30 + (i % 2) * 250} ${ky + Math.floor(i / 2) * 28})">${k[0]}<text x="32" y="1" class="qd-k">${k[1]}</text></g>`; });
   const H = ky + Math.ceil(key.length / 2) * 28 + 6;
   return `<svg viewBox="0 0 ${W} ${H}" class="figsvg fig-${KEY}" role="img" aria-label="A gridded quadrat with seaweed, barnacles and limpets">${g}</svg>`;
@@ -211,8 +212,8 @@ export default {
   tips: ["Percentage cover: count the squares that are more than half covered. With 25 squares, each square is 4 %.", "Per m²: a 0.5 m × 0.5 m quadrat is 0.25 m², so multiply the count by 4.", "Estimate a population: mean per quadrat × number of quadrats that would fit in the whole area.", "Random sampling (random-number coordinates) avoids bias. A transect (line or belt) is systematic and shows how organisms change down the shore.", "Species richness is the number of different species, not the number of individuals."],
   ctx: (F) => `sampling on ${F.place}`,
   make, svg, questions, selfTest,
-  css: `.fig-quadrat .qd-bg{fill:var(--surface2);stroke:none}.fig-quadrat .qd-weed{fill:url(#quadrat-weed);stroke:currentColor;stroke-width:1}.fig-quadrat .qd-weed.hl{fill:color-mix(in srgb,var(--app) 55%,transparent)}
-.fig-quadrat .qd-hatch{stroke:currentColor;stroke-width:2.2}.fig-quadrat .qd-bar{fill:var(--surface2);stroke:currentColor;stroke-width:1.6}.fig-quadrat .qd-bar.hl{fill:var(--app)}
+  css: `.fig-quadrat .qd-bg{fill:var(--surface2);stroke:none}.fig-quadrat .qd-weed{fill:url(#quadrat-weed);stroke:currentColor;stroke-opacity:.6;stroke-width:1}.fig-quadrat .qd-weed.hl{fill:color-mix(in srgb,var(--app) 55%,transparent)}
+.fig-quadrat .qd-hatch{stroke:currentColor;stroke-width:2.2}.fig-quadrat .qd-bar{fill:var(--surface2);stroke:currentColor;stroke-width:1.6}.fig-quadrat .qd-bar.hl{fill:var(--app)}.fig-quadrat .qd-ring{fill:none;stroke:var(--app);stroke-width:3}
 .fig-quadrat .qd-in{fill:currentColor}.fig-quadrat .qd-lim{fill:var(--surface2);stroke:currentColor;stroke-width:1.8}.fig-quadrat .qd-sp{fill:none;stroke:currentColor;stroke-width:1.4}
 .fig-quadrat .qd-grid{stroke:currentColor;stroke-width:1;opacity:.75}.fig-quadrat .qd-frame{fill:none;stroke:currentColor;stroke-width:3}
 .fig-quadrat .qd-s,.fig-quadrat .qd-n{font-size:13px}.fig-quadrat .qd-k{font-size:14px}.fig-quadrat .qd-cnt{font-size:17px;font-weight:700}
