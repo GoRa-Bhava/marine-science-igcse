@@ -92,7 +92,7 @@ export const NOTES = {
      {
       "h": "Earthquakes and volcanoes",
       "ref": "1.2/LO5",
-      "body": "<b>Volcano</b> (convergent): one plate is forced under another (<b>subducted</b>), sinks into the hot mantle and melts; the magma rises through the plate above and erupts. <b>Earthquake</b>: plates become locked together, movement builds up tension, then they suddenly slip and release a burst of energy. Both happen mostly along plate boundaries.",
+      "body": "<b>Earthquakes</b> happen at all three kinds of boundary: the plates become locked together, tension builds up, then they suddenly slip and release a burst of energy. <b>Volcanoes</b> need magma to rise. At a <b>convergent</b> boundary one plate is forced under another (<b>subducted</b>), sinks into the hot mantle and melts, and the magma rises through the plate above and erupts. At a <b>divergent</b> boundary the plates move apart and magma rises to fill the gap, erupting as lava and building a mid-ocean ridge (in places, such as Iceland, above the sea). At a <b>transform</b> boundary the plates slide past each other: there are earthquakes but no volcanoes, because no plate sinks and no gap opens.",
       "linked": "Interactive · subduction & earthquake"
      },
      {
@@ -1748,6 +1748,11 @@ export const NOTES = {
       "body": "<b>Land reclamation</b> (making new land from the sea) buries habitat and stirs up sediment. <b>Blast fishing</b> uses explosions that kill all nearby species and turn reef into rubble. <b>Shrimp farms</b> clear mangroves and release waste, and <b>oil spills</b> harm marine life."
      },
      {
+      "h": "Building infrastructure",
+      "ref": "6.1/LO2",
+      "body": "When a coast is developed for a resort, port or fishing industry, it needs <b>infrastructure</b>: roads, airports, harbours, fresh water and power, sewers and housing. Building it destroys coastal habitats and adds air pollution. More people produce more <b>sewage</b> and waste, need more fresh water (sometimes from <b>desalination</b> plants, which return very salty water to the sea) and more food, so farming spreads and fishing pressure rises. Resorts can come into conflict with local people and farms over water."
+     },
+     {
       "h": "Endangered species",
       "ref": "6.1/LO3",
       "body": "An <b>endangered</b> species has a population that is falling and may become extinct. This happens when animals are removed faster than breeding can replace them. Fewer breeders left means the population falls even faster."
@@ -1778,6 +1783,10 @@ export const NOTES = {
      [
       "Sustainable",
       "usable at the current rate, without harm, and without running out"
+     ],
+     [
+      "Infrastructure",
+      "the basic facilities an area needs, such as roads, harbours, water supply and sewers"
      ]
     ]
    },
@@ -1875,7 +1884,7 @@ export const NOTES = {
      {
       "h": "Navigational aids",
       "ref": "6.3/LO3",
-      "body": "A <b>chart</b> is a sea map showing depths, hazards and channels, and a <b>compass</b> points to magnetic north. <b>GPS</b> gives exact position from satellites in any visibility. <b>Sonar</b> sends sound pulses that reflect off the seabed and shoals, while <b>radar</b> uses radio waves to detect ships and coasts above the water."
+      "body": "A <b>chart</b> is a sea map showing depths, hazards and channels, and a <b>compass</b> points to magnetic north. Every chart has a <b>compass rose</b>, a diagram of the directions; a modern one shows both <b>true north</b> (fixed) and <b>magnetic north</b> (slightly different, and slowly moving), so sailors can correct their compass bearings. <b>GPS</b> gives exact position from satellites in any visibility. <b>Sonar</b> sends sound pulses that reflect off the seabed and shoals, while <b>radar</b> uses radio waves to detect ships and coasts above the water."
      },
      {
       "h": "Why stocks get over-harvested",
@@ -1913,6 +1922,10 @@ export const NOTES = {
      [
       "FAD",
       "fish aggregating device, a floating platform that gathers fish"
+     ],
+     [
+      "Compass rose",
+      "a diagram on a chart showing directions, including true north and magnetic north"
      ]
     ]
    },
@@ -2168,41 +2181,55 @@ export const NOTES = {
    {
     "id": "6.8",
     "title": "Understanding climate change",
-    "intro": "How adding greenhouse gases warms the planet, changes the sea water, raises sea level, and affects marine life.",
+    "intro": "How the greenhouse effect works, where the extra gases come from, and how warming and acidification change the sea, sea level and marine life.",
     "tip": "Keep the two effects apart: more CO₂ → warming (greenhouse effect), and CO₂ dissolving → lower pH (ocean acidification). Warming bleaches coral; acidification weakens shells.",
     "notes": [
      {
       "h": "Climate has changed before",
       "ref": "6.8/LO1",
-      "body": "Over hundreds of millions of years, regional climates have changed significantly. These changes link to <b>carbon dioxide</b> level and temperature, which move together. So climate was not constant until humans arrived."
+      "body": "Over the last 335 million years the climate of different regions has changed significantly. The <b>carbon dioxide</b> level and the average temperature have risen and fallen many times, generally together, and overall both are lower now than they were then. So the climate was not constant until humans arrived."
+     },
+     {
+      "h": "The greenhouse effect",
+      "ref": "6.8/LO2",
+      "body": "Radiation from the Sun passes through the atmosphere and is absorbed by the land and sea, which warm up and give off heat (infrared radiation). <b>Greenhouse gases</b>, mainly carbon dioxide, methane and water vapour, absorb some of this heat and send it back towards the surface, trapping it. This natural <b>greenhouse effect</b> keeps the Earth warm enough for life."
      },
      {
       "h": "The enhanced greenhouse effect",
       "ref": "6.8/LO2",
-      "body": "<b>Greenhouse gases</b> such as methane and carbon dioxide trap heat radiated from the surface. Extra emissions trap more heat, which is called the <b>enhanced greenhouse effect</b>. This causes <b>climate change</b>."
+      "body": "Human activity adds extra carbon dioxide and methane, so more heat is trapped: the <b>enhanced greenhouse effect</b>. The rise in the Earth's average temperature that results is <b>global warming</b>, and the long-term change in weather patterns (temperature, rainfall, storms) is <b>climate change</b>."
+     },
+     {
+      "h": "Where the extra gases come from",
+      "ref": "6.8/LO2",
+      "body": "<b>Carbon dioxide</b> comes from burning fossil fuels in vehicles, ships, aircraft and power stations, and from <b>deforestation</b> (fewer trees photosynthesise, and the dead wood releases CO₂). It is removed by photosynthesis and by dissolving in the oceans, but far more is now released than removed. <b>Methane</b> comes from cattle and rice farming, rotting waste in landfill, fossil-fuel production and thawing frozen wetlands. Methane traps more heat than the same amount of CO₂, but there is much less of it and it leaves the air faster."
      },
      {
       "h": "Warmer, more acidic sea",
       "ref": "6.8/LO3",
-      "body": "Rising CO₂ makes sea water increase in <b>temperature</b> and decrease in <b>pH</b>. The pH falls because dissolved CO₂ forms a weak acid. So the sea gets warmer and more acidic."
+      "body": "Rising CO₂ makes sea water increase in <b>temperature</b> and decrease in <b>pH</b>. Sea water is slightly alkaline (about pH 8.1–8.2); dissolved CO₂ forms a weak acid, so the water becomes less alkaline (<b>ocean acidification</b>). Organisms that build calcium carbonate skeletons or shells suffer: reefs erode and grow more slowly, and molluscs form thinner shells that protect them less."
      },
      {
       "h": "The ocean absorbs heat",
       "ref": "6.8/LO4",
-      "body": "The ocean takes up much of the extra heat, which buffers the global temperature and keeps it more stable. Warmed water undergoes <b>thermal expansion</b>: the particles move faster and further apart, so the same mass takes up a larger volume. This makes sea level rise."
+      "body": "Water needs a lot of energy to warm up, so the oceans absorb and store a great deal of heat with only a small rise in temperature. This reduces some of the warming and keeps global temperatures more <b>stable</b> (it is also why coasts have milder winters and cooler summers). But the oceans are slowly warming: the water undergoes <b>thermal expansion</b> (the particles move faster and further apart, so the same mass takes up a larger volume), ice melts and less oxygen dissolves."
      },
      {
       "h": "Two causes of sea-level rise",
       "ref": "6.8/LO5",
-      "body": "Both thermal expansion and melting ice raise sea level. <b>Thermal expansion</b> enlarges the water already there. Melting <b>land-based ice</b> adds new water to the sea, but melting floating ice does not raise the level."
+      "body": "Both raise sea level. <b>Thermal expansion</b> enlarges the water already in the ocean. Melting <b>land-based ice</b> (the ice sheets of Greenland and Antarctica, and mountain glaciers) adds new water. Melting floating ice (sea ice, icebergs) does not noticeably raise the level. Estimates suggest each causes a large share of the recent rise, with melting land ice now contributing slightly more."
      },
      {
       "h": "Impacts on marine life",
       "ref": "6.8/LO6",
-      "body": "<b>Sea-level rise</b> causes habitat and land loss, and warming causes <b>coral bleaching</b> as corals expel their zooxanthellae. Warm water holds less oxygen, so species change their distribution and migration, or are lost. <b>Extreme weather</b> also threatens habitats such as mangroves."
+      "body": "<b>Sea-level rise</b> floods coastal habitats and land, and low-lying islands such as the Maldives are most at risk. Warming causes <b>coral bleaching</b>. Warm water holds <b>less oxygen</b>, which hits active fish such as tuna hardest. Cool-water species such as cod shift <b>towards the poles</b>, and migrations can miss their food (humpback whales arriving after the krill have peaked). New competitors, predators and parasites spread, ice-dependent species may be lost, and more <b>extreme weather</b> damages reefs and mangroves; glacier meltwater can lower salinity and affect currents."
      }
     ],
     "terms": [
+     [
+      "Greenhouse effect",
+      "natural trapping of heat by gases in the atmosphere, which keeps the Earth warm enough for life"
+     ],
      [
       "Greenhouse gas",
       "a gas such as CO₂ or methane that traps heat"
@@ -2217,29 +2244,46 @@ export const NOTES = {
      ],
      [
       "Land-based ice",
-      "ice on land whose meltwater adds to the sea"
+      "ice sheets and glaciers on land, whose meltwater adds to the sea"
      ],
      [
       "Coral bleaching",
       "coral expelling its zooxanthellae when stressed, mainly by water that is too warm"
+     ],
+     [
+      "Global warming",
+      "the rise in the Earth's average temperature caused by the enhanced greenhouse effect"
+     ],
+     [
+      "Climate change",
+      "long-term change in weather patterns such as temperature, rainfall and storms"
+     ],
+     [
+      "Ocean acidification",
+      "the fall in the pH of sea water as more carbon dioxide dissolves in it"
      ]
     ]
    },
    {
     "id": "6.9",
     "title": "Conservation",
-    "intro": "Measuring how many species live in an area, and the projects that protect them.",
-    "tip": "Name a real strategy — marine protected areas / no-take zones, legislation, habitat restoration — and say how it works. 'Protect the animals' alone won't score.",
+    "intro": "Measuring how many species live in an area, and how harvesting rules, aquaculture, protected areas and conservation projects protect them, with their advantages and drawbacks.",
+    "tip": "For an 'evaluate' question, give both sides: how the strategy helps, and a named drawback (cost, enforcement, conflict with local people, or the cause of damage not being stopped).",
     "notes": [
      {
       "h": "Species richness",
       "ref": "6.9/LO1",
-      "body": "<b>Species richness</b> is the number of different species in an area. It counts the different kinds, not the number of individuals or the biomass. More individuals of one species does not raise richness."
+      "body": "<b>Species richness</b> is the number of different species in an area at a particular time. It counts the different kinds, not the number of individuals or the biomass. It is a quick measure of health, but it ignores how many individuals of each species there are: an area with many species but only one or two of each is not healthy."
      },
      {
-      "h": "Ways to conserve richness",
+      "h": "Sustainable harvesting",
       "ref": "6.9/LO2",
-      "body": "<b>Sustainable harvesting</b> of wild macroalgae, plants and animals keeps every species present. <b>Aquaculture</b> of commercial species relieves wild stocks, and of endangered species helps restock. <b>Marine parks and MPAs</b> protect habitat and all the species in it."
+      "body": "Harvesting of wild macroalgae, plants and animals is kept <b>sustainable</b> with quotas, limits on fishing days, closed seasons and areas, gear rules, and licences. Example: around the Maldives, tuna may only be caught by pole and line, with quotas and licences. For: people keep their income and traditional work, so they support the rules, and stocks survive. Against: the rules are hard to monitor and enforce, so some overfishing continues."
+     },
+     {
+      "h": "Aquaculture for conservation",
+      "ref": "6.9/LO2",
+      "body": "Farming <b>commercial species</b> meets demand and relieves wild stocks. Farming <b>endangered species</b> can restock the wild: giant clams farmed in Fiji are released onto reefs, and coral is farmed for reefs. For: less harvesting from the wild, local income, animals for release. Against: farms can pollute, may use wild-caught fish for feed or broodstock, and released animals can carry disease into wild populations."
      },
      {
       "h": "Why an MPA raises fish species",
@@ -2247,9 +2291,24 @@ export const NOTES = {
       "body": "After an <b>MPA</b> is set up, coral recovers, and more coral means more <b>zooxanthellae</b> and more photosynthesis. This gives more energy, so more trophic levels, more shelter and more niches. The result is more fish species. To compare an MPA with a fished area fairly, keep the same area, depth, time, method and conditions."
      },
      {
-      "h": "Conservation projects",
+      "h": "Marine parks and MPAs",
+      "ref": "6.9/LO2",
+      "body": "<b>National marine parks</b> and <b>MPAs</b> control activities inside their boundaries: no-take zones, limits on catches, gear and seasons, and bans or limits on drilling, mining, tourism and boats. For: species breed and increase, habitats and food chains are kept, and fish <b>spill over</b> into nearby waters. Against: conflict with local fishers who lose fishing grounds, and fishers crowding the boundary."
+     },
+     {
+      "h": "Coral farming",
       "ref": "6.9/LO3",
-      "body": "<b>Coral farming</b> grows coral for artificial or damaged reefs. Protecting turtle nest sites and rearing turtles for release means more hatchlings survive predators, though it is costly and few reach adulthood. <b>Culling</b> invasive species like lionfish, which have no natural predators and eat native fish, lets native species recover."
+      "body": "Coral is grown from fragments of healthy coral, or from larvae (collected at spawning or from broodstock spawned in tanks) that settle on concrete, plastic or rock; the young corals are then transplanted onto damaged or artificial reefs. For: it has repaired many reefs and gives local jobs. Against: it is slow, costly and needs skilled workers, many transplants fail, and it only works if the cause of the damage (such as blast fishing) is stopped."
+     },
+     {
+      "h": "Protecting turtles",
+      "ref": "6.9/LO3",
+      "body": "Nesting beaches are protected (restricted access, guided night visits, and <b>red lighting</b>, because white, blue and green light confuses turtles). Eggs are incubated away from predators, hatchlings are reared in tanks and released close to the water. For: more eggs hatch and more young reach the sea. Against: it is expensive, and at sea the turtles still face nets, longlines and plastic."
+     },
+     {
+      "h": "Culling lionfish",
+      "ref": "6.9/LO3",
+      "body": "Lionfish are an <b>invasive species</b> on Atlantic and Caribbean reefs: they have few predators there (groupers have been overfished) and eat many native fish, reducing species richness. They are culled with traps only lionfish can enter, licensed divers with spears, and campaigns to eat them. For: native species can recover, and the campaigns are cheap. Against: poorly designed traps catch other species, divers can damage coral, and lionfish learn to avoid divers."
      }
     ],
     "terms": [
@@ -2272,6 +2331,14 @@ export const NOTES = {
      [
       "Culling",
       "deliberately removing (killing) individuals of a species"
+     ],
+     [
+      "Invasive species",
+      "a species that causes harm in an area where it is not native"
+     ],
+     [
+      "Sustainable harvesting",
+      "taking only as much as a population can replace"
      ]
     ]
    }
