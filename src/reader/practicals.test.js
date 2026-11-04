@@ -13,7 +13,10 @@ const FLOORS = {
   totalItems: 100,       // 110 authored
   itemsPerPractical: 3,
   pilotItems: 10,        // P4.1 has 13
-  units: [1, 2, 3, 4, 5, 6],
+  // Units that must each own at least one hands-on practical. Unit 6 is absent by
+  // design: its only practical (P6.1, data handling) is cross-cutting AO3 skills,
+  // not a Unit 6 topic, so it is tagged crossCutting and grouped on its own.
+  units: [1, 2, 3, 4, 5],
 };
 
 test("practicals expose the pilot food-tests entry with a full procedure card", () => {
@@ -71,6 +74,16 @@ test("the full set: practicals across units 1–6 (floors, not exact counts), bo
   const ph = PRACTICALS.find((p) => p.swatches?.length);
   assert.ok(ph && ph.steps?.length && ph.apparatus?.length, "a procedure practical with swatches exists");
   assert.ok(ph.swatches.every((s) => s.label && /^#[0-9a-f]{3,8}$/i.test(s.color)), "swatches are {label,color-hex}");
+});
+
+test("the data-handling practical is cross-cutting AO3, not a Unit 6 topic", () => {
+  const p = practicalById("P6.1");
+  assert.ok(p, "P6.1 present");
+  assert.equal(p.crossCutting, true, "P6.1 is tagged cross-cutting");
+  assert.equal(p.unit, undefined, "P6.1 has no numbered syllabus unit");
+  assert.ok(!/^\d/.test(p.ref), `P6.1 ref is not a syllabus code, got "${p.ref}"`);
+  // No numbered-unit practical is wrongly flagged cross-cutting.
+  for (const q of PRACTICALS) assert.ok(!(q.crossCutting && q.unit != null), `${q.id}: cross-cutting xor numbered unit`);
 });
 
 // Standing invariants: rules that must hold for EVERY practicals item, so new

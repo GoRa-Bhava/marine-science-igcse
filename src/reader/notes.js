@@ -12,7 +12,7 @@ export const NOTES = {
     "id": "1.1",
     "title": "Earth in space and structure",
     "intro": "Where the Earth and Moon sit in space, what holds them there, and what the Earth is made of inside.",
-    "tip": "Get the layer order right from the centre out — inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. The inner core is solid despite being the hottest, because the pressure squeezes it solid.",
+    "tip": "Get the layer order right from the centre out — inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. The inner core is solid despite being the hottest, because the pressure squeezes it solid. Some textbooks call the mantle semi-molten; in the exam, write that it is solid rock that can melt to form magma.",
     "notes": [
      {
       "h": "Earth, Moon and the Sun",
@@ -370,7 +370,7 @@ export const NOTES = {
      {
       "h": "Temperature and solubility of solids",
       "ref": "2.2/LO6",
-      "body": "For most solid solutes, such as sodium chloride and sugar, <b>solubility increases with temperature</b>. You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
+      "body": "For most solid solutes, such as potassium nitrate and sugar, <b>solubility increases with temperature</b> (common salt is an exception: its solubility barely changes). You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
      },
      {
       "h": "Salinity and ppt",
@@ -538,7 +538,7 @@ export const NOTES = {
      {
       "h": "Measuring clarity with a Secchi disc",
       "ref": "2.5/LO3",
-      "body": "A <b>Secchi disc</b> is a white disc lowered on a marked line until it just disappears from view. That <b>Secchi depth</b> measures water clarity, so a greater depth means clearer water and deeper light penetration. For fair results use the same observer, the same time of day and the shaded side, and repeat and average."
+      "body": "A <b>Secchi disc</b> is a white, or black-and-white, disc lowered on a marked line until it just disappears from view. That <b>Secchi depth</b> measures water clarity, so a greater depth means clearer water and deeper light penetration. For fair results use the same observer, the same time of day and the shaded side, and repeat and average."
      },
      {
       "h": "Pressure",
@@ -553,7 +553,7 @@ export const NOTES = {
      {
       "h": "Dissolved oxygen",
       "ref": "2.5/LO6",
-      "body": "Dissolved oxygen is <b>high at the surface</b>, because gas dissolves from the atmosphere and photosynthesis adds oxygen in the light. It <b>falls with depth</b>, because there is no photosynthesis in the dark, oxygen is used up by respiration and decomposition, and there is little mixing from the surface. So deep water has little dissolved oxygen."
+      "body": "Dissolved oxygen is <b>high at the surface</b>, because gas dissolves from the atmosphere and photosynthesis adds oxygen in the light. It <b>falls with depth</b>, because there is no photosynthesis in the dark, oxygen is used up by respiration and decomposition, and there is little mixing from the surface. It is lowest in the middle depths, the <b>oxygen minimum layer</b> (roughly 200–1000 m), and rises a little again in the deep water below."
      }
     ],
     "terms": [
@@ -567,7 +567,7 @@ export const NOTES = {
      ],
      [
       "Secchi disc",
-      "a white disc used to measure how clear the water is"
+      "a white, or black-and-white, disc used to measure how clear the water is"
      ],
      [
       "Secchi depth",
@@ -712,7 +712,7 @@ export const NOTES = {
     "id": "3.3",
     "title": "Classification",
     "intro": "How scientists sort living things into groups and give each one a worldwide name.",
-    "tip": "Write the binomial name correctly: Genus with a capital, species lowercase (e.g. Homo sapiens). Classification runs kingdom → … → species.",
+    "tip": "Write the binomial name correctly: Genus with a capital, species lowercase (e.g. Homo sapiens). Classification runs domain → kingdom → … → species.",
     "notes": [
      {
       "h": "Grouping by shared features",
@@ -1245,7 +1245,7 @@ export const NOTES = {
      {
       "h": "Ecological pyramids",
       "ref": "4.4/LO13",
-      "body": "In a pyramid, producers form the bottom bar, and the width of each bar shows the quantity at that level. A <b>pyramid of numbers</b> can be any shape, and a <b>pyramid of biomass</b> can sometimes be inverted. A <b>pyramid of energy</b> is always upright because energy is lost at each level. To find the percentage of energy or biomass passed on, divide the higher value by the lower value and multiply by 100."
+      "body": "In a pyramid, producers form the bottom bar, and the width of each bar shows the quantity at that level. A <b>pyramid of numbers</b> can be any shape, and a <b>pyramid of biomass</b> can sometimes be inverted. A <b>pyramid of energy</b> is always upright because energy is lost at each level. To find the percentage of energy or biomass passed on, divide the value at the higher trophic level by the value at the level below it (the smaller number by the larger), then multiply by 100."
      }
     ],
     "terms": [
@@ -1606,7 +1606,7 @@ export const NOTES = {
      {
       "h": "Estuary changes with the tide",
       "ref": "5.6/LO2",
-      "body": "<b>Salinity</b> rises towards high tide as sea water flows in, and falls towards low tide when river water dominates. <b>Temperature</b> is steadier at high tide under a large volume of sea water and more variable at low tide. <b>Dissolved oxygen</b> is higher at high tide, when oxygen-rich sea water mixes in, and lower at low tide."
+      "body": "<b>Salinity</b> rises towards high tide as sea water flows in, and falls towards low tide when river water dominates. <b>Temperature</b> is steadier at high tide under a large volume of sea water and more variable at low tide. <b>Dissolved oxygen</b> also varies over the tidal cycle as sea water and river water mix in different amounts."
      },
      {
       "h": "Mangrove tree adaptations",
@@ -1646,7 +1646,7 @@ export const NOTES = {
     "id": "5.7",
     "title": "Coral reefs",
     "intro": "What corals are, how they live with tiny algae, what controls where reefs grow, and why reefs are so rich in life.",
-    "tip": "Coral and zooxanthellae are <b>mutualistic</b> — both benefit. Bleaching is the loss of the algae when the water is too warm; say what each partner gives.",
+    "tip": "Coral and zooxanthellae are <b>mutualistic</b> — both benefit. Bleaching is the loss of the algae when the coral is stressed, mainly by water that is too warm; say what each partner gives.",
     "notes": [
      {
       "h": "Corals are animals",
@@ -2221,7 +2221,7 @@ export const NOTES = {
      ],
      [
       "Coral bleaching",
-      "coral losing its zooxanthellae when water is too warm"
+      "coral expelling its zooxanthellae when stressed, mainly by water that is too warm"
      ]
     ]
    },

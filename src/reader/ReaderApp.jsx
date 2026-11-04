@@ -1465,7 +1465,11 @@ export function ReaderApp({
     // ----- index (grouped by unit) -----
     if (practicalOpen == null) {
       const list = practicalsList();
-      const units = [...new Set(list.map((p) => p.unit))].sort((a, b) => a - b);
+      // Cross-cutting practicals (e.g. AO3 data-handling skills) belong to no one
+      // syllabus unit, so they group on their own below the numbered units rather
+      // than masquerading as a topic of whichever unit their ref happened to start with.
+      const crossList = list.filter((p) => p.crossCutting || p.unit == null);
+      const units = [...new Set(list.filter((p) => !p.crossCutting && p.unit != null).map((p) => p.unit))].sort((a, b) => a - b);
       const unitTitle = (u) => index.units.find((x) => x.unitId === u)?.title;
       const practicalCard = (p) => {
         const ids = practicalItemIds(p.id);
@@ -1508,10 +1512,18 @@ export function ReaderApp({
             <div key={u} style={{ marginTop: 18 }}>
               <p style={kicker(C)}>UNIT {u}{unitTitle(u) ? ` · ${unitTitle(u)}` : ""}</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
-                {list.filter((p) => p.unit === u).map(practicalCard)}
+                {list.filter((p) => !p.crossCutting && p.unit === u).map(practicalCard)}
               </div>
             </div>
           ))}
+          {crossList.length > 0 && (
+            <div style={{ marginTop: 18 }}>
+              <p style={kicker(C)}>PRACTICAL SKILLS · AO3 · ALL UNITS</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+                {crossList.map(practicalCard)}
+              </div>
+            </div>
+          )}
         </div>
       );
     }

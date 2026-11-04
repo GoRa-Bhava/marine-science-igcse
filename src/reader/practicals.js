@@ -726,16 +726,17 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <rect x="45" y="170" width="330" height="204" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M40 105V361Q40 379 58 379H362Q380 379 380 361V105" class="apparatus" /><path d="M45 170H375" class="rule" /><rect x="46" y="171" width="328" height="100" rx="0" fill="var(--amber)" opacity=".28"/><rect x="46" y="271" width="328" height="102" rx="0" fill="var(--teal)" opacity=".35"/><text x="77" y="218" class="small">Warm</text><text x="77" y="253" class="small">less dense → floats</text><text x="77" y="314" class="small">Cold</text><text x="77" y="349" class="small">denser → sinks</text><g class="reveal" style="--delay:3s"><path d="M340 237V190" class="arrow" /><path d="M340 295V350" class="arrow" /></g><g class="density-demo" ><text x="623" y="100" class="small" text-anchor="middle">Warming: particles spread out</text><rect x="441" y="117" width="363" height="163" rx="12" fill="var(--panel)" /><circle cx="573" cy="151" r="7" fill="var(--teal)" class="particle p0"/><circle cx="623" cy="151" r="7" fill="var(--teal)" class="particle p1"/><circle cx="673" cy="151" r="7" fill="var(--teal)" class="particle p2"/><circle cx="573" cy="196" r="7" fill="var(--teal)" class="particle p3"/><circle cx="623" cy="196" r="7" fill="var(--teal)" class="particle p4"/><circle cx="673" cy="196" r="7" fill="var(--teal)" class="particle p5"/><circle cx="573" cy="241" r="7" fill="var(--teal)" class="particle p6"/><circle cx="623" cy="241" r="7" fill="var(--teal)" class="particle p7"/><circle cx="673" cy="241" r="7" fill="var(--teal)" class="particle p8"/><text x="440" y="329" class="small">Density: higher → lower</text><rect x="457" y="353" width="330" height="10" rx="5" fill="var(--line)" /><path d="M457 344V372M787 344V372" class="rule" /><circle cx="457" cy="358" r="13" fill="var(--coral)" class="density-marker" stroke="var(--panel)" stroke-width="3"/><text x="440" y="412" class="small">Mass unchanged · volume grows</text></g><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Warmer water → lower density</text><text x="440" y="514" class="accent" text-anchor="middle">Cold water sinks; warm water stays above.</text></g>
 </svg>`,
-    apparatus: ["Water at different temperatures", "Measuring cylinder (fixed volume)", "Balance", "Thermometer (or a hydrometer / floating object)"],
+    apparatus: ["Boiling tube of cold water, coloured with a few drops of dye", "Rubber bung fitted with a narrow glass tube", "Water baths or beakers of water at different temperatures", "Thermometer", "Ruler or marker to read the level in the narrow tube"],
     steps: [
-      "Measure the mass of a fixed volume of water at a low temperature",
-      "Warm the water to a higher temperature",
-      "Measure the mass of the same volume again",
-      "Compare to see how density changes with temperature",
+      "Fill a boiling tube with cold coloured water and push in a bung fitted with a narrow glass tube, so the water rises a little way up the tube with no air bubbles",
+      "Mark the water level in the narrow tube and record the temperature",
+      "Stand the boiling tube in a warmer water bath and wait for the temperature to stop changing",
+      "Mark the new level, repeat at several temperatures, and compare: a higher level means the same mass of water now fills a bigger volume",
     ],
     result: "Colder water is denser; density falls as temperature rises.",
-    controls: ["Same volume of water each time", "Same salinity", "Same balance and method"],
+    controls: ["The same tube of water throughout, so the mass does not change", "No air bubbles trapped in the boiling tube", "Wait until the temperature is steady before each reading"],
     technique: [
+      "The volume change is tiny (under 1 cm³ for 100 g of water warmed by 40 °C), far too small to see in a measuring cylinder or on a balance, so a narrow tube is used to make it visible.",
       "Colder water is denser, so it sinks below warmer water.",
       "Heating spreads the particles out, so the same mass fills a bigger volume → lower density.",
       "Mass does not change on heating — the volume does.",
@@ -754,12 +755,16 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         a: 0, why: "Density = mass ÷ volume. Warming makes the particles move faster and spread out, so the same mass fills a bigger volume and density falls. The particles themselves don't get bigger. Moving faster doesn't make them lighter, because mass stays the same. Losing water as steam would remove mass and volume together, so it doesn't explain the fall. (2.4/LO2)", status: "human_review" },
       { id: "P2.4a-04", type: "choice", tier: 2, ref: "2.4/LO2", family: "tempdens-control",
         q: "Which must be kept the same to compare density fairly?",
-        options: ["The volume of water measured", "The temperature of the water", "The time the water is heated for", "The time of day"],
-        a: 0, why: "You compare the mass of the same volume of water, so the volume must be kept the same. Temperature is the variable being changed, so it can't be kept the same. Heating time varies on purpose; what matters is the temperature reached. Time of day matters for fieldwork like a Secchi reading, not for this lab test. (2.4/LO2)", status: "human_review" },
+        options: ["The mass of water in the tube", "The temperature of the water", "The time the water is heated for", "The time of day"],
+        a: 0, why: "The same tube of water is used throughout, so its mass stays the same and any rise in the level shows the volume growing. Temperature is the variable being changed, so it can't be kept the same. Heating time varies on purpose; what matters is the temperature reached. Time of day matters for fieldwork like a Secchi reading, not for this lab test. (2.4/LO2)", status: "human_review" },
       { id: "P2.4a-05", type: "chain", tier: 2, ref: "2.4/LO2", family: "tempdens-method",
         q: "Put the steps of this investigation in order.",
-        chunks: ["Measure the mass of a fixed volume of cold water", "Warm the water to a higher temperature", "Measure the mass of the same volume again", "Compare to see how density changed"],
-        why: "Weigh a fixed volume cold, warm it, weigh the same volume again, and compare. (2.4/LO2)", status: "human_review" },
+        chunks: ["Fill a boiling tube with cold coloured water and fit a bung with a narrow glass tube", "Mark the water level in the narrow tube at the starting temperature", "Warm the tube in a water bath until the temperature is steady", "Mark the new level and compare"],
+        why: "Set up the sealed tube, mark the starting level, warm it, then read the new level. The level rises because the same mass of water now takes up more volume, so its density has fallen. (2.4/LO2)", status: "human_review" },
+      { id: "P2.4a-06", type: "choice", tier: 2, ref: "2.4/LO2", family: "tempdens-narrow",
+        q: "Why is the water level read in a narrow glass tube rather than in a measuring cylinder?",
+        options: ["The volume change is tiny, and a narrow tube makes it big enough to see", "A narrow tube stops the water from evaporating as it is heated", "Measuring cylinders cannot be heated in a water bath safely", "A narrow tube keeps the temperature of the water the same"],
+        a: 0, why: "Warming water by 40 °C changes its volume by less than 1 cm³ per 100 g, which a measuring cylinder or balance cannot show. In a narrow tube, that small extra volume makes the level rise a clear distance. Evaporation, the safety of heating a cylinder and keeping the temperature constant are not the reason. (2.4/LO2)", status: "human_review" },
     ],
     status: "human_review",
   },
@@ -1724,7 +1729,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     status: "human_review",
   },
   {
-    id: "P6.1", ref: "6/AO3", unit: 6,
+    id: "P6.1", ref: "AO3", crossCutting: true,
     title: "Data handling and experimental design",
     subtitle: "Tables, graphs, fair tests and reliable recording",
     aim: "Present and interpret results clearly: draw good tables and graphs, plan a fair test, and record data reliably.",
@@ -1744,22 +1749,22 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "An automatic data logger records more often and removes human reading error, but it does not interpret the results for you.",
     ],
     items: [
-      { id: "P6.1-01", type: "multi", tier: 2, ref: "6/AO3", family: "dh-results-table",
+      { id: "P6.1-01", type: "multi", tier: 2, ref: "AO3", family: "dh-results-table",
         q: "A student is designing a table to record how the water level in two tanks changes over time. Tick the features of a good results table.",
         options: ["The table is drawn as a ruled box with separate columns.", "Each column has a heading that names what was measured.", "The unit is written once, in the column heading, not beside every reading.", "The readings are entered in a sensible order, such as increasing time.", "The unit is written next to every number in the body of the table.", "The values are written down in whatever order they were noticed.", "Each reading is given a sentence of explanation inside its cell."],
         a: [0,1,2,3],
         why: "A good results table is a ruled box with columns; each column is headed with what was measured and its unit (unit in the heading only, numbers in the body); and the readings are entered in a sensible order such as increasing time. Repeating the unit beside every value, recording readings in no order, or writing sentences inside the cells all lose marks. (AO3)", status: "human_review" },
-      { id: "P6.1-02", type: "multi", tier: 2, ref: "6/AO3", family: "dh-line-graph",
+      { id: "P6.1-02", type: "multi", tier: 2, ref: "AO3", family: "dh-line-graph",
         q: "A student is plotting a line graph of a set of readings taken over time. Tick the features of a good line graph.",
         options: ["Each axis has a scale that rises in equal steps.", "The plotted points spread across at least half of the grid.", "Both axes are labelled with the quantity and its unit.", "The points are joined with straight, ruled lines.", "A key is given if more than one line is drawn.", "The scale is squeezed into one corner so the points sit close together.", "A smooth curve is sketched freehand as a rough guess through the points."],
         a: [0,1,2,3,4],
         why: "A good line graph uses a linear scale (equal steps) that fills at least half the grid, labels both axes with the quantity and its unit, joins the plotted points with straight ruled lines, and includes a key when there is more than one line. Cramming the points into a corner, or sketching a freehand curve, lose marks. (AO3)", status: "human_review" },
-      { id: "P6.1-03", type: "multi", tier: 2, ref: "6/AO3", family: "dh-fair-test",
+      { id: "P6.1-03", type: "multi", tier: 2, ref: "AO3", family: "dh-fair-test",
         q: "A student compares the number of coral species on two different reefs. Tick the variables that must be kept the same for this to be a fair test.",
         options: ["the water temperature", "the salinity of the water", "the size of the area sampled at each reef", "the light level (water clarity)", "the number of coral species found", "which of the two reefs is being sampled", "the types of coral found at each reef"],
         a: [0,1,2,3],
         why: "For a fair test, every condition that could affect the result — temperature, salinity, the size of the area sampled, and the light level / clarity — must be kept the same at both reefs. Then any difference in species is due to the reef itself. The reef is the thing you are changing, so it can't be kept the same. The number and types of coral found are what you are measuring, not controls. (AO3)", status: "human_review" },
-      { id: "P6.1-04", type: "multi", tier: 2, ref: "6/AO3", family: "dh-data-logger",
+      { id: "P6.1-04", type: "multi", tier: 2, ref: "AO3", family: "dh-data-logger",
         q: "A scientist can record the tide height with a data logger (an automatic sensor) instead of reading a ruler by hand. Tick the advantages of using the data logger.",
         options: ["It can take readings more often, at smaller time intervals.", "It is less likely to miss a brief high or low point.", "It removes the human error of reading a scale.", "It can record continuously without someone being present.", "It does not need to be calibrated before use.", "It explains why the tide height rises and falls.", "It is cheaper and quicker to set up than a ruler."],
         a: [0,1,2,3],
@@ -1770,6 +1775,6 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 ];
 
 export const practicalsList = () =>
-  PRACTICALS.map((p) => ({ id: p.id, title: p.title, subtitle: p.subtitle, ref: p.ref, unit: p.unit, count: p.items.length }));
+  PRACTICALS.map((p) => ({ id: p.id, title: p.title, subtitle: p.subtitle, ref: p.ref, unit: p.unit, crossCutting: !!p.crossCutting, count: p.items.length }));
 export const practicalById = (id) => PRACTICALS.find((p) => p.id === id) || null;
 export const practicalItemIds = (id) => (practicalById(id)?.items || []).map((i) => i.id);
