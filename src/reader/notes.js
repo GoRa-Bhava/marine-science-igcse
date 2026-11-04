@@ -98,7 +98,7 @@ export const NOTES = {
      {
       "h": "How a tsunami forms",
       "ref": "1.2/LO6",
-      "body": "A sudden movement of the seabed (usually an underwater earthquake) <b>displaces a huge volume of water</b>. A wave spreads across the ocean and grows in height as it reaches shallow water near the coast."
+      "body": "A sudden movement of the seabed (usually an underwater earthquake) <b>displaces a huge volume of water</b>. A wave spreads across the ocean towards the coast. Underwater landslides, volcanic eruptions and, rarely, meteorite impacts can also displace the water. In deep water the wave is low and very fast; in shallow water it slows down, the waves bunch up and its height grows."
      },
      {
       "h": "Effects of a tsunami",
@@ -143,7 +143,7 @@ export const NOTES = {
      {
       "h": "Finding places on a map",
       "ref": "1.3/LO2",
-      "body": "Lines of <b>latitude</b> run east–west, parallel to the <b>equator</b> (0° latitude). Lines of <b>longitude</b> run north–south and meet at the poles. A position is given as <b>coordinates</b>: its latitude (°N/°S) and longitude (°E/°W). The <b>tropical</b> zone is near the equator, the <b>polar</b> zones near the poles, and the <b>temperate</b> zones lie between."
+      "body": "Lines of <b>latitude</b> run east–west, parallel to the <b>equator</b> (0° latitude). Lines of <b>longitude</b> run north–south and meet at the poles. A position is given as <b>coordinates</b>: its latitude (°N/°S) and longitude (°E/°W). The <b>tropical</b> zone is near the equator, the <b>polar</b> zones near the poles, and the <b>temperate</b> zones lie between. The boundaries are the Tropics of Cancer and Capricorn (about 23.5° N and S) and the Arctic and Antarctic Circles (about 66.5° N and S). The Prime Meridian is 0° longitude."
      },
      {
       "h": "One World Ocean",
@@ -200,7 +200,7 @@ export const NOTES = {
      {
       "h": "High and low tides",
       "ref": "1.4/LO1",
-      "body": "The Moon's gravity (and the Sun's) pulls on the ocean water, so the sea rises to a <b>high tide</b> and falls to a <b>low tide</b> about twice a day.",
+      "body": "The Moon's gravity (and the Sun's) pulls on the ocean water, so the sea rises to a <b>high tide</b> and falls to a <b>low tide</b> about twice a day. The Moon's effect is about twice the Sun's because the Moon is much closer.",
       "linked": "Interactive · Tides — drag the Moon"
      },
      {
@@ -216,12 +216,12 @@ export const NOTES = {
      {
       "h": "Ocean currents",
       "ref": "1.4/LO3–4",
-      "body": "A <b>current</b> is the continuous movement of sea water in a particular direction. Currents are caused by <b>prevailing winds</b>, the <b>spinning of the Earth</b>, <b>tides</b>, and <b>changes in water density</b> (colder, saltier water sinks)."
+      "body": "A <b>current</b> is the continuous movement of sea water in a particular direction. Currents are caused by <b>prevailing winds</b>, the <b>spinning of the Earth</b>, <b>tides</b>, and <b>changes in water density</b> (colder, saltier water sinks). A <b>tidal current</b> reverses direction as the tide rises and falls, and is strongest in narrow channels. Cold, salty polar water is dense, so it sinks and flows along the deep ocean floor, linking surface and deep currents."
      },
      {
       "h": "Gyres",
       "ref": "1.4/LO5–7",
-      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres — North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean."
+      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres — North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean. They form as prevailing winds drive surface currents, which the continents turn and the Earth's spin deflects. Gyres turn <b>clockwise in the Northern Hemisphere</b> and <b>anticlockwise in the Southern Hemisphere</b>."
      },
      {
       "h": "Rip currents",
@@ -291,7 +291,7 @@ export const NOTES = {
      {
       "h": "Energy in changes of state",
       "ref": "2.1/LO5",
-      "body": "Melting and evaporation <b>take in energy</b> from the surroundings, so the particles can gain energy and break free. Freezing and condensation <b>give out energy</b> to the surroundings. The temperature does not change during the change of state itself."
+      "body": "Melting and evaporation <b>take in energy</b> from the surroundings, so the particles can gain energy and break free. Freezing and condensation <b>give out energy</b> to the surroundings. During melting and boiling the temperature does not change. While ice melts or water boils, the energy taken in is used to separate the particles, so the temperature stays constant until the change is complete; a heating curve shows this as a flat section."
      },
      {
       "h": "Floating ice vs land-based ice",
@@ -538,12 +538,12 @@ export const NOTES = {
      {
       "h": "Measuring clarity with a Secchi disc",
       "ref": "2.5/LO3",
-      "body": "A <b>Secchi disc</b> is a white, or black-and-white, disc lowered on a marked line until it just disappears from view. That <b>Secchi depth</b> measures water clarity, so a greater depth means clearer water and deeper light penetration. For fair results use the same observer, the same time of day and the shaded side, and repeat and average."
+      "body": "A <b>Secchi disc</b> is a white, or black-and-white, disc lowered on a marked line until it just disappears, then lowered a little more and raised until it just reappears; the mean of the two depths is the <b>Secchi depth</b>. It measures water clarity, so a greater depth means clearer water and deeper light penetration. For fair results use the same observer, the same time of day and the shaded side, and repeat and average."
      },
      {
       "h": "Pressure",
       "ref": "2.5/LO4",
-      "body": "<b>Pressure increases with depth</b> because the weight of the water above increases. The increase is steady as you go down. This is why deep-sea organisms live under very high pressure."
+      "body": "<b>Pressure increases with depth</b> because the weight of the water above increases. The increase is steady as you go down. This is why deep-sea organisms live under very high pressure. As a rule of thumb, pressure rises by about 1 atmosphere for every 10 m of depth, on top of the 1 atmosphere of air at the surface."
      },
      {
       "h": "Temperature",
@@ -781,12 +781,12 @@ export const NOTES = {
      {
       "h": "The outside features of a fish",
       "ref": "3.4/LO3",
-      "body": "The <b>operculum</b> is the gill cover, and <b>scales</b> give protection. The <b>lateral line</b> detects vibration and the <b>nares</b> detect chemicals. The <b>fins</b> (dorsal, pelvic, pectoral, anal and caudal) control pitching, rolling and yawing, change direction and give forward thrust; the caudal fin provides the thrust."
+      "body": "The <b>operculum</b> is the gill cover, and <b>scales</b> give protection. The <b>lateral line</b> detects vibration and the <b>nares</b> detect chemicals. The <b>fins</b> (dorsal, pelvic, pectoral, anal and caudal) control pitching, rolling and yawing, change direction and give forward thrust; the caudal fin provides the thrust. The <b>dorsal and anal fins</b> stop the fish rolling; the <b>pectoral and pelvic fins</b> control pitch and steering (the pectorals also act as brakes)."
      },
      {
       "h": "Sorting invertebrates into groups",
       "ref": "3.4/LO4",
-      "body": "<b>Crustaceans</b> have bilateral symmetry, an exoskeleton, compound eyes, two pairs of antennae and abdominal segments with jointed legs. <b>Cnidaria</b> have radial symmetry and tentacles with stinging cells; <b>echinoderms</b> have pentaradial symmetry, spiny skin and tube feet. <b>Molluscs</b> have bilateral symmetry, an unsegmented body and a shell, while <b>annelids</b> have bilateral symmetry, a segmented soft body and setae."
+      "body": "<b>Crustaceans</b> have bilateral symmetry, an exoskeleton, compound eyes, two pairs of antennae and abdominal segments with jointed legs. <b>Cnidaria</b> have radial symmetry and tentacles with stinging cells; <b>echinoderms</b> have pentaradial symmetry, spiny skin and tube feet. <b>Molluscs</b> have bilateral symmetry, an unsegmented body and a shell, while <b>annelids</b> have bilateral symmetry, a segmented soft body and setae. Examples: crabs, shrimps and <b>barnacles</b> are crustaceans; jellyfish, sea anemones and corals are cnidaria; starfish, sea urchins and <b>sea cucumbers</b> are echinoderms; mussels, snails and <b>squid</b> (internal shell) are molluscs; ragworms and lugworms are annelids."
      },
      {
       "h": "Comparing specimens (practical)",
@@ -801,7 +801,7 @@ export const NOTES = {
      {
       "h": "Working out magnification",
       "ref": "3.4/LO7",
-      "body": "<b>Magnification = image size ÷ actual size</b>. To find actual size, do image size ÷ magnification. Change both measurements into the same units first (1 cm = 10 mm), then round as the question asks."
+      "body": "<b>Magnification = image size ÷ actual size</b>. To find actual size, do image size ÷ magnification. Change both measurements into the same units first (1 cm = 10 mm and 1 mm = 1000 µm, the unit used for cells and plankton), then round as the question asks."
      },
      {
       "h": "Using a dichotomous key (practical)",
@@ -903,7 +903,7 @@ export const NOTES = {
      {
       "h": "The leatherback turtle life cycle",
       "ref": "3.6/LO1",
-      "body": "Females reproduce every 2 to 5 years and return to the sandy shore where they hatched. They dig a nest, lay eggs, and repeat the egg-laying several times at 10-day intervals before burying the eggs and leaving. The <b>temperature of incubation</b> decides the sex of the young. Eggs hatch after 55 to 60 days, the young go to sea to feed and grow, and they mature after 15 to 25 years; males live entirely at sea."
+      "body": "Females reproduce every 2 to 5 years and return to the sandy shore where they hatched. They dig a nest, lay eggs, and repeat the egg-laying several times at 10-day intervals before burying the eggs and leaving. The <b>temperature of incubation</b> decides the sex of the young. Eggs hatch after 55 to 60 days, the young go to sea to feed and grow, and they mature after 15 to 25 years; males live entirely at sea. Warmer sand produces more females and cooler sand more males, so warming beaches can upset the sex ratio."
      },
      {
       "h": "The coral polyp life cycle",
@@ -939,7 +939,7 @@ export const NOTES = {
      {
       "h": "What migration is and why",
       "ref": "3.7/LO1",
-      "body": "<b>Migration</b> is the movement of organisms from one place to another, often and back again. Animals migrate to find food, to find mates, to reach a different habitat to reproduce, and to avoid predators. It is different from just moving around a home area or from drifting with the water."
+      "body": "<b>Migration</b> is the movement of organisms from one place to another, and often back again. Animals migrate to find food, to find mates, to reach a different habitat to reproduce, and to avoid predators. It is different from just moving around a home area or from drifting with the water. Examples: blue whales follow summer krill to polar seas (finding food); European eels gather in the Sargasso Sea (finding mates); Pacific salmon return from the sea to the rivers where they hatched (a different habitat to reproduce); zooplankton sink to dark water by day (avoiding predators)."
      },
      {
       "h": "Migration in three dimensions",
@@ -949,12 +949,12 @@ export const NOTES = {
      {
       "h": "Daily vertical migration",
       "ref": "3.7/LO3",
-      "body": "Plankton, fish, squid and shrimp rise from the twilight zone to the sunlight zone at dusk. They feed near the surface at night, where the food is, hidden by the darkness. At dawn they sink back down and stay in the dim twilight zone during the day to avoid predators that hunt by sight."
+      "body": "Plankton, fish, squid and shrimp rise from the twilight zone to the sunlight zone at dusk. They feed near the surface at night, where the food is, hidden by the darkness. At dawn they sink back down and stay in the dim twilight zone during the day to avoid predators that hunt by sight. Lanternfish are a well-known example. The migration also carries food energy and nutrients down to the deep sea, where the migrators and their droppings are eaten."
      },
      {
       "h": "Very long horizontal migration",
       "ref": "3.7/LO4",
-      "body": "Tuna, turtles and whales make very long horizontal journeys. At one end they find seasonal food, such as cold polar waters in summer. At the other end they reach a suitable place to breed or give birth, such as warm calm water, nesting beaches or spawning grounds."
+      "body": "Tuna, turtles and whales make very long horizontal journeys. At one end they find seasonal food, such as cold polar waters in summer. At the other end they reach a suitable place to breed or give birth, such as warm calm water, nesting beaches or spawning grounds. Examples: Pacific bluefin tuna spawn in the western Pacific, cross to feed off North America, then return to breed; young loggerhead turtles spend years in the open North Atlantic, where there are fewer predators, before females return to nest; humpback whales feed on Antarctic krill in summer and breed in warm tropical water in winter."
      },
      {
       "h": "How animals navigate",
@@ -1029,7 +1029,7 @@ export const NOTES = {
      {
       "h": "Essential elements",
       "ref": "4.1/LO4",
-      "body": "<b>Nitrogen</b> is needed to make proteins and <b>carbon</b> to make organic compounds. <b>Magnesium</b> is needed to make chlorophyll, so a shortage means less photosynthesis. <b>Calcium</b> builds bones, shells and coral skeletons, and <b>iron</b> is needed for haemoglobin, which carries oxygen."
+      "body": "<b>Nitrogen</b> is needed to make proteins and <b>carbon</b> to make organic compounds. <b>Magnesium</b> is needed to make chlorophyll, so a shortage means less photosynthesis. <b>Calcium</b> builds bones, shells and coral skeletons, and <b>iron</b> is needed for haemoglobin, which carries oxygen in vertebrates and some invertebrates, such as lugworms in their oxygen-poor burrows."
      },
      {
       "h": "Nutrient cycling",
@@ -1089,7 +1089,7 @@ export const NOTES = {
      {
       "h": "Respiration is not gas exchange",
       "ref": "4.2/LO4",
-      "body": "<b>Respiration</b> is the chemical reactions inside every cell that release energy. <b>Gas exchange</b> is the movement of oxygen into, and carbon dioxide out of, an organism across a surface such as gills, lungs or the body surface. Gas exchange supplies the oxygen that respiration needs. Good gas-exchange surfaces have a large surface area, thin walls and a good blood supply."
+      "body": "<b>Respiration</b> is the chemical reactions inside every cell that release energy. <b>Gas exchange</b> is the movement of oxygen and carbon dioxide into and out of an organism across a surface such as gills, lungs or the body surface. Gas exchange supplies the oxygen that respiration needs. Good gas-exchange surfaces have a large surface area, thin walls and a good blood supply. Producers such as seagrass respire all the time, but in bright light photosynthesis is faster, so overall they take in carbon dioxide and give out oxygen; in the dark they take in oxygen and give out carbon dioxide."
      },
      {
       "h": "Why low oxygen matters",
@@ -1099,7 +1099,7 @@ export const NOTES = {
      {
       "h": "Measuring energy in food",
       "ref": "4.2/LO5",
-      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, food mass, distance and starting temperature the same so the test is fair, then compare energy per gram."
+      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, distance and starting temperature the same so the test is fair; because samples are rarely exactly the same mass, compare energy per gram. Energy per gram allows a fair comparison of different-sized samples. Lipid-rich foods such as nuts release the most, because lipids release about twice as much energy per gram as carbohydrates or proteins."
      },
      {
       "h": "Errors and improvements in the burning test",
@@ -1299,7 +1299,7 @@ export const NOTES = {
      {
       "h": "What changes population growth",
       "ref": "5.1/LO2",
-      "body": "Four things speed up or slow down how fast a population grows. More <b>food supply</b> means faster growth; <b>disease</b> causes deaths and slows it; <b>competition</b> for food or space slows it; and <b>predation</b> kills members and slows it. These are always described for one named organism."
+      "body": "Four things speed up or slow down how fast a population grows. More <b>food supply</b> means faster growth; <b>disease</b> causes deaths and slows it; <b>competition</b> for food or space slows it; and <b>predation</b> kills members and slows it. These are always described for one named organism. Predator and prey numbers often rise and fall in a cycle: more prey → more predators → fewer prey → fewer predators → more prey, with the predator peaks lagging behind. Disease spreads faster, and kills a larger share, in a dense population."
      },
      {
       "h": "Types of marine ecosystem",
@@ -1359,7 +1359,7 @@ export const NOTES = {
      {
       "h": "More quadrats, more reliable",
       "ref": "5.2/LO1",
-      "body": "Random placement removes the sampler’s bias in choosing where to look. Taking many quadrats gives a more reliable estimate than one large count. Species richness is the number of different species, not the total number of individuals."
+      "body": "Random placement removes the sampler’s bias in choosing where to look. Taking many quadrats gives a more reliable estimate than one large count. Species richness is the number of different species, not the total number of individuals. Count organisms touching two sides of the frame (for example the top and left) but not the other two. To decide how many quadrats are enough, keep a running mean: once it barely changes as more quadrats are added, the sample is big enough."
      },
      {
       "h": "Transects for distribution",
@@ -1507,7 +1507,7 @@ export const NOTES = {
      {
       "h": "How the factors work",
       "ref": "5.4/LO3",
-      "body": "Exposure to air causes drying, so <b>Fucus</b> (a macroalga) and <b>sea anemones</b> are limited higher up the shore, with anemones restricted to pools or under algae. Predation limits organisms such as mussels lower down. Wave action favours firmly attached organisms, and grazers follow their food."
+      "body": "Exposure to air causes drying, so <b>Fucus</b> (a macroalga) and <b>sea anemones</b> are limited higher up the shore, with anemones restricted to pools or under algae. Predation limits organisms such as mussels lower down. Wave action favours firmly attached organisms, and grazers follow their food. At low tide, high-shore rock pools are cut off: their small volume warms and cools quickly, so temperature swings widely, and on hot days the warm water holds less oxygen while animals keep respiring."
      },
      {
       "h": "Adaptations to a rocky shore",
@@ -1666,7 +1666,7 @@ export const NOTES = {
      {
       "h": "What controls coral distribution",
       "ref": "5.7/LO5",
-      "body": "Corals need light for their zooxanthellae, so they grow in shallow, clear water, and larvae need a hard surface to settle on. Sediment blocks light and smothers the coral, and if water gets too warm the polyps expel their zooxanthellae and turn white (bleaching). <b>Parrot fish</b> graze on coral and <b>crown-of-thorns starfish</b> eat the polyps, destroying reefs in outbreaks."
+      "body": "Corals need light for their zooxanthellae, so they grow in shallow, clear water, and larvae need a hard surface to settle on. Sediment blocks light and smothers the coral, and if water gets too warm the polyps expel their zooxanthellae and turn white (bleaching). <b>Parrot fish</b> graze on coral and <b>crown-of-thorns starfish</b> eat the polyps, destroying reefs in outbreaks. Most reef corals grow best at about 23–29 °C and few live below 18 °C; they are found in water less than about 50 m deep, between about 30° N and 30° S. Crown-of-thorns starfish normally keep fast-growing corals in check, but outbreaks may be triggered by nutrient run-off (feeding their larvae's food) or by overfishing of their predators. Parrot fish pass the ground-up coral skeleton out as sand."
      },
      {
       "h": "Why reef water is clear",
