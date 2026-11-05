@@ -1,7 +1,8 @@
 /* ---------- RESULTS TABLE (0697 practical activities) ----------
    Levels of an independent variable × 4 repeats, one clear anomaly, a blank mean. Contexts are the 0697 PAs:
    2.2/LO6 solubility of a solute · 2.3/LO4 gas solubility · 2.4/LO3 salinity and density · 2.2/LO4 CO₂ and pH ·
-   4.3/LO6 light and photosynthesis · 2.5/LO3 Secchi disc · 5.2/LO5 moisture content of sediment.
+   4.3/LO6 light and photosynthesis · 2.5/LO3 Secchi disc · 5.2/LO5 moisture content of sediment ·
+   2.1/LO6 melting land-based ice.
    Skills: spot the anomaly, mean leaving it out (stated rounding), range, IV / DV / control variables, why repeat,
    which conclusion best describes the means, evidence that supports a claim. Data are generated, never real. */
 import { rng, pickR, shuffleR, pickMixed } from "../core.js";
@@ -36,6 +37,10 @@ const CTX = [
     cap: "a sediment moisture survey", ref: "5.2/LO5", iv: "distance up the beach", ivHead: "distance from low-tide mark / m", ivU: "m", levels: [0, 10, 20, 30, 40],
     dv: "moisture content", dvHead: "moisture content / %", dvU: "%", dp: 0, base: [22, 28], delta: [-18, -14], dir: -1, trends: ["mono", "plateau"], noise: 0.8, rep: "sample",
     cvs: ["mass of each sand sample", "oven temperature used for drying", "drying time", "depth each sample was taken from", "time after low tide the samples were taken"] },
+  { id: "melt", title: "A student placed ice on a model of land made from modelling clay at one end of a tank of water, and measured the water level at the other end every 5 minutes. The investigation was done in four identical tanks.",
+    cap: "a melting land-ice investigation", ref: "2.1/LO6", iv: "time since the ice was added", ivHead: "time / minutes", ivU: "minutes", levels: [0, 5, 10, 15, 20],
+    dv: "water level", dvHead: "water level / mm", dvU: "mm", dp: 0, base: [40, 46], delta: [10, 16], dir: 1, trends: ["mono", "plateau"], noise: 0.8, rep: "tank",
+    cvs: ["mass of ice used in each tank", "starting volume of water", "room temperature", "size and shape of the tank", "temperature of the water at the start"] },
 ];
 const R = 4;
 const meanOf = (a) => a.reduce((s, x) => s + x, 0) / a.length;
