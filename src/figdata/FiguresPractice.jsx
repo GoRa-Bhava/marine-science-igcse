@@ -20,6 +20,7 @@ function figVars(C, light) {
     "--soft": C.mist,
     "--mut": light ? C.line : "#7fa8b6",
     "--line": light ? "#9fb8c1" : C.line,
+    "--surface": light ? C.raise : C.shelf,
     "--surface2": light ? C.raise : C.shelf,
     "--app": C.amber,
     "--accent": C.coral,
