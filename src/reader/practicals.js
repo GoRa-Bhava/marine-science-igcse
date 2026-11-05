@@ -59,7 +59,7 @@ export const PRACTICALS = [
         reagent: "Biuret solution",
         method: "Add biuret solution to the sample and mix.",
         positive: "Lilac / purple",
-        posColor: "#7a4fb0",
+        posColor: "#b48ad6",
         negative: "Stays blue",
         negColor: "#2e6fd6",
         why: "Biuret solution reacts with the bonds that hold a protein together, turning it purple.",
