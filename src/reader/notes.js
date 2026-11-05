@@ -732,7 +732,7 @@ export const NOTES = {
      {
       "h": "Kingdoms of Eukarya in the sea",
       "ref": "3.3/LO4",
-      "body": "<b>Animals</b> are multicellular, have no cell wall or chloroplasts, and feed on other organisms. <b>Plants</b> are multicellular with cell walls and chloroplasts, such as seagrass. <b>Protoctists</b> include kelp, dinoflagellates and diatoms; many are single-celled and some are multicellular."
+      "body": "<b>Animals</b> are multicellular, have no cell wall or chloroplasts, and feed on other organisms. <b>Plants</b> are multicellular with cell walls and chloroplasts, and have true roots, leaves and flowers, such as seagrass. <b>Protoctists</b> include kelp, dinoflagellates and diatoms; many are single-celled and some are multicellular."
      }
     ],
     "terms": [
@@ -999,7 +999,7 @@ export const NOTES = {
      {
       "h": "What a nutrient is",
       "ref": "4.1/LO1",
-      "body": "A <b>nutrient</b> is a substance an organism needs for growth, for repair, and to provide chemical energy. There are three kinds: <b>gases</b> such as carbon dioxide (used by producers), <b>dissolved salts</b> such as nitrates, and <b>organic compounds</b>. Nutrients are not just food, and water and oxygen are not counted as nutrients here."
+      "body": "A <b>nutrient</b> is a substance an organism needs for growth, for repair, and to provide chemical energy. There are three kinds: <b>gases</b> such as carbon dioxide (used by producers), <b>dissolved salts</b> such as nitrates, and <b>organic compounds</b>. Nutrients are not just food: carbon dioxide and dissolved salts count too."
      },
      {
       "h": "The organic compounds",
@@ -1099,7 +1099,7 @@ export const NOTES = {
      {
       "h": "Measuring energy in food",
       "ref": "4.2/LO5",
-      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, the mass of food (as near as possible), the distance and the starting temperature the same so the test is fair; because samples are rarely exactly the same mass, also compare energy per gram. If you are told that lipids release more energy per gram, you can predict that lipid-rich foods such as nuts heat the water most."
+      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, the mass of food (as near as possible), the distance and the starting temperature the same so the test is fair; because samples are rarely exactly the same mass, also compare energy per gram. You may be given: energy per gram (J/g) = mass of water (g) × temperature rise (°C) × 4.2 ÷ mass of food (g). If you are told that lipids release more energy per gram, you can predict that lipid-rich foods such as nuts heat the water most."
      },
      {
       "h": "Errors and improvements in the burning test",
@@ -1118,7 +1118,7 @@ export const NOTES = {
      ],
      [
       "Gas exchange",
-      "movement of oxygen in and carbon dioxide out across a surface"
+      "movement of oxygen and carbon dioxide into and out of an organism across a surface"
      ],
      [
       "Glucose",

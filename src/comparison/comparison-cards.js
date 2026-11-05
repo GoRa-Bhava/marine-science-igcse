@@ -259,7 +259,7 @@ export const COMPARISON_CARDS = [
   rows: [
     { label: "What it is", a: "A chemical reaction that releases energy.",           b: "The physical movement of gases across a surface." },
     { label: "Where",      a: "Inside every living cell (mitochondria).",            b: "At a gas-exchange surface, e.g. the gills." },
-    { label: "What moves / changes", a: "Glucose and oxygen are used; CO₂ and water are made.", b: "Oxygen diffuses in; carbon dioxide diffuses out." },
+    { label: "What moves / changes", a: "Glucose and oxygen are used; CO₂ and water are made.", b: "At the gills of a fish: oxygen diffuses in and carbon dioxide diffuses out." },
     { label: "Purpose",    a: "Provides usable energy for the cell.",                b: "Supplies the oxygen for respiration and removes its CO₂." },
   ],
   memoryHook: "Respiration is the reaction that releases energy inside cells; gas exchange is just oxygen moving in and carbon dioxide moving out at the gills.",
