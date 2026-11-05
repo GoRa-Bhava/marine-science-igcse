@@ -20,8 +20,12 @@ import readscale from "./templates/readscale.js";
 import mmaths from "./templates/mmaths.js";
 import seachart from "./templates/seachart.js";
 import labelparts from "./templates/labelparts.js";
+import seafloor from "./templates/seafloor.js";
+import shorezone from "./templates/shorezone.js";
+import atoll from "./templates/atoll.js";
+import fishgear from "./templates/fishgear.js";
 export const FIG_GROUPS = ["Graphs and charts", "Tables and fieldwork", "Maps", "Diagrams"];
-export const FIG_TEMPLATES = [tide, depth, shore, mline, mbar, mcharts, mscatter, mtrend, mtable, mcalc, mmaths, readscale, features, quadrat, magnify, tabledesign, oceanmap, seachart, choropleth, foodchain, labelparts];
+export const FIG_TEMPLATES = [tide, depth, shore, mline, mbar, mcharts, mscatter, mtrend, mtable, mcalc, mmaths, readscale, features, quadrat, magnify, tabledesign, oceanmap, seachart, choropleth, foodchain, labelparts, seafloor, shorezone, atoll, fishgear];
 export const templateByKey = (k) => FIG_TEMPLATES.find((t) => t.key === k);
 /* template CSS strings, to inject once (each is scoped to .fig-<key>) */
 export const FIG_TEMPLATE_CSS = FIG_TEMPLATES.map((t) => t.css || "").join("\n");
