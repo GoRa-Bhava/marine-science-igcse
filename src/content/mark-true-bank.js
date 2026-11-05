@@ -40,14 +40,14 @@ export const MARKTRUE = [
     options:[
       "Spring tides occur when the Sun and Moon are in line.",
       "Spring tides are caused by the change of season in spring.",
-      "A spring tide has a larger tidal range than a neap tide.",
+      "A spring tide has a larger tidal amplitude than a neap tide.",
       "Neap tides occur when the Sun and Moon are at right angles.",
       "At a spring tide, both the high tide and the low tide are higher than at a neap tide.",
       "Spring tides happen because the Moon moves closer to the Earth.",
       "The Moon's gravity is the main cause of the tides.",
       "Tides are caused by the Earth's magnetic field." ],
     answer:[0,2,3,6],
-    why:"Tides are caused mainly by the Moon's gravity pulling on the oceans, with help from the Sun. When the Sun and Moon are in a line, their pulls combine, giving a spring tide with a large tidal range. When they are at right angles, the pull is smaller, giving a neap tide with a small range. Spring tides have nothing to do with the season. They are not caused by the Moon coming closer either. At a spring tide the high tide is higher but the low tide is lower, which is why the range is bigger. The Earth's magnetic field does not cause tides." },
+    why:"Tides are caused mainly by the Moon's gravity pulling on the oceans, with help from the Sun. When the Sun and Moon are in a line, their pulls combine, giving a spring tide with a large tidal amplitude. When they are at right angles, the pull is smaller, giving a neap tide with a small amplitude. Spring tides have nothing to do with the season. They are not caused by the Moon coming closer either. At a spring tide the high tide is higher but the low tide is lower, which is why the amplitude is bigger. The Earth's magnetic field does not cause tides." },
   { id:"MT-U1-04", unit:1, topic:"1.3 Oceans & sea floor", spec:"1.3/LO1-5", tier:2, type:"multi",
     stem:"Mark which statements are true about oceans, seas and the World Ocean.",
     options:[
@@ -255,7 +255,7 @@ export const MARKTRUE = [
       "Mangrove roots carry out photosynthesis.",
       "The pneumatophores secrete the tree's excess salt." ],
     answer:[0,1,3,5],
-    why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Aerial roots take in oxygen, not water vapour. Prop roots mainly support the tree (their tops also have pores that take in some oxygen); they do not store fresh water. Roots do not photosynthesise, because that happens in the leaves. Salt is secreted by the leaves, not by the pneumatophores." },
+    why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Aerial roots take in oxygen, not water vapour. Prop roots mainly support the tree; they do not store fresh water. Roots do not photosynthesise, because that happens in the leaves. Salt is secreted by the leaves, not by the pneumatophores." },
   { id:"MT-U5-04", unit:5, topic:"5.7 Coral reef", spec:"5.7/LO1-5", tier:2, type:"multi",
     stem:"Mark which statements are true about coral reefs.",
     options:[

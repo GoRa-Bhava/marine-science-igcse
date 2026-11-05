@@ -12,7 +12,7 @@ export const NOTES = {
     "id": "1.1",
     "title": "Earth in space and structure",
     "intro": "Where the Earth and Moon sit in space, what holds them there, and what the Earth is made of inside.",
-    "tip": "Get the layer order right from the centre out — inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. The inner core is solid despite being the hottest, because the pressure squeezes it solid. Some textbooks call the mantle semi-molten; in the exam, write that it is solid rock that can melt to form magma.",
+    "tip": "Get the layer order right from the centre out — inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. Some textbooks call the mantle semi-molten; in the exam, write that it is solid rock that can melt to form magma.",
     "notes": [
      {
       "h": "Earth, Moon and the Sun",
@@ -92,7 +92,7 @@ export const NOTES = {
      {
       "h": "Earthquakes and volcanoes",
       "ref": "1.2/LO5",
-      "body": "<b>Earthquakes</b> happen at all three kinds of boundary: the plates become locked together, tension builds up, then they suddenly slip and release a burst of energy. <b>Volcanoes</b> need magma to rise. At a <b>convergent</b> boundary one plate is forced under another (<b>subducted</b>), sinks into the hot mantle and melts, and the magma rises through the plate above and erupts. At a <b>divergent</b> boundary the plates move apart and magma rises to fill the gap, erupting as lava and building a mid-ocean ridge (in places, such as Iceland, above the sea). At a <b>transform</b> boundary the plates slide past each other: there are earthquakes but no volcanoes, because no plate sinks and no gap opens.",
+      "body": "<b>Earthquakes</b> happen at all three kinds of boundary: the plates become locked together, tension builds up, then they suddenly slip and release a burst of energy. <b>Volcanoes</b> need magma to rise. At a <b>convergent</b> boundary one plate is forced under another (<b>subducted</b>), sinks into the hot mantle and melts, and the magma rises through the plate above and erupts. At a <b>divergent</b> boundary the plates move apart and magma rises to fill the gap, erupting as lava and building a mid-ocean ridge (in places building volcanic islands above the sea). At a <b>transform</b> boundary the plates slide past each other: there are earthquakes but no volcanoes, because no plate sinks and no gap opens.",
       "linked": "Interactive · subduction & earthquake"
      },
      {
@@ -133,7 +133,7 @@ export const NOTES = {
     "id": "1.3",
     "title": "Oceans and the sea floor",
     "intro": "The world's oceans, how they connect, how big and deep they are, and the shape of the sea floor.",
-    "tip": "Name sea-floor features precisely — continental shelf, continental slope, abyssal plain, trench, mid-ocean ridge — and remember the shallow, sunlit continental shelf is the most productive zone.",
+    "tip": "Name sea-floor features precisely: continental shelf, continental slope, abyssal plain, mid-ocean ridge, ocean trench and volcanic island.",
     "notes": [
      {
       "h": "The five oceans",
@@ -216,7 +216,7 @@ export const NOTES = {
      {
       "h": "Ocean currents",
       "ref": "1.4/LO3–4",
-      "body": "A <b>current</b> is the continuous movement of sea water in a particular direction. Currents are caused by <b>prevailing winds</b>, the <b>spinning of the Earth</b>, <b>tides</b>, and <b>changes in water density</b> (colder, saltier water sinks). A <b>tidal current</b> reverses direction as the tide rises and falls, and is strongest in narrow channels. Cold, salty polar water is dense, so it sinks and flows along the deep ocean floor, linking surface and deep currents."
+      "body": "A <b>current</b> is the continuous movement of sea water in a particular direction. Currents are caused by <b>prevailing winds</b>, the <b>spinning of the Earth</b>, <b>tides</b>, and <b>changes in water density</b> (colder, saltier water sinks). A <b>tidal current</b> reverses direction as the tide rises and falls, and is strongest in narrow channels. Cold, salty polar water is dense, so it sinks and flows along the deep ocean floor."
      },
      {
       "h": "Gyres",
@@ -312,7 +312,7 @@ export const NOTES = {
     "terms": [
      [
       "Diffusion",
-      "the spreading of particles from where they are crowded to where there are fewer, due to random movement"
+      "the net movement of particles from a region of higher concentration to a region of lower concentration, as a result of their random movement"
      ],
      [
       "Evaporation",
@@ -340,7 +340,7 @@ export const NOTES = {
     "id": "2.2",
     "title": "pH and salinity",
     "intro": "What sea water is made of, how acidic or alkaline it is, and why some seas are saltier than others.",
-    "tip": "Salinity is in parts per thousand (ppt), not percent, and the open ocean is about 35 ppt. For the named seas always give the <b>reason</b> (evaporation, run-off), never just 'hot' or 'cold'.",
+    "tip": "Salinity is in parts per thousand (ppt), not percent (about 35 ppt in the open ocean; a question will give it if you need it). For the named seas always give the <b>reason</b> (evaporation, run-off), never just 'hot' or 'cold'.",
     "notes": [
      {
       "h": "Element, compound, mixture",
@@ -365,17 +365,17 @@ export const NOTES = {
      {
       "h": "Solutions and solubility",
       "ref": "2.2/LO5",
-      "body": "In sea water, water is the <b>solvent</b> and the dissolved salts are the <b>solutes</b>, making it a <b>solution</b>. Salts that are <b>soluble</b>, like sodium chloride and magnesium sulfate, dissolve; <b>insoluble</b> substances like calcium carbonate barely dissolve and instead form shells and skeletons. <b>Sodium chloride</b> is the most abundant dissolved salt."
+      "body": "In sea water, water is the <b>solvent</b> and the dissolved salts are the <b>solutes</b>, making it a <b>solution</b>. Salts that are <b>soluble</b>, like sodium chloride and magnesium sulfate, dissolve. <b>Insoluble</b> substances do not dissolve. Calcium carbonate is only very slightly soluble, so marine organisms can build shells and skeletons from it that do not dissolve away. <b>Sodium chloride</b> is the most abundant dissolved salt."
      },
      {
       "h": "Temperature and solubility of solids",
       "ref": "2.2/LO6",
-      "body": "For most solid solutes, such as potassium nitrate and sugar, <b>solubility increases with temperature</b> (the solubility of common salt rises only slightly). You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
+      "body": "For most solid solutes, such as potassium nitrate and sugar, <b>solubility increases with temperature</b>. You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
      },
      {
       "h": "Salinity and ppt",
       "ref": "2.2/LO7",
-      "body": "<b>Salinity</b> is the concentration of dissolved salts in sea water. It is measured in <b>parts per thousand (ppt)</b>, meaning grams of dissolved salt per 1000 g of sea water. Open-ocean salinity is typically about <b>35 ppt</b>."
+      "body": "<b>Salinity</b> is the concentration of dissolved salts in sea water. It is measured in <b>parts per thousand (ppt)</b>, meaning grams of dissolved salt per 1000 g of sea water. A typical open-ocean value (about 35 ppt) is given in questions when it is needed."
      },
      {
       "h": "Salinities of named seas",
@@ -543,7 +543,7 @@ export const NOTES = {
      {
       "h": "Pressure",
       "ref": "2.5/LO4",
-      "body": "<b>Pressure increases with depth</b> because the weight of the water above increases. The increase is steady as you go down. This is why deep-sea organisms live under very high pressure. As a rule of thumb, pressure rises by about 1 atmosphere for every 10 m of depth, on top of the 1 atmosphere of air at the surface."
+      "body": "<b>Pressure increases with depth</b> because the weight of the water above increases. The increase is steady as you go down. This is why deep-sea organisms live under very high pressure. If a question needs a figure, it will give one (for example, about 1 atmosphere more for every 10 m); you do not need to learn it."
      },
      {
       "h": "Temperature",
@@ -680,7 +680,7 @@ export const NOTES = {
     "id": "3.2",
     "title": "Reproduction",
     "intro": "The two ways organisms make new offspring, and how the offspring differ.",
-    "tip": "External fertilisation releases eggs and sperm into the water, so huge numbers of gametes are needed because many are lost. Always link the fact to the reason.",
+    "tip": "External fertilisation releases eggs and sperm into the water, so huge numbers of sex cells are needed because many are lost. Always link the fact to the reason.",
     "notes": [
      {
       "h": "Asexual reproduction",
@@ -712,7 +712,7 @@ export const NOTES = {
     "id": "3.3",
     "title": "Classification",
     "intro": "How scientists sort living things into groups and give each one a worldwide name.",
-    "tip": "Write the binomial name correctly: Genus with a capital, species lowercase (e.g. Homo sapiens). Classification runs domain → kingdom → … → species.",
+    "tip": "The binomial name has two parts, genus then species (e.g. Orcinus orca). Classification runs domain → kingdom → … → species.",
     "notes": [
      {
       "h": "Grouping by shared features",
@@ -771,7 +771,7 @@ export const NOTES = {
      {
       "h": "Sorting vertebrates into groups",
       "ref": "3.4/LO1",
-      "body": "Vertebrates are grouped by three features: their <b>skin covering</b>, their <b>reproductive method</b> (internal or external fertilisation), and whether they have <b>gills or lungs</b>. Mammals have hair, internal fertilisation and lungs; birds have feathers, internal fertilisation and lungs; reptiles have scales, internal fertilisation and lungs; fish have scales, external fertilisation and gills. Reptiles and fish both have scales, so fertilisation and gas exchange tell them apart."
+      "body": "Vertebrates are grouped by three features: their <b>skin covering</b>, their <b>reproductive method</b> (internal or external fertilisation), and whether they have <b>gills or lungs</b>. Mammals have hair, internal fertilisation and lungs; birds have feathers, internal fertilisation and lungs; reptiles have scales, internal fertilisation and lungs; fish have scales, gills and (in most fish) external fertilisation. Reptiles and fish both have scales, so fertilisation and gas exchange tell them apart."
      },
      {
       "h": "Examples of each vertebrate group",
@@ -903,7 +903,7 @@ export const NOTES = {
      {
       "h": "The leatherback turtle life cycle",
       "ref": "3.6/LO1",
-      "body": "Females reproduce every 2 to 5 years and return to the sandy shore where they hatched. They dig a nest, lay eggs, and repeat the egg-laying several times at 10-day intervals before burying the eggs and leaving. The <b>temperature of incubation</b> decides the sex of the young. Eggs hatch after 55 to 60 days, the young go to sea to feed and grow, and they mature after 15 to 25 years; males live entirely at sea. Warmer sand produces more females and cooler sand more males, so warming beaches can upset the sex ratio."
+      "body": "Females reproduce every 2 to 5 years and return to the sandy shore where they hatched. They dig a nest, lay eggs, and repeat the egg-laying several times at 10-day intervals before burying the eggs and leaving. The <b>temperature of incubation</b> decides the sex of the young. Eggs hatch after 55 to 60 days, the young go to sea to feed and grow, and they mature after 15 to 25 years; males live entirely at sea."
      },
      {
       "h": "The coral polyp life cycle",
@@ -939,7 +939,7 @@ export const NOTES = {
      {
       "h": "What migration is and why",
       "ref": "3.7/LO1",
-      "body": "<b>Migration</b> is the movement of organisms from one place to another, and often back again. Animals migrate to find food, to find mates, to reach a different habitat to reproduce, and to avoid predators. It is different from just moving around a home area or from drifting with the water. Examples: blue whales follow summer krill to polar seas (finding food); many reef fish, such as groupers, gather at the same sites each year to spawn (finding mates); Pacific salmon return from the sea to the rivers where they hatched (a different habitat to reproduce); zooplankton sink to dark water by day (avoiding predators)."
+      "body": "<b>Migration</b> is the movement of organisms from one place to another, and often back again. Animals migrate to find food, to find mates, to reach a different habitat to reproduce, and to avoid predators. It is different from just moving around a home area or from drifting with the water. For example, whales travel to cold waters where food is plentiful in summer (finding food), and plankton sink to dark water by day (avoiding predators)."
      },
      {
       "h": "Migration in three dimensions",
@@ -954,7 +954,7 @@ export const NOTES = {
      {
       "h": "Very long horizontal migration",
       "ref": "3.7/LO4",
-      "body": "Tuna, turtles and whales make very long horizontal journeys. At one end they find seasonal food, such as cold polar waters in summer. At the other end they reach a suitable place to breed or give birth, such as warm calm water, nesting beaches or spawning grounds. Examples: Pacific bluefin tuna spawn in the western Pacific, cross to feed off North America, then return to breed; young loggerhead turtles spend years in the open North Atlantic, where there are fewer predators, before females return to nest; humpback whales feed on Antarctic krill in summer and breed in warm tropical water in winter."
+      "body": "Tuna, turtles and whales make very long horizontal journeys. At one end they find seasonal food, such as cold polar waters in summer. At the other end they reach a suitable place to breed or give birth, such as warm calm water, nesting beaches or spawning grounds. For example, whales feed in polar waters in summer and breed in warm water in winter, and female turtles return to nesting beaches to lay their eggs."
      },
      {
       "h": "How animals navigate",
@@ -1099,7 +1099,7 @@ export const NOTES = {
      {
       "h": "Measuring energy in food",
       "ref": "4.2/LO5",
-      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, distance and starting temperature the same so the test is fair; because samples are rarely exactly the same mass, compare energy per gram. Energy per gram allows a fair comparison of different-sized samples. Lipid-rich foods such as nuts usually release the most energy per gram."
+      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, the mass of food (as near as possible), the distance and the starting temperature the same so the test is fair; because samples are rarely exactly the same mass, also compare energy per gram. If you are told that lipids release more energy per gram, you can predict that lipid-rich foods such as nuts heat the water most."
      },
      {
       "h": "Errors and improvements in the burning test",
@@ -1204,7 +1204,7 @@ export const NOTES = {
     "id": "4.4",
     "title": "Feeding relationships",
     "intro": "How energy moves from the Sun through producers and consumers, the words used to describe who eats what, why energy is lost along the way, and how pyramids show it.",
-    "tip": "Food-chain arrows point the way energy flows (prey → predator). Only about 10% passes to the next level, so give a reason for the loss — respiration, movement, not all of it eaten.",
+    "tip": "Food-chain arrows point the way energy flows (prey → predator). Only a small fraction passes to the next level, so give a reason for the loss — respiration, movement, excretion, harvesting, not all of it eaten.",
     "example": "Biomass at one level 5.000 kg, the next 0.052 kg → transfer = 0.052 ÷ 5.000 × 100 = <b>1.04%</b>.",
     "notes": [
      {
@@ -1299,7 +1299,7 @@ export const NOTES = {
      {
       "h": "What changes population growth",
       "ref": "5.1/LO2",
-      "body": "Four things speed up or slow down how fast a population grows. More <b>food supply</b> means faster growth; <b>disease</b> causes deaths and slows it; <b>competition</b> for food or space slows it; and <b>predation</b> kills members and slows it. These are always described for one named organism. Predator and prey numbers often rise and fall in a cycle: more prey → more predators → fewer prey → fewer predators → more prey, with the predator peaks lagging behind. Disease spreads faster, and kills a larger share, in a dense population."
+      "body": "Four things speed up or slow down how fast a population grows. More <b>food supply</b> means faster growth; <b>disease</b> causes deaths and slows it; <b>competition</b> for food or space slows it; and <b>predation</b> kills members and slows it. These are always described for one named organism. Disease spreads faster, and kills a larger share, in a dense population."
      },
      {
       "h": "Types of marine ecosystem",
@@ -1546,7 +1546,7 @@ export const NOTES = {
     "id": "5.5",
     "title": "Sandy and muddy shores",
     "intro": "How sandy and muddy shores differ, and how animals cope with a loose, low-oxygen ground.",
-    "tip": "On sandy and muddy shores most organisms burrow to escape drying out and predators. Muddy shores trap more organic food but hold less oxygen than sandy shores.",
+    "tip": "On sandy and muddy shores most organisms burrow to escape drying out and predators. Muddy shores hold less oxygen than sandy shores because the fine mud stays waterlogged.",
     "notes": [
      {
       "h": "Zones of sandy and muddy shores",
@@ -1596,7 +1596,7 @@ export const NOTES = {
     "id": "5.6",
     "title": "Mangrove forests and estuaries",
     "intro": "How mangrove forests are set up, how estuary conditions swing with the tide, and the special features of mangrove life.",
-    "tip": "Match each mangrove feature to the problem it solves: salt-excreting/filtering roots (salt), aerial roots (low-oxygen mud), and support against shifting tides.",
+    "tip": "Match each mangrove feature to the problem it solves: leaves that secrete salt (salty water), pneumatophores (low-oxygen mud), and prop roots (support in soft mud against the tide).",
     "notes": [
      {
       "h": "Structure of a mangrove forest",
@@ -1874,7 +1874,7 @@ export const NOTES = {
      {
       "h": "Nets, traps and lines",
       "ref": "6.3/LO2",
-      "body": "<b>Gill, tangle and drift nets</b> entangle non-target species, and if lost become <b>ghost nets</b> that keep catching. <b>Basket traps</b> have low impact unless overused. <b>Trolling</b> and <b>longlining</b> use lines: longlining has thousands of hooks and catches seabirds and turtles, while <b>pole and line</b> takes one fish at a time with low bycatch."
+      "body": "<b>Gill, tangle and drift nets</b> entangle non-target species, and if lost become <b>ghost nets</b> that keep catching. <b>Basket traps</b> have low impact unless overused. <b>Trolling</b> and <b>longlining</b> use lines: longlining sets very long lines with many hooks and catches seabirds and turtles, while <b>pole and line</b> takes one fish at a time with low bycatch."
      },
      {
       "h": "Bycatch",
@@ -2127,7 +2127,7 @@ export const NOTES = {
     "id": "6.7",
     "title": "Eutrophication",
     "intro": "How fertilisers and sewage add nutrients to the sea, and why this can end up killing the animals that need oxygen.",
-    "tip": "Learn the eutrophication chain in order: extra nutrients → algal bloom → light blocked / algae die → decomposers use up the oxygen → animals suffocate. The marks are for the sequence.",
+    "tip": "Learn the eutrophication chain in order: extra nutrients (nitrogen, phosphorus) → algal bloom → algae die → more decomposition → decomposers respire aerobically → dissolved oxygen falls → organisms needing oxygen die. The marks are for the sequence.",
     "notes": [
      {
       "h": "Fertilisers raise crop yields",
@@ -2182,7 +2182,7 @@ export const NOTES = {
     "id": "6.8",
     "title": "Understanding climate change",
     "intro": "How the greenhouse effect works, where the extra gases come from, and how warming and acidification change the sea, sea level and marine life.",
-    "tip": "Keep the two effects apart: more CO₂ → warming (greenhouse effect), and CO₂ dissolving → lower pH (ocean acidification). Warming bleaches coral; acidification weakens shells.",
+    "tip": "Keep the two effects apart: more CO₂ → warming (greenhouse effect), and CO₂ dissolving → lower pH (ocean acidification). Warming bleaches coral.",
     "notes": [
      {
       "h": "Climate has changed before",
@@ -2222,7 +2222,7 @@ export const NOTES = {
      {
       "h": "Impacts on marine life",
       "ref": "6.8/LO6",
-      "body": "<b>Sea-level rise</b> floods coastal habitats and land, and low-lying islands such as the Maldives are most at risk. Warming causes <b>coral bleaching</b>, and more acidic water makes it harder for corals and molluscs to build their calcium carbonate skeletons and shells. Warm water holds <b>less oxygen</b>, which affects active fish most. Cool-water species shift <b>towards the poles</b>, and migrations can miss the food they are timed to meet. New competitors, predators and parasites spread, ice-dependent species may be lost, and more <b>extreme weather</b> damages reefs and mangroves; glacier meltwater can lower salinity and affect currents."
+      "body": "<b>Sea-level rise</b> floods coastal habitats and land, and low-lying islands such as the Maldives are most at risk. Warming causes <b>coral bleaching</b>. Warm water holds <b>less oxygen</b>, which affects active fish most. Cool-water species shift <b>towards the poles</b>, and migrations can miss the food they are timed to meet. New competitors, predators and parasites spread, ice-dependent species may be lost, and more <b>extreme weather</b> damages reefs and mangroves; glacier meltwater can lower salinity and affect currents."
      }
     ],
     "terms": [
@@ -2273,7 +2273,7 @@ export const NOTES = {
      {
       "h": "Species richness",
       "ref": "6.9/LO1",
-      "body": "<b>Species richness</b> is the number of different species in an area at a particular time. It counts the different kinds, not the number of individuals or the biomass. It is a quick measure of health, but it ignores how many individuals of each species there are: an area with many species but only one or two of each is not healthy."
+      "body": "<b>Species richness</b> is the number of different species in an area at a particular time. It counts the different kinds, not the number of individuals or the biomass. It is a quick measure of health, but it ignores how many individuals of each species there are, so a high species richness can hide the fact that most of the populations are very small."
      },
      {
       "h": "Sustainable harvesting",

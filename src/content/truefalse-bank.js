@@ -239,7 +239,7 @@ export const TRUEFALSE = [
     why:"Richness counts the different species present — not the number of individuals and not biomass.",
     misconception:"richness = number of individuals" },
   { id:"TF-U6-05", unit:6, topic:"6.1 Overview", spec:"6.1/LO4", tier:1, type:"truefalse",
-    stem:"A sustainable activity can continue without damaging the environment or making the resource run out.",
+    stem:"A sustainable activity can continue at the current rate without damaging the environment or making the resource run out.",
     answer:true,
     why:"Sustainable use means using a resource at the current rate, without damaging the environment and without it running out.",
     misconception:"renewable = sustainable at any rate" },
