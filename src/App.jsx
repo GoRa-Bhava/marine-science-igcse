@@ -7,6 +7,7 @@ import { paletteFor } from "./theme.js";
 import { initAnswer as initAnswerShared, canSubmit as canSubmitShared, gradeItem } from "./quiz/grade.js";
 import { ReaderApp } from "./reader/ReaderApp.jsx";
 import { FLASHCARDS } from "./flashcards/flashcards.js";
+import { useUpdateNotice } from "./updates/useUpdateNotice.js";
 
 /* ========================================================================
    MARINE SCIENCE REVISION APP — subject content lives in src/content/
@@ -743,7 +744,7 @@ function ComparisonSelector({ cards, activeIndex, onSelect }) {
 /* One "Check for updates" control for both platforms. Web: refresh the service
    worker and reload to the newest deploy. Native (APK): compare the build number
    to the latest GitHub release and hand the download to the phone's browser. */
-function UpdatesControl() {
+function UpdatesControl({ onFound } = {}) {
   const [state, setState] = useState({ kind: "idle" });
   const link = {
     background: "none", border: "none", padding: 0, color: C.accent, cursor: "pointer",
@@ -755,7 +756,9 @@ function UpdatesControl() {
     try {
       if (IS_NATIVE) {
         const latest = await fetchLatestBuild();
-        setState(latest > BUILD ? { kind: "available", latest } : { kind: "current" });
+        const avail = latest > BUILD;
+        if (avail) onFound?.(latest);   // clear the home-banner dismissal and surface it
+        setState(avail ? { kind: "available", latest } : { kind: "current" });
         return;
       }
       const reg = await navigator.serviceWorker?.getRegistration?.();
@@ -766,7 +769,7 @@ function UpdatesControl() {
       });
       await reg.update();
       const fresh = reg.installing || reg.waiting;
-      if (fresh) { setState({ kind: "updating" }); fresh.postMessage?.({ type: "SKIP_WAITING" }); }
+      if (fresh) { onFound?.(); setState({ kind: "updating" }); fresh.postMessage?.({ type: "SKIP_WAITING" }); }
       else setState({ kind: "current" });
     } catch (e) { setState({ kind: "error" }); }
   };
@@ -841,6 +844,9 @@ export default function App() {
 
   setPalette(theme);
 
+  // Quiet update check on open + return to foreground; banner shown on home.
+  const updates = useUpdateNotice();
+
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.theme = theme;      // drives the light/dark tokens in comparison-card.css
@@ -882,7 +888,11 @@ export default function App() {
         ComparisonCard={ComparisonCard}
         ComparisonSelector={ComparisonSelector}
         comparisonCards={COMPARISON_CARDS}
-        UpdatesControl={UpdatesControl}
+        UpdatesControl={(props) => <UpdatesControl {...props} onFound={updates.onManualFound} />}
+        updateNotice={updates.notice}
+        onUpdateDownload={updates.download}
+        onUpdateNow={updates.update}
+        onUpdateLater={updates.later}
         flashcards={FLASHCARDS}
       />
     </>
