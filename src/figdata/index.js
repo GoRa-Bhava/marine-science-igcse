@@ -32,8 +32,9 @@ import mlinks from "./templates/mlinks.js";
 import sieve from "./templates/sieve.js";
 import aquafarm from "./templates/aquafarm.js";
 import foodtest from "./templates/foodtest.js";
+import mangrove from "./templates/mangrove.js";
 export const FIG_GROUPS = ["Graphs and charts", "Tables and fieldwork", "Maps", "Diagrams"];
-export const FIG_TEMPLATES = [tide, depth, shore, mline, mbar, mcharts, mscatter, mtrend, mlinks, mtable, sieve, foodtest, mcalc, mmaths, readscale, features, quadrat, magnify, tabledesign, oceanmap, seachart, choropleth, foodchain, labelparts, seafloor, shorezone, atoll, fishgear, plates, greenhouse, nutcycle, apparatus, aquafarm];
+export const FIG_TEMPLATES = [tide, depth, shore, mline, mbar, mcharts, mscatter, mtrend, mlinks, mtable, sieve, foodtest, mcalc, mmaths, readscale, features, quadrat, magnify, tabledesign, oceanmap, seachart, choropleth, foodchain, labelparts, seafloor, shorezone, atoll, fishgear, plates, greenhouse, nutcycle, apparatus, aquafarm, mangrove];
 export const templateByKey = (k) => FIG_TEMPLATES.find((t) => t.key === k);
 /* template CSS strings, to inject once (each is scoped to .fig-<key>) */
 export const FIG_TEMPLATE_CSS = FIG_TEMPLATES.map((t) => t.css || "").join("\n");
