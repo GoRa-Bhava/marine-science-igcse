@@ -64,10 +64,64 @@ function make(seed) {
     const tq = shuffleR(r, all.filter(([c, u]) => !rq.some(([a, b]) => a === c && b === u))).slice(0, 4);   // tap set (different squares)
     // transect
     const belt = r() < 0.5, len = pickR(r, [16, 20, 24]), step = pickR(r, [2, 4]);
-    return { kind: KEY, seed, place: pickR(r, SHORES), sea: [...sea], fringe, bar, lim, peri, nSea, N, M, rq, counts, sum, est, tq, belt, len, step };
+    const F = { kind: KEY, seed, place: pickR(r, SHORES), sea: [...sea], fringe, bar, lim, peri, nSea, N, M, rq, counts, sum, est, tq, belt, len, step };
+    F.edge = edgeLayout(F, free);
+    if (F.edge) F.lim = F.edge.inner;
+    return F;
   }
   throw new Error("quadrat: no layout");
 }
+
+/* ---------- edge rule (about 45 % of runs) ----------
+   Uses its own RNG stream, so the shared layout above is the same as before for every seed. In an edge run:
+   - limpets already inside are kept at least IN squares (centre) from the frame — radius 0.18 + a clear 0.4 gap — nudged in
+     or, if that would overlap another animal, moved to another bare square;
+   - 2–4 more limpets are centred on the frame line (within EOFF squares, about 3 SVG units), away from the corners,
+     at least one on a counted side and one on a not-counted side;
+   - each pair of counted sides is one horizontal + one vertical side. */
+const SIDES = [["top", "left"], ["top", "right"], ["bottom", "left"], ["bottom", "right"]];
+const IN = 0.6, EOFF = 0.05, ECORN = 0.8;
+function edgeLayout(F, free) {
+  const r = rng(((F.seed ^ 0x5bd1e995) >>> 0) + 17);
+  if (r() >= 0.55) return null;                          // some layouts cannot take edge limpets (seaweed on the border), so about 45 % of runs end up with this question
+  const mode = r() < 0.6 ? "num" : "tap", pair = pickR(r, SIDES);
+  const freeSet = new Set(free.map((p) => p.join(",")));
+  const others = [...F.bar.map((p) => [p, 0.22]), ...F.peri.map((p) => [p, 0.42])], inner = [];
+  const clear = (p) => !others.some(([q, m]) => Math.hypot(q[0] - p[0], q[1] - p[1]) <= m) && !inner.some((q) => Math.hypot(q[0] - p[0], q[1] - p[1]) <= 0.42);
+  const clampIn = (v) => Math.min(CW - IN, Math.max(IN, v));
+  for (const [x, y] of F.lim) {                          // keep each limpet where it is if it is clear of the frame, else nudge it in, else move it to another bare square
+    let p = [clampIn(x), clampIn(y)];
+    for (let g = 0; g < 80 && !clear(p); g++) { const [cx, cy] = pickR(r, free); p = [clampIn(cx + 0.15 + r() * 0.7), clampIn(cy + 0.15 + r() * 0.7)]; }
+    if (!clear(p)) return null;
+    inner.push(p);
+  }
+  const n = 2 + Math.floor(r() * 3), sides = ["top", "bottom", "left", "right"], off = sides.filter((s) => !pair.includes(s));
+  const want = [pair, off];                              // one counted, one not counted, the rest on any side
+  while (want.length < n) want.push(sides);
+  const near = [...inner.map((p) => [p, 0.5]), ...F.peri.map((p) => [p, 0.5]), ...F.bar.map((p) => [p, 0.35])], lims = [];
+  for (const group of shuffleR(r, want)) {
+    let got = null;
+    for (let g = 0; g < 150 && !got; g++) {
+      const side = pickR(r, group), t = ECORN + r() * (CW - 2 * ECORN), o = (r() * 2 - 1) * EOFF;
+      const [x, y] = side === "left" ? [o, t] : side === "right" ? [CW + o, t] : side === "bottom" ? [t, o] : [t, CW + o];
+      // the squares just inside the frame under this limpet must be bare rock (no seaweed or fringe)
+      const cells = side === "left" || side === "right" ? [t - 0.2, t + 0.2].map((v) => [side === "left" ? 0 : CW - 1, Math.floor(v)]) : [t - 0.2, t + 0.2].map((v) => [Math.floor(v), side === "bottom" ? 0 : CW - 1]);
+      if (!cells.every((c) => freeSet.has(c.join(",")))) continue;
+      if (near.some(([q, m]) => Math.hypot(q[0] - x, q[1] - y) < m) || lims.some((q) => Math.hypot(q.x - x, q.y - y) < 0.6)) continue;
+      got = { x, y, side };
+    }
+    if (!got) return null;
+    lims.push(got);
+  }
+  const counted = lims.filter((l) => pair.includes(l.side)).length;
+  return { mode, pair, inner, lims, counted, notCounted: lims.length - counted, ans: inner.length + counted };
+}
+
+/* every limpet in an edge run as [tap id, x, y]: the ones inside first, then the ones on the frame */
+const limpetIds = (F) => [...F.lim.map(([x, y], i) => [`L${i}`, x, y]), ...F.edge.lims.map((l, i) => [`L${F.lim.length + i}`, l.x, l.y])];
+const third = (v, lo, mid, hi) => (v < CW / 3 ? lo : v > 2 * CW / 3 ? hi : mid);
+const limpetLabel = (F, id) => { const p = limpetIds(F).find((L) => L[0] === id); const v = third(p[2], "bottom", "middle", "top"), h = third(p[1], "left", "centre", "right");
+  return `limpet (${v === "middle" && h === "centre" ? "centre" : v === "middle" ? "middle " + h : h === "centre" ? v + " centre" : v + " " + h})`; };
 
 /* ---------- drawing ---------- */
 const icon = (name, cx, cy, d) => `<image href="${FIG_IMG}qd-${name}.webp" x="${(cx - d / 2).toFixed(1)}" y="${(cy - d / 2).toFixed(1)}" width="${d}" height="${d}"/>`;
@@ -82,12 +136,24 @@ function quadratSVG(F, opt) {
   g += `<clipPath id="quadrat-clip"><rect x="${X0}" y="${Y0}" width="${Q}" height="${Q}"/></clipPath>`;
   for (const [x, y] of F.bar) g += (hl.bar ? `<circle cx="${X(x)}" cy="${Y(y)}" r="8.4" class="qd-ring"/>` : "") + icon("barnacle", X(x), Y(y), 13);
   for (const [x, y] of F.lim) g += icon("limpet", X(x), Y(y), 22);
+  const E = F.edge;
+  if (E) for (const l of E.lims) g += icon("limpet", X(l.x), Y(l.y), 22);
   for (const [x, y] of F.peri) g += icon("periwinkle", X(x), Y(y), 19);
   for (let i = 0; i <= CW; i++) g += `<line x1="${X0}" x2="${X0 + Q}" y1="${Y0 + i * s}" y2="${Y0 + i * s}" class="qd-grid"/><line y1="${Y0}" y2="${Y0 + Q}" x1="${X0 + i * s}" x2="${X0 + i * s}" class="qd-grid"/>`;
   g += `<rect x="${X0}" y="${Y0}" width="${Q}" height="${Q}" class="qd-frame"/>`;
-  g += `<text x="${X0 + Q / 2}" y="${Y0 + Q + 20}" text-anchor="middle" class="qd-s">0.5 m</text><text transform="translate(${X0 - 12} ${Y0 + Q / 2}) rotate(-90)" text-anchor="middle" class="qd-s">0.5 m</text>`;
+  if (E && hl.edge) {                                   // after Check: the two counted sides, and which limpets are counted
+    const seg = { top: [X0, Y0, X0 + Q, Y0], bottom: [X0, Y0 + Q, X0 + Q, Y0 + Q], left: [X0, Y0, X0, Y0 + Q], right: [X0 + Q, Y0, X0 + Q, Y0 + Q] };
+    for (const sd of E.pair) { const [a, b, c, d] = seg[sd]; g += `<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" class="qd-side"/>`; }
+    if (!opt.limTap) {
+      for (const [x, y] of F.lim) g += `<circle cx="${X(x)}" cy="${Y(y)}" r="14" class="qd-ring"/>`;
+      for (const l of E.lims) g += `<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="14" class="${E.pair.includes(l.side) ? "qd-ring" : "qd-xring"}"/>`;
+    }
+  }
+  if (E && opt.limTap) limpetIds(F).forEach(([id, x, y]) => { g += `<circle cx="${X(x)}" cy="${Y(y)}" r="14" fill="transparent" data-tap="${id}"/>`; });
+  const lo = E ? 16 : 0, lx = E ? 22 : 0;              // edge runs: scale labels and key move out past the edge limpets (and their rings)
+  g += `<text x="${X0 + Q / 2}" y="${Y0 + Q + 20 + lo}" text-anchor="middle" class="qd-s">0.5 m</text><text transform="translate(${X0 - 12 - lx} ${Y0 + Q / 2}) rotate(-90)" text-anchor="middle" class="qd-s">0.5 m</text>`;
   // key
-  const ky = Y0 + Q + 46;
+  const ky = Y0 + Q + 46 + lo;
   const key = [[`<rect x="0" y="-12" width="22" height="16" class="qd-weed"/>`, "seaweed"], [icon("barnacle", 11, -4, 15), "barnacle"], [icon("limpet", 11, -4, 22), "limpet"]];
   if (F.peri.length) key.push([icon("periwinkle", 11, -4, 20), "periwinkle"]);
   key.forEach((k, i) => { g += `<g transform="translate(${30 + (i % 2) * 250} ${ky + Math.floor(i / 2) * 28})">${k[0]}<text x="32" y="1" class="qd-k">${k[1]}</text></g>`; });
@@ -137,6 +203,23 @@ function svg(F, opt) {
 }
 
 /* ---------- questions ---------- */
+function edgeQ(F) {
+  const E = F.edge, [h, v] = E.pair, [oh, ov] = [h === "top" ? "bottom" : "top", v === "left" ? "right" : "left"];
+  const n0 = F.lim.length, c = E.counted, k = E.notCounted, pl = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+  const rule = `count every limpet inside the frame, plus those touching the <b>${h}</b> or <b>${v}</b> edge of the frame, but not those touching the <b>${oh}</b> or <b>${ov}</b> edge`;
+  const why = `Inside the frame, not touching it: ${n0}. Touching the ${h} or ${v} edge (highlighted, so counted): ${c}. Touching the ${oh} or ${ov} edge (not counted): ${k}. ` +
+    `Count = ${n0} + ${c} = <b>${pl(E.ans, "limpet")}</b>. Counting every limpet on the frame gives ${E.ans + k} (an over-estimate); counting none of them gives ${n0} (an under-estimate). ` +
+    `Using two sides only means a limpet across the line between two quadrats is counted once, not twice.`;
+  const base = `Some limpets lie across the edge of the quadrat frame. Use this rule: ${rule}.`;
+  if (E.mode === "tap") return { kind: "tap", multi: true, q: `${base} <b>Tap</b> every limpet that should be counted.`,
+    a: limpetIds(F).filter(([id], i) => i < n0 || E.pair.includes(E.lims[i - n0].side)).map(([id]) => id),
+    ansTxt: `${pl(E.ans, "limpet")}: the ${n0} inside the frame and the ${c} touching the ${h} or ${v} edge`, labelOf: (id) => limpetLabel(F, id),
+    hint: "Tap each limpet once to select it. Tap again to deselect.",
+    askOpt: { panel: "quadrat", limTap: true }, doneOpt: () => ({ panel: "quadrat", limTap: true, hl: { panel: "quadrat", edge: true } }), why };
+  return { kind: "num", q: `${base} How many limpets are counted in this quadrat?`, ans: E.ans, tol: 0, unit: "limpets",
+    askOpt: { panel: "quadrat" }, hl: { panel: "quadrat", edge: true }, why };
+}
+
 function questions(F, r) {
   const qs = [];
   const bars = F.bar.length, lims = F.lim.length, species = 3 + (F.peri.length ? 1 : 0);
@@ -144,8 +227,10 @@ function questions(F, r) {
   qs.push({ kind: "num", q: "Estimate the percentage cover of <b>seaweed</b> in this quadrat. Count a square only if more than half of it is covered. There are 25 squares.", ans: F.nSea * 4, tol: 0, unit: "%",
     askOpt: { panel: "quadrat" }, hl: { panel: "quadrat", weed: true },
     why: `${F.nSea} squares are more than half covered by seaweed. Each square is 1/25 of the quadrat = 4 %, so the percentage cover = ${F.nSea} × 4 = <b>${F.nSea * 4} %</b>. Squares with only a small edge of seaweed are not counted.` });
-  // 2. density or species richness
-  if (r() < 0.6) qs.push({ kind: "num", q: "The quadrat measures 0.5 m × 0.5 m (an area of 0.25 m²). Use the number of <b>barnacles</b> in it to estimate the number of barnacles per m².", ans: bars * 4, tol: 0, unit: "per m²",
+  // 2. density, species richness, or (edge runs) counting limpets with the edge rule. r() is drawn every run so later draws are unchanged.
+  const q2 = r();
+  if (F.edge) qs.push(edgeQ(F));
+  else if (q2 < 0.6) qs.push({ kind: "num", q: "The quadrat measures 0.5 m × 0.5 m (an area of 0.25 m²). Use the number of <b>barnacles</b> in it to estimate the number of barnacles per m².", ans: bars * 4, tol: 0, unit: "per m²",
     askOpt: { panel: "quadrat" }, hl: { panel: "quadrat", bar: true },
     why: `There are ${bars} barnacles in 0.25 m². 1 m² is 4 times bigger, so the estimate is ${bars} ÷ 0.25 = ${bars} × 4 = <b>${bars * 4} per m²</b>.` });
   else qs.push({ kind: "num", q: "What is the <b>species richness</b> in this quadrat?", ans: species, tol: 0, unit: "",
@@ -200,9 +285,24 @@ function selfTest(F, qs) {
   if (F.fringe.some((f) => Math.PI * (f.f * 1.25) ** 2 * 1.2 / 2 > 0.2 || f.p - 1.2 * 1.25 * f.f < 0 || f.p + 1.2 * 1.25 * f.f > 1)) bad.push("fringe too big");
   if (new Set(F.fringe.map((f) => f.x + "," + f.y)).size !== F.fringe.length) bad.push("two fringes in a square");
   if (!Number.isInteger(F.est) || F.est !== F.sum * F.N * F.M / 5) bad.push("estimate");
-  const tap = qs.find((q) => q.kind === "tap"); if (new Set(tap.a).size !== 4) bad.push("tap set");
+  const tap = qs.find((q) => q.kind === "tap" && q.askOpt.panel === "grid"); if (new Set(tap.a).size !== 4) bad.push("tap set");
   for (const [c, u] of [...F.tq, ...F.rq]) if (c < 1 || u < 1 || c > F.N || u > F.M) bad.push("square off grid");
   const pts = [...F.bar, ...F.lim, ...F.peri]; for (const [x, y] of pts) { const k = `${Math.floor(x)},${Math.floor(y)}`; if (F.sea.includes(k)) bad.push("animal under seaweed"); }
+  const E = F.edge;
+  if (E) {                                                 // edge rule: unambiguous touching, clear insides, a unique count
+    const inF = (p) => Math.min(p[0], p[1], CW - p[0], CW - p[1]);
+    if (F.lim.some((p) => inF(p) < IN - 1e-9)) bad.push("inner limpet near frame");
+    for (const l of E.lims) { const d = l.side === "left" ? l.x : l.side === "right" ? l.x - CW : l.side === "bottom" ? l.y : l.y - CW, t = l.side === "left" || l.side === "right" ? l.y : l.x;
+      if (Math.abs(d) > EOFF + 1e-9) bad.push("edge limpet off the line"); if (t < ECORN || t > CW - ECORN) bad.push("edge limpet at a corner"); }
+    const P = [...F.lim, ...E.lims.map((l) => [l.x, l.y])]; for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) if (Math.hypot(P[i][0] - P[j][0], P[i][1] - P[j][1]) < 0.42) bad.push("limpets overlap");
+    if (E.lims.length < 2 || E.lims.length > 4 || E.counted < 1 || E.notCounted < 1) bad.push("edge mix");
+    if (E.ans !== F.lim.length + E.lims.filter((l) => E.pair.includes(l.side)).length) bad.push("edge count");
+    if (!(["top", "bottom"].includes(E.pair[0]) && ["left", "right"].includes(E.pair[1]))) bad.push("edge pair");
+    const eq = qs[1]; if (!eq || !/edge of the quadrat frame/.test(eq.q)) bad.push("edge question missing");
+    else if (eq.kind === "num" ? eq.ans !== E.ans : eq.a.length !== E.ans) bad.push("edge answer");
+    for (const q of qs.slice(0, 1)) if (/limpet/.test(q.why)) bad.push("earlier feedback mentions limpets");
+    if (qs.length > 7) bad.push("too many questions");
+  }
   return bad;
 }
 
@@ -220,5 +320,6 @@ export default {
 .fig-quadrat .qd-samp{fill:var(--surface2);stroke:currentColor;stroke-width:2}.fig-quadrat .qd-samp.hl{stroke:var(--app);stroke-width:3}
 .fig-quadrat .qd-rockfill{fill:color-mix(in srgb,var(--ink) 12%,transparent);stroke:none}.fig-quadrat .qd-ground{fill:none;stroke:currentColor;stroke-width:2}
 .fig-quadrat .qd-sea{fill:color-mix(in srgb,var(--recall) 22%,transparent);stroke:none}.fig-quadrat .qd-tape{fill:none;stroke:var(--app);stroke-width:2.5;stroke-dasharray:6 3}
+.fig-quadrat .qd-side{stroke:var(--app);stroke-width:6;stroke-linecap:round}.fig-quadrat .qd-xring{fill:none;stroke:currentColor;stroke-width:2;stroke-dasharray:4 3}
 .fig-quadrat .qd-qsq{fill:none;stroke:currentColor;stroke-width:2}.fig-quadrat .qd-tick{stroke:currentColor;stroke-width:1.5}`,
 };
