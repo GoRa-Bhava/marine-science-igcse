@@ -221,7 +221,7 @@ export const NOTES = {
      {
       "h": "Gyres",
       "ref": "1.4/LO5–7",
-      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres — North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean. They form as prevailing winds drive surface currents, which the continents turn and the Earth's spin deflects. Gyres turn <b>clockwise in the Northern Hemisphere</b> and <b>anticlockwise in the Southern Hemisphere</b>."
+      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres — North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean. They form as prevailing winds and the spinning of the Earth drive surface currents round in huge circular paths."
      },
      {
       "h": "Rip currents",
@@ -370,7 +370,7 @@ export const NOTES = {
      {
       "h": "Temperature and solubility of solids",
       "ref": "2.2/LO6",
-      "body": "For most solid solutes, such as potassium nitrate and sugar, <b>solubility increases with temperature</b> (common salt is an exception: its solubility barely changes). You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
+      "body": "For most solid solutes, such as potassium nitrate and sugar, <b>solubility increases with temperature</b> (the solubility of common salt rises only slightly). You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
      },
      {
       "h": "Salinity and ppt",
@@ -481,7 +481,7 @@ export const NOTES = {
      {
       "h": "Temperature and density",
       "ref": "2.4/LO2",
-      "body": "<b>Colder water is denser</b> than warmer water. To test this, measure the mass of a fixed volume of water at different temperatures, controlling the salinity and volume. The result is that density falls as temperature rises."
+      "body": "<b>Colder water is denser</b> than warmer water. One way to show it is to warm coloured water in a boiling tube fitted with a narrow glass tube: the level rises as the water expands, but the mass stays the same, so the density falls. Measuring the mass of a fixed volume also works in principle, but the change is only about 1 %, too small to measure well with a measuring cylinder. The result is that density falls as temperature rises."
      },
      {
       "h": "Salinity and density",
@@ -538,7 +538,7 @@ export const NOTES = {
      {
       "h": "Measuring clarity with a Secchi disc",
       "ref": "2.5/LO3",
-      "body": "A <b>Secchi disc</b> is a white, or black-and-white, disc lowered on a marked line until it just disappears, then lowered a little more and raised until it just reappears; the mean of the two depths is the <b>Secchi depth</b>. It measures water clarity, so a greater depth means clearer water and deeper light penetration. For fair results use the same observer, the same time of day and the shaded side, and repeat and average."
+      "body": "A <b>Secchi disc</b> is a white, or black-and-white, disc lowered on a marked line until it just disappears from view: that depth is the <b>Secchi depth</b>. For a more reliable reading, lower it a little further, raise it until it just reappears, and take the mean of the two depths. It measures water clarity, so a greater depth means clearer water and deeper light penetration. For fair results use the same observer, the same time of day and the shaded side, and repeat and average."
      },
      {
       "h": "Pressure",
@@ -553,7 +553,7 @@ export const NOTES = {
      {
       "h": "Dissolved oxygen",
       "ref": "2.5/LO6",
-      "body": "Dissolved oxygen is <b>high at the surface</b>, because gas dissolves from the atmosphere and photosynthesis adds oxygen in the light. It <b>falls with depth</b>, because there is no photosynthesis in the dark, oxygen is used up by respiration and decomposition, and there is little mixing from the surface. It is lowest in the middle depths, the <b>oxygen minimum layer</b> (roughly 200–1000 m), and rises a little again in the deep water below."
+      "body": "Dissolved oxygen is <b>high at the surface</b>, because gas dissolves from the atmosphere and photosynthesis adds oxygen in the light. It <b>falls with depth</b>, because there is no photosynthesis in the dark, oxygen is used up by respiration and decomposition, and there is little mixing from the surface. So deep water has little dissolved oxygen."
      }
     ],
     "terms": [
@@ -781,7 +781,7 @@ export const NOTES = {
      {
       "h": "The outside features of a fish",
       "ref": "3.4/LO3",
-      "body": "The <b>operculum</b> is the gill cover, and <b>scales</b> give protection. The <b>lateral line</b> detects vibration and the <b>nares</b> detect chemicals. The <b>fins</b> (dorsal, pelvic, pectoral, anal and caudal) control pitching, rolling and yawing, change direction and give forward thrust; the caudal fin provides the thrust. The <b>dorsal and anal fins</b> stop the fish rolling; the <b>pectoral and pelvic fins</b> control pitch and steering (the pectorals also act as brakes)."
+      "body": "The <b>operculum</b> is the gill cover, and <b>scales</b> give protection. The <b>lateral line</b> detects vibration and the <b>nares</b> detect chemicals. The <b>fins</b> (dorsal, pelvic, pectoral, anal and caudal) control pitching, rolling and yawing, change direction and give forward thrust; the caudal fin provides the thrust."
      },
      {
       "h": "Sorting invertebrates into groups",
@@ -939,7 +939,7 @@ export const NOTES = {
      {
       "h": "What migration is and why",
       "ref": "3.7/LO1",
-      "body": "<b>Migration</b> is the movement of organisms from one place to another, and often back again. Animals migrate to find food, to find mates, to reach a different habitat to reproduce, and to avoid predators. It is different from just moving around a home area or from drifting with the water. Examples: blue whales follow summer krill to polar seas (finding food); European eels gather in the Sargasso Sea (finding mates); Pacific salmon return from the sea to the rivers where they hatched (a different habitat to reproduce); zooplankton sink to dark water by day (avoiding predators)."
+      "body": "<b>Migration</b> is the movement of organisms from one place to another, and often back again. Animals migrate to find food, to find mates, to reach a different habitat to reproduce, and to avoid predators. It is different from just moving around a home area or from drifting with the water. Examples: blue whales follow summer krill to polar seas (finding food); many reef fish, such as groupers, gather at the same sites each year to spawn (finding mates); Pacific salmon return from the sea to the rivers where they hatched (a different habitat to reproduce); zooplankton sink to dark water by day (avoiding predators)."
      },
      {
       "h": "Migration in three dimensions",
@@ -949,7 +949,7 @@ export const NOTES = {
      {
       "h": "Daily vertical migration",
       "ref": "3.7/LO3",
-      "body": "Plankton, fish, squid and shrimp rise from the twilight zone to the sunlight zone at dusk. They feed near the surface at night, where the food is, hidden by the darkness. At dawn they sink back down and stay in the dim twilight zone during the day to avoid predators that hunt by sight. Lanternfish are a well-known example. The migration also carries food energy and nutrients down to the deep sea, where the migrators and their droppings are eaten."
+      "body": "Plankton, fish, squid and shrimp rise from the twilight zone to the sunlight zone at dusk. They feed near the surface at night, where the food is, hidden by the darkness. At dawn they sink back down and stay in the dim twilight zone during the day to avoid predators that hunt by sight. Lanternfish are a well-known example."
      },
      {
       "h": "Very long horizontal migration",
@@ -1099,7 +1099,7 @@ export const NOTES = {
      {
       "h": "Measuring energy in food",
       "ref": "4.2/LO5",
-      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, distance and starting temperature the same so the test is fair; because samples are rarely exactly the same mass, compare energy per gram. Energy per gram allows a fair comparison of different-sized samples. Lipid-rich foods such as nuts release the most, because lipids release about twice as much energy per gram as carbohydrates or proteins."
+      "body": "To find the energy in food, weigh a food sample and burn it under a boiling tube holding a measured volume of water. Record the start temperature and the highest temperature: the <b>temperature rise</b> shows how much energy was released. Keep the water volume, distance and starting temperature the same so the test is fair; because samples are rarely exactly the same mass, compare energy per gram. Energy per gram allows a fair comparison of different-sized samples. Lipid-rich foods such as nuts usually release the most energy per gram."
      },
      {
       "h": "Errors and improvements in the burning test",
@@ -1507,7 +1507,7 @@ export const NOTES = {
      {
       "h": "How the factors work",
       "ref": "5.4/LO3",
-      "body": "Exposure to air causes drying, so <b>Fucus</b> (a macroalga) and <b>sea anemones</b> are limited higher up the shore, with anemones restricted to pools or under algae. Predation limits organisms such as mussels lower down. Wave action favours firmly attached organisms, and grazers follow their food. At low tide, high-shore rock pools are cut off: their small volume warms and cools quickly, so temperature swings widely, and on hot days the warm water holds less oxygen while animals keep respiring."
+      "body": "Exposure to air causes drying, so <b>Fucus</b> (a macroalga) and <b>sea anemones</b> are limited higher up the shore, with anemones restricted to pools or under algae. Predation limits organisms such as mussels lower down. Wave action favours firmly attached organisms, and grazers follow their food. At low tide, high-shore rock pools are cut off: their small volume warms and cools quickly, so temperature swings widely, and at night, with no light for photosynthesis, oxygen can fall as everything in the pool keeps respiring."
      },
      {
       "h": "Adaptations to a rocky shore",
@@ -1666,7 +1666,7 @@ export const NOTES = {
      {
       "h": "What controls coral distribution",
       "ref": "5.7/LO5",
-      "body": "Corals need light for their zooxanthellae, so they grow in shallow, clear water, and larvae need a hard surface to settle on. Sediment blocks light and smothers the coral, and if water gets too warm the polyps expel their zooxanthellae and turn white (bleaching). <b>Parrot fish</b> graze on coral and <b>crown-of-thorns starfish</b> eat the polyps, destroying reefs in outbreaks. Most reef corals grow best at about 23–29 °C and few live below 18 °C; they are found in water less than about 50 m deep, between about 30° N and 30° S. Crown-of-thorns starfish normally keep fast-growing corals in check, but outbreaks may be triggered by nutrient run-off (feeding their larvae's food) or by overfishing of their predators. Parrot fish pass the ground-up coral skeleton out as sand."
+      "body": "Corals need light for their zooxanthellae, so they grow in shallow, clear water, and larvae need a hard surface to settle on, so reefs are found in warm, shallow, clear tropical water. Sediment blocks light and smothers the coral, and if water gets too warm the polyps expel their zooxanthellae and turn white (bleaching). <b>Parrot fish</b> graze on coral and <b>crown-of-thorns starfish</b> eat the polyps, destroying reefs in outbreaks."
      },
      {
       "h": "Why reef water is clear",
@@ -1884,7 +1884,7 @@ export const NOTES = {
      {
       "h": "Navigational aids",
       "ref": "6.3/LO3",
-      "body": "A <b>chart</b> is a sea map showing depths, hazards and channels, and a <b>compass</b> points to magnetic north. Every chart has a <b>compass rose</b>, a diagram of the directions; a modern one shows both <b>true north</b> (fixed) and <b>magnetic north</b> (slightly different, and slowly moving), so sailors can correct their compass bearings. <b>GPS</b> gives exact position from satellites in any visibility. <b>Sonar</b> sends sound pulses that reflect off the seabed and shoals, while <b>radar</b> uses radio waves to detect ships and coasts above the water."
+      "body": "A <b>chart</b> is a sea map showing depths, hazards and channels, and a <b>compass</b> points to magnetic north. Every chart has a <b>compass rose</b>, a diagram showing the directions (north, east, south, west and the points between), which sailors use with a compass to plan and follow a course. <b>GPS</b> gives exact position from satellites in any visibility. <b>Sonar</b> sends sound pulses that reflect off the seabed and shoals, while <b>radar</b> uses radio waves to detect ships and coasts above the water."
      },
      {
       "h": "Why stocks get over-harvested",
@@ -1925,7 +1925,7 @@ export const NOTES = {
      ],
      [
       "Compass rose",
-      "a diagram on a chart showing directions, including true north and magnetic north"
+      "a diagram on a chart showing the directions, such as north, east, south and west"
      ]
     ]
    },
@@ -2187,12 +2187,12 @@ export const NOTES = {
      {
       "h": "Climate has changed before",
       "ref": "6.8/LO1",
-      "body": "Over the last 335 million years the climate of different regions has changed significantly. The <b>carbon dioxide</b> level and the average temperature have risen and fallen many times, generally together, and overall both are lower now than they were then. So the climate was not constant until humans arrived."
+      "body": "Over the last 335 million years the climate of different regions has changed significantly. The <b>carbon dioxide</b> level and the average temperature have risen and fallen many times, generally together. So the climate was not constant until humans arrived."
      },
      {
       "h": "The greenhouse effect",
       "ref": "6.8/LO2",
-      "body": "Radiation from the Sun passes through the atmosphere and is absorbed by the land and sea, which warm up and give off heat (infrared radiation). <b>Greenhouse gases</b>, mainly carbon dioxide, methane and water vapour, absorb some of this heat and send it back towards the surface, trapping it. This natural <b>greenhouse effect</b> keeps the Earth warm enough for life."
+      "body": "Radiation from the Sun passes through the atmosphere and is absorbed by the land and sea, which warm up and give off heat (infrared radiation). <b>Greenhouse gases</b>, such as carbon dioxide and methane, absorb some of this heat and send it back towards the surface, trapping it. This natural <b>greenhouse effect</b> keeps the Earth warm enough for life."
      },
      {
       "h": "The enhanced greenhouse effect",
@@ -2202,12 +2202,12 @@ export const NOTES = {
      {
       "h": "Where the extra gases come from",
       "ref": "6.8/LO2",
-      "body": "<b>Carbon dioxide</b> comes from burning fossil fuels in vehicles, ships, aircraft and power stations, and from <b>deforestation</b> (fewer trees photosynthesise, and the dead wood releases CO₂). It is removed by photosynthesis and by dissolving in the oceans, but far more is now released than removed. <b>Methane</b> comes from cattle and rice farming, rotting waste in landfill, fossil-fuel production and thawing frozen wetlands. Methane traps more heat than the same amount of CO₂, but there is much less of it and it leaves the air faster."
+      "body": "<b>Carbon dioxide</b> comes from burning fossil fuels in vehicles, ships, aircraft and power stations, and from <b>deforestation</b> (fewer trees photosynthesise, and the dead wood releases CO₂). It is removed by photosynthesis and by dissolving in the oceans, but far more is now released than removed. <b>Methane</b> also comes from human activities, such as farming and rotting waste."
      },
      {
       "h": "Warmer, more acidic sea",
       "ref": "6.8/LO3",
-      "body": "Rising CO₂ makes sea water increase in <b>temperature</b> and decrease in <b>pH</b>. Sea water is slightly alkaline (about pH 8.1–8.2); dissolved CO₂ forms a weak acid, so the water becomes less alkaline (<b>ocean acidification</b>). Organisms that build calcium carbonate skeletons or shells suffer: reefs erode and grow more slowly, and molluscs form thinner shells that protect them less."
+      "body": "Rising CO₂ makes sea water increase in <b>temperature</b> and decrease in <b>pH</b>. Sea water is slightly alkaline (about pH 8.1–8.2); dissolved CO₂ forms a weak acid, so the water becomes less alkaline (<b>ocean acidification</b>)."
      },
      {
       "h": "The ocean absorbs heat",
@@ -2217,12 +2217,12 @@ export const NOTES = {
      {
       "h": "Two causes of sea-level rise",
       "ref": "6.8/LO5",
-      "body": "Both raise sea level. <b>Thermal expansion</b> enlarges the water already in the ocean. Melting <b>land-based ice</b> (the ice sheets of Greenland and Antarctica, and mountain glaciers) adds new water. Melting floating ice (sea ice, icebergs) does not noticeably raise the level. Estimates suggest each causes a large share of the recent rise, with melting land ice now contributing slightly more."
+      "body": "Both raise sea level. <b>Thermal expansion</b> enlarges the water already in the ocean. Melting <b>land-based ice</b> (the ice sheets of Greenland and Antarctica, and mountain glaciers) adds new water. Melting floating ice (sea ice, icebergs) does not noticeably raise the level."
      },
      {
       "h": "Impacts on marine life",
       "ref": "6.8/LO6",
-      "body": "<b>Sea-level rise</b> floods coastal habitats and land, and low-lying islands such as the Maldives are most at risk. Warming causes <b>coral bleaching</b>. Warm water holds <b>less oxygen</b>, which hits active fish such as tuna hardest. Cool-water species such as cod shift <b>towards the poles</b>, and migrations can miss their food (humpback whales arriving after the krill have peaked). New competitors, predators and parasites spread, ice-dependent species may be lost, and more <b>extreme weather</b> damages reefs and mangroves; glacier meltwater can lower salinity and affect currents."
+      "body": "<b>Sea-level rise</b> floods coastal habitats and land, and low-lying islands such as the Maldives are most at risk. Warming causes <b>coral bleaching</b>, and more acidic water makes it harder for corals and molluscs to build their calcium carbonate skeletons and shells. Warm water holds <b>less oxygen</b>, which affects active fish most. Cool-water species shift <b>towards the poles</b>, and migrations can miss the food they are timed to meet. New competitors, predators and parasites spread, ice-dependent species may be lost, and more <b>extreme weather</b> damages reefs and mangroves; glacier meltwater can lower salinity and affect currents."
      }
     ],
     "terms": [
@@ -2278,7 +2278,7 @@ export const NOTES = {
      {
       "h": "Sustainable harvesting",
       "ref": "6.9/LO2",
-      "body": "Harvesting of wild macroalgae, plants and animals is kept <b>sustainable</b> with quotas, limits on fishing days, closed seasons and areas, gear rules, and licences. Example: around the Maldives, tuna may only be caught by pole and line, with quotas and licences. For: people keep their income and traditional work, so they support the rules, and stocks survive. Against: the rules are hard to monitor and enforce, so some overfishing continues."
+      "body": "Harvesting of wild macroalgae, plants and animals is kept <b>sustainable</b> with quotas, limits on fishing days, closed seasons and areas, gear rules, and licences. For example, around the Maldives tuna may only be caught by pole and line, with quotas and licences. For: people keep their income and traditional work, so they support the rules, and stocks survive. Against: the rules are hard to monitor and enforce, so some overfishing continues."
      },
      {
       "h": "Aquaculture for conservation",
@@ -2303,7 +2303,7 @@ export const NOTES = {
      {
       "h": "Protecting turtles",
       "ref": "6.9/LO3",
-      "body": "Nesting beaches are protected (restricted access, guided night visits, and <b>red lighting</b>, because white, blue and green light confuses turtles). Eggs are incubated away from predators, hatchlings are reared in tanks and released close to the water. For: more eggs hatch and more young reach the sea. Against: it is expensive, and at sea the turtles still face nets, longlines and plastic."
+      "body": "Nesting beaches are protected (restricted access, guided night visits, and limits on <b>artificial lighting</b>, which confuses nesting females and hatchlings). Eggs are incubated away from predators, hatchlings are reared in tanks and released close to the water. For: more eggs hatch and more young reach the sea. Against: it is expensive, and at sea the turtles still face nets, longlines and plastic."
      },
      {
       "h": "Culling lionfish",

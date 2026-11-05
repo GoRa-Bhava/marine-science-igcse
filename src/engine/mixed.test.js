@@ -100,3 +100,12 @@ test("default rng (no seed) still produces a valid, full, non-repeating session"
   assert.equal(s.length, 5);
   assert.equal(new Set(s).size, 5);
 });
+
+test("stale schedule for a deleted id never enters the session (pool is flatOrder)", () => {
+  // srMap holds a long-overdue entry for "ZZ", an id that was removed from the bank.
+  // The due/fresh pools are filtered from flatOrder, so ZZ can never be served.
+  const srMap = { ZZ: { seen: true, due: "2000-01-01", box: 0 }, a1: { seen: true, due: "2000-01-01" } };
+  const s = buildMixedSession(FLAT, srMap, topicOf, 8, new Date("2026-10-06"));
+  assert.ok(s.every((id) => FLAT.includes(id)), "every served id is a current id");
+  assert.ok(!s.includes("ZZ"), "a deleted id is never served");
+});

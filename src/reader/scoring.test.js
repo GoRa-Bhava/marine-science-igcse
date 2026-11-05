@@ -126,3 +126,20 @@ test("readiness = coverage × accuracy", () => {
   const u = unitReadiness([ids, ["x"]], pm); // 2nd section unseen -> 0
   assert.ok(Math.abs(u - (0.375 + 0) / 2) < 1e-9);
 });
+
+test("stale progress for a deleted id is ignored (not counted, never served)", () => {
+  // After content is pruned, a learner may still hold progress for an id that no
+  // longer exists in the bank. Every read path is driven by the CURRENT id list
+  // and only looks up progressMap[id], so the stale entry must have no effect:
+  // results with and without it are identical.
+  const live = ["a", "b"];                 // the current items
+  const clean = { a: { timesSeen: 2, timesCorrect: 2, box: 4, wrongFlag: false } }; // b unseen
+  const stale = { ...clean, GONE: { timesSeen: 9, timesCorrect: 0, box: 0, wrongFlag: true } };
+  assert.deepEqual(coverage(live, stale), coverage(live, clean), "GONE's views do not change coverage");
+  assert.deepEqual(readiness(live, stale), readiness(live, clean), "GONE does not change readiness");
+  assert.equal(masteryState(live, stale), masteryState(live, clean), "GONE does not change mastery");
+  // reviseIds never surfaces a deleted id even though its wrongFlag is true.
+  assert.deepEqual(reviseIds(live, stale), [], "GONE.wrongFlag must not add it to revision");
+  // pickNext only draws from its pool, so a deleted id can never be served.
+  for (let i = 0; i < 50; i++) assert.ok(live.includes(pickNext(live, stale, [], Math.random)), "pickNext stays in-pool");
+});
