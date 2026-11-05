@@ -340,7 +340,7 @@ export const NOTES = {
     "id": "2.2",
     "title": "pH and salinity",
     "intro": "What sea water is made of, how acidic or alkaline it is, and why some seas are saltier than others.",
-    "tip": "Salinity is in parts per thousand (ppt), not percent (about 35 ppt in the open ocean; a question will give it if you need it). For the named seas always give the <b>reason</b> (evaporation, run-off), never just 'hot' or 'cold'.",
+    "tip": "Salinity is given in parts per thousand (ppt); the open ocean is about 35 ppt (a question will give the figure if you need it). A percentage is also accepted, but take care: 35 ppt = 3.5 %, not 35 %. For the named seas always give the <b>reason</b> (evaporation, run-off), never just 'hot' or 'cold'.",
     "notes": [
      {
       "h": "Element, compound, mixture",
@@ -1843,7 +1843,7 @@ export const NOTES = {
      ],
      [
       "MPA",
-      "Marine Protected Area, a part of the sea protected from harm"
+      "Marine Protected Area, an area of sea where fishing and other human activities are banned, restricted or controlled"
      ],
      [
       "Behavioural consequences",
@@ -2318,7 +2318,7 @@ export const NOTES = {
      ],
      [
       "MPA",
-      "Marine Protected Area, a part of the sea protected from harm"
+      "Marine Protected Area, an area of sea where fishing and other human activities are banned, restricted or controlled"
      ],
      [
       "Zooxanthellae",
