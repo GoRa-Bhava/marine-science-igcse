@@ -29,8 +29,10 @@ function make(seed) {
     return make(seed + 1);
   }
   if (m < 0.68) {
-    const t1 = 2 + Math.floor(r() * 2), melt = 3 + Math.floor(r() * 4), rise = 8 + Math.floor(r() * 3), t2 = t1 + melt, t3 = t2 + rise, end = t3 + 3 + Math.floor(r() * 3);
-    const T0 = -pickR(r, [10, 15, 20]), pts = [];
+    // steady heating, so the times follow the real energy needs: ice warms about twice as fast as liquid water (half the
+    // specific heat capacity) and melting takes about 0.8 × the time to heat the water from 0 to 100 °C
+    const rise = 15 + Math.floor(r() * 6), T0 = -pickR(r, [20, 25, 30]), t1 = Math.max(2, Math.round((rise * -T0) / 200)), melt = Math.round(0.8 * rise);
+    const t2 = t1 + melt, t3 = t2 + rise, end = t3 + 3 + Math.floor(r() * 3), pts = [];
     for (let t = 0; t <= end; t++) pts.push(t <= t1 ? T0 + (0 - T0) * t / t1 : t <= t2 ? 0 : t <= t3 ? 100 * (t - t2) / rise : 100);
     const probe = pickR(r, [Math.round((t1 + t2) / 2), Math.round((t2 + t3) / 2), Math.min(end, t3 + 2)]);
     return { kind: KEY, seed, mode: "heat", t1, t2, t3, end, T0, pts, probe };
@@ -77,7 +79,7 @@ function heatSVG(F, opt) {
   const W = 560, H = 440, L = 70, T = 24, pw = 460, ph = 340, hl = opt.hl || {}, cols = F.end, X = (t) => L + t * pw / cols, Y = (v) => T + ph - (v + 30) / 140 * ph;
   let s = grid(L, T, pw, ph, cols, 28, 5, 2);
   for (let v = -30; v <= 110; v += 10) s += `<text x="${L - 8}" y="${Y(v) + 5}" text-anchor="end">${v}</text>`;
-  for (let t = 0; t <= cols; t += 2) s += `<text x="${X(t)}" y="${T + ph + 20}" text-anchor="middle">${t}</text>`;
+  for (let t = 0; t <= cols; t += cols > 24 ? 4 : 2) s += `<text x="${X(t)}" y="${T + ph + 20}" text-anchor="middle">${t}</text>`;
   const seg = [[0, F.t1], [F.t1, F.t2], [F.t2, F.t3], [F.t3, F.end]];
   seg.forEach(([a, b], k) => { const id = `s${k + 1}`, pts = []; for (let t = a; t <= b; t++) pts.push(`${X(t)},${Y(F.pts[t])}`);
     s += `<polyline points="${pts.join(" ")}" class="mt-line mt-a${(hl.segs || []).includes(id) ? " mt-hl" : ""}"/>`;

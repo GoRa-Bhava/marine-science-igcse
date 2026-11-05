@@ -3,7 +3,11 @@
    in the direction of energy transfer. Three panels:
    - "web": the whole web;
    - "chain": one 4-level chain from the web with biomass or energy values;
-   - "pyramid": a pyramid of numbers or energy for that chain (not to scale, levels unlabelled while asking).
+   - "pyramid": a pyramid of numbers or energy for that chain (not to scale, levels unlabelled while asking);
+   - "scale": a pyramid of BIOMASS drawn to scale on a grid (4.4/LO13 "draw"), for the first three levels of a seaweed-based chain
+     (each level 20–35 % of the one below). One bar is
+     missing: read a drawn bar with the scale, then draw the missing bar to scale. Seaweed, kelp and algae chains only,
+     because a phytoplankton-based pyramid of biomass can be inverted. Generated values; bar edges always on grid lines.
    The knowledge model rules are kept: energy loss is limited to respiration, movement, removal or harvesting and
    excretion, and the mark scheme also credits "not all eaten" and "undigested / egested". Those are never offered
    as wrong options. "Heat" is not a separate route. The 10 % rule is never required. % transfer =
@@ -78,7 +82,17 @@ function make(seed) {
     // pyramid type: kelp chains → numbers with a narrow base; otherwise numbers (upright) or energy
     const pyr = ch[0] === "kelp" ? "numbersKelp" : r() < 0.5 ? "numbers" : "energy";
     const nums = pyr === "numbersKelp" ? [3, 400, 30, 1] : [Math.round(500000 + r() * 500000), Math.round(20000 + r() * 20000), Math.round(300 + r() * 500), Math.round(2 + r() * 6)];
-    return { kind: KEY, seed, W, ch, energy, unit, v, lo, hi, raw, pct: Math.round(raw * 10) / 10, pyr, nums, place: W.place };
+    // to-scale pyramid of biomass: a chain with a large seaweed producer (this web's, else the rocky shore's)
+    const macro = chains4(W).filter((c) => ["kelp", "weed", "alg"].includes(c[0]) && perms(c).filter((p) => validChain(W, p)).length === 1);
+    const SW = macro.length ? W : WEBS.find((w) => w.id === "shore"), sch = macro.length ? pickR(r, macro) : ["weed", "lim", "crab", "bird"];
+    // three levels (producer, primary, secondary), each 20–35 % of the one below, so the bars stay drawable on 40 squares
+    const sq = pickR(r, [5, 10, 20]), sw = [34 + 2 * Math.floor(r() * 4)];
+    for (let i = 1; i < 3; i++) { let x = Math.round((sw[i - 1] * (0.2 + r() * 0.15)) / 2) * 2; if (x >= sw[i - 1]) x = sw[i - 1] - 2; sw.push(Math.max(2, x)); }
+    if (!(sw[1] > sw[2]) || sw[2] < 2) continue;
+    const miss = pickR(r, [0, 1].filter((i) => sw[i] >= 6)), read = pickR(r, [0, 1, 2].filter((i) => i !== miss));
+    if (miss == null) continue;
+    const scale = { web: SW.id, names: sch.slice(0, 3).map((k) => SW.n[k][0]), place: ({ kelp: "in", ocean: "in", shore: "on", reef: "on" }[SW.id]) + " " + SW.place, sq, w: sw, miss, read };
+    return { kind: KEY, seed, W, ch, energy, unit, v, lo, hi, raw, pct: Math.round(raw * 10) / 10, pyr, nums, place: W.place, scale };
   }
   throw new Error("foodchain: no data");
 }
@@ -135,11 +149,32 @@ function pyramidSVG(F, opt) {
   return `<svg viewBox="0 0 520 ${y0 + bh + 30}" class="figsvg fig-${KEY}" role="img" aria-label="An ecological pyramid for a marine food chain">${s}</svg>`;
 }
 
+/* pyramid of biomass to scale: 40 × 16 small squares, each bar 4 squares tall, centred */
+const SQ = 11, GL = 40, GT = 46, GC = 40, GR = 12, GCX = GL + (GC / 2) * SQ;
+function scaleSVG(F, opt) {
+  const S = F.scale, hl = opt.hl || {}, st = opt.state;
+  let s = `<text x="${GCX}" y="18" text-anchor="middle" class="fc-u">${S.names.join(" → ")}</text><text x="${GCX}" y="36" text-anchor="middle" class="fc-u">pyramid of biomass, drawn to scale</text>`;
+  for (let i = 0; i <= GR; i++) s += `<line x1="${GL}" x2="${GL + GC * SQ}" y1="${GT + i * SQ}" y2="${GT + i * SQ}" class="${i % 4 ? "gmin" : "gmaj"}"/>`;
+  for (let i = 0; i <= GC; i++) s += `<line y1="${GT}" y2="${GT + GR * SQ}" x1="${GL + i * SQ}" x2="${GL + i * SQ}" class="${i % 10 ? "gmin" : "gmaj"}"/>`;
+  const rowY = (i) => GT + (GR - 4 * (i + 1)) * SQ;
+  S.w.forEach((w, i) => {
+    const show = i !== S.miss || hl.showMiss, on = (hl.lv || []).includes(i);
+    if (show) s += `<rect x="${GCX - (w * SQ) / 2}" y="${rowY(i)}" width="${w * SQ}" height="${4 * SQ}" class="fc-bar${on ? " hl" : ""}"/>`;
+    else s += `<line x1="${GL}" x2="${GL + GC * SQ}" y1="${rowY(i) + 2 * SQ}" y2="${rowY(i) + 2 * SQ}" class="fc-miss"/>`;
+  });
+  if (st && st.w > 0) s += `<rect x="${GCX - (st.w * SQ) / 2}" y="${rowY(S.miss)}" width="${st.w * SQ}" height="${4 * SQ}" class="fc-mine"/>`;
+  S.w.forEach((w, i) => (s += `<text x="${GCX}" y="${rowY(i) + 2 * SQ + 6}" text-anchor="middle" class="fc-t fc-halo">${S.names[i]}</text>`));
+  s += `<text x="${GCX}" y="${GT + GR * SQ + 22}" text-anchor="middle" class="fc-u">1 small square = ${S.sq} g per m² of dry biomass</text><text x="${GCX}" y="${GT + GR * SQ + 40}" text-anchor="middle" class="fc-u fc-sm">values simplified so every bar can be drawn</text>`;
+  if (opt.plotMode) s += `<rect x="${GL}" y="${GT}" width="${GC * SQ}" height="${GR * SQ}" fill="transparent" class="plothit"/>`;
+  return `<svg viewBox="0 0 520 ${GT + GR * SQ + 50}" class="figsvg fig-${KEY}" role="img" aria-label="A pyramid of biomass drawn to scale on a grid, with one bar missing">${s}</svg>`;
+}
+
 function svg(F, opt) {
   opt = opt || {};
   const panel = opt.panel || (opt.hl && opt.hl.panel) || "web";
   if (panel === "chain") return chainSVG(F, opt);
   if (panel === "pyramid") return pyramidSVG(F, opt);
+  if (panel === "scale") return scaleSVG(F, opt);
   return webSVG(F, opt);
 }
 
@@ -165,7 +200,7 @@ function questions(F, r) {
     ["Some energy is lost in excretion.", true, "Waste such as urea removed by excretion contains energy."],
     ["Energy is destroyed each time one organism eats another.", false, "Energy is never destroyed; it is transferred, mostly to the surroundings."],
     ["Energy is passed back down to the producers by the nutrient cycle.", false, "Nutrients are recycled, but energy flows one way and is not returned to producers."],
-    ["The consumers gain extra energy from the sea water around them.", false, "Consumers get their energy only from the food they eat."],
+    ["The organisms at each higher level are smaller, so they can hold less energy.", false, "Size is not the reason: energy is lost at every level (respiration, movement, excretion, uneaten and undigested material), whatever the size of the organisms."],
   ];
   const pick = pickMixed(r, st, 5);
   qs.push({ kind: "multi", q: `Only a small part of the ${what} at one trophic level reaches the next. Tick every statement that helps to explain why.`, options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
@@ -189,6 +224,24 @@ function questions(F, r) {
     options: ["Energy is lost at each level, for example in respiration and movement", "Energy is destroyed each time one organism eats another", "The top predators are larger, so they need less energy", "Energy flows back down the chain to the producers"], a: 0,
     askOpt: { panel: "pyramid" }, hl: { panel: "pyramid", labels: true },
     why: "Only part of the energy at one level reaches the next; the rest is lost in respiration, movement, excretion and in uneaten or undigested material. So each bar is smaller than the one below, and a pyramid of energy is always upright. Energy is not destroyed and it does not return to producers." });
+  // 5b. pyramid of biomass to scale: read one bar, then draw the missing bar
+  const S = F.scale, rd = S.read, ms = S.miss, rv = S.w[rd] * S.sq, mv = S.w[ms] * S.sq;
+  qs.push({ kind: "num", q: `This pyramid of biomass, for a food chain ${S.place}, is drawn to scale. Use the scale to work out the dry biomass of the <b>${S.names[rd]}</b>.`, ans: rv, tol: 0, unit: "g per m²",
+    askOpt: { panel: "scale" }, hl: { panel: "scale", lv: [rd] },
+    why: `Count the small squares across the ${S.names[rd]} bar: ${S.w[rd]} squares. Each small square is ${S.sq} g per m², so the biomass is ${S.w[rd]} × ${S.sq} = <b>${rv} g per m²</b>. Use the whole width of the bar, not half of it. The bar edges are on grid lines, so the count is exact.` });
+  qs.push({ kind: "plot", q: `The bar for the <b>${S.names[ms]}</b> is missing. Its dry biomass is <b>${mv} g per m²</b>. Tap the grid to draw the bar to scale, in the centre like the others.`, hl: { panel: "scale", lv: [ms], showMiss: true },
+    askOpt: { panel: "scale", plotMode: true },
+    plot: {
+      start: { w: 0 }, answer: { w: S.w[ms] }, hint: "Tap the grid where the right-hand end of the bar should be.",
+      fromTap: (p) => ({ w: Math.max(2, Math.min(GC, 2 * Math.round(Math.abs(p.x - GCX) / SQ))) }),
+      nudges: [["-", "◀ narrower", "Make the bar one small square narrower on each side"], ["+", "wider ▶", "Make the bar one small square wider on each side"]],
+      nudge: (st, k) => ({ w: Math.max(2, Math.min(GC, (st.w || 0) + (k === "+" ? 2 : -2))) }),
+      label: (st) => `Your bar is ${st.w} small squares wide.`,
+      check: (st) => st.w === S.w[ms],
+    },
+    doneOpt: (st, ok) => ({ panel: "scale", state: ok ? null : st, hl: { panel: "scale", lv: [ms], showMiss: true } }),
+    doneNote: (st, ok) => (ok ? "" : `Highlighted: the correct bar, ${S.w[ms]} small squares wide. Your bar has the orange outline.`),
+    why: `Width = biomass ÷ value of one small square = ${mv} ÷ ${S.sq} = <b>${S.w[ms]} small squares</b>, so the bar reaches ${S.w[ms] / 2} squares either side of the centre line. Every bar is the same height; only the width shows the biomass. A pyramid of biomass drawn to scale lets you compare the levels by eye.` });
   // 6. effect of removing an organism (authored per web)
   const sc = pickR(r, W.scen);
   qs.push({ kind: "choice", q: sc.q, options: sc.o, a: 0, askOpt: { panel: "web" }, hl: { panel: "web" }, why: sc.why });
@@ -196,6 +249,8 @@ function questions(F, r) {
   qs.push({ kind: "order", q: `Use the food web to put these organisms into a food chain, starting with the producer.`, options: C.map(nm), a: [0, 1, 2, 3],
     askOpt: { panel: "web" }, hl: { panel: "web", nodes: C },
     why: `Follow the arrows from the producer: ${C.map(nm).join(" → ")}. Each arrow points from the food to the organism that eats it, in the direction energy is transferred.` });
+  // keep 8: drop either "name the level" (q1) or "tap the bar" (q3); both test the order of trophic levels
+  qs.splice(r() < 0.5 ? 1 : 3, 1);
   return qs;
 }
 
@@ -214,18 +269,24 @@ function selfTest(F, qs) {
   if (W.id === "reef" && !(has("algae", "parrotfish") && has("damselfish", "grouper") && has("parrotfish", "grouper"))) bad.push("reef facts");
   // every node box must not overlap another
   const ks = Object.keys(W.n); for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) { const A = W.n[ks[i]], B = W.n[ks[j]]; if (Math.abs(A[1] - B[1]) < BW && Math.abs(A[2] - B[2]) < BH) bad.push("boxes overlap"); }
-  const sec = qs.find((q) => q.kind === "choice"); if (sec.options[sec.a] !== W.n[F.ch[2]][0] && !/primary|tertiary/.test(sec.q)) bad.push("secondary");
+  const sec = qs.find((q) => q.kind === "choice" && /which organism is the/.test(q.q)); if (sec && sec.options[sec.a] !== W.n[F.ch[2]][0] && !/primary|tertiary/.test(sec.q)) bad.push("secondary");
+  const S = F.scale; if (!S.w.every((w, i) => w % 2 === 0 && w >= 2 && w <= GC && (!i || w < S.w[i - 1]))) bad.push("scale widths");
+  if (!["kelp", "seaweed", "algae"].includes(S.names[0])) bad.push("scale producer not seaweed");
+  if (S.w[S.miss] < 6 || S.read === S.miss || S.w.length !== 3) bad.push("scale miss/read");
+  for (let i = 1; i < 3; i++) if (S.w[i] / S.w[i - 1] > 0.4) bad.push("scale ratio");
+  const pq = qs.find((q) => q.kind === "plot"); if (!pq || pq.plot.check({ w: S.w[S.miss] + 2 }) || pq.plot.check({ w: S.w[S.miss] - 2 })) bad.push("scale plot tolerance");
   return bad;
 }
 
 export default {
   key: KEY, group: "Diagrams", name: "Marine food chains and pyramids", topics: "Unit 4 (4.4)", thumbSeed: 3,
-  blurb: "Marine food webs and chains with biomass or energy values, and pyramids of numbers and energy.",
-  tips: ["Arrows point from the food to the organism that eats it: the direction energy is transferred.", "Producer → primary consumer → secondary consumer → tertiary consumer.", "% transferred = (value at the higher level ÷ value at the lower level) × 100.", "Energy is lost at each level through respiration, movement and excretion, and in parts that are not eaten or not digested.", "The producer is always the bottom bar. A pyramid of numbers can be any shape; a pyramid of energy is always upright."],
-  ctx: (F) => `a food web in ${F.place}`,
+  blurb: "Marine food webs and chains with biomass or energy values; pyramids of numbers and energy, and a pyramid of biomass to read and draw to scale.",
+  tips: ["Arrows point from the food to the organism that eats it: the direction energy is transferred.", "Producer → primary consumer → secondary consumer → tertiary consumer.", "% transferred = (value at the higher level ÷ value at the lower level) × 100.", "Energy is lost at each level through respiration, movement and excretion, and in parts that are not eaten or not digested.", "The producer is always the bottom bar. A pyramid of numbers can be any shape; a pyramid of energy is always upright.", "To draw a pyramid to scale, width = value ÷ value of one small square. Keep every bar the same height and centre each one."],
+  ctx: (F) => `a food web in ${F.place}` + (F.scale && F.scale.web !== F.W.id ? `, and a food chain ${F.scale.place}` : ""),
   make, svg, questions, selfTest,
   css: `.fig-foodchain .fc-box{fill:var(--surface2);stroke:currentColor;stroke-width:1.6}.fig-foodchain .fc-box.hl{fill:color-mix(in srgb,var(--app) 55%,transparent);stroke-width:2.4}
-.fig-foodchain .fc-t{font-size:17px;font-weight:600}.fig-foodchain .fc-ts{font-size:15px}.fig-foodchain .fc-v{font-size:18px;font-weight:700}.fig-foodchain.fc-chain{max-width:420px}.fig-foodchain .fc-u{font-size:15px}
+.fig-foodchain .fc-t{font-size:17px;font-weight:600}.fig-foodchain .fc-ts{font-size:15px}.fig-foodchain .fc-v{font-size:18px;font-weight:700}.fig-foodchain.fc-chain{max-width:420px}.fig-foodchain .fc-u{font-size:15px}.fig-foodchain .fc-sm{font-size:13px;opacity:.85}
 .fig-foodchain .fc-arr{stroke:currentColor;stroke-width:2}.fig-foodchain .fc-ah{fill:currentColor}
-.fig-foodchain .fc-bar{fill:color-mix(in srgb,var(--ink) 22%,transparent);stroke:currentColor;stroke-width:1.5}.fig-foodchain .fc-bar.hl{fill:color-mix(in srgb,var(--app) 60%,transparent)}`,
+.fig-foodchain .fc-bar{fill:color-mix(in srgb,var(--ink) 22%,transparent);stroke:currentColor;stroke-width:1.5}.fig-foodchain .fc-bar.hl{fill:color-mix(in srgb,var(--app) 60%,transparent)}
+.fig-foodchain .fc-miss{stroke:currentColor;stroke-width:1.2;stroke-dasharray:4 4;opacity:.5}.fig-foodchain .fc-mine{fill:none;stroke:var(--accent);stroke-width:3}.fig-foodchain .fc-halo{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}`,
 };

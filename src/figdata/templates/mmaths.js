@@ -21,7 +21,7 @@ function make(seed) {
   const dumm = Math.round(dia.a * 10);                                                                // in µm (×10^-5 m = ×10 µm)
   const rad = pickR(r, [2.5, 3, 3.5, 4]), len = pickR(r, [10, 12, 15, 20]), dens = 1.6 + Math.round(r() * 50) / 100;
   const vol = Math.PI * rad * rad * len, mass = Math.round(vol * dens);
-  const raw = Math.round((1.01 + r() * 0.04) * 100000) / 100000;                                     // a density to round to 3 s.f.
+  const raw = Math.round((1.02 + r() * 0.01) * 100000) / 100000;                                        // a density to round to 3 s.f.
   return { kind: KEY, seed, big, cells, dia, dumm, rad, len, mass, raw, sfN: pickR(r, [2, 3]) };
 }
 

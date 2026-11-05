@@ -3,7 +3,8 @@
    Skills: name the five oceans (Arctic, Atlantic, Pacific, Indian, Southern) on a world map; latitude and longitude in degrees
    (N/S, E/W); hemispheres; difference in latitude; place a point from coordinates; read latitude in DEGREES AND MINUTES from a
    detail map (2027 syllabus: "recognise and use latitude and longitude on a map (degrees and minutes)"); 8-point direction of a
-   tracked migration route. All points sit on water, well away from coasts. */
+   tracked migration route; the climate zone (tropical, temperate, polar) of a point from its latitude (1.3). All points sit on
+   water, well away from coasts. */
 import { rng, pickR, shuffleR, fmt } from "../core.js";
 
 const KEY = "oceanmap";
@@ -216,9 +217,17 @@ function questions(F, r) {
     qs.push({ kind: "choice", q: `The dashed line shows the route of ${R.animal} from its start to its end. In which direction did it travel overall?`, options: dopt, a: 0, askOpt: { route: true }, doneOpt: () => ({ route: true }),
       why: `Compare the end with the start. North is up the map. The end is ${dirExplain(R)} of the start, so the overall direction is <b>${DIRS[d]}</b>. Use the start and end points, not the bends in between.` });
   }
-  // keep at most 7: always 1, 2, 4, 6, 7 (+ route), then fill with 3/5
-  const core = qs.filter((q) => q.kind === "tap" || q.kind === "plot" || /detail map|Which ocean/.test(q.q) || /route/.test(q.q)), extra = shuffleR(r, qs.filter((q) => !core.includes(q)));
-  return core.concat(extra).slice(0, 7).sort((x, y) => qs.indexOf(x) - qs.indexOf(y));
+  // 9. climate zone of a point from its latitude (tropical up to 23.5°, temperate to 66.5°, polar beyond); points within 5° of a boundary are never asked
+  const zone = (lat) => (Math.abs(lat) < 23.5 ? "tropical" : Math.abs(lat) < 66.5 ? "temperate" : "polar");
+  const zp = P.filter((p) => [23.5, 66.5].every((b) => Math.abs(Math.abs(p.lat) - b) >= 5));
+  if (zp.length) {
+    const zq = pickR(r, zp), z = zone(zq.lat), zo = ["tropical", "temperate", "polar"];
+    qs.push({ kind: "choice", q: `Which climate zone is point <b>${zq.id}</b> in? Use its latitude.`, options: [z, ...zo.filter((x) => x !== z)], a: 0, hl: { pts: [zq.id], guide: [zq] },
+      why: `The <b>tropical</b> zone lies between the Tropic of Cancer (23.5° N) and the Tropic of Capricorn (23.5° S). The <b>polar</b> zones lie beyond the Arctic Circle (66.5° N) and the Antarctic Circle (66.5° S). The <b>temperate</b> zones lie between 23.5° and 66.5° in each hemisphere. ${zq.id} is ${Math.abs(zq.lat)}° ${zq.lat > 0 ? "north" : "south"} of the Equator, so it is in the <b>${z}</b> zone.` });
+  }
+  // keep at most 8: always 1, 2, 4, 6, 7 (+ route, climate zone), then fill with 3/5
+  const core = qs.filter((q) => q.kind === "tap" || q.kind === "plot" || /detail map|Which ocean|climate zone/.test(q.q) || /route/.test(q.q)), extra = shuffleR(r, qs.filter((q) => !core.includes(q)));
+  return core.concat(extra).slice(0, 8).sort((x, y) => qs.indexOf(x) - qs.indexOf(y));
 }
 const pos = (p) => `${latS(p.lat)}, ${lonS(p.lon)}`;
 function dirExplain(R) { const s = R.wp[0], e = R.wp[R.wp.length - 1], ns = e.lat > s.lat + 3 ? "north" : e.lat < s.lat - 3 ? "south" : "", ew = e.lon > s.lon + 3 ? "east" : e.lon < s.lon - 3 ? "west" : ""; return ns && ew ? `further ${ns} and further ${ew}` : `further ${ns || ew}`; }
@@ -236,13 +245,14 @@ function selfTest(F, qs) {
   if (F.route) { const s = F.route.wp[0], e = F.route.wp[3], ang = (Math.atan2(e.lon - s.lon, e.lat - s.lat) * 180) / Math.PI; let df = Math.abs(((ang - F.route.dir * 45) % 360 + 540) % 360 - 180); if (df > 12.5) bad.push("route direction off " + df); }
   const dq = qs.find((q) => /detail map/.test(q.q)); if (!dq || new Set(dq.options).size !== 4) bad.push("detail options");
   if (qs.length < 6) bad.push("too few questions " + qs.length);
+  const cz = qs.find((q) => /climate zone/.test(q.q)); if (cz) { const lat = Math.abs(F.pts.find((p) => p.id === cz.q.match(/point <b>(\w)<\/b>/)[1]).lat); const z = lat < 23.5 ? "tropical" : lat < 66.5 ? "temperate" : "polar"; if (cz.options[cz.a] !== z || Math.abs(lat - 23.5) < 5 || Math.abs(lat - 66.5) < 5) bad.push("climate zone"); }
   return bad;
 }
 
 export default {
   key: KEY, group: "Maps", zoomDefault: true, name: "World ocean map: latitude and longitude", topics: "Unit 1 (1.3)", thumbSeed: 5,
   blurb: "A world map with the five oceans, lines of latitude and longitude, a detail map in degrees and minutes, and a tracked migration route.",
-  tips: ["The five oceans are the Arctic, Atlantic, Pacific, Indian and Southern. Large seas such as the Mediterranean are not oceans.", "Latitude is measured north or south of the Equator; longitude east or west of the Prime Meridian (0°). Give latitude first, with N/S and E/W.", "On opposite sides of the Equator, add the two latitudes to find the difference; on the same side, subtract.", "1 degree = 60 minutes (60′). Half a degree is 30′, not 50′.", "For a direction, compare the end with the start. North is up the map."],
+  tips: ["The five oceans are the Arctic, Atlantic, Pacific, Indian and Southern. Large seas such as the Mediterranean are not oceans.", "Latitude is measured north or south of the Equator; longitude east or west of the Prime Meridian (0°). Give latitude first, with N/S and E/W.", "On opposite sides of the Equator, add the two latitudes to find the difference; on the same side, subtract.", "1 degree = 60 minutes (60′). Half a degree is 30′, not 50′.", "For a direction, compare the end with the start. North is up the map.", "Climate zones: tropical between 23.5° N and 23.5° S; temperate from 23.5° to 66.5°; polar beyond 66.5° N or S."],
   ctx: (F) => "world map of the oceans",
   make, svg, questions, selfTest,
   css: `.fig-oceanmap .oland{fill:color-mix(in srgb,var(--ink) 22%,transparent);stroke:currentColor;stroke-width:.6}.fig-oceanmap .osea{fill:var(--surface2)}.fig-oceanmap .oframe{fill:none;stroke:currentColor;stroke-width:1.2}.fig-oceanmap .oeq{stroke:currentColor;stroke-width:1.4}.fig-oceanmap .oax{font-size:12px}.fig-oceanmap .osm{font-size:12px;opacity:.85}.fig-oceanmap .olab{font-size:14px;font-weight:700}.fig-oceanmap .opt{fill:currentColor}.fig-oceanmap .opt.ohl{fill:var(--app);stroke:currentColor;stroke-width:1.5}.fig-oceanmap .oband{fill:color-mix(in srgb,var(--app) 22%,transparent)}.fig-oceanmap .oguide{stroke:var(--app);stroke-width:2;stroke-dasharray:5 3}.fig-oceanmap .otarget{fill:none;stroke:var(--app);stroke-width:3}.fig-oceanmap .oX{stroke:var(--accent);stroke-width:3.2}.fig-oceanmap .oroute{fill:none;stroke:currentColor;stroke-width:2.2;stroke-dasharray:7 4}.fig-oceanmap .omarr{fill:currentColor}.fig-oceanmap .omline{stroke:currentColor;stroke-width:2}.fig-oceanmap .odetbox{fill:none;stroke:var(--accent);stroke-width:2}`,

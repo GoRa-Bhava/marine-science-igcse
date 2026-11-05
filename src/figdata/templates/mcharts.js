@@ -82,8 +82,8 @@ function questions(F, r) {
     const C = F.C, f = F.f, mi = f.indexOf(Math.max(...f)), thr = C.start + F.cut * C.w, over = f.slice(F.cut).reduce((a, b) => a + b, 0), pc = over / F.tot * 100;
     qs.push({ kind: "num", q: `How many ${C.animal} had a ${C.var} in the class ${cls(C, F.ask)}?`, ans: f[F.ask], tol: 0, unit: "", hl: { bars: [String(F.ask)] },
       why: `Go to the top of the bar for ${cls(C, F.ask)} and read across: <b>${f[F.ask]}</b> ${C.animal}. Each grid line is one animal.` });
-    qs.push({ kind: "tap", q: `Tap the bar for the modal class (the class with the most ${C.animal}).`, a: [String(mi)], askOpt: { tapMode: true }, doneOpt: () => ({ tapMode: true }), hl: { bars: [String(mi)] },
-      labelOf: (id) => cls(C, +id), ansTxt: cls(C, mi), why: `The modal class is the tallest bar: <b>${cls(C, mi)}</b>, with ${f[mi]} ${C.animal}.` });
+    qs.push({ kind: "tap", q: `Tap the bar for the class with the most ${C.animal}.`, a: [String(mi)], askOpt: { tapMode: true }, doneOpt: () => ({ tapMode: true }), hl: { bars: [String(mi)] },
+      labelOf: (id) => cls(C, +id), ansTxt: cls(C, mi), why: `The class with the most ${C.animal} is the tallest bar: <b>${cls(C, mi)}</b>, with ${f[mi]} ${C.animal}. (This is sometimes called the modal class.)` });
     qs.push({ kind: "num", q: `How many ${C.animal} were measured altogether?`, ans: F.tot, tol: 0, unit: "",
       why: `Add the frequencies of every bar: ${f.join(" + ")} = <b>${F.tot}</b>.` });
     const ans = Math.round(pc);
@@ -110,7 +110,7 @@ function questions(F, r) {
   qs.push({ kind: "num", q: `What angle at the centre of the pie chart does the sector for ${cats[ia]} have? (A whole circle is 360°.)`, ans: ang, tol: 0, unit: "°", check: (v) => v >= (P[ia] - 0.5) * 3.6 - 1e-9 && v <= (P[ia] + 0.5) * 3.6 + 1e-9, hl: { sectors: [String(ia)] },
     why: `Each 1% of a pie chart is 360 ÷ 100 = 3.6°. So ${P[ia]}% × 3.6 = <b>${fmt(ang)}°</b>.` });
   qs.push({ kind: "choice", q: "Why is a pie chart a suitable way to present these data?", options: ["It shows how each category makes up a share of the whole", "It shows how the amounts changed over time", "It shows a relationship between two continuous variables", "It shows the exact number in each category"], a: 0,
-    why: "A pie chart shows parts of a whole: each sector is a share of the total. Changes over time need a line graph, a relationship between two variables needs a scatter graph, and the exact numbers are clearer in a table or a bar chart." });
+    why: "A pie chart shows parts of a whole: each sector is a share of the total. Changes over time need a line graph, how one variable changes with another needs a line graph, and the exact numbers are clearer in a table or a bar chart." });
   if (F.C.plastic) {
     const pl = F.C.plastic.map((c) => F.C.cats[c]), sum = cats.reduce((a, c, i) => a + (pl.includes(c) ? P[i] : 0), 0), np = cats.filter((c) => pl.includes(c)).length;
     const named = cats.filter((c) => pl.includes(c)), list = named.map((c) => `${String.fromCharCode(65 + cats.indexOf(c))} (${c})`).join(", ");
@@ -134,8 +134,8 @@ function selfTest(F, qs) {
 export default {
   key: KEY, group: "Graphs and charts", name: "Histograms and pie charts", topics: "Presentation of data; 5.2, 6.3, 6.6", thumbSeed: 2,
   ctx: (F) => F.C.what,
-  blurb: "Read a histogram of animal sizes or a pie chart of a survey: frequencies, the modal class, percentages and angles.",
-  tips: ["A histogram shows continuous data in equal classes, so the bars touch.", "The modal class is the tallest bar.", "On a pie chart each 1% is 3.6°, because a whole circle is 360°.", "Percentage of a total × the total ÷ 100 gives the number."],
+  blurb: "Read a histogram of animal sizes or a pie chart of a survey: frequencies, the largest class, percentages and angles.",
+  tips: ["A histogram shows continuous data in equal classes, so the bars touch.", "The class with the most is the tallest bar.", "On a pie chart each 1% is 3.6°, because a whole circle is 360°.", "Percentage of a total × the total ÷ 100 gives the number."],
   make, svg, questions, selfTest,
   css: `.fig-mcharts .pc-s{stroke:currentColor;stroke-width:1.2}.fig-mcharts .pc-s0{fill:color-mix(in srgb,var(--ink) 38%,transparent)}.fig-mcharts .pc-s1{fill:color-mix(in srgb,var(--ink) 10%,transparent)}.fig-mcharts .pc-s2{fill:color-mix(in srgb,#4aa8d8 50%,transparent)}.fig-mcharts .pc-s3{fill:color-mix(in srgb,#e0a030 45%,transparent)}.fig-mcharts .pc-s4{fill:color-mix(in srgb,#6cbf7a 45%,transparent)}.fig-mcharts .pc-s5{fill:color-mix(in srgb,#c77dc9 45%,transparent)}.fig-mcharts .pc-s.hl{fill:color-mix(in srgb,var(--app) 70%,transparent)}.fig-mcharts .pc-n{font-weight:700;font-size:15px}.fig-mcharts .pc-t{stroke:currentColor;stroke-width:1}.fig-mcharts .pc-k{font-size:12.5px;fill:var(--soft)}.fig-mcharts .pc-l{font-size:14px}.fig-mcharts .pc-h{font-weight:700}`,
 };

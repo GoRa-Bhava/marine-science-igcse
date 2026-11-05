@@ -1,6 +1,6 @@
 /* Offline support for Earth and Oceans.
    Bump CACHE when you deploy a new version. */
-const CACHE = "marine-v179";
+const CACHE = "marine-v180";
 
 /* Figures & data photos: cached on install so they also work offline before
    they have been seen once. Relative to this file, like the rest of the app. */
@@ -27,6 +27,15 @@ const FIG_IMAGES = [
   "./figdata-img/qd-limpet.webp",
   "./figdata-img/qd-periwinkle.webp",
   "./figdata-img/qd-seaweed.webp",
+  "./figdata-img/lp-animalcell.webp",
+  "./figdata-img/lp-bacterium.webp",
+  "./figdata-img/lp-coral.webp",
+  "./figdata-img/lp-diatom.webp",
+  "./figdata-img/lp-dino.webp",
+  "./figdata-img/lp-fish.webp",
+  "./figdata-img/lp-kelp.webp",
+  "./figdata-img/lp-plantcell.webp",
+  "./figdata-img/lp-seagrass.webp",
 ];
 
 self.addEventListener("install", (e) => {
