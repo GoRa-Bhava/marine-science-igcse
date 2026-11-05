@@ -378,6 +378,84 @@ export const PRACTICALS = [
 
   /* ============================ UNIT 2 ============================ */
   {
+    id: "P1.4b", ref: "1.4/LO9", unit: 1,
+    title: "Measuring the speed and direction of a current",
+    subtitle: "Time a float over a measured distance and take a compass bearing",
+    aim: "Measure the speed and direction of a surface current using a float on a measured line.",
+    diagram: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 880 560" role="img" aria-labelledby="title desc">
+<title id="title">Measuring the speed and direction of a current</title><desc id="desc">A weighted float is released from a fixed point on a jetty. It is tied to a 10.0 m line. A stopwatch is started when the float is released and stopped when the line pulls tight. A compass gives the bearing of the direction the float drifted. Speed equals distance divided by time.</desc>
+<style>:root{--bg:#e9f1f2;--panel:#ffffff;--ink:#0d2a37;--soft:#4d6c77;--line:#d2e0e3;--teal:#12a7bb;--deep:#0b6b79;--coral:#ff6a4d}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#071820;--panel:#0e2733;--ink:#e9f4f5;--soft:#9dbcc5;--line:#1c3d49;--teal:#3ac6d8;--deep:#8fdce7;--coral:#ff7d63}}
+:root[data-theme="dark"]{--bg:#071820;--panel:#0e2733;--ink:#e9f4f5;--soft:#9dbcc5;--line:#1c3d49;--teal:#3ac6d8;--deep:#8fdce7;--coral:#ff7d63}
+svg{display:block;height:auto;font-family:system-ui,sans-serif;background:var(--bg)}
+text{fill:var(--ink);font-size:26px}.title{font-size:32px;font-weight:700}.small{font-size:23px}.soft{fill:var(--soft)}.accent{fill:var(--coral);font-weight:700}
+.sea{fill:var(--teal);fill-opacity:.22}.wave{fill:none;stroke:var(--teal);stroke-width:3}
+.app{fill:none;stroke:var(--deep);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.rope{fill:none;stroke:var(--ink);stroke-width:3;stroke-dasharray:10 7}
+.arrow{fill:none;stroke:var(--coral);stroke-width:4;marker-end:url(#p14b-arrow)}
+</style>
+<defs><marker id="p14b-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--coral)"/></marker></defs>
+<text class="title" x="40" y="56">Float on a measured line</text>
+<rect class="sea" x="0" y="250" width="880" height="310"/>
+<path class="wave" d="M0 250 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+<rect class="app" x="40" y="200" width="170" height="40" rx="4"/><path class="app" d="M70 240v220M180 240v220"/>
+<text class="small soft" x="40" y="186">jetty (fixed point)</text>
+<path class="rope" d="M200 232 L 682 258"/>
+<circle class="app" cx="700" cy="262" r="18"/><path class="app" d="M700 280v34"/><rect class="app" x="690" y="314" width="20" height="16"/>
+<text class="small" x="640" y="226">weighted float</text>
+<text class="small" x="250" y="330">line of known length, e.g. 10.0 m</text>
+<path class="arrow" d="M560 400 H 760"/><text class="small accent" x="560" y="440">current</text>
+<circle class="app" cx="790" cy="110" r="44"/><path class="app" d="M790 78v64M758 110h64"/><text class="small" x="780" y="60">N</text><path class="arrow" d="M790 110 H 826"/>
+<text class="small soft" x="640" y="182">bearing 090° (east)</text>
+<rect class="app" x="380" y="86" width="150" height="80" rx="12"/><text x="408" y="138">20.0 s</text><text class="small soft" x="388" y="190">stopwatch</text>
+<text x="40" y="520">speed = distance ÷ time = 10.0 m ÷ 20.0 s = <tspan class="accent">0.50 m/s</tspan></text>
+</svg>`,
+    apparatus: ["A weighted float (it sits low in the water, so the wind has little effect on it)", "A line of known length, e.g. 10.0 m", "A stopwatch", "A compass"],
+    steps: [
+      "Tie the measured line to the float and hold the other end at a fixed point",
+      "Release the float into the current and start the stopwatch",
+      "Stop the stopwatch when the line is pulled tight",
+      "Take a compass bearing of the direction the float moved",
+      "Calculate speed = distance ÷ time, then repeat and calculate a mean",
+    ],
+    result: "The speed of the current in m/s, and its direction as a compass bearing.",
+    controls: [
+      "Use the same length of line and the same float for every run",
+      "Release the float from the same fixed point each time",
+      "Repeat several times and calculate a mean; take readings at different times if you want to know how the current changes",
+    ],
+    safety: ["Work in pairs, and stay back from the edge of the jetty or the water.", "Check the tide times and the weather before you go.", "Wear a life jacket if you work from a boat or near deep water."],
+    technique: [
+      "Speed = distance ÷ time; give the unit (m/s).",
+      "A float that sits low in the water is moved mainly by the current, not the wind.",
+      "Direction is the way the float moves, taken as a compass bearing, which is not always the wind direction.",
+      "Three readings on one afternoon don't tell you what the current always does: it can change with the tide and the weather.",
+    ],
+    items: [
+      { id: "P1.4b-01", type: "choice", tier: 1, ref: "1.4/LO9", family: "current-calc",
+        q: "A float on a 12.0 m line takes 30.0 s to pull the line tight. What is the speed of the current?",
+        options: ["0.40 m/s", "2.5 m/s", "360 m/s", "4.0 m/s"],
+        a: 0, why: "Speed = distance ÷ time = 12.0 ÷ 30.0 = <b>0.40 m/s</b>. 2.5 m/s is time ÷ distance (the wrong way round). 360 m/s multiplies distance by time. 4.0 m/s comes from dividing by 3.0 instead of 30.0 (a decimal-point slip). (1.4/LO9)", status: "human_review" },
+      { id: "P1.4b-02", type: "choice", tier: 2, ref: "1.4/LO9", family: "current-float",
+        q: "Why is the float weighted so that it sits low in the water?",
+        options: ["So that it is moved by the current rather than pushed by the wind", "So that it sinks to the seabed and measures the depth", "So that it measures the current at the seabed instead of at the surface", "So that the line pulls tight more quickly and the timing is shorter"],
+        a: 0, why: "A float that sits low in the water is carried by the <b>current</b>, not blown by the <b>wind</b>, so it measures the current. It is not meant to sink or measure depth, it stays near the surface, so it measures the surface current, not the current at the seabed, and the time depends on the current, not on the weight. (1.4/LO9)", status: "human_review" },
+      { id: "P1.4b-03", type: "choice", tier: 1, ref: "1.4/LO9", family: "current-direction",
+        q: "How is the direction of the current found in this method?",
+        options: ["By taking a compass bearing of the direction the float moves", "By noting the compass direction the wind is blowing from at the time", "By measuring how much of the line is let out before it pulls tight", "By timing how long the float takes to reach the end of the line"],
+        a: 0, why: "The direction is the way the <b>float moves</b>, measured as a <b>compass bearing</b>. The wind direction is not always the same as the current's direction. The length of line and the time give the speed, not the direction. (1.4/LO9)", status: "human_review" },
+      { id: "P1.4b-04", type: "choice", tier: 2, ref: "1.4/LO9", family: "current-repeat",
+        q: "A student times the float five times: 24.8 s, 25.2 s, 31.6 s, 25.0 s and 24.9 s. What should she do with the 31.6 s reading before calculating a mean?",
+        options: ["Treat it as anomalous and leave it out of the mean", "Include it, because every reading must be used in the mean", "Include it and take the mean of all five readings, 26.3 s", "Change it to 25.0 s so that it matches the other readings"],
+        a: 0, why: "31.6 s is far from the other four readings (about 25 s), so it is <b>anomalous</b>: leave it out and take the mean of the rest, (24.8 + 25.2 + 25.0 + 24.9) ÷ 4 = 24.975 ≈ <b>25.0 s</b>. Including it drags the mean up to 26.3 s. Leaving out an anomaly is accepted practice, but making up a new value is not. (1.4/LO9)", status: "human_review" },
+      { id: "P1.4b-05", type: "choice", tier: 2, ref: "1.4/LO9", family: "current-conclusion",
+        q: "A student times the float three times one afternoon and concludes: 'The current here flows at 0.4 m/s.' Which is the best criticism of her conclusion?",
+        options: ["All the readings were taken at one time, but the current changes with the tide and the weather", "The speed should have been given in km/h rather than in m/s, as currents are slow", "The float should have been released from a different point for each of the readings", "A shorter line should have been used so that each of the timings was quicker"],
+        a: 0, why: "The current changes with the <b>tide</b> and the <b>weather</b>, so readings from one afternoon cannot show the speed at other times; more readings at different times are needed. m/s is a suitable unit, the float should be released from the same fixed point every time, and a shorter line makes each timing less accurate, not better. (1.4/LO9)", status: "human_review" },
+    ],
+    status: "human_review",
+  },
+  {
     id: "P2.1", ref: "2.1/LO6", unit: 2,
     title: "Melting floating ice and land-based ice",
     subtitle: "Which kind of melting ice raises the water level?",
@@ -672,7 +750,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     id: "P2.3", ref: "2.3/LO4", unit: 2,
     title: "Temperature and the solubility of a gas",
     subtitle: "How temperature changes how much gas stays dissolved",
-    aim: "Investigate how temperature affects how much gas (oxygen) stays dissolved in water.",
+    aim: "Investigate how temperature affects how much gas (for example oxygen or carbon dioxide) stays dissolved in water.",
     diagram: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 880 560" role="img" aria-labelledby="title desc">
 <title id="title">Temperature and the solubility of a gas</title><desc id="desc">As temperature rises, gas escapes as bubbles and less remains dissolved. This is not boiling.</desc>
 <style>:root{--bg:#e9f1f2;--panel:#ffffff;--ink:#0d2a37;--soft:#4d6c77;--line:#d2e0e3;--teal:#12a7bb;--deep:#0b6b79;--coral:#ff6a4d;--good:#1a9b6c;--amber:#f0a63c;--violet:#7a5bb0}
@@ -721,6 +799,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Gases dissolve LESS as temperature rises — the opposite of solids.",
       "Bubbles forming on gentle warming are dissolved gas escaping, not the water boiling.",
       "So warmer sea water holds less oxygen for organisms.",
+      "Another method: weigh a flask of carbonated water, keep it at one temperature for a fixed time and weigh it again. A bigger loss in mass at a higher temperature shows less carbon dioxide stays dissolved. A flask of plain water at each temperature shows how much of the loss is just evaporation.",
     ],
     items: [
       { id: "P2.3-01", type: "choice", tier: 1, ref: "2.3/LO4", family: "gas-trend",
@@ -874,12 +953,13 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Record how density changes with salinity",
     ],
     result: "Saltier water is denser; density rises with salinity.",
-    controls: ["Equal volumes", "Same temperature", "Same test object, if floating one"],
+    controls: ["Equal volumes", "Same temperature", "Same test object, if floating one", "Repeat each measurement and calculate a mean"],
     safety: ["Wipe up spilt salt solution straight away, so nobody slips.", "If eggs are used, wash your hands after handling them."],
     technique: [
       "Adding salt adds mass to the same volume, so density rises.",
       "Salt doesn't disappear when it dissolves — its mass is still there.",
       "An object floats higher in saltier (denser) water.",
+      "To make a range of salinities, mix a stock solution with distilled water to the same total volume, e.g. 8 cm³ of 50 ppt stock + 2 cm³ of water = 40 ppt.",
     ],
     items: [
       { id: "P2.4b-01", type: "choice", tier: 1, ref: "2.4/LO3", family: "saldens-trend",
