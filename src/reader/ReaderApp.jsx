@@ -11,6 +11,7 @@ import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
 import UpdateBanner from "../updates/UpdateBanner.jsx";
+import { shuffleDeck, mixedDeck } from "../flashcards/order.js";
 
 // Practical items grade + persist through the normal machinery (they're keyed in
 // itemById below), but are deliberately kept OUT of the content index, so they
@@ -124,6 +125,7 @@ export function ReaderApp({
   const [fcPos, setFcPos] = useState(0);
   const [fcFlipped, setFcFlipped] = useState(false);
   const [fcSeen, setFcSeen] = useState(() => new Set());
+  const [fcOrder, setFcOrder] = useState([]); // card ids in play order; fixed while moving through a deck
 
   // Read = syllabus notes (book-style). Read-only: no queue, mastery or rewards.
   const [notesUnit, setNotesUnit] = useState(null); // null = unit picker; 1..6 = a unit
@@ -321,6 +323,14 @@ export function ReaderApp({
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+
+  // If a session is restored straight into an open flashcard deck (fcUnit set but
+  // no play order yet), build one so the deck is shuffled rather than file order.
+  useEffect(() => {
+    if (view === "flashcards" && fcUnit != null && fcOrder.length === 0) {
+      setFcOrder(fcBuildOrder(fcUnit));
+    }
+  }, [view, fcUnit]);
 
   // ---- start / navigate ----
   function startRead(secId, startIndex = 0) {
@@ -1374,7 +1384,14 @@ export function ReaderApp({
 
   // ---------- Flashcards (standalone revision deck) ----------
   function fcMarkSeen(id) { setFcSeen((s) => (s.has(id) ? s : new Set(s).add(id))); }
-  function fcOpenDeck(u) { setFcUnit(u); setFcPos(0); setFcFlipped(false); setFcSeen(new Set()); }
+  // Build a fresh play order: the Mixed deck interleaves units; a unit deck shuffles.
+  function fcBuildOrder(u) {
+    const pool = u === "all" ? flashcards : flashcards.filter((c) => c.unit === u);
+    const ordered = u === "all" ? mixedDeck(pool) : shuffleDeck(pool);
+    return ordered.map((c) => c.id);
+  }
+  function fcOpenDeck(u) { setFcUnit(u); setFcOrder(fcBuildOrder(u)); setFcPos(0); setFcFlipped(false); setFcSeen(new Set()); }
+  function fcShuffle() { setFcOrder(fcBuildOrder(fcUnit)); setFcPos(0); setFcFlipped(false); } // keeps fcSeen
   function fcBackToUnits() { setFcUnit(null); setFcFlipped(false); }
   function fcNext(deck) {
     const cur = deck[fcPos]; if (cur) fcMarkSeen(cur.id);
@@ -1415,7 +1432,12 @@ export function ReaderApp({
     }
 
     // ----- deck -----
-    const deck = fcUnit === "all" ? flashcards : flashcards.filter((c) => c.unit === fcUnit);
+    // Play in the stored fcOrder so the sequence stays fixed while moving through
+    // the deck. Fall back to pool order if no order is set yet (e.g. a restored
+    // session); the effect below then builds one.
+    const pool = fcUnit === "all" ? flashcards : flashcards.filter((c) => c.unit === fcUnit);
+    const byId = Object.fromEntries(pool.map((c) => [c.id, c]));
+    const deck = fcOrder.length ? fcOrder.map((id) => byId[id]).filter(Boolean) : pool;
     const fcCard = deck[fcPos];
     if (!fcCard) {
       return <div style={pad} className="rl-pad"><TopBar C={C} left="Flashcards" /><button onClick={fcBackToUnits} style={linkBtn(C)}>‹ Units</button><p style={sub(C)}>This deck is empty.</p></div>;
@@ -1427,7 +1449,10 @@ export function ReaderApp({
       <div style={pad} className="rl-pad">
         <TopBar C={C} left={fcUnit === "all" ? "Flashcards · Mixed" : `Flashcards · Unit ${fcUnit}`} />
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <button onClick={fcBackToUnits} style={linkBtn(C)}>‹ Units</button>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <button onClick={fcBackToUnits} style={linkBtn(C)}>‹ Units</button>
+            <button onClick={fcShuffle} style={linkBtn(C)} aria-label="Shuffle this deck">⇄ Shuffle</button>
+          </div>
           <span style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist }}>{fcCard.topic} · {seenCount} of {deck.length} seen</span>
         </div>
 
