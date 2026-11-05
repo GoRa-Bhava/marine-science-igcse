@@ -1,6 +1,6 @@
 /* Offline support for Earth and Oceans.
    Bump CACHE when you deploy a new version. */
-const CACHE = "marine-v193";
+const CACHE = "marine-v194";
 
 /* Figures & data photos: cached on install so they also work offline before
    they have been seen once. Relative to this file, like the rest of the app. */
@@ -37,6 +37,13 @@ const FIG_IMAGES = [
   "./figdata-img/lp-plantcell.webp",
   "./figdata-img/lp-seagrass.webp",
 ];
+
+/* "Check for updates" (src/App.jsx) posts {type:"SKIP_WAITING"} to a waiting
+   worker. install already calls skipWaiting(), but honour the message too so the
+   post is meaningful and a worker that is only waiting can be promoted on demand. */
+self.addEventListener("message", (e) => {
+  if (e.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
 
 self.addEventListener("install", (e) => {
   self.skipWaiting();

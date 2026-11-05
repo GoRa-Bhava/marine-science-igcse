@@ -10,6 +10,7 @@ import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
+import UpdateBanner from "../updates/UpdateBanner.jsx";
 
 // Practical items grade + persist through the normal machinery (they're keyed in
 // itemById below), but are deliberately kept OUT of the content index, so they
@@ -81,6 +82,7 @@ export function ReaderApp({
   content, C, theme, onSetTheme, renderItemBody, grade, canSubmit, initAnswer,
   CreatureArt, creatures, InteractiveLab, ComparisonCard, ComparisonSelector,
   comparisonCards = [], UpdatesControl, flashcards = [],
+  updateNotice = null, onUpdateDownload, onUpdateNow, onUpdateLater,
 }) {
   const desktop = useIsDesktop();
   const index = useMemo(() => buildContentIndex(content.items, content.figures || {}), [content]);
@@ -715,6 +717,7 @@ export function ReaderApp({
     return (
       <div style={pad} className="rl-pad rl-pad--home">
         <TopBar C={C} left="Library" />
+        <UpdateBanner C={C} notice={updateNotice} onDownload={onUpdateDownload} onUpdate={onUpdateNow} onLater={onUpdateLater} />
         <p style={kicker(C)}>MARINE SCIENCE IGCSE 0697</p>
         <h1 style={h1(C)}>Your revision</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Pick up where you left off, or choose anywhere.</p>
