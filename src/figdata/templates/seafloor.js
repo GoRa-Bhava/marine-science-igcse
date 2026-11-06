@@ -101,6 +101,12 @@ function make(seed) {
   throw new Error("seafloor: no layout");
 }
 
+/* axes for the reading guide: the depth (y) axis only — the cross-section is not to scale horizontally. */
+function axes() {
+  const yt = []; for (let dd = 0; dd <= MAXD; dd += 500) yt.push({ at: yOf(dd), label: dd % 1000 === 0 ? String(dd) : undefined });
+  return [{ plot: { x0: L, x1: R, y0: SEA, y1: AXB }, x: { ticks: [] }, y: { ticks: yt } }];
+}
+
 /* ---------- drawing ---------- */
 const X = (F, u) => (F.mirror ? R - u : L + u);
 function boxes(F, type) {
@@ -296,7 +302,7 @@ export default {
     "Depth increases downwards from 0 m at sea level. Read straight across to the depth scale. The vertical scale is exaggerated, so slopes look steeper than they really are.",
   ],
   ctx: () => "a cross-section of the ocean floor, from a coast out into the deep ocean",
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-seafloor .sf-water{fill:var(--surface2)}.fig-seafloor .sf-sea{stroke:currentColor;stroke-width:1.6}
 .fig-seafloor .sf-rock{fill:color-mix(in srgb,var(--ink) 20%,var(--surface))}.fig-seafloor .sf-rockh{fill:url(#seafloor-rock)}.fig-seafloor .sf-hatch{stroke:var(--ink);stroke-width:.7;opacity:.3}
 .fig-seafloor .sf-floor{fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}

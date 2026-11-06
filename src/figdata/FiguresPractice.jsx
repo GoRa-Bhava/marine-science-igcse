@@ -2,7 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { FIG_GROUPS, FIG_TEMPLATES, templateByKey, FIG_TEMPLATE_CSS } from "./index.js";
 import { makeRun, figOpt, gradeFigQuestion, answerText, shuffleR } from "./core.js";
 import { applyTap, orderAdd, orderRemove } from "./interactions.js";
+import { panelIndexAt, clampToPlot, guideLayerSVG, guideReadSVG, centreOf, answeringEnabled } from "./guide.js";
 import "./figdata.css";
+
+/* smallest grid step along an axis (labelled ticks for a "large" step), for keyboard nudging. */
+function gridStep(ticks, big) {
+  if (!ticks || ticks.length < 2) return 0;
+  const arr = (big ? ticks.filter((t) => t.label != null) : ticks).map((t) => t.at).sort((a, b) => a - b);
+  let m = Infinity; for (let k = 1; k < arr.length; k++) m = Math.min(m, Math.abs(arr[k] - arr[k - 1]));
+  return isFinite(m) ? m : 0;
+}
+const figAxes = (t, F) => { try { return t.axes ? t.axes(F) || null : null; } catch { return null; } };
 
 /* Figures & data — practice section. A React port of the EnviroReady 0680
    figs-engine.js: every practice draws a fresh figure from seeded data and asks
@@ -69,10 +79,13 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
   const [ok, setOk] = useState(false);
   const [nudge, setNudge] = useState("");
   const [zoom, setZoom] = useState(false);
+  const [guide, setGuide] = useState(false);     // reading-guide toggle (off for every new question)
 
   const figWrapRef = useRef(null);
   const checkedRef = useRef(false);
   checkedRef.current = checked;
+  const guidePtRef = useRef(null);               // the ✕ position {pi, x, y}; kept while toggling within a question
+  const guideUsedRef = useRef(false);            // has the guide been turned on this session (controls the first-question tip)
 
   // ---- style helpers (match the app's inline-styled surfaces) ----
   const cardBg = light ? "#FFFFFF" : C.deep;
@@ -87,6 +100,7 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
     setNumVal(""); setChoiceVal(null); setMultiSet([]);
     setOrd(q.kind === "choice" || q.kind === "order" ? shuffleForDisplay(q) : null);
     setChecked(false); setOk(false); setNudge("");
+    setGuide(false); guidePtRef.current = null;    // guide resets to off on each new question
   }
   function startFig(key) {
     const t = templateByKey(key);
@@ -133,7 +147,50 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
     w.innerHTML = run.t.svg(run.F, opt) + (note ? `<p class="plothint">${note}</p>` : "");
     w.scrollLeft = sl;
 
-    if (phase === "ask") {
+    // ---- reading guide (the ✕ with guide lines and mini axis scales) ----
+    const svgEl = w.querySelector("svg.figsvg");
+    const panels = figAxes(run.t, run.F);
+    const hasGuide = !!(panels && panels.length);
+    // after Check: show the correct reading in amber (for num / plot questions that provide hl.guide)
+    if (phase === "done" && hasGuide && svgEl && opt.hl && opt.hl.guide) {
+      const gp = opt.hl.guide, pi = panelIndexAt(panels, gp.x, gp.y);
+      svgEl.insertAdjacentHTML("beforeend", guideReadSVG(panels[pi >= 0 ? pi : 0], gp.x, gp.y));
+    }
+    const guideOn = phase === "ask" && guide && hasGuide && svgEl;
+    if (guideOn) {
+      const vbb = svgEl.viewBox.baseVal, vb = { w: vbb.width, h: vbb.height };
+      svgEl.classList.add("guiding"); svgEl.setAttribute("tabindex", "0");
+      const toPt = (e) => {
+        const ctm = svgEl.getScreenCTM(); if (!ctm) return null;
+        const p = svgEl.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+        const u = p.matrixTransform(ctm.inverse()), pi = panelIndexAt(panels, u.x, u.y);
+        if (pi < 0) return null;
+        const c = clampToPlot(panels[pi].plot, u.x, u.y);
+        return { pi, x: c.x, y: c.y };
+      };
+      const draw = () => {
+        const old = svgEl.querySelector(".figguide"); if (old) old.remove();
+        let pt = guidePtRef.current;
+        if (!pt || !panels[pt.pi]) { const c = centreOf(panels[0]); pt = { pi: 0, x: c.x, y: c.y }; guidePtRef.current = pt; }
+        svgEl.insertAdjacentHTML("beforeend", guideLayerSVG(panels[pt.pi], pt.x, pt.y, vb));
+      };
+      draw();
+      let dragging = false;
+      svgEl.onpointerdown = (e) => { const pt = toPt(e); if (!pt) return; guidePtRef.current = pt; dragging = true; draw(); try { svgEl.setPointerCapture(e.pointerId); } catch { /* */ } e.preventDefault(); };
+      svgEl.onpointermove = (e) => { if (!dragging) return; const pt = toPt(e); if (pt) { guidePtRef.current = pt; draw(); } };
+      svgEl.onpointerup = svgEl.onpointercancel = () => { dragging = false; };
+      svgEl.onkeydown = (e) => {
+        const dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }, d = dirs[e.key];
+        if (!d) return; e.preventDefault();
+        let pt = guidePtRef.current; if (!pt || !panels[pt.pi]) { const c = centreOf(panels[0]); pt = { pi: 0, x: c.x, y: c.y }; }
+        const panel = panels[pt.pi], sx = gridStep(panel.x && panel.x.ticks, e.shiftKey), sy = gridStep(panel.y && panel.y.ticks, e.shiftKey);
+        const c = clampToPlot(panel.plot, pt.x + d[0] * sx, pt.y + d[1] * sy);
+        guidePtRef.current = { pi: pt.pi, x: c.x, y: c.y }; draw();
+      };
+    }
+
+    // while the guide is on, taps/plots do not answer; normal answering is wired only with the guide off
+    if (answeringEnabled(phase, guideOn)) {
       if (q.kind === "plot") {
         const hit = w.querySelector(".plothit");
         if (hit) hit.onclick = (e) => {
@@ -151,13 +208,13 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
           el.onclick = () => { if (checkedRef.current) return; setState((s) => applyTap(s, el.dataset.tap, q.multi)); };
         });
       }
-    } else if (q.kind === "tap") {
+    } else if (phase === "done" && q.kind === "tap") {
       w.querySelectorAll("[data-tap]").forEach((el) => {
         const id = el.dataset.tap, isA = q.a.map(String).includes(id), was = (state || []).includes(id);
         el.classList.add("tapel", isA ? (was ? "tapok" : "tapmiss") : was ? "tapno" : "tapoff");
       });
     }
-  }, [screen, i, checked, ok, state, run]);
+  }, [screen, i, checked, ok, state, run, guide]);
 
   // ================= list =================
   if (screen === "list") {
@@ -234,6 +291,8 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
     ? (state ? `${q.plot.label(state)} Tap again${q.plot.nudges ? " or use the buttons" : ""} to adjust it.` : (q.plot.hint || "Tap the figure to plot your answer."))
     : (state && state.length ? `Selected: ${state.map((id) => (q.labelOf ? q.labelOf(id) : id)).join(", ")}. Tap again to deselect.` : (q.hint || (q.multi ? "Tap every one that applies on the figure." : "Tap your answer on the figure.")));
   const ansTxt = answerText(q);
+  const hasGuide = !checked && !!(figAxes(run.t, run.F) || {}).length;
+  const pillBtn = { flex: "0 0 auto", fontFamily: F_UI, fontSize: 12.5, fontWeight: 800, padding: "6px 10px", borderRadius: 999, border: `1px solid ${guide ? (light ? C.accent : C.glow) : C.line}`, background: guide ? (light ? "#e6f6f3" : "#113a38") : (light ? C.raise : C.shelf), color: guide ? (light ? C.accent : C.glow) : C.foam, cursor: "pointer" };
 
   return (
     <div className="figroot" style={{ ...figVars(C, light), fontFamily: F_UI, color: C.foam }}>
@@ -250,15 +309,23 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
         {/* caption + zoom */}
         <div style={{ fontSize: 12.5, color: C.mist, fontWeight: 700, marginBottom: 6, display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between" }}>
           <span>Figure: {run.t.ctx ? run.t.ctx(run.F) : run.t.name}</span>
-          {!run.t.noZoom && (
-            <button onClick={() => setZoom((z) => !z)} aria-pressed={zoom}
-              style={{ flex: "0 0 auto", fontFamily: F_UI, fontSize: 12.5, fontWeight: 800, padding: "6px 10px", borderRadius: 999, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam, cursor: "pointer" }}>
-              {zoom ? "⤡ Fit" : "⤢ Zoom"}
-            </button>
-          )}
+          <div style={{ display: "flex", gap: 6, flex: "0 0 auto" }}>
+            {hasGuide && (
+              <button onClick={() => { setGuide((g) => { if (!g) guideUsedRef.current = true; return !g; }); }} aria-pressed={guide} style={pillBtn}>📏 Guide</button>
+            )}
+            {!run.t.noZoom && (
+              <button onClick={() => setZoom((z) => !z)} aria-pressed={zoom}
+                style={{ flex: "0 0 auto", fontFamily: F_UI, fontSize: 12.5, fontWeight: 800, padding: "6px 10px", borderRadius: 999, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam, cursor: "pointer" }}>
+                {zoom ? "⤡ Fit" : "⤢ Zoom"}
+              </button>
+            )}
+          </div>
         </div>
         {/* figure (drawn imperatively) */}
         <div ref={figWrapRef} className={"figwrap" + (zoom && !run.t.noZoom ? " zoom" : "") + (run.t.html ? " html" : "")} />
+        {hasGuide && (guide
+          ? <p className="plothint">Guide on: tap or drag on the graph. Turn it off to answer by tapping.</p>
+          : (!guideUsedRef.current && i === 0 ? <p className="plothint">Tip: turn on 📏 Guide to line up a point with both axes.</p> : null))}
 
         {/* stem */}
         <div style={{ fontSize: 17, fontWeight: 600, lineHeight: 1.4, marginBottom: 14 }} dangerouslySetInnerHTML={{ __html: q.q }} />

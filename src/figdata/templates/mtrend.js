@@ -101,11 +101,35 @@ function seaSVG(F, opt) {
 }
 function svg(F, opt) { opt = opt || {}; return F.mode === "cycle" ? cycleSVG(F, opt) : F.mode === "heat" ? heatSVG(F, opt) : seaSVG(F, opt); }
 
+/* axes for the reading guide: built from the same geometry each mode's SVG uses. */
+function axes(F) {
+  if (F.mode === "cycle") {
+    const L = 64, pw = 470;
+    const mk = (T, ph, ymax, step) => {
+      const X = (i) => L + i * pw / 20, Y = (v) => T + ph - v / ymax * ph, rows = ymax / step, lstep = rows > 20 ? step * 5 : step * 2;
+      const xt = []; for (let i = 0; i <= 20; i++) xt.push({ at: X(i), label: i % 2 === 0 ? String(i) : undefined });
+      const yt = []; for (let v = 0; v <= ymax + 1e-9; v += step) yt.push({ at: Y(v), label: v % lstep === 0 ? String(v) : undefined });
+      return { plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: xt }, y: { ticks: yt } };
+    };
+    return [mk(24, 220, 100, 2), mk(300, 190, 16, 1)];
+  }
+  if (F.mode === "heat") {
+    const L = 70, T = 24, pw = 460, ph = 340, cols = F.end, X = (t) => L + t * pw / cols, Y = (v) => T + ph - (v + 30) / 140 * ph, xstep = cols > 24 ? 4 : 2;
+    const yt = []; for (let v = -30; v <= 110; v += 5) yt.push({ at: Y(v), label: v % 10 === 0 ? String(v) : undefined });
+    const xt = []; for (let t = 0; t <= cols; t++) xt.push({ at: X(t), label: t % xstep === 0 ? String(t) : undefined });
+    return [{ plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: xt }, y: { ticks: yt } }];
+  }
+  const L = 64, T = 24, pw = 470, ph = 340, X = (y) => L + (y - 1990) / 45 * pw, Y = (v) => T + ph - v / 150 * ph;
+  const yt = []; for (let v = 0; v <= 150; v += 5) yt.push({ at: Y(v), label: v % 10 === 0 ? String(v) : undefined });
+  const xt = []; for (let y = 1990; y <= 2035; y++) xt.push({ at: X(y), label: (y - 1990) % 5 === 0 ? String(y) : undefined });
+  return [{ plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: xt }, y: { ticks: yt } }];
+}
+
 /* ---- questions */
 function questions(F, r) {
   const qs = [];
   if (F.mode === "cycle") {
-    qs.push({ kind: "num", q: `How many sea urchins per 10 m² were there in year ${F.ry}?`, ans: F.prey[F.ry], tol: 1, unit: "per 10 m²", hl: { pts: [`u${F.ry}`] },
+    qs.push({ kind: "num", q: `How many sea urchins per 10 m² were there in year ${F.ry}?`, ans: F.prey[F.ry], tol: 1, unit: "per 10 m²", hl: { pts: [`u${F.ry}`], guide: { x: 64 + F.ry * 470 / 20, y: 244 - F.prey[F.ry] / 100 * 220 } },
       why: `Go up from year ${F.ry} to the urchin line and read across: <b>${F.prey[F.ry]}</b> per 10 m². Each small square on that axis is 2, so answers within half a square (1) are accepted.` });
     qs.push({ kind: "tap", q: "Tap the point that shows the first peak in the number of sea urchins.", a: [`u${F.pk}`], askOpt: { tapMode: "u" }, doneOpt: () => ({ tapMode: "u" }), hl: { pts: [`u${F.pk}`] },
       labelOf: (id) => `year ${id.slice(1)}`, ansTxt: `year ${F.pk}`, why: `The urchin numbers rise to their first high point in <b>year ${F.pk}</b>, at ${F.prey[F.pk]} per 10 m², and then fall.` });
@@ -161,6 +185,6 @@ export default {
   ctx: (F) => (F.mode === "cycle" ? "sea urchin and sea otter numbers over 20 years" : F.mode === "heat" ? "a heating curve for ice warmed until it boils" : "sea-level change since the 1990s"),
   blurb: "Predator–prey cycles, a heating curve with its flat sections, and a sea-level trend to extend, with its gradient and intercept.",
   tips: ["In a predator–prey cycle the predator peaks come after the prey peaks.", "On a heating curve, a flat section is a change of state: the temperature stays the same.", "Gradient = change in y ÷ change in x, using two points far apart on the line.", "To extrapolate, extend the line of best fit at the same slope beyond the data."],
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-mtrend .mt-line{fill:none;stroke-width:2.2}.fig-mtrend .mt-a{stroke:currentColor}.fig-mtrend .mt-b{stroke:currentColor;stroke-dasharray:6 4}.fig-mtrend .mt-dot{fill:currentColor}.fig-mtrend .mt-dot.hl{fill:var(--app);stroke:currentColor;stroke-width:1.5}.fig-mtrend .mt-hl{stroke:var(--app);stroke-width:5}.fig-mtrend .mt-hit{fill:none;stroke:transparent;stroke-width:18;cursor:pointer}.figsvg.fig-mtrend .mt-hit.tapel{fill:none!important;stroke-width:12px!important}.figsvg.fig-mtrend .mt-hit.tapel:not(.sel):not(.tapok):not(.tapno):not(.tapmiss){stroke:transparent!important}.fig-mtrend .mt-zero{stroke:currentColor;stroke-width:1;stroke-dasharray:3 3;opacity:.6}.fig-mtrend .mt-x{stroke:currentColor;stroke-width:2}.fig-mtrend .mt-fit{stroke:currentColor;stroke-width:2}.fig-mtrend .mt-ext{stroke:var(--app);stroke-width:2.5;stroke-dasharray:7 5}`,
 };

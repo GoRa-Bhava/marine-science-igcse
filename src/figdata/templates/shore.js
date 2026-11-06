@@ -51,6 +51,18 @@ function geo(F) {
 }
 const X = (G, d) => G.L + d / DX * G.pw, Y1 = (G, F, h) => G.T1 + G.ph1 - h / F.Hmax * G.ph1, Y2 = (G, c) => G.T2 + G.ph2 - c / 100 * G.ph2;
 
+/* axes for the reading guide: two stacked panels (height, then percentage cover) sharing the distance axis. */
+function axes(F) {
+  const G = geo(F), xt = [];
+  for (let i = 0; i <= DX; i++) xt.push({ at: X(G, i), label: i % 5 === 0 ? String(i) : undefined });
+  const yTop = []; for (let k = 0; k <= G.rowsH; k++) { const h = k * 0.2; yTop.push({ at: Y1(G, F, h), label: k % 5 === 0 ? fmt(h, 1) : undefined }); }
+  const yBot = []; for (let i = 0; i <= 20; i++) { const c = i * 5; yBot.push({ at: Y2(G, c), label: i % 4 === 0 ? String(c) : undefined }); }
+  return [
+    { plot: { x0: G.L, x1: G.L + G.pw, y0: G.T1, y1: G.T1 + G.ph1 }, x: { ticks: xt }, y: { ticks: yTop } },
+    { plot: { x0: G.L, x1: G.L + G.pw, y0: G.T2, y1: G.T2 + G.ph2 }, x: { ticks: xt }, y: { ticks: yBot } },
+  ];
+}
+
 function svg(F, opt) {
   opt = opt || {}; const G = geo(F), hl = opt.hl || {}, O = ORGS[F.orgKey];
   let s = gridLines(G.L, G.T1, G.pw, G.ph1, 40, G.rowsH, 5, 5) + gridLines(G.L, G.T2, G.pw, G.ph2, 40, 20, 5, 2);
@@ -154,6 +166,6 @@ export default {
   blurb: "A rocky-shore profile and the percentage cover of one organism along the same transect.",
   tips: ["Both graphs share the same distance axis, so a distance on one graph is the same place on the other.", "To use both graphs: read across the top graph to find the distance, then read the bottom graph at that distance.", "The steepest section is where the height rises most for each metre along the shore.", "Quadrats at set intervals along a tape make a belt transect."],
   ctx: (F) => `a transect up ${F.place}`,
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-shore .shax{font-size:13px}.fig-shore .shttl{font-size:13.5px;font-weight:700}.fig-shore .shhl{stroke:var(--app);stroke-width:5;stroke-linecap:round}.fig-shore .shcons{stroke:var(--app);stroke-width:1.6;stroke-dasharray:4 3}.fig-shore .shcross line{stroke:var(--accent);stroke-width:3}`,
 };

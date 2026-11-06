@@ -24,6 +24,18 @@
 .figroot .figsvg .vlab{font-size:12.5px;opacity:.85}
 .figroot .figsvg .plothit{cursor:crosshair}
 
+/* ---- reading guide (the ✕ with guide lines and mini axis scales) ---- */
+.figroot .figsvg.guiding{touch-action:none;cursor:crosshair}
+.figroot .figsvg .figguide .gg-line{stroke:var(--accent);stroke-width:1.6;stroke-dasharray:6 5;fill:none}
+.figroot .figsvg .figguide .gg-cross{stroke:var(--accent);stroke-width:2.6;fill:none}
+.figroot .figsvg .figguide .gg-dot{fill:var(--app)}
+.figroot .figsvg .figguide.amber .gg-line{stroke:var(--app);stroke-dasharray:6 4}
+.figroot .figsvg .figguide.amber .gg-cross{stroke:var(--app)}
+.figroot .figsvg .figguide .gg-mini rect{fill:var(--surface);fill-opacity:.94;stroke:var(--accent);stroke-width:1.4}
+.figroot .figsvg .figguide .gg-mini .gg-maj{stroke:var(--ink);stroke-width:1.4}
+.figroot .figsvg .figguide .gg-mini .gg-min{stroke:var(--ink);stroke-width:.8;opacity:.8}
+.figroot .figsvg .figguide .gg-mini text{fill:var(--ink);font-size:13px;font-weight:600}
+
 /* ---- figure frame + zoom ---- */
 .figroot .figthumb{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px}
 .figroot .figwrap{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:14px}

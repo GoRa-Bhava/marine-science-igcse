@@ -137,6 +137,12 @@ const geo = (F) => {
   const bx = (c, s) => (F.ns === 2 ? L + cw * c + (cw - 2 * bw - gap) / 2 + s * (bw + gap) : L + cw * c + (cw - bw) / 2);
   return { W, L, T, ph, B, pw, cw, sq, bw, bx, H: T + ph + B, yv: (v) => T + ph - (v / F.ps) * sq };
 };
+/* axes for the reading guide: the value (y) axis of the bar chart only (category axis has no numeric ticks). */
+function axes(F) {
+  const G = geo(F), { L, T, ph, pw, sq } = G;
+  const yt = []; for (let i = 0; i <= ROWS; i++) yt.push({ at: T + ph - i * sq, label: i % 5 === 0 ? fmt(i * F.ps) : undefined });
+  return [{ plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: [] }, y: { ticks: yt } }];
+}
 function wrapLab(t, x, y) {
   // "more than 2" / "less than 0.25" on two lines; a long range such as "0.125–0.25" splits after the dash
   const two = /^(more|less) than /.test(t) ? [t.replace(/ [^ ]+$/, ""), t.replace(/^.* /, "")] : t.length > 8 ? [t.replace(/–.*$/, "–"), t.replace(/^.*–/, "")] : null;
@@ -376,7 +382,7 @@ export default {
     "Add up the masses and compare with the starting mass: a small loss is usually fine dust or grains stuck in the mesh.", "Mostly larger particles → sand from an exposed shore; mostly very small particles → mud from a sheltered shore.",
     "To compare two samples, use the same starting mass and the same set of sieves, and compare the same size class in each."],
   ctx: (F) => `sieving sediment to find its particle sizes (5.2/LO4)${F.ns === 2 ? ", two shores" : ""}`,
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-${KEY} .sv-cap{margin:0 0 8px;font-size:13.5px;line-height:1.45;color:var(--soft)}.fig-${KEY} .ftable{font-size:13px;margin-bottom:10px}.fig-${KEY} .ftable th,.fig-${KEY} .ftable td{padding:6px 5px}
 .fig-${KEY} .ftable td.hl{background:color-mix(in srgb,var(--app) 28%,transparent)}.fig-${KEY} .svtot th,.fig-${KEY} .svtot td{font-weight:700}.fig-${KEY} .svpan{font-weight:400;font-size:12.5px}
 .fig-${KEY}-c .svs0{fill:url(#sieve-h0);stroke:currentColor;stroke-width:1}.fig-${KEY}-c .svs1{fill:color-mix(in srgb,var(--ink) 20%,transparent);stroke:currentColor;stroke-width:1}.fig-${KEY}-c .svpbg{fill:var(--surface2)}

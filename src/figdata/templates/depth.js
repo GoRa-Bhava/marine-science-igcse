@@ -58,6 +58,17 @@ function geo(F) {
 }
 const yD = (G, F, d) => G.T + d / F.dmax * G.ph;
 const xV = (P, v) => P.x + v / QTY[P.q].max * P.w;
+
+/* axes for the reading guide: depth (y) runs DOWN the left; the value axis is along the TOP of each panel. */
+function axes(F) {
+  const G = geo(F);
+  const yt = []; for (let rr = 0; rr <= F.rows; rr++) yt.push({ at: G.T + rr * G.ph / F.rows, label: rr % F.dmajor === 0 ? String(rr * F.dsq) : undefined });
+  return G.panels.map((P) => {
+    const Q = QTY[P.q], xt = [];
+    for (let c = 0; c <= Q.cols; c++) xt.push({ at: P.x + c * P.w / Q.cols, label: c % Q.label === 0 ? fmt(c * Q.sq) : undefined });
+    return { plot: { x0: P.x, x1: P.x + P.w, y0: G.T, y1: G.T + G.ph }, x: { ticks: xt }, y: { ticks: yt }, xAxisY: G.T, yAxisX: P.x };
+  });
+}
 const seriesOf = (F, q, s) => (q === "light" ? F.series[s] : q === "temp" ? F.temp : F.other);
 
 function svg(F, opt) {
@@ -227,6 +238,6 @@ export default {
   blurb: "How light, temperature, dissolved oxygen and pressure change as you go deeper into the ocean.",
   tips: ["Depth is on the <b>vertical</b> axis and increases <b>downwards</b>: 0 m is at the top.", "To read a value, go down to the depth, across to the line, then up to the axis at the top.", "Zones: sunlight 0–200 m, twilight 200–1000 m, midnight below 1000 m.", "Light and temperature fall with depth; pressure rises steadily; dissolved oxygen is highest near the surface."],
   ctx: (F) => (F.variant === "light" ? `light measurements at ${F.place}` : `measurements from ${F.place}`),
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-depth .dpdash{stroke-dasharray:7 5}.fig-depth .dpsq{fill:var(--surface2);stroke:currentColor;stroke-width:1.5}.fig-depth .dpaxis{font-size:13px;font-weight:600}.fig-depth .dparrow{stroke:currentColor;stroke-width:1.6;fill:none}.fig-depth .dpcons{stroke:var(--app);stroke-width:1.6;stroke-dasharray:4 3}.fig-depth .dpcross line{stroke:var(--accent);stroke-width:3}.fig-depth .dpzone{stroke:var(--app);stroke-width:1.8;stroke-dasharray:8 4}.fig-depth .dpzt{font-size:13px;fill:var(--app);font-weight:700;paint-order:stroke;stroke:var(--surface2);stroke-width:4px;stroke-linejoin:round}`,
 };

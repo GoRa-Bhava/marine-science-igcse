@@ -83,7 +83,7 @@ const GEO = {
 function geo(F) { const G = GEO[F.mode](); if (F.mode === "estuary") G.Q = pane(60, 244, 478, 156, 26, 12, 0, 0.5, F.Ty0, 0.5); return G; }
 const xm = (x, y, k, cls) => `<path d="M${x - k} ${y - k}L${x + k} ${y + k}M${x - k} ${y + k}L${x + k} ${y - k}" class="${cls}"/>`;
 const sqm = (x, y, k, cls) => `<rect x="${x - k}" y="${y - k}" width="${2 * k}" height="${2 * k}" class="${cls}"/>`;
-const axes = (P) => `<line x1="${P.L}" x2="${P.L + P.pw}" y1="${P.T + P.ph}" y2="${P.T + P.ph}" class="axis"/><line x1="${P.L}" x2="${P.L}" y1="${P.T}" y2="${P.T + P.ph}" class="axis"/>`;
+const axisLines = (P) => `<line x1="${P.L}" x2="${P.L + P.pw}" y1="${P.T + P.ph}" y2="${P.T + P.ph}" class="axis"/><line x1="${P.L}" x2="${P.L}" y1="${P.T}" y2="${P.T + P.ph}" class="axis"/>`;
 const cons = (P, x, y, right) => { const X = P.X(x), Y = P.Y(y); return `<line x1="${right ? P.L + P.pw : P.L}" x2="${X}" y1="${Y}" y2="${Y}" class="mkcons"/><line x1="${X}" x2="${X}" y1="${Y}" y2="${P.T + P.ph}" class="mkcons"/>`; };
 const isHl = (hl, s, i) => (hl.pts || []).some((p) => p[0] === s && p[1] === i);
 /* a series joined point to point; `skip` index is left out (with its two segments) */
@@ -97,7 +97,7 @@ const stu = (x, y) => xm(x, y, 7, "mkstu");
 const ring = (x, y) => `<circle cx="${x}" cy="${y}" r="10" class="mkring"/>`;
 
 function svgPhoto(F, opt, G) {
-  const P = G.P, hl = opt.hl || {}; let s = gridLines(P.L, P.T, P.pw, P.ph, P.cols, P.rows, 5, 5) + axes(P);
+  const P = G.P, hl = opt.hl || {}; let s = gridLines(P.L, P.T, P.pw, P.ph, P.cols, P.rows, 5, 5) + axisLines(P);
   for (let d = 0; d <= 60; d += 10) s += `<text x="${P.X(d)}" y="${P.T + P.ph + 19}" text-anchor="middle">${d}</text>`;
   for (let v = 0; v <= 60; v += 10) s += `<text x="${P.L - 7}" y="${P.Y(v) + 5}" text-anchor="end">${v}</text>`;
   s += `<text x="${P.L + P.pw / 2}" y="${G.H - 10}" text-anchor="middle">distance of lamp from plant / cm</text><text transform="translate(16 ${P.T + P.ph / 2}) rotate(-90)" text-anchor="middle">rate / bubbles per minute</text>`;
@@ -113,7 +113,7 @@ function svgPhoto(F, opt, G) {
 function svgEstuary(F, opt, G) {
   const P = G.P, Q = G.Q, hl = opt.hl || {}, hrs = [...Array(14).keys()]; let s = "";
   for (const [Z, top, step, lab] of [[P, 40, 10, "salinity / ppt"], [Q, Q.y0 + 6, 1, "temperature / °C"]]) {
-    s += gridLines(Z.L, Z.T, Z.pw, Z.ph, Z.cols, Z.rows, 2, Z === P ? 5 : 2) + axes(Z);
+    s += gridLines(Z.L, Z.T, Z.pw, Z.ph, Z.cols, Z.rows, 2, Z === P ? 5 : 2) + axisLines(Z);
     for (let v = Z.y0; v <= top + 1e-9; v += step) s += `<text x="${Z.L - 7}" y="${Z.Y(v) + 5}" text-anchor="end">${fmt(v)}</text>`;
     for (let h = 0; h <= 13; h++) s += `<text x="${Z.X(h)}" y="${Z.T + Z.ph + 18}" text-anchor="middle" class="mksm">${h}</text>`;
     s += `<text transform="translate(16 ${Z.T + Z.ph / 2}) rotate(-90)" text-anchor="middle">${lab}</text>`;
@@ -125,7 +125,7 @@ function svgEstuary(F, opt, G) {
   return s;
 }
 function svgClimate(F, opt, G) {
-  const P = G.P, hl = opt.hl || {}, YT = (v) => P.T + P.ph - (v - F.T0) / 0.1 * P.ph / P.rows; let s = gridLines(P.L, P.T, P.pw, P.ph, P.cols, P.rows, 4, 5) + axes(P);
+  const P = G.P, hl = opt.hl || {}, YT = (v) => P.T + P.ph - (v - F.T0) / 0.1 * P.ph / P.rows; let s = gridLines(P.L, P.T, P.pw, P.ph, P.cols, P.rows, 4, 5) + axisLines(P);
   s += `<line x1="${P.L + P.pw}" x2="${P.L + P.pw}" y1="${P.T}" y2="${P.T + P.ph}" class="axis"/>`;
   F.Y.forEach((y) => (s += `<text x="${P.X(y)}" y="${P.T + P.ph + 25}" text-anchor="middle">${y}</text>`));
   for (let k = 0; k <= 30; k += 5) { s += `<text x="${P.L - 7}" y="${P.Y(300 + 5 * k) + 5}" text-anchor="end">${300 + 5 * k}</text><text x="${P.L + P.pw + 10}" y="${YT(F.T0 + k / 10) + 5}">${fmt(F.T0 + k / 10, 1)}</text>`; }
@@ -146,6 +146,30 @@ function svg(F, opt) {
   opt = opt || {}; const G = geo(F);
   const body = F.mode === "photo" ? svgPhoto(F, opt, G) : F.mode === "estuary" ? svgEstuary(F, opt, G) : svgClimate(F, opt, G);
   return `<svg viewBox="0 0 ${G.W} ${G.H}" class="figsvg fig-${KEY}" role="img" aria-label="${ARIA[F.mode]}">${body}</svg>`;
+}
+
+/* axes for the reading guide: built from the same pane() geometry the drawing uses (climate uses the left axis). */
+function axes(F) {
+  const G = geo(F);
+  if (F.mode === "photo") {
+    const P = G.P, xt = [], yt = [];
+    for (let i = 0; i <= 30; i++) { const v = i * 2; xt.push({ at: P.X(v), label: v % 10 === 0 ? String(v) : undefined }); yt.push({ at: P.Y(v), label: v % 10 === 0 ? String(v) : undefined }); }
+    return [{ plot: { x0: P.L, x1: P.L + P.pw, y0: P.T, y1: P.T + P.ph }, x: { ticks: xt }, y: { ticks: yt } }];
+  }
+  if (F.mode === "estuary") {
+    const P = G.P, Q = G.Q;
+    const xt = (Z) => { const a = []; for (let i = 0; i <= 26; i++) a.push({ at: Z.X(i * 0.5), label: i % 2 === 0 ? String(i / 2) : undefined }); return a; };
+    const ys = []; for (let i = 0; i <= 20; i++) { const v = i * 2; ys.push({ at: P.Y(v), label: v % 10 === 0 ? fmt(v) : undefined }); }
+    const yq = []; for (let i = 0; i <= 12; i++) { const v = F.Ty0 + i * 0.5; yq.push({ at: Q.Y(v), label: i % 2 === 0 ? fmt(v) : undefined }); }
+    return [
+      { plot: { x0: P.L, x1: P.L + P.pw, y0: P.T, y1: P.T + P.ph }, x: { ticks: xt(P) }, y: { ticks: ys } },
+      { plot: { x0: Q.L, x1: Q.L + Q.pw, y0: Q.T, y1: Q.T + Q.ph }, x: { ticks: xt(Q) }, y: { ticks: yq } },
+    ];
+  }
+  const P = G.P, xt = [], yt = [];
+  for (let i = 0; i <= 24; i++) { const yr = 1960 + i * 2.5; xt.push({ at: P.X(yr), label: i % 4 === 0 ? String(yr) : undefined }); }
+  for (let k = 0; k <= 30; k++) { const v = 300 + 5 * k; yt.push({ at: P.Y(v), label: k % 5 === 0 ? String(v) : undefined }); }
+  return [{ plot: { x0: P.L, x1: P.L + P.pw, y0: P.T, y1: P.T + P.ph }, x: { ticks: xt }, y: { ticks: yt } }];
 }
 
 /* ---------------- questions ---------------- */
@@ -327,7 +351,7 @@ export default {
     "Describe a trend in words and quote values with units: \"as the distance increased, the rate fell from … to …\".",
     "Two quantities rising together on a graph do not, on their own, show that one causes the other. The explanation comes from the science."],
   ctx: (F) => (F.mode === "photo" ? "rate of photosynthesis of a water plant with a lamp at different distances" : F.mode === "estuary" ? "salinity and water temperature in an estuary during one tide" : "carbon dioxide in the air and mean sea-surface temperature at a monitoring station"),
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-mlinks .mkx{stroke:currentColor;stroke-width:2.2;fill:none}.fig-mlinks .mkx.hl{stroke:var(--app);stroke-width:3.4}.fig-mlinks .mks{fill:var(--surface2);stroke:currentColor;stroke-width:1.6}.fig-mlinks .mks.hl{fill:var(--app)}
 .fig-mlinks .mkd{stroke-dasharray:8 5}.fig-mlinks .mkstu{stroke:var(--accent);stroke-width:3.2;fill:none}.fig-mlinks .mkring{fill:none;stroke:var(--app);stroke-width:3}
 .fig-mlinks .mkcons{stroke:var(--app);stroke-width:1.6;stroke-dasharray:4 3}.fig-mlinks .mksm{font-size:16px}.fig-mlinks .mknote{font-size:13px;font-style:italic}`,

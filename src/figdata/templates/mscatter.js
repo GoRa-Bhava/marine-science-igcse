@@ -58,6 +58,13 @@ function make(seed) {
   return make(seed + 1);
 }
 function geo() { const W = 560, H = 470, L = 70, R = 22, T = 26, B = 58, pw = W - L - R, ph = H - T - B; return { W, H, L, T, pw, ph, sx: pw / NC, sy: ph / NR }; }
+/* axes for the reading guide: same geometry svg() uses. y label every 5 squares, x every 10. */
+function axes(F) {
+  const C = F.C, G = geo(), { L, T, pw, ph, sx, sy } = G;
+  const yt = []; for (let i = 0; i <= NR; i++) yt.push({ at: T + ph - i * sy, label: i % 5 === 0 ? fy(C, C.y0 + i * C.ys) : undefined });
+  const xt = []; for (let i = 0; i <= NC; i++) xt.push({ at: L + i * sx, label: i % 10 === 0 ? fx(C, C.x0 + i * C.xs) : undefined });
+  return [{ plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: xt }, y: { ticks: yt } }];
+}
 function clip(F, g, px, py) {
   const C = F.C, x1 = C.x0, x2 = C.x0 + NC * C.xs, y0 = C.y0, y1 = C.y0 + NR * C.ys; let a = [x1, py + g * (x1 - px)], b = [x2, py + g * (x2 - px)];
   const cy = (yy) => [px + (yy - py) / g, yy];
@@ -147,7 +154,7 @@ export default {
   key: KEY, group: "Graphs and charts", name: "Scatter graph", topics: "Units 2, 5 and 6 (2.3, 2.4, 5.7, 6.7, 6.8)", thumbSeed: 9,
   blurb: "Each cross is a separate sample, such as temperature and dissolved oxygen. Describe the relationship, find the anomaly and use a best-fit line.",
   tips: ["Describe the relationship in words: \"as x increases, y decreases\".", "An anomalous result does not fit the pattern. Ignore it when you draw the best-fit line.", "A best-fit line is one thin line with points roughly evenly spread either side. It does not have to pass through any point.", "Read estimates from the line, not from the nearest cross, to ½ small square.", "Gradient = change in y ÷ change in x, using two points far apart on the line. Give units."],
-  ctx: (F) => F.C.cap, make, svg, questions, selfTest,
+  ctx: (F) => F.C.cap, make, svg, axes, questions, selfTest,
   css: `.fig-mscatter .msx{stroke:currentColor;stroke-width:2;fill:none}.fig-mscatter .msx.hl{stroke:var(--app);stroke-width:3.4}.fig-mscatter .msfit{stroke-width:3}
 .fig-mscatter .msuser{stroke:var(--accent);stroke-width:2.6}.fig-mscatter .msmean{stroke:var(--recall);stroke-width:2.6}.fig-mscatter .msmeanc{fill:none;stroke:var(--recall);stroke-width:1.2}
 .fig-mscatter .msc{stroke:var(--app);stroke-width:2;stroke-dasharray:4 3}`,

@@ -34,6 +34,14 @@ const hAt = (D, t) => D.M + D.A * Math.cos(2 * Math.PI * (t - D.tL) / PERIOD + M
 function geo(F) { const W = 560, L = 58, R = 18, T = 46, B = 54, rows = Math.round(F.Ymax * 10), sq = 7.2; const ph = rows * sq; return { W, H: T + ph + B, L, T, pw: W - L - R, ph, rows, cols: 48 }; }
 const X = (G, t) => G.L + t / 24 * G.pw, Y = (G, F, h) => G.T + G.ph - h / F.Ymax * G.ph;
 
+/* axes for the reading guide: same geometry svg() uses. x 0–24 h (label every 2 h), y 0–Ymax m (label every 0.5 m). */
+function axes(F) {
+  const G = geo(F), rows = Math.round(F.Ymax * 10);
+  const yt = []; for (let i = 0; i <= rows; i++) { const h = i / 10; yt.push({ at: Y(G, F, h), label: i % 5 === 0 ? fmt(h, 1) : undefined }); }
+  const xt = []; for (let i = 0; i <= 48; i++) { const t = i / 2; xt.push({ at: X(G, t), label: i % 4 === 0 ? String(t) : undefined }); }
+  return [{ plot: { x0: G.L, x1: G.L + G.pw, y0: G.T, y1: G.T + G.ph }, x: { ticks: xt }, y: { ticks: yt } }];
+}
+
 function svg(F, opt) {
   opt = opt || {}; const G = geo(F), hl = opt.hl || {};
   let s = gridLines(G.L, G.T, G.pw, G.ph, G.cols, G.rows, 4, 5);
@@ -131,6 +139,6 @@ export default {
   blurb: "Two days of a recording tide gauge, a week apart: one spring tide and one neap tide.",
   tips: ["Read heights from the left axis: each small square is 0.1 m.", "High tide is a peak of the line; low tide is a trough. There are about two of each per day, a little over 12 hours apart.", "Tidal amplitude = (height of high tide − height of low tide) ÷ 2. Don't forget the ÷ 2.", "The day with the larger amplitude is the spring tide: the Sun and the Moon are in a line."],
   ctx: (F) => `tide gauge record from ${F.place}`,
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-tide .tdash{stroke-dasharray:7 5}.fig-tide .thl{stroke:var(--app);stroke-width:3}.fig-tide .tcons{stroke:var(--app);stroke-width:1.6;stroke-dasharray:4 3}.fig-tide .tcross line{stroke:var(--accent);stroke-width:3}`,
 };

@@ -108,6 +108,13 @@ function geo(F) { const sq = F.Hmax === 5 ? 11 : F.Hmax === 6 ? 10 : 9, ph = F.H
 const Yh = (G, F, h) => G.PB - h / F.Hmax * G.ph;
 const zoneX = (F) => ({ sup: [PL, F.xHT], int: [F.xHT, F.xLT], sub: [F.xLT, PR] });
 
+/* axes for the reading guide: a height (y) scale on the RIGHT; horizontal distances are not to scale. */
+function axes(F) {
+  const G = geo(F), yt = [];
+  for (let i = 0; i <= F.Hmax * 5; i++) yt.push({ at: Yh(G, F, i / 5), label: i % 5 === 0 ? String(i / 5) : undefined });
+  return [{ plot: { x0: PL, x1: PR, y0: PT, y1: G.PB }, x: { ticks: [] }, y: { ticks: yt }, yAxisX: PR }];
+}
+
 function svg(F, opt) {
   opt = opt || {}; const G = geo(F), hl = opt.hl || {}, Y = (h) => Yh(G, F, h), ZX = zoneX(F);
   const pat = F.type === "rocky"
@@ -285,7 +292,7 @@ export default {
   blurb: "A cross-section of a rocky, sandy or muddy shore with the tide marks: find the three zones and what each is like.",
   tips: ["The supratidal zone is above the high-tide mark: the sea never covers it, only spray reaches it.", "The intertidal zone is between the high-tide mark and the low-tide mark: it is covered at high tide and uncovered at low tide.", "The subtidal zone is below the low-tide mark: it is under water at every state of the tide.", "Read heights where the dashed tide mark meets the scale on the right: each small division is 0.2 m."],
   ctx: (F) => `a cross-section of ${F.place}`,
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-shorezone .sz-sea{fill:color-mix(in srgb,var(--ink) 10%,transparent)}.fig-shorezone .sz-surf{fill:none;stroke:currentColor;stroke-width:1.4}
 .fig-shorezone .sz-gnd{fill:color-mix(in srgb,var(--ink) 16%,var(--surface2))}.fig-shorezone .sz-pl{stroke:currentColor;stroke-width:1;opacity:.5;fill:none}.fig-shorezone .sz-pd{fill:currentColor;opacity:.55}
 .fig-shorezone .sz-mark{stroke:currentColor;stroke-width:1.8;stroke-dasharray:8 5}.fig-shorezone .sz-mhl{stroke:var(--app);stroke-width:3}

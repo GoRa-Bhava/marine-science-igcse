@@ -72,6 +72,12 @@ const geo = (F) => { const W = 560, L = 66, R = 14, T = F.ns === 2 ? 62 : 30, ph
   const bw = F.ns === 2 ? cw * 0.33 : cw * 0.5, gap = cw * 0.05;
   const bx = (c, s) => (F.ns === 2 ? L + cw * c + (cw - 2 * bw - gap) / 2 + s * (bw + gap) : L + cw * c + (cw - bw) / 2);
   return { W, L, T, ph, B, pw, n, cw, sq, bw, bx, H: T + ph + B, yv: (v) => T + ph - (v / F.ps) * sq }; };
+/* axes for the reading guide: value (y) axis only — the category axis has no numeric ticks. */
+function axes(F) {
+  const G = geo(F), { L, T, ph, pw, sq } = G;
+  const yt = []; for (let i = 0; i <= 40; i++) yt.push({ at: T + ph - i * sq, label: i % 5 === 0 ? String(i * F.ps) : undefined });
+  return [{ plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: [] }, y: { ticks: yt } }];
+}
 function wrapLab(t, x, y) { const w = t.split(" "); if (t.length <= 10 || w.length === 1) return `<text x="${x}" y="${y}" text-anchor="middle" class="mbcat">${t}</text>`;
   const mid = Math.ceil(w.length / 2); return `<text x="${x}" y="${y}" text-anchor="middle" class="mbcat"><tspan x="${x}">${w.slice(0, mid).join(" ")}</tspan><tspan x="${x}" dy="15">${w.slice(mid).join(" ")}</tspan></text>`; }
 function svg(F, opt) {
@@ -95,13 +101,13 @@ function svg(F, opt) {
   return `<svg viewBox="0 0 ${W} ${H}" class="figsvg fig-${KEY}" role="img" aria-label="Bar chart of ${F.C.title}">${s}</svg>`;
 }
 function questions(F, r) {
-  const qs = [], C = F.C, n = F.cats.length, ps = F.ps, u = C.unit ? " " + C.unit : "", V = F.v, S = F.sq;
+  const qs = [], C = F.C, n = F.cats.length, ps = F.ps, u = C.unit ? " " + C.unit : "", V = F.v, S = F.sq, Gg = geo(F);
   const M = (si) => (F.ns === 2 ? `${C.ylab.replace(/ \/.*$/, "")} for the ${C.series[si]}` : C.ylab.replace(/ \/.*$/, ""));
   const cin = (c) => C.catIn(F.cats[c]), pin = (c) => `${C.prep || "in"} ${C.catIn(F.cats[c])}`, val = (si, c) => `${V[si][c]}${u}`, argmax = (a) => a.indexOf(Math.max(...a));
   const ser = (si) => (F.ns === 2 ? `<b>${C.series[si]}</b> ` : "");
   // 1. read a bar
   const rs = Math.floor(r() * F.ns), rc = pickR(r, [...Array(n).keys()].filter((c) => c !== argmax(V[rs])));
-  qs.push({ kind: "num", q: `What was the ${M(rs)} ${pin(rc)}?`, ans: V[rs][rc], tol: ps / 2, unit: C.unit, hl: { bars: [`${rc}-${rs}`] },
+  qs.push({ kind: "num", q: `What was the ${M(rs)} ${pin(rc)}?`, ans: V[rs][rc], tol: ps / 2, unit: C.unit, hl: { bars: [`${rc}-${rs}`], guide: { x: Gg.bx(rc, rs) + Gg.bw / 2, y: Gg.yv(V[rs][rc]) } },
     why: `Go to the top of the ${F.ns === 2 ? `${ser(rs)}bar (check the key) ` : "bar "}for ${cin(rc)} and read across to the vertical axis: <b>${val(rs, rc)}</b>. Each small square is ${ps}${u}; readings are accepted to within half a small square.` });
   // 2. tap the highest bar of one series
   const ts = Math.floor(r() * F.ns), tc = argmax(V[ts]);
@@ -198,7 +204,7 @@ export default {
   key: KEY, group: "Graphs and charts", name: "Bar chart", topics: "Units 3, 5 and 6 (3.6, 5.7, 6.3, 6.4, 6.6, 6.9)", thumbSeed: 4,
   blurb: "Simple and grouped bar charts, such as plastic inside and outside a garbage patch. Read, compare, calculate and draw a missing bar.",
   tips: ["Read from the <b>top</b> of the bar straight across to the axis. Work out what one small square is worth first.", "In a grouped chart, use the key: compare only bars with the same shading.", "\"Compare the change\": work out how much each series changed, then say which changed more, with data.", "Percentage change = change ÷ <b>original</b> value × 100. Mean = total ÷ number of values.", "Bar charts have bars of equal width that do not touch."],
-  ctx: (F) => F.C.title, make, svg, questions, selfTest,
+  ctx: (F) => F.C.title, make, svg, axes, questions, selfTest,
   css: `.fig-mbar .mbs0{fill:url(#mbar-h0);stroke:currentColor;stroke-width:1}.fig-mbar .mbs1{fill:color-mix(in srgb,var(--ink) 20%,transparent);stroke:currentColor;stroke-width:1}.fig-mbar .mbpbg{fill:var(--surface2)}
 .fig-mbar .hl{fill:color-mix(in srgb,var(--app) 75%,transparent)}.fig-mbar .mbstu{stroke:var(--accent);stroke-width:3}.fig-mbar .mbcat{font-size:14px}`,
 };

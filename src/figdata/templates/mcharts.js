@@ -74,13 +74,24 @@ function pieSVG(F, opt) {
 }
 function svg(F, opt) { opt = opt || {}; return F.mode === "hist" ? histSVG(F, opt) : pieSVG(F, opt); }
 
+/* geometry of the histogram, shared by the guide axes and the reading point (matches histSVG). */
+const histGeo = (C) => { const L = 64, T = 30, pw = 476, ph = 320, bw = pw / C.k; return { L, T, pw, ph, bw, X: (i) => L + i * bw, Y: (v) => T + ph - v * (ph / 24) }; };
+/* axes for the reading guide: the histogram only (a pie chart has no cartesian axes). */
+function axes(F) {
+  if (F.mode !== "hist") return [];
+  const C = F.C, G = histGeo(C);
+  const yt = []; for (let i = 0; i <= 24; i++) yt.push({ at: G.Y(i), label: i % 2 === 0 ? String(i) : undefined });
+  const xt = []; for (let i = 0; i <= C.k; i++) xt.push({ at: G.X(i), label: String(C.start + i * C.w) });
+  return [{ plot: { x0: G.L, x1: G.L + G.pw, y0: G.T, y1: G.T + G.ph }, x: { ticks: xt }, y: { ticks: yt } }];
+}
+
 /* ---- questions */
 const cls = (C, i) => `${C.start + i * C.w}–${C.start + (i + 1) * C.w} ${C.unit}`;
 function questions(F, r) {
   const qs = [];
   if (F.mode === "hist") {
-    const C = F.C, f = F.f, mi = f.indexOf(Math.max(...f)), thr = C.start + F.cut * C.w, over = f.slice(F.cut).reduce((a, b) => a + b, 0), pc = over / F.tot * 100;
-    qs.push({ kind: "num", q: `How many ${C.animal} had a ${C.var} in the class ${cls(C, F.ask)}?`, ans: f[F.ask], tol: 0, unit: "", hl: { bars: [String(F.ask)] },
+    const C = F.C, f = F.f, mi = f.indexOf(Math.max(...f)), thr = C.start + F.cut * C.w, over = f.slice(F.cut).reduce((a, b) => a + b, 0), pc = over / F.tot * 100, Gh = histGeo(C);
+    qs.push({ kind: "num", q: `How many ${C.animal} had a ${C.var} in the class ${cls(C, F.ask)}?`, ans: f[F.ask], tol: 0, unit: "", hl: { bars: [String(F.ask)], guide: { x: Gh.X(F.ask) + Gh.bw / 2, y: Gh.Y(f[F.ask]) } },
       why: `Go to the top of the bar for ${cls(C, F.ask)} and read across: <b>${f[F.ask]}</b> ${C.animal}. Each grid line is one animal.` });
     qs.push({ kind: "tap", q: `Tap the bar for the class with the most ${C.animal}.`, a: [String(mi)], askOpt: { tapMode: true }, doneOpt: () => ({ tapMode: true }), hl: { bars: [String(mi)] },
       labelOf: (id) => cls(C, +id), ansTxt: cls(C, mi), why: `The class with the most ${C.animal} is the tallest bar: <b>${cls(C, mi)}</b>, with ${f[mi]} ${C.animal}. (This is sometimes called the modal class.)` });
@@ -136,6 +147,6 @@ export default {
   ctx: (F) => F.C.what,
   blurb: "Read a histogram of animal sizes or a pie chart of a survey: frequencies, the largest class, percentages and angles.",
   tips: ["A histogram shows continuous data in equal classes, so the bars touch.", "The class with the most is the tallest bar.", "On a pie chart each 1% is 3.6°, because a whole circle is 360°.", "Percentage of a total × the total ÷ 100 gives the number."],
-  make, svg, questions, selfTest,
+  make, svg, axes, questions, selfTest,
   css: `.fig-mcharts .pc-s{stroke:currentColor;stroke-width:1.2}.fig-mcharts .pc-s0{fill:color-mix(in srgb,var(--ink) 38%,transparent)}.fig-mcharts .pc-s1{fill:color-mix(in srgb,var(--ink) 10%,transparent)}.fig-mcharts .pc-s2{fill:color-mix(in srgb,#4aa8d8 50%,transparent)}.fig-mcharts .pc-s3{fill:color-mix(in srgb,#e0a030 45%,transparent)}.fig-mcharts .pc-s4{fill:color-mix(in srgb,#6cbf7a 45%,transparent)}.fig-mcharts .pc-s5{fill:color-mix(in srgb,#c77dc9 45%,transparent)}.fig-mcharts .pc-s.hl{fill:color-mix(in srgb,var(--app) 70%,transparent)}.fig-mcharts .pc-n{font-weight:700;font-size:15px}.fig-mcharts .pc-t{stroke:currentColor;stroke-width:1}.fig-mcharts .pc-k{font-size:12.5px;fill:var(--soft)}.fig-mcharts .pc-l{font-size:14px}.fig-mcharts .pc-h{font-weight:700}`,
 };

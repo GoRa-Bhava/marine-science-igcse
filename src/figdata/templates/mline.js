@@ -52,6 +52,13 @@ function geo(F) {
   return { W, H, L, T, cp, cols, pw, ph, sx, sy, X, Y };
 }
 const xm = (x, y, k, cls) => `<path d="M${x - k} ${y - k}L${x + k} ${y + k}M${x - k} ${y + k}L${x + k} ${y - k}" class="${cls}"/>`;
+/* axes for the reading guide: same geometry svg() uses (geo). y labelled every 5 squares, x at each data point. */
+function axes(F) {
+  const G = geo(F), { L, T, pw, ph, sx, sy, cols } = G, C = F.C;
+  const yt = []; for (let i = 0; i <= C.N; i++) yt.push({ at: T + ph - i * sy, label: i % 5 === 0 ? vf(C, C.y0 + i * C.ys) : undefined });
+  const xt = []; for (let i = 0; i <= cols; i++) { const di = i / 4; xt.push({ at: L + i * sx, label: Number.isInteger(di) && di < C.x.length ? String(C.x[di]) : undefined }); }
+  return [{ plot: { x0: L, x1: L + pw, y0: T, y1: T + ph }, x: { ticks: xt }, y: { ticks: yt } }];
+}
 function svg(F, opt) {
   opt = opt || {}; const G = geo(F), { W, H, L, T, pw, ph, sx, sy, X, Y, cols } = G, C = F.C, hl = opt.hl || {};
   let s = "";
@@ -74,11 +81,11 @@ function svg(F, opt) {
   return `<svg viewBox="0 0 ${W} ${H}" class="figsvg fig-${KEY}" role="img" aria-label="Line graph of ${C.cap}">${key}${s}${p2}${p1}${hit}</svg>`;
 }
 function questions(F, r) {
-  const C = F.C, S = F.S, Q = F.Q, n = F.n, ys = C.ys, qs = [], A = C.s[0], B = C.s[1], u = uu(C), v = (x) => vf(C, x);
+  const C = F.C, S = F.S, Q = F.Q, n = F.n, ys = C.ys, qs = [], A = C.s[0], B = C.s[1], u = uu(C), v = (x) => vf(C, x), G = geo(F);
   const half = `±½ small square (±${fmt(ys / 2)}${u})`, forA = `for <b>${A}</b>`, forB = `for <b>${B}</b>`;
   // 1. read series B at an interior point
   const ri = pickR(r, [...Array(n).keys()].slice(1, n - 1));
-  qs.push({ kind: "num", q: `What was the ${C.what} ${forB} in ${lab(C, ri)}?`, ans: S[1][ri], tol: ys / 2, unit: C.unit, dp: dpOf(C) || undefined, hl: { pts: [[1, ri]] },
+  qs.push({ kind: "num", q: `What was the ${C.what} ${forB} in ${lab(C, ri)}?`, ans: S[1][ri], tol: ys / 2, unit: C.unit, dp: dpOf(C) || undefined, hl: { pts: [[1, ri]], guide: { x: G.X(ri), y: G.Y(S[1][ri]) } },
     why: `Find ${lab(C, ri)} on the x-axis, go up to the <b>${B}</b> line (dashed, square points) and read across to the y-axis: <b>${v(S[1][ri])}${u}</b>. Each small square on the y-axis is ${fmt(ys)}${u}, so readings are accepted to ${half}.` });
   // 2. difference between the series in one year
   const di = pickR(r, [...Array(n).keys()].filter((i) => Math.abs(Q[0][i] - Q[1][i]) >= 3)), dd = Math.round(Math.abs(S[0][di] - S[1][di]) * 1e6) / 1e6, hiA = S[0][di] > S[1][di];
@@ -159,7 +166,7 @@ export default {
   key: KEY, group: "Graphs and charts", name: "Line graph", topics: "Units 5 and 6 (5.7, 6.3, 6.8, 6.9)", thumbSeed: 3,
   blurb: "Two lines over time, such as reefs inside and outside a protected area. Read, compare, calculate and plot points.",
   tips: ["Check the key first: which line is which (solid with crosses, or dashed with squares).", "The y-axis does not always start at 0. Read the first label before counting squares.", "Read and plot to within half of the smallest square. Plot points as neat crosses.", "Percentage change = change ÷ original value × 100. Divide by the earlier value.", "Readings taken over time are joined point to point."],
-  ctx: (F) => F.C.cap, make, svg, questions, selfTest,
+  ctx: (F) => F.C.cap, make, svg, axes, questions, selfTest,
   css: `.fig-mline .mld{stroke-dasharray:8 5}.fig-mline .mls{fill:var(--surface2);stroke:currentColor;stroke-width:1.6}.fig-mline .mls.hl{fill:var(--app)}
 .fig-mline .mlx{stroke:currentColor;stroke-width:2.2;fill:none}.fig-mline .mlx.hl{stroke:var(--app);stroke-width:3.4}.fig-mline .mlstu{stroke:var(--accent);stroke-width:3.2;fill:none}
 .fig-mline .mlring{fill:none;stroke:var(--app);stroke-width:3}.mlwrap{overflow-x:auto;margin-top:10px;max-width:100%}.mltbl{font-size:12px;width:auto}.mltbl th,.mltbl td{padding:3px 4px}`,
