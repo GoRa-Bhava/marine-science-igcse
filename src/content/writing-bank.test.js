@@ -75,3 +75,44 @@ test("writingByUnit groups in ascending unit order, preserving bank order within
   assert.equal(flat.length, WRITING.length);
   assert.equal(new Set(flat).size, WRITING.length);
 });
+
+import { scoreWritingItem, pointLabel } from "./writing-bank.js";
+
+test("writing bank: caps refer to real point labels and are positive", () => {
+  for (const w of WRITING) {
+    if (!w.caps) continue;
+    const labels = new Set(w.points.map(pointLabel).filter(Boolean));
+    for (const c of w.caps) {
+      assert.ok(Array.isArray(c.labels) && c.labels.length >= 1, `${w.id} cap needs labels`);
+      for (const l of c.labels) assert.ok(labels.has(l), `${w.id} cap label "${l}" has no points`);
+      assert.ok(Number.isInteger(c.max) && c.max >= 1, `${w.id} cap max must be a positive integer`);
+    }
+  }
+});
+
+test("writing bank: full marks are still reachable on every item after caps", () => {
+  for (const w of WRITING) {
+    const all = w.points.map((_, i) => i);
+    assert.equal(scoreWritingItem(w, all), w.marks, `${w.id} cannot reach ${w.marks} with every point ticked`);
+  }
+});
+
+test("scoreWritingItem applies single and combined caps", () => {
+  const item = { marks: 6, points: [
+    { t: "Strength: a" }, { t: "Strength: b" }, { t: "Strength: c" }, { t: "Strength: d" },
+    { t: "Limitation: e" }, { t: "Limitation: f" }, { t: "Limitation: g" }, { t: "Judgement: h" } ],
+    caps: [{ labels: ["Strength"], max: 3 }, { labels: ["Limitation"], max: 3 }, { labels: ["Strength", "Limitation"], max: 5 }] };
+  assert.equal(scoreWritingItem(item, [0, 1, 2, 3]), 3, "single cap");
+  assert.equal(scoreWritingItem(item, [0, 1, 2, 3, 4, 5, 6]), 5, "combined cap");
+  assert.equal(scoreWritingItem(item, [0, 1, 2, 4, 5, 7]), 6, "judgement lifts to full marks");
+  assert.equal(scoreWritingItem({ marks: 4, points: [{ t: "a" }, { t: "b" }] }, [0, 1, 1, 9]), 2, "no caps, ignores duplicates and bad indices");
+});
+
+test("no single capped group (or combined cap) reaches full marks on its own", () => {
+  for (const w of WRITING) {
+    for (const c of w.caps || []) {
+      const only = w.points.map((p, i) => (c.labels.includes(pointLabel(p)) ? i : -1)).filter((i) => i >= 0);
+      assert.ok(scoreWritingItem(w, only) < w.marks, `${w.id}: the ${c.labels.join("+")} points alone reach full marks`);
+    }
+  }
+});

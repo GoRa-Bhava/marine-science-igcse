@@ -4,7 +4,7 @@
 // `accept` = alternatives the mark schemes credit; `noCredit` = common answers that earn nothing.
 // Not a quiz tier: nothing here feeds scoring, spaced repetition or rewards.
 // STATUS: every item is human_review. Independently reviewed against the 0697 2027-2029 syllabus, mark schemes and knowledge models (2026-11-06); awaiting teacher sign-off.
-// Coverage: 10 questions per unit (Units 1-6), spread across command words and syllabus topics.
+// Coverage: 86 questions across Units 1-6, weighted towards the larger units (5 and 6), spread across command words and syllabus topics.
 
 export const WRITING = [
   /* ===================== UNIT 1: Earth and oceans ===================== */
@@ -112,6 +112,7 @@ export const WRITING = [
     noCredit: ["The sea becomes permanently less salty", "Sea level stays higher after the tsunami has passed", "The tides become stronger for weeks afterwards", "The tsunami causes earthquakes along the coast"],
     model: "In marine ecosystems, the force of the water breaks up coral reefs and tears out mangroves and seagrass, so habitats are destroyed. Marine organisms are swept out of their habitats, some onto land, and many die. In coastal communities, many people are drowned or injured. Homes, boats and harbours are destroyed.",
     tip: "Outline means one short, clear effect per sentence. Give two ecosystem effects and two effects on people. When you mark, count at most two ticks from the Ecosystem points and at most two from the People points.",
+    caps: [{ labels: ["Ecosystem"], max: 2 }, { labels: ["People"], max: 2 }],
     status: "human_review" },
 
   { id: "W1-08", unit: 1, ref: "1.4/LO8", command: "Explain", marks: 4,
@@ -159,6 +160,39 @@ export const WRITING = [
     noCredit: ["Watch the water and estimate how fast it is moving", "Check the wind direction, because the current always flows the same way as the wind", "One timed run is enough", "Wear a lab coat for safety"],
     model: "Attach a float to a 10 m line. Release the float into the current from the end of the jetty and start a stopwatch at the same moment. Stop the stopwatch when the line becomes tight. Calculate the speed as distance ÷ time, in m/s. Use a compass to find the direction in which the float moves. Repeat several times and calculate the mean speed. Take all the runs close together in time, because the current changes as the tide rises and falls. Wear a lifejacket and work in a group.",
     tip: "For a 6-mark method, cover: the equipment and known distance, what you time, the calculation, how you find direction, repeats and a mean, one thing kept the same, and safety.",
+    status: "human_review" },
+
+  { id: "W1-11", unit: 1, ref: "1.2/LO4", command: "Describe", marks: 5,
+    q: "Describe convergent, divergent and transform plate boundaries. For each one, describe how the plates move and a feature found there.",
+    points: [
+      { t: "Convergent: the plates move towards each other", accept: "the plates converge / collide / push together" },
+      { t: "Convergent: one plate can be forced down beneath the other into the mantle", accept: "one plate is subducted / subduction" },
+      { t: "Convergent: a deep ocean trench forms along the boundary", accept: "volcanoes or volcanic islands form on the plate above / earthquakes are common" },
+      { t: "Divergent: the plates move apart", accept: "the plates move away from each other / the plates separate" },
+      { t: "Divergent: a mid-ocean ridge forms", accept: "magma rises into the gap and forms new ocean floor / an underwater mountain chain forms" },
+      { t: "Transform: the plates slide past each other sideways", accept: "the plates move alongside each other" },
+      { t: "Transform: earthquakes happen there", accept: "the plates stick, then suddenly slip, causing an earthquake" },
+    ],
+    noCredit: ["At a transform boundary the plates pull apart", "At a divergent boundary the plates collide", "A deep ocean trench forms where the plates move apart"],
+    model: "At a convergent boundary the plates move towards each other. One plate can be forced down beneath the other into the mantle, and where this happens a deep ocean trench forms along the boundary. At a divergent boundary the plates move apart. Magma rises into the gap and a mid-ocean ridge forms. At a transform boundary the plates slide past each other sideways. The plates stick and then suddenly slip, so earthquakes happen there.",
+    tip: "Take each boundary in turn: first how the plates move, then a feature found there. When you mark, count at most two ticks for any one boundary type, so full marks needs all three.",
+    caps: [{ labels: ["Convergent"], max: 2 }, { labels: ["Divergent"], max: 2 }, { labels: ["Transform"], max: 2 }],
+    status: "human_review" },
+
+  { id: "W1-12", unit: 1, ref: "1.4/LO1", command: "Suggest", marks: 4,
+    q: "A class wants to survey the animals in rock pools at the very bottom of the intertidal zone on a rocky shore. These pools are uncovered only at the lowest low tides. The teacher chooses a day of spring tides, not neap tides, and tells the class to keep a close eye on the time. Suggest reasons for the teacher's choices, using what you know about how the Sun and Moon affect the tides.",
+    points: [
+      { t: "Sun and Moon: at spring tides the Sun, Moon and Earth are in a line", accept: "the Sun and Moon are aligned with the Earth / at new moon and full moon" },
+      { t: "Sun and Moon: their gravitational pulls combine, giving a bigger pull on the water", accept: "the pulls add together / the gravitational effect of the Sun and Moon is greater" },
+      { t: "Sun and Moon: at neap tides the Sun and Moon are at right angles to the Earth", accept: "at 90° to each other / at neap tides their pulls partly cancel out" },
+      { t: "Sun and Moon: so spring tides have the largest tidal amplitude", accept: "the biggest difference between high tide and low tide / the biggest tidal range" },
+      { t: "The spring low tide is lower than the neap low tide, so it uncovers the pools at the bottom of the shore", accept: "more of the shore is exposed at a spring low tide / ORA: at neap tides the low tide is higher, so these pools stay covered" },
+      { t: "The tide rises again soon after low tide, so the pools are uncovered for only a short time", accept: "the rising tide could cut the class off / there are about two low tides a day and each lasts only a short time" },
+    ],
+    noCredit: ["Spring tides only happen in the spring season", "At spring tides the Moon is closest to the Earth", "Neap tides give the lowest low tides", "The wind pushes the sea further out at spring tides"],
+    model: "At spring tides the Sun, Moon and Earth are in a line. Their gravitational pulls combine, giving a bigger pull on the water, so spring tides have the largest tidal amplitude. The spring low tide is lower than the neap low tide, so it uncovers the pools at the bottom of the shore. At neap tides the Sun and Moon are at right angles to the Earth, and the low tide is not low enough to uncover these pools. The class must watch the time because the tide rises again soon after low tide, so the pools are uncovered for only a short time.",
+    tip: "Suggest means apply what you know to a new situation. Link the position of the Sun and Moon to the size of the tide, then link the size of the tide to the pools, and say why time matters. When you mark, count at most two ticks from the Sun and Moon points, so full marks needs both points about the pools and the time.",
+    caps: [{ labels: ["Sun and Moon"], max: 2 }],
     status: "human_review" },
 
 
@@ -302,6 +336,96 @@ export const WRITING = [
     noCredit: ["The effects are the same on both sides of the Pacific", "El Niño brings drought to South America", "Warmer water brings more nutrients, so fish catches rise", "Australia has floods because the warm water moves towards it"],
     model: "In the eastern Pacific, off South America, the surface water becomes warmer than usual. Reduced upwelling means fewer nutrients reach the surface water. Rainfall increases there, which can cause flooding. In contrast, Australia and Asia receive less rainfall than usual and may suffer drought.",
     tip: "Discuss temperature, nutrient availability and rainfall. Contrast more rain in the eastern Pacific with less rain in Australia and Asia. When you mark, count at most four ticks from the Eastern Pacific points, so full marks needs both sides.",
+    caps: [{ labels: ["Eastern Pacific"], max: 4 }],
+    status: "human_review" },
+
+  { id: "W2-11", unit: 2, ref: "2.2/LO8", command: "Describe and explain", marks: 6,
+    q: "The Pacific Ocean has a typical salinity. Describe and explain how the salinity of the Red Sea and the salinity of the Baltic Sea differ from that of the Pacific Ocean.",
+    points: [
+      { t: "Red Sea: its salinity is higher than that of the Pacific Ocean", accept: "the Red Sea is saltier" },
+      { t: "Red Sea: the hot climate causes a lot of evaporation, which removes water but leaves the salts behind", accept: "high temperature gives high evaporation, so the salt becomes more concentrated" },
+      { t: "Red Sea: very little rain falls, so little fresh water is added", accept: "low precipitation" },
+      { t: "Red Sea: few rivers flow into it, so there is little run-off to dilute the salts", accept: "almost no river water enters" },
+      { t: "Baltic Sea: its salinity is lower than that of the Pacific Ocean", accept: "the Baltic Sea is less salty" },
+      { t: "Baltic Sea: many rivers flow into it, and the run-off dilutes the salts", accept: "a large input of fresh river water" },
+      { t: "Baltic Sea: rain adds fresh water, which dilutes the salts", accept: "precipitation lowers the salinity" },
+      { t: "Baltic Sea: the cool climate means there is little evaporation", accept: "low temperature, so less water evaporates and the salt is not concentrated" },
+      { t: "Both: the seas are partly enclosed by land, so their water mixes little with the open ocean", accept: "little exchange of water with the ocean" },
+    ],
+    noCredit: ["The Red Sea is salty because of its red colour", "The Baltic Sea is less salty because cold water cannot hold as much salt", "The Pacific Ocean is the saltiest because it is the largest ocean", "Rain makes the Red Sea saltier because rain contains salt"],
+    model: "The Red Sea has a higher salinity than the Pacific Ocean. It has a hot climate, so there is a lot of evaporation, which removes water but leaves the salts behind. Very little rain falls and few rivers flow into it, so little fresh water is added. The Baltic Sea has a lower salinity than the Pacific Ocean. Many rivers flow into it, and the run-off dilutes the salts. Rain adds more fresh water. Its cool climate means there is little evaporation. Both seas are partly enclosed by land, so their water mixes little with the open ocean.",
+    tip: "For each sea, first say whether its salinity is higher or lower than the Pacific's, then explain why using evaporation, precipitation and run-off. Cold on its own is not a reason; say that it means less evaporation. When you mark, count at most three ticks from the Red Sea points and at most three from the Baltic Sea points.",
+    caps: [{ labels: ["Red Sea"], max: 3 }, { labels: ["Baltic Sea"], max: 3 }],
+    status: "human_review" },
+
+  { id: "W2-12", unit: 2, ref: "2.4/LO4", command: "Explain", marks: 4,
+    q: "A student heats one bottom corner of a large tank of water and adds a drop of dye just above the heat. The dye moves up to the surface, across the top of the tank, down the far side and back along the bottom. Explain, in terms of density, why the water moves in this way.",
+    points: [
+      { t: "Particles: the particles of the heated water gain kinetic energy and move further apart", accept: "the particles move faster and spread out" },
+      { t: "Particles: the same mass of water takes up a larger volume, so its density decreases", accept: "the heated water expands and becomes less dense" },
+      { t: "Less dense water rises above denser water", accept: "the warm water floats up because it is less dense than the water around it" },
+      { t: "Water away from the heat cools and becomes denser", accept: "the water at the top loses heat, so its density increases" },
+      { t: "Denser water sinks below less dense water", accept: "the cooled, denser water sinks at the far side" },
+      { t: "Cooler water flows in along the bottom to replace the warm water that has risen", accept: "water moves in to take its place, so the flow keeps going round" },
+    ],
+    noCredit: ["Warm water sinks because it holds more energy", "The particles get bigger when the water is heated", "Heat rises", "The dye spreads out by diffusion"],
+    model: "The particles of the water above the heat gain kinetic energy and move further apart. The same mass of water now takes up a larger volume, so its density decreases. Less dense water rises above denser water, so the warm water carries the dye up. As it moves across the top, away from the heat, it cools and becomes denser. Denser water sinks, so it moves down the far side. Cooler water then flows in along the bottom to replace the warm water that has risen, so the loop keeps going. This circulation is a convection current.",
+    tip: "Explain with density: heating spreads the particles out, so the volume rises and the density falls. Then follow the whole loop: what rises, where it cools, what sinks and what flows back to replace it. When you mark, count at most one tick from the Particles points.",
+    caps: [{ labels: ["Particles"], max: 1 }],
+    status: "human_review" },
+
+  { id: "W2-13", unit: 2, ref: "2.5/LO6", command: "Describe and explain", marks: 5,
+    q: "Describe and explain how the concentration of dissolved oxygen changes from the surface of the open ocean down into deep water.",
+    points: [
+      { t: "Dissolved oxygen is generally highest in the sunlight zone and lower in deeper water", accept: "generally decreases with depth / some in the twilight zone and little in the midnight zone" },
+      { t: "Surface: oxygen from the atmosphere dissolves into the surface water", accept: "waves mix air into the water" },
+      { t: "Surface: phytoplankton in the sunlight zone photosynthesise, releasing oxygen", accept: "producers / algae / seaweeds photosynthesise and give out oxygen" },
+      { t: "Deep water: below the sunlight zone there is too little light for photosynthesis, so no oxygen is produced", accept: "no producers in deep water" },
+      { t: "Deep water: organisms living there respire, using up oxygen", accept: "animals use oxygen in respiration" },
+      { t: "Deep water: decomposers break down dead organisms and waste sinking from above, and this uses oxygen", accept: "decomposition of marine snow uses oxygen" },
+      { t: "Deep water: it is far from the air and mixes little with surface water, so its oxygen is not replaced", accept: "oxygen that dissolves at the surface does not reach deep water" },
+    ],
+    noCredit: ["Deep water has more oxygen because cold water can hold more gas", "The high pressure squeezes the oxygen out of deep water", "Oxygen comes up into the water from the seabed"],
+    model: "Dissolved oxygen is generally highest in the sunlight zone and lower in deeper water, with only a little in the midnight zone. At the surface, oxygen from the atmosphere dissolves into the water. Phytoplankton in the sunlight zone photosynthesise and release oxygen. Below the sunlight zone there is too little light for photosynthesis, so no oxygen is produced. Organisms in deep water respire and use up oxygen. Decomposers break down dead organisms and waste sinking from above, and this also uses oxygen. Deep water is far from the air and mixes little with surface water, so its oxygen is not replaced.",
+    tip: "Describe the pattern first, using 'generally'. Then explain how oxygen is added near the surface and why it is used up and not replaced deeper down. When you mark, count at most three ticks from the Deep water points.",
+    caps: [{ labels: ["Deep water"], max: 3 }],
+    status: "human_review" },
+
+  { id: "W2-14", unit: 2, ref: "2.3/LO4", command: "Describe", marks: 6,
+    q: "Carbonated (fizzy) water contains dissolved carbon dioxide. You are given unopened bottles of carbonated water, still water, beakers, a balance, measuring cylinders, a thermometer, a timer and water baths. Describe how you could investigate the effect of temperature on how much carbon dioxide stays dissolved in the water.",
+    points: [
+      { t: "Use the same volume of carbonated water in each container, measured with a measuring cylinder", accept: "the same mass of carbonated water in each" },
+      { t: "Use carbonated water of the same brand, opened at the same time", accept: "all from the same batch / freshly opened bottles" },
+      { t: "Use the same size and type of open container for each sample", accept: "so the same surface area is open to the air" },
+      { t: "Weigh each container of carbonated water at the start to find its starting mass", accept: "zero the balance with the empty container, then weigh the water" },
+      { t: "Put the samples in water baths at a range of temperatures, e.g. 20, 30, 40, 50 and 60 °C", accept: "at least five temperatures, checked with a thermometer" },
+      { t: "Leave every sample for the same length of time, e.g. 30 minutes", accept: "a stated, fixed time for all samples" },
+      { t: "Reweigh each sample and subtract to find the mass lost", accept: "mass lost = starting mass − final mass" },
+      { t: "Set up a control of still (non-carbonated) water at each temperature, to find the mass lost by evaporation alone", accept: "subtract the mass lost by the still water" },
+      { t: "Repeat at each temperature and calculate a mean mass lost", accept: "at least three repeats, then average" },
+      { t: "Safety: handle hot containers with tongs or heatproof gloves", accept: "wear eye protection" },
+    ],
+    noCredit: ["Bubble carbon dioxide into water and measure how the pH changes", "Weigh the samples only at the end", "Test one sample at one temperature", "Measure the temperature of the water, because that shows how much gas is dissolved"],
+    model: "Open bottles of the same brand of carbonated water at the same time. Measure 50 cm³ into each of several identical beakers with a measuring cylinder. Weigh each beaker with its water to find the starting mass. Put the beakers in water baths at 20, 30, 40, 50 and 60 °C. In each bath, also put a beaker of 50 cm³ of still water as a control, to find the mass lost by evaporation alone. Leave every beaker for 30 minutes. Dry the outside, reweigh and subtract to find the mass lost. The mass lost by the carbonated water, minus the mass lost by the still water, is the mass of carbon dioxide that came out of solution. Repeat three times at each temperature and calculate the mean. Handle the hot beakers with tongs or heatproof gloves.",
+    tip: "In a 6-mark plan, say what you change and how, what you measure at the start and at the end, each variable you keep the same, a control, repeats with a mean, and safety. The mass lost, minus the mass lost by the still-water control, tells you how much carbon dioxide came out of solution.",
+    status: "human_review" },
+
+  { id: "W2-15", unit: 2, ref: "2.4/LO3", command: "Describe", marks: 6,
+    q: "You are given sodium chloride, distilled water, beakers, a stirring rod, a balance that reads to 0.1 g and a 100 cm³ measuring cylinder. Describe how you could investigate the effect of salinity on the density of water.",
+    points: [
+      { t: "Make salt solutions with at least five different salinities, e.g. 0, 20, 40, 60 and 80 ppt", accept: "a range of salt concentrations" },
+      { t: "Make each solution by dissolving a measured mass of sodium chloride in a measured mass or volume of water", accept: "e.g. 20 g of salt in 480 g of water for 40 ppt / dilute a stronger stock solution with measured volumes of distilled water" },
+      { t: "Stir each solution until all the salt has dissolved", accept: "no undissolved salt is left at the bottom" },
+      { t: "Find the mass of the empty measuring cylinder", accept: "zero (tare) the balance with the empty cylinder on it" },
+      { t: "Measure the same volume of each solution, e.g. 100 cm³", accept: "read the volume at eye level from the bottom of the meniscus" },
+      { t: "Weigh the cylinder with the solution and subtract the empty mass to find the mass of the solution", accept: "read the mass of the solution from the zeroed balance" },
+      { t: "Calculate density = mass ÷ volume, in g/cm³", accept: "divide the mass of the solution by its volume" },
+      { t: "Keep all the solutions at the same temperature, because temperature also affects density", accept: "leave them all to reach room temperature / use a water bath" },
+      { t: "Repeat for each salinity and calculate a mean density", accept: "at least three repeats, then average" },
+    ],
+    noCredit: ["Density = volume ÷ mass", "Weigh the solutions without measuring their volume", "Put an object in each solution and see whether it floats, without measuring anything", "Use a different volume of each solution and compare their masses"],
+    model: "Make 500 g of sodium chloride solution at each of 0, 20, 40, 60 and 80 ppt by dissolving measured masses of salt in measured masses of distilled water. For example, 20 g of salt in 480 g of water gives 40 ppt. Stir each solution until all the salt has dissolved. Leave all the solutions to reach room temperature, so they are at the same temperature. Find the mass of the empty measuring cylinder. Measure exactly 100 cm³ of one solution into it and reweigh. Subtract to find the mass of the solution. Calculate density = mass ÷ volume, in g/cm³. Repeat three times for each salinity and calculate the mean density.",
+    tip: "In a 6-mark plan, say how you make each salinity, what you measure (mass and volume), how you calculate density, what you keep the same, and repeats with a mean. You must find the mass of the empty cylinder, or you cannot work out the mass of the solution. Use a large volume, so the differences in mass are big enough for the balance to show.",
     status: "human_review" },
 
 
@@ -447,6 +571,39 @@ export const WRITING = [
     noCredit: ["They follow the direction of the wind", "They follow the tide in and out", "They follow the colour of the water", "They drift with the currents and arrive by chance"],
     model: "Migrating animals can detect the Earth's magnetic field and use it like a compass. They can use the position of the Sun, Moon or stars. They use olfaction, detecting chemicals in the water by smell. They also use mental maps of landmarks they have learned, such as coastlines.",
     tip: "Outline means a short point for each method. Learn the four: magnetic field, Sun, Moon and stars, olfaction (smell), mental maps and landmarks.",
+    status: "human_review" },
+
+  { id: "W3-11", unit: 3, ref: "3.6/LO2", command: "Describe", marks: 6,
+    q: "Describe the life cycle of a coral polyp.",
+    points: [
+      { t: "Asexual: a parent polyp produces a new polyp next to itself by budding", accept: "polyps bud off new polyps beside them" },
+      { t: "Sexual: polyps release eggs and sperm into the water", accept: "fertilisation happens in the water" },
+      { t: "Sexual: the release is synchronised, so many polyps release at the same time", accept: "mass spawning / huge numbers released at once" },
+      { t: "Sexual: the fertilised eggs float up to the surface and form planktonic larvae", accept: "the fertilised eggs rise and develop into larvae that drift in the plankton" },
+      { t: "Sexual: the larvae swim towards the light", accept: "the larvae move up towards light" },
+      { t: "Sexual: the larvae feed and grow", accept: "the larvae take in food as they develop" },
+      { t: "Sexual: the larvae are carried by currents", accept: "the larvae drift to new areas" },
+      { t: "Sexual: the larvae sink and attach to a hard surface, where they grow into new polyps", accept: "settle on rock or reef and become polyps" },
+    ],
+    noCredit: ["The fertilised eggs sink and settle next to the parent polyp", "Budding is a type of sexual reproduction", "The larvae make their own food by photosynthesis", "The adult polyp swims to a new reef to release its eggs"],
+    model: "Coral polyps reproduce both asexually and sexually. In asexual reproduction, a parent polyp produces a new polyp next to itself by budding. In sexual reproduction, polyps release eggs and sperm into the water. The release is synchronised, so huge numbers of eggs and sperm are released at the same time. The fertilised eggs float up to the surface and form planktonic larvae. The larvae swim towards the light, feed and grow, and are carried by currents. Each larva then sinks and attaches to a hard surface, where it grows into a new polyp.",
+    tip: "Describe both kinds of reproduction, then follow the sexual cycle in order, from the release of eggs and sperm to a new polyp. When you mark, count at most five ticks from the Sexual points, so full marks needs budding too.",
+    caps: [{ labels: ["Sexual"], max: 5 }],
+    status: "human_review" },
+
+  { id: "W3-12", unit: 3, ref: "3.4/LO4", command: "Compare", marks: 4,
+    q: "Crabs belong to the crustacean group and ragworms belong to the annelid group. Compare the main features used to place marine invertebrates in the crustaceans with those used to place them in the annelids.",
+    points: [
+      { t: "Both groups have bilateral symmetry", accept: "both have segmented bodies (tick once only for similarities)" },
+      { t: "Crustaceans have a hard exoskeleton, whereas annelids have a soft body", accept: "annelids have no exoskeleton" },
+      { t: "Crustaceans have jointed legs, whereas annelids have no jointed legs", accept: "only crustaceans have jointed legs" },
+      { t: "Annelids have setae (bristles), which are not used to place animals in the crustaceans", accept: "only annelids are identified by setae" },
+      { t: "Crustaceans have compound eyes, which are not used to place animals in the annelids", accept: "only crustaceans are identified by compound eyes" },
+      { t: "Crustaceans have two pairs of antennae, which are not a feature of annelids", accept: "only crustaceans are identified by two pairs of antennae" },
+    ],
+    noCredit: ["Both groups have an exoskeleton", "Annelids have tube feet", "Crustaceans have radial symmetry", "Crustaceans are bigger than annelids", "Annelids are slimy and long"],
+    model: "Both crustaceans and annelids have bilateral symmetry, and both have segmented bodies. A crustacean has a hard exoskeleton, whereas an annelid has a soft body. Crustaceans have jointed legs, but annelids have no jointed legs. Annelids have setae, which are bristles; setae are not used to place animals in the crustaceans. Crustaceans also have compound eyes and two pairs of antennae; these features are not used to place animals in the annelids.",
+    tip: "Compare means similarities and differences. Give one similarity, then make each difference a contrast: 'crustaceans have …, whereas annelids …'. Shared features earn only one tick, and size or colour is not a classification feature.",
     status: "human_review" },
 
 
@@ -600,6 +757,49 @@ export const WRITING = [
     noCredit: ["Seagrass increases because there are fewer crabs", "Only the octopuses are affected, because energy flows up the food web", "Octopuses increase because they no longer compete with the crabs", "Sea urchins decrease because the crabs are their food"],
     model: "With fewer crabs, fewer sea urchins are eaten, so the urchin population increases. The extra urchins eat more seagrass, so the seagrass decreases. This leaves less seagrass for the green turtles, so their numbers may fall. The octopuses have fewer crabs to eat, so they may decrease. They may also eat more small fish instead, so the small fish population may fall.",
     tip: "Follow every arrow that touches the removed organism. Its prey go up (less predation), its predators lose food, and the changes pass on to the next links.",
+    status: "human_review" },
+
+  { id: "W4-11", unit: 4, ref: "4.1/LO2", command: "Describe", marks: 6,
+    q: "A student wants to find out whether a sample of prawn meat contains protein and whether it contains lipid (fats and oils). Describe how the student could carry out a test for each of these nutrients.",
+    points: [
+      { t: "Protein: add biuret solution to a sample of the prawn", accept: "crush the prawn with a little water first, then add biuret solution / biuret reagent; leave it for a few minutes" },
+      { t: "Protein: a lilac or purple colour shows that protein is present", accept: "mauve / violet; if it stays blue there is no protein" },
+      { t: "Lipid: crush or shake a fresh sample of the prawn with ethanol", accept: "dissolve the sample in ethanol" },
+      { t: "Lipid: pour the ethanol into a tube of water, or add water, and shake", accept: "add the ethanol to water" },
+      { t: "Lipid: a cloudy white emulsion shows that lipid is present", accept: "milky white; if it stays clear there is no lipid" },
+      { t: "Set up each test with water in place of the prawn, to compare the colours", accept: "a control or blank tube for comparison" },
+      { t: "Safety: keep the ethanol away from naked flames, because it is flammable", accept: "no Bunsen burner near the ethanol / wear eye protection when using the reagents" },
+    ],
+    noCredit: [
+      "Biuret solution turns blue-black when protein is present",
+      "Heat the prawn with Benedict's solution to test for protein",
+      "A white emulsion shows that protein is present",
+      "Warm the ethanol over a Bunsen burner to dissolve the fat",
+    ],
+    model: "Crush a small piece of the prawn with a little water in a test tube. Add biuret solution and leave it for a few minutes. If protein is present, the blue solution turns lilac or purple; if not, it stays blue. For the lipid test, crush a fresh piece of prawn with ethanol in a dry tube and shake it. Pour the ethanol into a tube of water and shake again. A cloudy white emulsion shows that lipid is present; if the water stays clear, there is no lipid. Set up each test with water in place of the prawn, so the colours can be compared. Keep the ethanol away from naked flames, because it is flammable, and wear eye protection.",
+    tip: "For each test give the reagent, the steps in order and the colour that shows the nutrient is present. Biuret solution is for protein and turns lilac; ethanol, then water, is for lipid and gives a white emulsion. Neither test needs heating.",
+    status: "human_review" },
+
+  { id: "W4-12", unit: 4, ref: "4.3/LO8", command: "Suggest", marks: 5,
+    q: "Along one coast, winds cause upwelling for most of the year. Huge colonies of seabirds nest on the cliffs and feed on shoals of small fish, such as anchovies, that they catch near the surface. In some years the upwelling becomes much weaker. Suggest why this coast can support so many seabirds, and how a year with weak upwelling could affect them.",
+    points: [
+      { t: "Rich coast: upwelling brings nutrient-rich water from the deep ocean up to the surface", accept: "nutrients rise into the sunlight zone" },
+      { t: "Rich coast: phytoplankton use the nutrients to photosynthesise and grow rapidly (high productivity)", accept: "producers transfer a lot of energy into carbohydrates / large numbers of phytoplankton" },
+      { t: "Rich coast: energy passes along the food chain through zooplankton to the small fish", accept: "phytoplankton → zooplankton → small fish → seabirds" },
+      { t: "Weak year: fewer nutrients reach the surface, so fewer phytoplankton grow", accept: "productivity falls" },
+      { t: "Weak year: there is less food for the small fish, so there are fewer of them", accept: "the fish die or reproduce less" },
+      { t: "Weak year: the remaining fish may move deeper or further away, out of reach of birds that feed near the surface", accept: "the shoals move elsewhere to find food" },
+      { t: "Weak year: the seabirds cannot find enough food, so fewer of their chicks survive", accept: "adults may starve, breed less or leave the colony / the seabird population falls" },
+    ],
+    noCredit: [
+      "Upwelling brings warm water to the surface, which the fish prefer",
+      "Upwelling carries phytoplankton up from the deep sea",
+      "Productivity is high because the upwelled water contains more oxygen",
+      "The seabirds feed on the nutrients that the upwelling brings up",
+    ],
+    model: "Upwelling brings cold, nutrient-rich water up from the deep ocean to the surface. In the sunlight zone, phytoplankton use these nutrients to photosynthesise and grow rapidly, so productivity is high. Energy passes from the phytoplankton through zooplankton to huge shoals of small fish, which give the seabirds plenty of food. In a year with weak upwelling, fewer nutrients reach the surface, so fewer phytoplankton grow. There is then less food for the small fish, so fewer of them are found near the surface. The fish that are left may move deeper or further away to find food, out of reach of the birds. The seabirds cannot find enough food for themselves and their chicks, so fewer chicks survive and some adults may starve or leave.",
+    tip: "Suggest means apply what you know to a new situation. Build the chain from nutrients to producers to fish, then run it for the weak year and go all the way to the birds and their chicks. When you mark, count at most two ticks from the Rich coast points, so full marks needs three from the Weak year points.",
+    caps: [{ labels: ["Rich coast"], max: 2 }],
     status: "human_review" },
 
 
@@ -761,6 +961,126 @@ export const WRITING = [
     noCredit: ["Corals live near the surface because they need low pressure", "Corals grow best in cloudy water because it is full of food", "Crown-of-thorns starfish grind the coral into sand", "Warm water dissolves the coral skeleton"],
     model: "Corals need warm water, so reefs are found mainly in tropical seas. The zooxanthellae inside the coral need light for photosynthesis. Light intensity decreases with depth, so reefs only grow in shallow water. The water must also be clear so that light can reach the coral. Where rivers bring in a lot of sediment, it blocks the light and settles on the coral, smothering the polyps. Coral larvae need a hard surface such as rock to attach to, so reefs do not start on soft sand or mud. Biotic factors matter too. Crown-of-thorns starfish feed on coral polyps, and large numbers of them can kill whole areas of reef. Parrot fish bite off and grind up coral as they feed.",
     tip: "Explain means give each factor and its effect on the coral. Link light to the zooxanthellae and photosynthesis, then to depth. Include at least one biotic factor: parrot fish or crown-of-thorns starfish.",
+    status: "human_review" },
+
+  { id: "W5-11", unit: 5, ref: "5.1/LO4", command: "Explain", marks: 4,
+    q: "Explain why coastal ecosystems, such as seagrass beds and coral reefs, are more likely to be harmed by human activity than the open-ocean ecosystem.",
+    points: [
+      { t: "Coastal ecosystems are close to where many people live and work", accept: "a large share of the human population lives near the coast" },
+      { t: "Pollution from the land, such as sewage or fertiliser run-off, reaches coastal water first", accept: "rivers carry waste and run-off into coastal waters" },
+      { t: "Coastal water is shallow and has a small volume, so pollution is less diluted", accept: "the open ocean is so large and deep that pollution is spread out" },
+      { t: "Direct use: coastal habitats are cleared or built on, for example for ports, housing, hotels or fish farms", accept: "mangroves are cut down / land is reclaimed from the sea" },
+      { t: "Direct use: coastal ecosystems are easy to reach, so fishing and collecting of organisms are concentrated there", accept: "heavily fished / organisms taken as souvenirs" },
+      { t: "Direct use: tourism and recreation, such as boats, anchors, divers and trampling, damage them directly", accept: "tourists trample rocky shores / anchors break coral" },
+    ],
+    noCredit: [
+      "Coastal ecosystems have fewer species, so they are more fragile",
+      "Warmer coastal water makes pollutants stronger",
+      "The open ocean is not affected by human activity at all",
+      "Coastal ecosystems are affected by the tides",
+    ],
+    model: "Coastal ecosystems are close to where many people live and work. They are the first to receive pollution from the land, such as sewage and fertiliser carried by rivers and run-off. Coastal water is shallow and has a small volume, so the pollution is not diluted as much as it is in the huge, deep open ocean. Coastal habitats are also cleared or built on for ports, housing and hotels. Because they are easy to reach, they are heavily fished, and tourists' boats, anchors and trampling damage them directly.",
+    tip: "Give reasons why the coast is more at risk, and link each one to the harm: closeness to people, pollution from the land, a small volume of water, and direct use. Contrast with the open ocean, which is far from land and very large. When you mark, count at most two ticks from the Direct use points, so full marks needs a pollution or dilution reason.",
+    caps: [{ labels: ["Direct use"], max: 2 }],
+    status: "human_review" },
+
+  { id: "W5-12", unit: 5, ref: "5.3/LO8", command: "Explain", marks: 3,
+    q: "Explain why the sunlight zone of the open ocean contains a large mass of living organisms (biomass).",
+    points: [
+      { t: "There is enough light for photosynthesis only in the sunlight zone", accept: "light intensity decreases with depth / too little light for photosynthesis below about 200 m" },
+      { t: "Producers such as phytoplankton photosynthesise there, so they grow and reproduce", accept: "diatoms, dinoflagellates or cyanobacteria / productivity is high" },
+      { t: "The producers are food for large numbers of consumers, such as zooplankton and fish", accept: "food chains start with the producers / energy passes from producers to consumers" },
+      { t: "There is plenty of dissolved oxygen for the organisms' respiration", accept: "oxygen is released by photosynthesis and dissolves from the air" },
+    ],
+    noCredit: [
+      "The water is warmer, so the organisms grow bigger",
+      "The low pressure lets organisms grow larger bodies",
+      "Zooplankton make their own food from sunlight",
+    ],
+    model: "There is only enough light for photosynthesis in the sunlight zone, because light intensity decreases with depth. Producers such as phytoplankton photosynthesise there, so they grow and reproduce quickly. They are food for huge numbers of zooplankton, which are eaten by fish, so the food chains build up a large biomass. Photosynthesis and oxygen dissolving from the air also give the water plenty of dissolved oxygen for the animals to respire.",
+    tip: "Start with light and link each step: light, then photosynthesis by producers, then food for consumers. Warm water or low pressure on their own do not explain the biomass.",
+    status: "human_review" },
+
+  { id: "W5-13", unit: 5, ref: "5.5/LO2", command: "Compare", marks: 5,
+    q: "Compare the features of a sandy shore and a muddy shore.",
+    points: [
+      { t: "Sand particles are larger than mud particles", accept: "mud has very fine particles ORA" },
+      { t: "Sandy shores have more water movement and stronger waves than muddy shores", accept: "muddy shores have calm, sheltered water ORA" },
+      { t: "On a muddy shore sedimentation is greater than erosion, while a sandy shore has more erosion", accept: "fine particles settle and build up on muddy shores but are washed away from sandy shores" },
+      { t: "Sandy shores are less stable than muddy shores", accept: "sand shifts and moves easily / mud particles stick together ORA" },
+      { t: "Sandy shores are usually steeper than muddy shores", accept: "muddy shores are almost flat / have a gentler gradient ORA" },
+      { t: "Sand contains more oxygen than mud", accept: "air spaces between the larger sand particles / mud is waterlogged and low in oxygen ORA" },
+      { t: "Similarity: both have supratidal, intertidal and subtidal zones", accept: "both are covered and uncovered by the tides" },
+    ],
+    noCredit: [
+      "Mud contains more oxygen because it holds more water",
+      "Mud particles are larger and heavier than sand particles",
+      "Muddy shores are found where the waves are strongest",
+      "Sandy shores are more stable because sand particles are heavier",
+    ],
+    model: "Sand particles are larger than mud particles. Sandy shores have more water movement, with stronger waves, while muddy shores are in sheltered places with calm water. On a muddy shore the rate of sedimentation is greater than the rate of erosion, so fine particles settle and build up. A sandy shore has more erosion, so fine particles are washed away. Sand shifts easily, so a sandy shore is less stable than a muddy one. A sandy shore is usually steeper, while a muddy shore is almost flat. Sand contains more oxygen than mud, which is waterlogged. Both kinds of shore have supratidal, intertidal and subtidal zones.",
+    tip: "Compare means each point covers both shores: use words such as \"larger than\", \"more than\" or \"whereas\". Describing one shore on its own, with no comparison, scores nothing. Watch the oxygen trap: mud holds more water but less oxygen.",
+    status: "human_review" },
+
+  { id: "W5-14", unit: 5, ref: "5.7/LO9", command: "Describe", marks: 4,
+    q: "Describe the Darwin–Dana–Daly theory of how a coral atoll forms.",
+    points: [
+      { t: "A volcano erupts and forms an island in a warm, tropical sea", accept: "a volcanic island" },
+      { t: "Corals grow in the shallow water around the edge of the island, forming a fringing reef", accept: "fringing reef" },
+      { t: "The island slowly sinks (subsides)", accept: "subsidence / the island gradually sinks into the sea / the island is worn down by erosion" },
+      { t: "The corals keep growing upwards, so the reef stays in shallow, well-lit water", accept: "the reef grows up as the island sinks" },
+      { t: "The reef becomes a barrier reef, separated from the island by a lagoon", accept: "a lagoon forms between the island and the reef" },
+      { t: "The island sinks below sea level, leaving a ring of reef around a central lagoon (an atoll)", accept: "the island disappears and only the ring-shaped reef remains" },
+    ],
+    noCredit: [
+      "The sea level falls, leaving a ring of coral above the water",
+      "The reef grows up from an underwater mountain that never reached the surface",
+      "Atolls form on the continental shelf beside large continents",
+      "The coral sinks with the island and dies",
+    ],
+    model: "A volcano erupts and forms an island in a warm, tropical sea. Corals grow in the shallow water around its edge, forming a fringing reef. Over a very long time the island slowly sinks. The corals keep growing upwards towards the light, so the reef stays in shallow water. A lagoon opens up between the island and the reef, which is now a barrier reef. Finally the island sinks below sea level and disappears, leaving a ring of coral reef around a central lagoon. This is an atoll.",
+    tip: "Describe the stages in order and name each type of reef: fringing, barrier, then atoll. The key idea is that the island sinks while the coral grows upwards.",
+    status: "human_review" },
+
+  { id: "W5-15", unit: 5, ref: "5.2/LO3", command: "Describe", marks: 6,
+    q: "A group of students wants to draw a scale diagram showing how the slope of a sandy beach changes up the beach. Describe how they could measure the profile of the beach.",
+    points: [
+      { t: "Start at the low-tide mark and work in a straight line up to the top of the beach", accept: "lay a tape from the water's edge up the beach, at right angles to the sea" },
+      { t: "Place two ranging poles upright on the line, at the two ends of a section of beach", accept: "e.g. 5 m apart / at each place where the slope changes" },
+      { t: "Measure the distance between the two poles with a tape measure", accept: "lay a tape between the poles" },
+      { t: "Line up the clinometer with the same height mark on each pole", accept: "sight from a mark on one pole to the same mark on the other / line up the tops of the poles" },
+      { t: "Read the angle of the slope from the clinometer", accept: "use a protractor to measure the angle" },
+      { t: "Move the poles up the beach, placing the lower pole where the upper pole stood, and repeat to the top", accept: "repeat for each section up the shore" },
+      { t: "Take each angle reading more than once and use the mean", accept: "repeat readings and average them" },
+      { t: "Record the distance and the angle for each section in a table", accept: "record each section so the profile can be drawn to scale" },
+      { t: "Safety: check the tide times before starting and watch for the incoming tide", accept: "work in a group / wear suitable footwear" },
+    ],
+    noCredit: [
+      "Place quadrats at random on the beach",
+      "Count the organisms touching the tape at each pole",
+      "Measure the mass of sand in each section",
+    ],
+    model: "Check the tide times and start soon after low tide. Lay a tape from the low-tide mark in a straight line up the beach. Place two ranging poles upright on the line, about 5 m apart, and measure the distance between them with the tape. One student holds the clinometer against a mark on the lower pole and lines it up with the same height mark on the upper pole, then reads the angle of slope. Take the reading three times and work out the mean. Record the distance and the angle in a table. Then move the lower pole to where the upper pole stood, place the upper pole further up the beach and repeat until you reach the top. Work in a group and keep watching for the incoming tide.",
+    tip: "Describe the method in the order you would do it: equipment, what you measure, how you move up the beach, repeats, recording and safety. Read the angle between the same marks on the two poles, not from the ground.",
+    status: "human_review" },
+
+  { id: "W5-16", unit: 5, ref: "5.4/LO3", command: "Explain", marks: 4,
+    q: "On a rocky shore, mussels are most common on the lower shore and become fewer further up. Very few mussels live below the low-tide mark, where starfish, which are predators of shellfish, are common. Fucus seaweed grows on the middle and lower shore but not at the top, and there is much less Fucus on a part of the shore that faces very strong waves. Explain how biotic and abiotic factors could cause this pattern.",
+    points: [
+      { t: "Higher up the shore, organisms are uncovered by the tide for longer, so they are more likely to dry out", accept: "exposure to air increases up the shore / lower down they are covered by water for longer" },
+      { t: "Higher up the shore, the temperature changes more, because air temperature varies more than water temperature", accept: "temperature is more stable lower down / organisms can overheat in the sun when uncovered" },
+      { t: "Mussels can feed only when they are covered by water, so higher up they have less time to feed", accept: "less food is available higher up / they feed less when uncovered" },
+      { t: "Below the low-tide mark the mussels are always under water, where the starfish can reach and eat them", accept: "predation by starfish keeps mussel numbers low there" },
+      { t: "Strong wave action can tear Fucus off the rocks, so there is less of it on the wave-exposed part", accept: "very strong waves remove it even though it has a holdfast" },
+    ],
+    noCredit: [
+      "Mussels live low on the shore because they need more light",
+      "Fucus is missing from the top of the shore because mussels eat it",
+      "The starfish compete with the mussels for food",
+      "Wave action is a biotic factor",
+    ],
+    model: "Higher up the shore, organisms are uncovered by the tide for longer, so they are more likely to dry out. This is why Fucus cannot live at the top of the shore. When they are uncovered, the temperature also changes more, because air temperature varies more than water temperature. Mussels can only feed when they are covered by water, so higher up they have less time to feed. Below the low-tide mark the mussels are always under water, where starfish can reach and eat them, so predation keeps their numbers low. Where the waves are very strong, wave action can tear Fucus off the rocks, so there is much less of it there.",
+    tip: "For each mark, name a factor, say how it changes up or down the shore or between places, and link it to where the organism is common or missing. Cover both the mussels and the Fucus. Use biotic factors (predation, food) as well as abiotic ones (exposure to air, temperature, wave action).",
     status: "human_review" },
 
 
@@ -931,6 +1251,168 @@ export const WRITING = [
     model: "Mangrove wood is used as timber to build houses and boats, and as firewood and charcoal for fuel. People catch fish, crabs and shellfish there for food. Young fish and shellfish shelter among the roots, so mangroves are nursery areas that keep up the stocks caught by fisheries. The roots reduce wave energy, which protects the coast from erosion and homes from storm flooding. Some mangrove plants are used as medicines. Mangroves also attract tourists on boat trips, which brings income. The fisheries they support also provide jobs and income for coastal communities.",
     tip: "Outline means one clear benefit per point, and say what it gives people. 'Slows the waves' only scores when you link it to less erosion or flooding.",
     status: "human_review" },
+
+  { id: "W6-11", unit: 6, ref: "6.3/LO7", command: "Discuss", marks: 6,
+    q: "Some fishers anchor fish aggregating devices (FADs) in the open ocean. A FAD is a floating platform with a long line hanging below it. Explain how a FAD works and how fishers use it, and discuss its ecological impacts.",
+    points: [
+      { t: "How it works: algae and other small organisms grow on the platform and the hanging line", accept: "producers / macroalgae settle and grow on the FAD" },
+      { t: "How it works: small fish gather under the FAD for shelter from predators", accept: "small fish hide under the floating object" },
+      { t: "How it works: small fish feed on the algae and small organisms growing on the FAD", accept: "the FAD gives small fish a food source" },
+      { t: "How it works: larger predatory fish, such as tuna, are attracted to feed on the small fish", accept: "a food web develops around the FAD" },
+      { t: "How it works: fishers know where the fish are, so they can catch large numbers quickly", accept: "less time or fuel is spent searching for shoals" },
+      { t: "Impact: the number of small fish around the FAD can increase, because it gives them extra food and shelter", accept: "a local increase in small fish / more biomass around the FAD" },
+      { t: "Impact: very large catches of tuna around FADs can lead to overfishing", accept: "young tuna gather too and are caught before they can breed" },
+      { t: "Impact: non-target species, such as turtles, sharks and dolphins, are attracted and caught as bycatch or entangled in the lines", accept: "lost FADs keep entangling animals" },
+      { t: "Impact: predators are drawn into areas where they would not normally be found, changing their distribution or migration", accept: "predators are kept outside their normal range" },
+    ],
+    noCredit: ["The FAD feeds the tuna directly", "FADs are dragged across the seabed to catch fish", "Only tuna are attracted to a FAD"],
+    model: "Algae and other small organisms grow on the floating platform and its line. Small fish gather under the FAD for shelter from predators, and they feed on the algae and small organisms there. Larger predatory fish such as tuna are then attracted to feed on the small fish. Fishers know where the fish are, so they can catch large numbers quickly. One impact is that the number of small fish around the FAD can increase, because it gives them extra food and shelter. However, the very large catches of tuna can lead to overfishing. Turtles, sharks and dolphins are also attracted and can be caught as bycatch or tangled in the lines. FADs can draw predators into areas where they would not normally be found, which changes their distribution.",
+    tip: "First explain the food chain that builds up around the FAD, step by step, and how fishers use it. Then discuss impacts on both sides: small fish can increase locally, but there are also overfishing, bycatch and changes to where predators live. Marking cap: count at most four How it works ticks, so full marks needs at least two Impact points.",
+    caps: [{ labels: ["How it works"], max: 4 }],
+    status: "human_review" },
+
+  { id: "W6-12", unit: 6, ref: "6.4/LO5", command: "Outline", marks: 6,
+    q: "Grouper are farmed in floating sea cages in some tropical countries. Outline the methods a farmer could use to produce grouper by aquaculture, from obtaining the first fish to keeping the stock healthy and growing well.",
+    points: [
+      { t: "Obtain the first broodstock (adult breeding fish) to produce eggs and young", accept: "source breeding fish from the wild or from a hatchery" },
+      { t: "Keep the water conditions the species needs, such as temperature, salinity, light, pH and oxygen", accept: "monitor and maintain water conditions (any two named) / choose a site with suitable conditions" },
+      { t: "Give a diet with the right protein and lipid (fat) levels for the species", accept: "grouper are predators, so they need a high-protein feed" },
+      { t: "Choose a feed that limits environmental harm, e.g. plant-based protein rather than feed made from wild-caught fish", accept: "fish-based pellets or fresh fish use up wild fish stocks, so plant-based protein reduces this" },
+      { t: "Remove waste to keep the water clean, by a good water flow through the cages or by moving the cages", accept: "place the cages where currents carry waste away / move the cages to a clean site" },
+      { t: "Sort the fish by size, so larger fish cannot eat smaller ones", accept: "size grading to prevent cannibalism" },
+      { t: "Feed the fish regularly, so hungry fish do not eat each other", accept: "regular feeding to prevent cannibalism" },
+      { t: "Keep the stocking density low, so disease and parasites spread less easily", accept: "do not overcrowd the cages" },
+      { t: "Use antibiotics to treat or prevent disease", accept: "medicines for infected fish" },
+      { t: "Use cleaner species that remove parasites from the fish", accept: "cleaner fish or shrimps eat the parasites" },
+      { t: "Select the fastest-growing fish as the new broodstock, so the offspring grow quickly", accept: "breed from the fastest growers" },
+    ],
+    noCredit: ["One type of pellet suits every farmed species", "Put as many fish as possible in each cage so more are produced", "Choose the oldest fish as broodstock because they are the biggest"],
+    model: "The farmer first obtains broodstock, adult grouper that breed to produce eggs and young. The water conditions grouper need, such as temperature, salinity, pH and oxygen, are monitored and kept right. The fish are given a diet with the right protein and lipid levels, and the farmer can choose plant-based protein rather than feed made from wild-caught fish, to limit the harm to wild fish stocks. A good water flow through the cages removes waste, or the cages can be moved. The fish are sorted by size and fed regularly so that they do not eat each other. The stocking density is kept low so that disease and parasites spread less easily, and antibiotics or cleaner species can be used to treat disease and remove parasites. The fastest-growing fish are selected as the next broodstock.",
+    tip: "Outline means a short list of methods, each with a few words on what it is for. Work through the farm in order: broodstock, conditions, feeding, water quality, cannibalism, disease, then choosing new broodstock.",
+    status: "human_review" },
+
+  { id: "W6-13", unit: 6, ref: "6.4/LO6", command: "Discuss", marks: 5,
+    q: "Large areas of mangrove forest along a coast were cleared to build shrimp farms. The shrimp farms have now closed. Discuss the use of aquaculture to restock this area with mangroves.",
+    points: [
+      { t: "How: young mangrove plants are raised in a nursery, sheltered from waves and grazing animals, until they are large enough to plant out", accept: "seeds or seedlings are grown on and cared for, then transplanted" },
+      { t: "Benefit: more young plants survive than if seeds settled naturally, so the forest recovers faster", accept: "quicker than natural regrowth" },
+      { t: "Benefit: the restored forest gives nursery areas for juvenile fish and other animals", accept: "young fish shelter among the roots" },
+      { t: "Benefit: the roots reduce wave energy and erosion, so the coast is protected again", accept: "coastal protection is restored" },
+      { t: "Limitation: it is slow, because it takes many years for the young plants to grow into a forest", accept: "slow to show results" },
+      { t: "Limitation: it is costly and needs many workers with the right skills", accept: "expensive / labour intensive" },
+      { t: "Limitation: if pollution left from the shrimp ponds is not removed, the new plants may die", accept: "the pollution problem must be solved first" },
+      { t: "Limitation: the area must be protected, or it may be cleared again", accept: "the cause of the damage must be stopped" },
+    ],
+    noCredit: ["It counts as aquaculture because the mangroves are sold for timber", "Once planted, the young mangroves will survive whatever the conditions", "Mangroves are replanted to make the water saltier for fish"],
+    model: "Young mangrove plants are grown in a nursery, where they are sheltered from waves and grazing animals. When they are large enough, they are planted out in the cleared area. More young plants survive this way than if seeds settled naturally, so the forest can recover faster. The restored forest gives nursery areas for juvenile fish, and its roots reduce wave energy and erosion, so the coast is protected again. However, restocking is slow, because it takes many years for a forest to grow. It is also costly and needs many skilled workers. If pollution left from the shrimp ponds is not removed, the new plants may die, and the area must be protected so that it is not cleared again.",
+    tip: "Discuss means both sides. Say how the restocking is done and what it gives back to the ecosystem, then give its limits. A strong answer notes that restocking fails unless the cause of the damage is dealt with. Marking cap: count at most three How and Benefit ticks together, so full marks needs at least two Limitation points.",
+    caps: [{ labels: ["How","Benefit"], max: 3 }],
+    status: "human_review" },
+
+  { id: "W6-14", unit: 6, ref: "6.5/LO6", command: "Evaluate", marks: 6,
+    q: "An oil tanker runs aground and spills oil close to a coral reef. Winds are pushing the oil towards a coastline where seabirds nest. Evaluate the use of booms, skimmers, dispersant sprays and burning to minimise the impact of this spill.",
+    points: [
+      { t: "Strength: booms are floating barriers that hold the oil in one place and stop it spreading to the coast", accept: "booms keep the oil away from the seabirds' shore" },
+      { t: "Limitation: booms only contain the oil and do not remove it, so another method is also needed", accept: "waves in rough seas can carry oil over the boom" },
+      { t: "Strength: skimmers remove oil from the surface so it can be taken away, without adding chemicals to the sea", accept: "the oil is collected / recovered" },
+      { t: "Limitation: skimmers can only collect oil floating on the surface, not oil that has mixed into the water or reached the shore", accept: "skimmers work best on oil gathered by booms in calm water" },
+      { t: "Strength: dispersants quickly break the oil into tiny droplets that mix into the water, removing it from the surface", accept: "less oil reaches the seabirds and the shore" },
+      { t: "Limitation: the oil droplets are toxic to fish and coral, so dispersants would harm the nearby reef", accept: "dispersed oil poisons reef organisms" },
+      { t: "Limitation: the dispersed droplets can sink, so the oil harms organisms on the seabed instead of staying on the surface", accept: "the oil is moved into the water and onto the seabed, not removed" },
+      { t: "Strength: burning quickly removes large amounts of oil from the surface", accept: "burning gets rid of the oil fast" },
+      { t: "Limitation: burning releases smoke and carbon dioxide, polluting the air", accept: "adds to the enhanced greenhouse effect / smoke is blown onto the coast" },
+      { t: "Limitation: burning only works on a thick layer of fresh oil", accept: "the slick must be thick enough to burn" },
+      { t: "Judgement: near the reef, booms with skimmers are probably the best choice, because they remove oil without adding toxic droplets, although burning or dispersants may be needed further out if the spill is large", accept: "any conclusion supported by a reason, weighing benefits and limitations" },
+    ],
+    noCredit: ["Dispersants make the oil evaporate", "Dispersants are natural and harmless to marine life", "Dispersants turn the oil into a solid that can be scooped up", "Booms are the best method (with no reason given)"],
+    model: "Booms are floating barriers that hold the oil in one place, so they can stop it reaching the coast where the seabirds nest. However, booms only contain the oil and do not remove it. Skimmers remove oil from the surface so it can be taken away, without adding chemicals, but they can only collect oil that is still floating. Dispersants quickly break the oil into tiny droplets that mix into the water. This removes oil from the surface, but the droplets are toxic to fish and coral, so they would harm the nearby reef. The droplets can also sink and harm organisms living on the seabed. Burning removes large amounts of surface oil quickly, but it releases smoke and carbon dioxide, and it only works on a thick layer of fresh oil. Overall, near the reef, booms with skimmers are probably the best choice because they remove the oil without adding toxic droplets. Burning or dispersants may still be needed further out if the spill is very large.",
+    tip: "Evaluate each method: one strength and one limitation. Use the context: a reef nearby makes dispersants a poor choice. End with a judgement and a reason, for example that combining methods works better than any one alone. Marking cap: count at most three Strength ticks and three Limitation ticks, and at most five of the two together, so full marks needs the Judgement.",
+    caps: [{ labels: ["Strength"], max: 3 }, { labels: ["Limitation"], max: 3 }, { labels: ["Strength","Limitation"], max: 5 }],
+    status: "human_review" },
+
+  { id: "W6-15", unit: 6, ref: "6.6/LO3", command: "Explain", marks: 4,
+    q: "A plastic bottle top lost from a beach in California is found years later in the Great Pacific Garbage Patch, far out in the North Pacific Ocean. Explain how ocean gyres cause plastic to collect in garbage patches such as this one.",
+    points: [
+      { t: "Floating plastic is carried away from the coast by surface ocean currents", accept: "currents move the plastic out to sea" },
+      { t: "The ocean currents are driven by winds and the spinning of the Earth", accept: "winds / the Earth's rotation / tides / differences in density" },
+      { t: "In the North Pacific the currents form a gyre, a large system of currents moving in a circle", accept: "the currents circulate / rotate around the ocean" },
+      { t: "The circulating currents gradually move the plastic towards the centre of the gyre", accept: "plastic is carried into the middle" },
+      { t: "Water at the centre of the gyre hardly moves, so plastic that reaches it is not carried away again and builds up", accept: "plastic is trapped in the calm centre / accumulates in the centre" },
+      { t: "Plastic breaks down very slowly, so it stays in the patch for many years and the amount keeps growing", accept: "plastic is not decomposed, so it persists" },
+    ],
+    noCredit: ["Gyres are tidal currents that flow in and out twice a day", "A gyre is a whirlpool that drags plastic down to the seabed", "Gyres are currents that flow along the seabed"],
+    model: "Floating plastic from the coast is carried out to sea by surface ocean currents, which are driven by winds and the spinning of the Earth. In the North Pacific these currents form a gyre, a large system of currents moving in a circle. As the water circulates, the plastic is gradually moved towards the centre of the gyre. Water at the centre hardly moves, so plastic that reaches it is not carried away again and builds up. Plastic breaks down very slowly, so it stays in the patch for many years and the garbage patch keeps growing.",
+    tip: "Explain the journey in order: carried by currents, circulating in the gyre, moved to the calm centre, trapped and building up. Plastic lasts a very long time, which is why the patch grows.",
+    status: "human_review" },
+
+  { id: "W6-16", unit: 6, ref: "6.8/LO5", command: "Compare", marks: 3,
+    q: "Global warming is causing sea level to rise. Compare the effects on sea level of thermal expansion of sea water, melting of land-based ice, and melting of floating sea ice.",
+    points: [
+      { t: "Similarity: thermal expansion and melting land-based ice both raise sea level", accept: "both are caused by rising temperatures / both lead to coastal flooding" },
+      { t: "Key contrast: thermal expansion makes the water already in the sea take up more volume, with no water added, whereas melting land-based ice adds extra water to the sea", accept: "in expansion the particles move further apart, so the same mass has a larger volume; in melting, water stored on land flows into the sea" },
+      { t: "Floating ice: melting floating sea ice does not raise sea level, unlike thermal expansion and melting land-based ice", accept: "the level stays the same when floating ice melts" },
+      { t: "Floating ice: it is already in the sea and displaces its own mass of water, but land-based ice is added to the sea only when it melts", accept: "floating ice already takes up its space in the water" },
+    ],
+    noCredit: ["Melting floating sea ice raises sea level as much as melting land-based ice", "Thermal expansion adds new water to the sea", "Melting ice cools the sea so it contracts and sea level falls"],
+    model: "Thermal expansion and melting land-based ice both raise sea level. In thermal expansion no water is added: as the sea water warms, its particles move further apart, so the same mass takes up more volume. Melting land-based ice, by contrast, adds extra water to the sea from glaciers and ice sheets. Melting floating sea ice does not raise sea level, unlike the other two. This is because floating ice is already in the sea and displaces its own mass of water, whereas land-based ice adds to the sea only when it melts.",
+    tip: "In a Compare, make each point about both things, using words like \"whereas\" or \"but\". The key contrast is more volume (expansion) against more water (land ice). Floating ice is the trap: it does not raise sea level. Marking cap: count at most two Similarity and Floating ice ticks together, so full marks needs the Key contrast.",
+    caps: [{ labels: ["Similarity","Floating ice"], max: 2 }],
+    status: "human_review" },
+
+  { id: "W6-17", unit: 6, ref: "6.7/LO5", command: "Explain", marks: 6,
+    q: "A coastal town releases untreated sewage into a sheltered bay. A resident says: \"Algae give out oxygen, so anything that makes the algae in the bay grow will be good for the fish.\" Explain how the sewage could cause fish in the bay to die, and why the resident's argument is wrong.",
+    points: [
+      { t: "Chain: sewage adds nutrients, such as nitrates and phosphates, to the water", accept: "nitrogen and phosphorus" },
+      { t: "Chain: algae grow rapidly, forming an algal bloom", accept: "producers / phytoplankton multiply quickly" },
+      { t: "Chain: when the bloom dies, bacteria break down the dead algae, so there is much more decay", accept: "decomposers break down the dead bloom / the bloom blocks light so producers below die and decay" },
+      { t: "Chain: bacteria also decompose the organic matter in the sewage itself", accept: "the sewage is broken down by decomposers" },
+      { t: "Chain: the decomposers respire aerobically and use up dissolved oxygen", accept: "the bacteria respire and use the oxygen" },
+      { t: "Chain: the dissolved oxygen in the water falls", accept: "oxygen falls too low for fish to survive" },
+      { t: "Resident: decomposers use oxygen faster than the algae and the air can replace it", accept: "dead algae no longer photosynthesise, so they add no oxygen" },
+      { t: "Resident: in the dark, algae cannot photosynthesise, but they still respire and use oxygen", accept: "at night the algae use oxygen too" },
+    ],
+    noCredit: ["The sewage kills the fish because of the chlorine in it", "The fish starve because the algae use up all the nutrients", "More algae always means more oxygen, so the fish will do better"],
+    model: "The sewage adds nutrients such as nitrates and phosphates to the bay. Algae use them to grow rapidly, forming an algal bloom. When the algae die, bacteria decompose them, and the bacteria also decompose the organic matter in the sewage itself. The decomposers respire aerobically and use up the dissolved oxygen, so the oxygen level falls and fish die. The resident is right that living algae release oxygen in the light, but the decomposers use oxygen faster than the algae and the air can replace it. Also, in the dark the algae cannot photosynthesise, but they still respire and use oxygen.",
+    tip: "Give the full chain: nutrients, algal bloom, death and decomposition, aerobic respiration by decomposers, oxygen falls. Sewage is itself food for decomposers. To answer the resident, compare how fast oxygen is used with how fast it is replaced. Marking cap: count at most five Chain ticks, so full marks needs a Resident point.",
+    caps: [{ labels: ["Chain"], max: 5 }],
+    status: "human_review" },
+
+  { id: "W6-18", unit: 6, ref: "6.8/LO6", command: "Describe and explain", marks: 5,
+    q: "Increasing greenhouse gases in the atmosphere are leading to more frequent coral bleaching. Explain how coral bleaching happens, and describe the effects it can have on the coral and on the reef ecosystem.",
+    points: [
+      { t: "Coral: the enhanced greenhouse effect warms the sea water above the temperature the coral can tolerate", accept: "a rise in sea temperature / falling pH (acidification) can add to the stress" },
+      { t: "Coral: the stressed coral polyps expel the zooxanthellae from their tissues", accept: "the zooxanthellae leave / are lost" },
+      { t: "Coral: the zooxanthellae give coral its colour, so without them the white skeleton shows through", accept: "the coral turns white because the algae have gone" },
+      { t: "Coral: the coral loses the food (sugars) that the zooxanthellae made by photosynthesis", accept: "loses its main energy source" },
+      { t: "Coral: if the water stays too warm for a long time, the coral starves and dies", accept: "prolonged bleaching kills the coral" },
+      { t: "Reef: fish and other animals lose the shelter and habitat the coral gave them, so they leave or die", accept: "loss of habitat / loss of species / species richness falls" },
+      { t: "Reef: with less photosynthesis by zooxanthellae, less energy enters the reef food web, so fewer consumers can be supported", accept: "less food at the base of the food web" },
+    ],
+    noCredit: ["Strong sunlight fades the colour out of the coral", "Bleached coral is always dead coral", "The warm water dissolves the coral skeleton, turning it white"],
+    model: "More greenhouse gases cause an enhanced greenhouse effect, which warms the sea water above the temperature the coral can tolerate. The stressed polyps expel the zooxanthellae from their tissues. The zooxanthellae give coral its colour, so without them the white skeleton shows through. The coral also loses the sugars the zooxanthellae made by photosynthesis, so if the water stays warm for a long time the coral starves and dies. Fish and other animals then lose the shelter and habitat the coral gave them, so they leave or die. With fewer zooxanthellae photosynthesising, less energy enters the reef food web, so fewer consumers can be supported.",
+    tip: "Explain the chain first: warmer water, zooxanthellae expelled, coral turns white, no food from photosynthesis, coral starves. Then describe the effects on the animals that depend on the reef. Acidification can add to the stress, but warming is the main cause. Marking cap: count at most four Coral ticks, so full marks needs a Reef point.",
+    caps: [{ labels: ["Coral"], max: 4 }],
+    status: "human_review" },
+
+  { id: "W6-19", unit: 6, ref: "6.3/LO5", command: "Evaluate", marks: 6,
+    q: "Fish stocks in a country's coastal waters are falling. The government plans to introduce catch quotas, a larger minimum mesh size for nets, and a closed season each year. Evaluate these strategies for making the fishery sustainable.",
+    points: [
+      { t: "Strength: quotas limit the mass or number of fish caught, so fish are not removed faster than they can reproduce", accept: "quotas cap the catch so the stock can replace itself" },
+      { t: "Limitation: fishers may throw back fish caught over their quota, and many of these die", accept: "dumping or discarding of the excess catch" },
+      { t: "Strength: a larger mesh lets young fish escape, so they can grow and breed before they are caught", accept: "juveniles pass through the net" },
+      { t: "Limitation: a larger mesh does not limit how many adult fish are caught", accept: "mesh size alone does not cap the total catch" },
+      { t: "Strength: a closed season protects the fish while they breed, so more young are produced", accept: "no fishing in the breeding season" },
+      { t: "Limitation: fishing may increase just before and after the closed season, so the total catch may not fall", accept: "fishing effort moves to the open months" },
+      { t: "Limitation: all three must be checked and enforced, which is costly, and illegal fishing may continue", accept: "needs inspections or patrols" },
+      { t: "Limitation: quotas and closed seasons reduce fishers' income, at least in the short term", accept: "loss of earnings or jobs" },
+      { t: "Limitation: fish that migrate into other countries' waters are not protected, so international agreements are also needed", accept: "national rules do not cover shared or migratory stocks" },
+      { t: "Judgement: used together and enforced, the strategies are likely to work better than any one alone, because each tackles a different part of the problem", accept: "any conclusion supported by a reason, weighing benefits and limitations" },
+    ],
+    noCredit: ["A larger mesh lets the biggest fish escape, so more large adults survive", "Quotas need no checking, because fishers always stop when they reach their limit", "Sustainable fishing means banning all fishing"],
+    model: "Quotas limit the number of fish caught, so fish are not removed faster than they can reproduce. However, fishers may throw back fish caught over their quota, and many of these die. A larger mesh lets young fish escape, so they can grow and breed before they are caught, but it does not limit how many adult fish are taken. A closed season protects the fish while they breed, so more young are produced, but fishing may increase just before and after it. All three strategies must be checked and enforced, which is costly, and quotas and closed seasons reduce fishers' income in the short term. Fish that migrate into other countries' waters are not protected, so international agreements are also needed. Overall, the strategies are likely to work better together than alone, because each tackles a different part of the problem, as long as they are enforced.",
+    tip: "Evaluate each strategy: say how it protects the stock, then give a limitation. End with a judgement and a reason. Combining strategies usually works better than relying on one. Marking cap: count at most three Strength ticks and three Limitation ticks, and at most five of the two together, so full marks needs the Judgement.",
+    caps: [{ labels: ["Strength"], max: 3 }, { labels: ["Limitation"], max: 3 }, { labels: ["Strength","Limitation"], max: 5 }],
+    status: "human_review" },
 ];
 
 // Allowed command words (exam-style). Kept here so the content test and the UI agree.
@@ -944,6 +1426,30 @@ export function scoreWriting(ticked, marks) {
   const t = Math.max(0, Math.floor(Number(ticked) || 0));
   const m = Math.max(0, Math.floor(Number(marks) || 0));
   return Math.min(t, m);
+}
+
+// Label of a point: the text before the first colon, when the point starts "Label: …" (else null).
+export function pointLabel(p) {
+  const m = /^([A-Z][A-Za-z ,'-]{1,40}):/.exec(p && p.t ? p.t : "");
+  return m ? m[1] : null;
+}
+
+// Score a self-marked answer from the indices of the ticked points, applying the item's caps.
+// caps: [{ labels: [..], max }]. Caps may nest (single-label caps inside a combined cap):
+// single-label caps clip each group first, then combined caps clip the sum of their groups.
+export function scoreWritingItem(item, tickedIdx) {
+  const ticked = new Set((tickedIdx || []).filter((i) => Number.isInteger(i) && i >= 0 && i < item.points.length));
+  const byLabel = new Map(); let free = 0;
+  for (const i of ticked) { const l = pointLabel(item.points[i]); if (l) byLabel.set(l, (byLabel.get(l) || 0) + 1); else free++; }
+  const caps = item.caps || [];
+  for (const c of caps) if (c.labels.length === 1 && byLabel.has(c.labels[0])) byLabel.set(c.labels[0], Math.min(byLabel.get(c.labels[0]), c.max));
+  const used = new Set(); let capped = 0;
+  for (const c of caps) if (c.labels.length > 1) {
+    capped += Math.min(c.max, c.labels.reduce((s, l) => s + (byLabel.get(l) || 0), 0));
+    c.labels.forEach((l) => used.add(l));
+  }
+  for (const [l, n] of byLabel) if (!used.has(l)) capped += n;
+  return scoreWriting(capped + free, item.marks);
 }
 
 // Questions grouped by unit, in bank order, for the list screen.

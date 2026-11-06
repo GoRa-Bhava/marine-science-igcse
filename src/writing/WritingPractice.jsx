@@ -1,5 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { WRITING, scoreWriting, writingByUnit } from "../content/writing-bank.js";
+import { WRITING, scoreWritingItem, writingByUnit } from "../content/writing-bank.js";
+
+/* A one-line, plain-words summary of an item's marking caps, shown under the checklist,
+   e.g. "Counts at most 3 Strength ticks and 3 Limitation ticks (5 together)." */
+function capsLine(caps) {
+  const singles = caps.filter((c) => c.labels.length === 1);
+  const combined = caps.filter((c) => c.labels.length > 1);
+  const s = singles.map((c, i) => `${i === 0 ? "at most " : ""}${c.max} ${c.labels[0]} tick${c.max === 1 ? "" : "s"}`).join(" and ");
+  const comb = combined.map((c) => `${c.max} together`).join(", ");
+  return "Counts" + (s ? " " + s : "") + (comb ? ` (${comb})` : "") + ".";
+}
 
 /* Writing practice — a "write it, then mark it" pilot. Three screens, all local:
  *   list     → questions grouped by unit (command word, marks, last self-mark)
@@ -66,7 +76,7 @@ export default function WritingPractice({
   }
   function finish() {
     if (!q) return;
-    const score = scoreWriting(ticks.size, q.marks);
+    const score = scoreWritingItem(q, [...ticks]);
     setDone(true);
     if (onSaveResult) onSaveResult(q.id, { score, of: q.marks, text: paper ? "" : text });
   }
@@ -159,7 +169,7 @@ export default function WritingPractice({
   }
 
   // ================= MARK =================
-  const score = scoreWriting(ticks.size, q.marks);
+  const score = scoreWritingItem(q, [...ticks]);
   const missed = q.points.filter((_, i) => !ticks.has(i));
   return (
     <div style={{ fontFamily: F_UI, color: C.foam }}>
@@ -200,6 +210,10 @@ export default function WritingPractice({
           );
         })}
       </div>
+
+      {Array.isArray(q.caps) && q.caps.length > 0 && (
+        <p style={{ fontFamily: F_UI, fontSize: 12.5, color: C.mist, margin: "8px 2px 0", lineHeight: 1.5 }}>{capsLine(q.caps)}</p>
+      )}
 
       {Array.isArray(q.noCredit) && q.noCredit.length > 0 && (
         <div style={{ marginTop: 12 }}>
