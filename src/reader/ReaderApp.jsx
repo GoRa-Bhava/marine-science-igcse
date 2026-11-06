@@ -10,6 +10,7 @@ import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
+import WritingPractice from "../writing/WritingPractice.jsx";
 import UpdateBanner from "../updates/UpdateBanner.jsx";
 import { shuffleDeck, mixedDeck } from "../flashcards/order.js";
 
@@ -110,6 +111,7 @@ export function ReaderApp({
   const [recent, setRecent] = useState([]);
   const [srMap, setSrMap] = useState({}); // spaced-repetition schedule (Mixed Practice only)
   const [figData, setFigData] = useState({}); // Figures & data practice stats (per template key)
+  const [writingData, setWritingData] = useState({}); // Writing practice self-marks (per question id)
   const [session, setSession] = useState({ answered: [], wrong: [], count: 0, correct: 0 });
   const [checkpointSec, setCheckpointSec] = useState(null);
   const [browse, setBrowse] = useState({ ids: [], pos: 0, title: "" });
@@ -140,6 +142,7 @@ export function ReaderApp({
 
   // Settings: back up / restore / reset (against this device's Reader store).
   const [backupMsg, setBackupMsg] = useState("");
+  const [writingDeleteMsg, setWritingDeleteMsg] = useState("");
   const [restoreText, setRestoreText] = useState("");
   const [restoreMsg, setRestoreMsg] = useState("");
   const [restoreErr, setRestoreErr] = useState("");
@@ -188,6 +191,7 @@ export function ReaderApp({
     setActiveProfileId(store.getActiveProfileId());
     setSrMap(await store.getSRMap()); // Mixed-Practice spaced-repetition schedule
     setFigData(await store.getFigData()); // Figures & data practice stats
+    setWritingData(await store.getWriting()); // Writing practice self-marks (isolated)
 
     // Re-validate on launch (honours refunds/disables without a webhook). On any
     // network failure the cached entitlement is kept — never hard-lock offline.
@@ -649,6 +653,7 @@ export function ReaderApp({
   else if (view === "flashcards") viewContent = renderFlashcards();
   else if (view === "practicals") viewContent = renderPracticals();
   else if (view === "figdata") viewContent = renderFigData();
+  else if (view === "writing") viewContent = renderWriting();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else if (view === "profiles") viewContent = renderProfilePicker();
@@ -690,7 +695,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", figdata: "Figures & data", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", figdata: "Figures & data", writing: "Writing practice", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -1357,6 +1362,45 @@ export function ReaderApp({
     );
   }
 
+  // ---------- Writing practice (write it, then self-mark — isolated, no scoring) ----------
+  // keepWriting (answers kept on device, on by default) is read inline from settings
+  // to avoid a temporal-dead-zone on the first render dispatch.
+  function saveWritingResult(qid, { score, of, text }) {
+    setWritingData((prev) => {
+      const cur = prev[qid] || { bestScore: 0, attempts: 0 };
+      const rec = {
+        lastScore: score,
+        bestScore: Math.max(cur.bestScore || 0, score),
+        attempts: (cur.attempts || 0) + 1,
+        lastAt: Date.now(),
+      };
+      if (settings.keepWriting !== false && text) rec.text = text; // store the answer only if the toggle is on
+      const nextMap = { ...prev, [qid]: rec };
+      const s = store(); if (s) s.putWriting(nextMap);
+      return nextMap;
+    });
+  }
+  function deleteWrittenAnswers() {
+    setWritingData((prev) => {
+      const nextMap = {};
+      for (const [qid, rec] of Object.entries(prev)) { const { text, ...keep } = rec; nextMap[qid] = keep; }
+      const s = store(); if (s) s.putWriting(nextMap);
+      return nextMap;
+    });
+    setWritingDeleteMsg("Your written answers were deleted from this device.");
+  }
+  function renderWriting() {
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Writing practice" />
+        <WritingPractice C={C} theme={theme} writingData={writingData} keepText={settings.keepWriting !== false}
+          isUnlocked={(u) => isUnlockedUnit(u, entitlement)} onLocked={() => setView("unlock")}
+          onSaveResult={saveWritingResult} onBack={backToLibrary}
+          fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
+      </div>
+    );
+  }
+
   // ---------- Concept Cards (two-sided comparisons) ----------
   function renderConcepts() {
     const cards = comparisonCards;
@@ -1956,6 +2000,22 @@ export function ReaderApp({
           <input type="date" value={settings.examDate ? settings.examDate.slice(0, 10) : ""}
             onChange={async (e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, examDate: v })); if (store()) await store().putSettings({ examDate: v }); }}
             style={{ fontFamily: FONT_UI, fontSize: 15, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
+        </div>
+
+        {/* Writing practice */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Writing practice</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Your typed answers are saved only on this device, so you can come back to them. Turn this off to practise without keeping any text. Your self-marks are always kept.</div>
+          <label style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+            <input type="checkbox" checked={settings.keepWriting !== false}
+              onChange={async (e) => { const v = e.target.checked; setSettings((s) => ({ ...s, keepWriting: v })); if (store()) await store().putSettings({ keepWriting: v }); if (!v) deleteWrittenAnswers(); }}
+              style={{ width: 20, height: 20, accentColor: C.glow }} />
+            <span style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam }}>Keep my written answers on this device</span>
+          </label>
+          <button onClick={deleteWrittenAnswers} style={{ ...ghostBtn(C), width: "100%", marginTop: 12, border: `1px solid ${C.coral}`, color: C.coral }}>
+            Delete my written answers
+          </button>
+          {writingDeleteMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{writingDeleteMsg}</p>}
         </div>
 
         {/* About + updates */}

@@ -31,6 +31,13 @@ export const EXPLORE_ENTRIES = [
     icon: "🎴",
   },
   {
+    key: "writing",
+    view: "writing",
+    title: "Writing practice",
+    blurb: "Write a 4–6 mark answer, then mark it against the points",
+    icon: "✍️",
+  },
+  {
     key: "practicals",
     view: "practicals",
     title: "Practicals",
