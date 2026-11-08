@@ -779,7 +779,7 @@ export function ReaderApp({
         <p style={{ ...kicker(C), marginTop: 22 }}>YOUR UNITS</p>
         {/* Unit grid: compact card per unit (ring + % covered + revise link). Tap a
             card to expand its section list; tap a section to study it. */}
-        <div className="rl-unit-grid">
+        <div className={`rl-unit-grid${Object.values(expandedUnits).some(Boolean) ? " has-open" : ""}`}>
         {index.units.map((u, ui) => {
           const ids = unitIdsOf(u);
           const cov = coverage(ids, progressMap);
@@ -810,7 +810,7 @@ export function ReaderApp({
             );
           }
           return (
-            <div key={u.unitId} className="rl-unit-card" style={{ ...card(C), marginTop: 14, border: here ? `1.5px solid ${C.glow}` : `1px solid ${C.line}55` }}>
+            <div key={u.unitId} className={`rl-unit-card${open ? " is-open" : ""}`} style={{ ...card(C), marginTop: 14, border: here ? `1.5px solid ${C.glow}` : `1px solid ${C.line}55` }}>
               {/* Header — tap toggles the section list. */}
               <button onClick={() => toggleUnit(u.unitId)} aria-expanded={open}
                 style={{ display: "flex", gap: 14, alignItems: "center", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>

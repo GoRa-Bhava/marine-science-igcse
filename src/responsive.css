@@ -114,8 +114,12 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 16px;
-    align-items: start;
+    align-items: stretch;          /* cards in a row share a height */
+    grid-auto-rows: 1fr;           /* every row as tall as the tallest card, so all six match */
   }
+  .rl-unit-grid.has-open { grid-auto-rows: auto; }      /* an open unit must not stretch the others */
+  .rl-unit-card { display: flex; flex-direction: column; justify-content: center; }
+  .rl-unit-card.is-open { grid-column: 1 / -1; justify-content: flex-start; }   /* open unit takes the full row */
   .rl-unit-grid > * { margin-top: 0 !important; }   /* grid gap replaces the stacked margins */
 
   .rl-tile-row { flex-direction: row !important; flex-wrap: wrap; }
