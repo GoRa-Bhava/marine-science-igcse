@@ -7,7 +7,7 @@
 // Every Explore/Discoveries view returns here.
 export const LIBRARY_VIEW = "library";
 
-// The two-item "Explore" group shown below the practice-mode row.
+// The "Explore" group shown below the Writing practice card.
 export const EXPLORE_ENTRIES = [
   {
     key: "interactives",
@@ -31,13 +31,6 @@ export const EXPLORE_ENTRIES = [
     icon: "🎴",
   },
   {
-    key: "writing",
-    view: "writing",
-    title: "Writing practice",
-    blurb: "Write a 4–6 mark answer, then mark it against the points",
-    icon: "✍️",
-  },
-  {
     key: "practicals",
     view: "practicals",
     title: "Practicals",
@@ -53,6 +46,17 @@ export const EXPLORE_ENTRIES = [
   },
 ];
 
+// Writing practice — featured on the Library home as a full-width card directly
+// below the Mixed Practice / Syllabus Notes row (not in the Explore list), and
+// third in the desktop sidebar after Syllabus Notes.
+export const WRITING_ENTRY = {
+  key: "writing",
+  view: "writing",
+  title: "Writing practice",
+  blurb: "Write a 4–6 mark exam answer, then mark it against the marking points",
+  icon: "✍️",
+};
+
 // The Ocean Discoveries collection — a small entry by the readiness card.
 export const DISCOVERIES_ENTRY = {
   key: "collection",
@@ -64,4 +68,4 @@ export const DISCOVERIES_ENTRY = {
 
 // All views the Library can open from Explore/Discoveries; each must return to
 // LIBRARY_VIEW. Handy for tests and for the view dispatcher.
-export const EXPLORE_VIEWS = [...EXPLORE_ENTRIES, DISCOVERIES_ENTRY].map((e) => e.view);
+export const EXPLORE_VIEWS = [...EXPLORE_ENTRIES, WRITING_ENTRY, DISCOVERIES_ENTRY].map((e) => e.view);

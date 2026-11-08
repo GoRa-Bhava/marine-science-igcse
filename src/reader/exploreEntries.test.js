@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  EXPLORE_ENTRIES, DISCOVERIES_ENTRY, EXPLORE_VIEWS, LIBRARY_VIEW,
+  EXPLORE_ENTRIES, DISCOVERIES_ENTRY, EXPLORE_VIEWS, LIBRARY_VIEW, WRITING_ENTRY,
 } from "./exploreEntries.js";
 
 test("Library exposes Interactive Lab and Concept Cards in the Explore group", () => {
@@ -22,9 +22,7 @@ test("Library exposes Interactive Lab and Concept Cards in the Explore group", (
   assert.ok(byKey.figdata, "Figures & data entry present");
   assert.equal(byKey.figdata.view, "figdata");
   assert.match(byKey.figdata.title, /Figures/i);
-  assert.ok(byKey.writing, "Writing practice entry present");
-  assert.equal(byKey.writing.view, "writing");
-  assert.match(byKey.writing.title, /Writing/i);
+  assert.ok(!byKey.writing, "Writing practice is featured on its own, not in the Explore list");
 });
 
 test("Library exposes a Discoveries entry for the Ocean discoveries collection", () => {
@@ -43,4 +41,10 @@ test("every Explore/Discoveries view is a distinct route that is not the library
   // interactives, concepts, flashcards, writing, practicals, figdata, collection
   assert.equal(EXPLORE_VIEWS.length, 7);
   assert.equal(LIBRARY_VIEW, "library");
+});
+
+test("Writing practice is a featured Library entry that routes to the writing view", () => {
+  assert.equal(WRITING_ENTRY.view, "writing");
+  assert.match(WRITING_ENTRY.title, /Writing practice/i);
+  assert.ok(EXPLORE_VIEWS.includes("writing"), "writing view is reachable from the Library");
 });

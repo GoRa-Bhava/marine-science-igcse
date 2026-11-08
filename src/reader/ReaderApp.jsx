@@ -6,7 +6,8 @@ import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
 import { answer as schedAnswer } from "../engine/scheduler.js";
 import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
-import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY } from "./exploreEntries.js";
+import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY, WRITING_ENTRY } from "./exploreEntries.js";
+import { WRITING } from "../content/writing-bank.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
@@ -682,6 +683,7 @@ export function ReaderApp({
           {nav("read", "📖 Revise a unit", () => resume(), view === "reader" && mode === "read")}
           {nav("smart", "🔀 Mixed Practice", startSmart, view === "reader" && mode === "smart")}
           {nav("notes", "📖 Syllabus Notes", () => setView("notes"), view === "notes")}
+          {nav("writing", "✍️ Writing practice", () => setView("writing"), view === "writing")}
           <div className="rl-nav-group">Explore</div>
           {EXPLORE_ENTRIES.map((e) => nav(e.key, `${e.icon} ${e.title.split(" · ")[0]}`, () => setView(e.view), view === e.view))}
           {nav("collection", "🐚 Ocean Discoveries", () => setView("collection"), view === "collection")}
@@ -711,6 +713,9 @@ export function ReaderApp({
 
   // ---------- Library ----------
   function renderLibrary() {
+    // Writing practice progress for the featured card: N answered of M.
+    const writingM = WRITING.length;
+    const writingN = WRITING.filter((w) => writingData[w.id] && writingData[w.id].lastScore != null).length;
     const lastUid = bookmarks.lastUnitId;
     const lastBm = lastUid != null ? bookmarks.byUnit[lastUid] : null;
     const unitIdsOf = (u) => u.sectionIds.flatMap((s) => index.sections[s].orderedItemIds);
@@ -890,6 +895,22 @@ export function ReaderApp({
           <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice / Spaced Repetition</button>
           <button style={entryBtn(C)} onClick={() => setView("notes")}>📖 Syllabus Notes</button>
         </div>
+
+        {/* Writing practice — featured full-width card, directly under Mixed Practice / Syllabus Notes. */}
+        <button onClick={() => setView(WRITING_ENTRY.view)}
+          aria-label={`Writing practice, ${writingN} of ${writingM} answered`}
+          style={{ ...card(C), width: "100%", marginTop: 12, minHeight: 44, display: "flex", alignItems: "center", gap: 14, textAlign: "left", cursor: "pointer",
+            border: `2px solid ${C.accent}`, background: `linear-gradient(135deg, color-mix(in srgb, ${C.accent} 12%, ${C.shelf}) 0%, ${C.shelf} 58%)` }}>
+          <span aria-hidden="true" style={{ fontSize: 28, lineHeight: 1 }}>{WRITING_ENTRY.icon}</span>
+          <span style={{ flex: 1 }}>
+            <span style={{ display: "block", fontFamily: FONT_UI, fontWeight: 700, fontSize: 17, color: C.foam }}>{WRITING_ENTRY.title}</span>
+            <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, fontWeight: 400, color: C.mist, marginTop: 3, lineHeight: 1.4 }}>{WRITING_ENTRY.blurb}</span>
+            <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.accent, marginTop: 6 }}>
+              {writingN === 0 && !isEntitled(entitlement) ? `${writingM} questions · Unit 1 free` : `${writingN} of ${writingM} answered`}
+            </span>
+          </span>
+          <span aria-hidden="true" style={{ color: C.accent, fontSize: 22 }}>›</span>
+        </button>
 
         <div style={{ marginTop: 22 }}>
           <p style={kicker(C)}>EXPLORE</p>
