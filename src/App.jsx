@@ -6,6 +6,7 @@ import { InteractiveLab } from "./interactives/index.js";
 import { paletteFor } from "./theme.js";
 import { initAnswer as initAnswerShared, canSubmit as canSubmitShared, gradeItem } from "./quiz/grade.js";
 import { ReaderApp } from "./reader/ReaderApp.jsx";
+import { recallEligible, recallStem } from "./reader/recallFirst.js";
 import { FLASHCARDS } from "./flashcards/flashcards.js";
 import { useUpdateNotice } from "./updates/useUpdateNotice.js";
 
@@ -295,27 +296,76 @@ function FigureLabelQ({ item, locked, state, setState }) {
   );
 }
 
-function ChoiceQ({ item, locked, picked, setPicked }) {
+function ChoiceQ({ item, locked, picked, setPicked, settings }) {
   // Options are authored with the answer first; never show them that way.
   const order = useMemo(() => reorder(item.options.map((_, i) => i)), [item.id]);
+  // "Write your answer first" (recall-first): hide the options until the student has
+  // written their own answer (or skipped). Only the tap is graded; the text is never stored.
+  const eligible = recallEligible(item, settings);
+  const [revealed, setRevealed] = useState(false);
+  const [text, setText] = useState("");
+  const liveRef = useRef(null), firstOptRef = useRef(null);
+  useEffect(() => { setRevealed(false); setText(""); }, [item.id]);   // reset on each new question
+  // When the options are revealed, announce it (aria-live stays mounted) and move focus to the first option.
+  useEffect(() => {
+    if (!revealed) return;
+    if (liveRef.current) liveRef.current.textContent = "Options shown";
+    const r = requestAnimationFrame(() => { try { firstOptRef.current && firstOptRef.current.focus(); } catch (e) { /* */ } });
+    return () => cancelAnimationFrame(r);
+  }, [revealed]);
+
+  const hidden = eligible && !locked && !revealed;
+  const canShow = text.trim().length > 0;
+  const srOnly = { position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0 0 0 0)", border: 0 };
+  const pillBtn = (primary, enabled) => ({
+    ...btnBase, width: "auto", flex: "1 1 160px", minHeight: 44, textAlign: "center", marginBottom: 0, fontWeight: 700,
+    background: primary && enabled ? C.glow : C.shelf, color: primary && enabled ? C.abyss : C.foam,
+    borderColor: primary && enabled ? C.glow : C.line, cursor: enabled ? "pointer" : "default", opacity: enabled ? 1 : 0.55,
+  });
+
   return (
     <>
-      <Prompt>{item.q}</Prompt>
-      {item.fig && <FigureStage figId={item.fig} mode="static" item={item} locked={locked} onHotspot={() => {}} />}
-      {order.map((i) => {
-        let bg = C.shelf, bd = C.line, col = C.foam;
-        if (locked) {
-          if (i === item.a) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
-          else if (i === picked) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }
-          else { col = C.mist; }
-        } else if (i === picked) { bg = C.raise; bd = C.glow; }
-        return (
-          <button key={i} onClick={() => !locked && setPicked(i)} disabled={locked}
-            style={{ ...btnBase, background: bg, borderColor: bd, color: col, cursor: locked ? "default" : "pointer" }}>
-            {item.options[i]}
-          </button>
-        );
-      })}
+      {/* a persistent live region so the "Options shown" announcement survives the reveal */}
+      <span ref={liveRef} aria-live="polite" style={srOnly} />
+      {hidden ? (
+        <>
+          <Prompt>{recallStem(item)}</Prompt>
+          {item.fig && <FigureStage figId={item.fig} mode="static" item={item} locked={false} onHotspot={() => {}} />}
+          <label htmlFor={`recall-${item.id}`} style={{ display: "block", fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>Your answer</label>
+          <textarea id={`recall-${item.id}`} value={text} onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && canShow) { e.preventDefault(); setRevealed(true); } }}
+            rows={3} placeholder="Write your answer. A word or a sentence is enough." aria-label="Your answer"
+            style={{ width: "100%", boxSizing: "border-box", fontFamily: FONT_UI, fontSize: 16, lineHeight: 1.5, padding: "12px 14px", borderRadius: 14, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam, resize: "vertical", minHeight: 78 }} />
+          <div style={{ display: "flex", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
+            <button onClick={() => setRevealed(true)} disabled={!canShow} style={pillBtn(true, canShow)}>Show the options</button>
+            <button onClick={() => setRevealed(true)} style={pillBtn(false, true)}>Skip, show the options</button>
+          </div>
+        </>
+      ) : (
+        <>
+          <Prompt>{item.q}</Prompt>
+          {item.fig && <FigureStage figId={item.fig} mode="static" item={item} locked={locked} onHotspot={() => {}} />}
+          {eligible && text.trim() && (
+            <div style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, background: C.shelf, border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 12px", marginBottom: 14, lineHeight: 1.5 }}>
+              <b style={{ color: C.foam }}>Your answer:</b> {text}
+            </div>
+          )}
+          {order.map((i, idx) => {
+            let bg = C.shelf, bd = C.line, col = C.foam;
+            if (locked) {
+              if (i === item.a) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; }
+              else if (i === picked) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; }
+              else { col = C.mist; }
+            } else if (i === picked) { bg = C.raise; bd = C.glow; }
+            return (
+              <button key={i} ref={idx === 0 ? firstOptRef : null} onClick={() => !locked && setPicked(i)} disabled={locked}
+                style={{ ...btnBase, background: bg, borderColor: bd, color: col, cursor: locked ? "default" : "pointer" }}>
+                {item.options[i]}
+              </button>
+            );
+          })}
+        </>
+      )}
     </>
   );
 }
@@ -805,11 +855,11 @@ function UpdatesControl({ onFound } = {}) {
 /* ---------------------------------------------------------------- app */
 /* Dispatch one item's interaction to its component. Shared by the classic
    lesson render and the Reader so both look and behave identically. */
-export function ItemBody({ item, locked, answer, setAnswer }) {
+export function ItemBody({ item, locked, answer, setAnswer, settings }) {
   if (!item) return null;
   return (
     <>
-      {item.type === "choice" && <ChoiceQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
+      {item.type === "choice" && <ChoiceQ item={item} locked={locked} picked={answer} setPicked={setAnswer} settings={settings} />}
       {item.type === "truefalse" && <TrueFalseQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
       {item.type === "multi" && <MultiQ item={item} locked={locked} picked={answer} setPicked={setAnswer} />}
       {item.type === "gap" && <GapQ item={item} locked={locked} filled={answer} setFilled={setAnswer} />}

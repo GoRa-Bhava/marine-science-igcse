@@ -987,7 +987,7 @@ export function ReaderApp({
               </div>
             )}
             <div style={{ marginTop: 6 }}>
-              {renderItemBody(it, { locked, answer, setAnswer })}
+              {renderItemBody(it, { locked, answer, setAnswer, settings })}
             </div>
             {locked && (
               <div aria-live="polite" style={{ ...card(C), marginTop: 16 }}>
@@ -2000,6 +2000,18 @@ export function ReaderApp({
           <input type="date" value={settings.examDate ? settings.examDate.slice(0, 10) : ""}
             onChange={async (e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, examDate: v })); if (store()) await store().putSettings({ examDate: v }); }}
             style={{ fontFamily: FONT_UI, fontSize: 15, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
+        </div>
+
+        {/* Write your answer first (recall-first multiple choice) */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Write your answer first</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Hide the options on multiple-choice questions until you've written your own answer. Recalling is better for memory than recognising.</div>
+          <label style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
+            <input type="checkbox" checked={settings.recallFirst !== false}
+              onChange={async (e) => { const v = e.target.checked; setSettings((s) => ({ ...s, recallFirst: v })); if (store()) await store().putSettings({ recallFirst: v }); }}
+              style={{ width: 20, height: 20, accentColor: C.glow }} />
+            <span style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam }}>Write your answer first</span>
+          </label>
         </div>
 
         {/* Writing practice */}
