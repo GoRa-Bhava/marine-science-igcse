@@ -166,3 +166,26 @@
 @media (prefers-reduced-motion: reduce) {
   .rl-nav-item, .rl-theme-toggle button { transition: none !important; }
 }
+
+/* Teacher view — printable reports. Hidden on screen; the print stylesheet
+   hides the app and shows one page per student plus a class summary. */
+.teacher-print { display: none; }
+@media print {
+  body * { visibility: hidden !important; }
+  #teacher-print, #teacher-print * { visibility: visible !important; }
+  #teacher-print {
+    display: block !important;
+    position: absolute; left: 0; top: 0; width: 100%;
+    color: #000; background: #fff;
+    font-family: Karla, system-ui, sans-serif; padding: 0 6mm;
+  }
+  #teacher-print h1 { font-size: 20pt; margin: 0 0 2mm; }
+  #teacher-print h2 { font-size: 13pt; margin: 4mm 0 1mm; }
+  #teacher-print .tp-date { font-size: 9pt; color: #444; margin: 0 0 2mm; }
+  #teacher-print .tp-student { page-break-inside: avoid; border-top: 1px solid #ccc; padding-top: 3mm; margin-top: 4mm; }
+  #teacher-print table { border-collapse: collapse; margin: 2mm 0; }
+  #teacher-print th, #teacher-print td { border: 1px solid #999; padding: 1mm 3mm; font-size: 9pt; text-align: center; }
+  #teacher-print ul, #teacher-print ol { margin: 1mm 0 2mm; padding-left: 6mm; font-size: 10pt; }
+  #teacher-print li { margin: 0.5mm 0; }
+  #teacher-print p { font-size: 10pt; margin: 1mm 0; }
+}

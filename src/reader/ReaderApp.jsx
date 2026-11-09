@@ -14,7 +14,9 @@ import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./p
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
 import WritingPractice from "../writing/WritingPractice.jsx";
 import SendProgress from "../teacher/SendProgress.jsx";
+import TeacherView from "../teacher/TeacherView.jsx";
 import { contentIndex } from "../teacher/buildReport.js";
+import { readHash } from "../teacher/reportCodec.js";
 import UpdateBanner from "../updates/UpdateBanner.jsx";
 import { shuffleDeck, mixedDeck } from "../flashcards/order.js";
 
@@ -81,6 +83,16 @@ function useIsDesktop() {
     mq.addEventListener ? mq.addEventListener("change", on) : mq.addListener(on);
     return () => { mq.removeEventListener ? mq.removeEventListener("change", on) : mq.removeListener(on); };
   }, []);
+
+  // Teacher-tools hash routing: a #r= link opens the teacher view with that
+  // student ready to add. (#a assignment and #x result arrive in phase E.)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const parsed = readHash(window.location.hash);
+    if (!parsed) return;
+    if (parsed.kind === "report") { setPendingAdd(parsed.code); setView("teacher"); }
+    try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch {}
+  }, []);
   return desktop;
 }
 
@@ -94,6 +106,10 @@ export function ReaderApp({
   const index = useMemo(() => buildContentIndex(content.items, content.figures || {}), [content]);
   const itemById = useMemo(() => Object.fromEntries([...content.items, ...PRACTICAL_ITEMS].map((i) => [i.id, i])), [content]);
   const reportIndex = useMemo(() => contentIndex(content, WRITING), [content]);
+  const topicMeta = useMemo(() => Object.fromEntries((content.topics || []).map((t) => [t.id, { name: t.name, unit: t.unit }])), [content]);
+  const topicUnit = useMemo(() => Object.fromEntries((content.topics || []).map((t) => [t.id, t.unit])), [content]);
+  const writingById = useMemo(() => Object.fromEntries(WRITING.map((w) => [w.id, w])), []);
+  const unitNames = useMemo(() => Object.fromEntries((content.units || []).map((u) => [String(u.n), u.name])), [content]);
 
   const storeRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -104,6 +120,7 @@ export function ReaderApp({
   const [bookmarks, setBookmarks] = useState({ byUnit: {}, lastUnitId: null });
 
   const [view, setView] = useState("library");
+  const [pendingAdd, setPendingAdd] = useState(null); // a #r= report code that arrived in the URL
   const [mode, setMode] = useState("read");       // read | smart | retry
   const [queue, setQueue] = useState([]);          // itemIds for read/retry
   const [pos, setPos] = useState(0);
@@ -664,6 +681,7 @@ export function ReaderApp({
   else if (view === "figdata") viewContent = renderFigData();
   else if (view === "writing") viewContent = renderWriting();
   else if (view === "sendprogress") viewContent = renderSendProgress();
+  else if (view === "teacher") viewContent = renderTeacher();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else if (view === "profiles") viewContent = renderProfilePicker();
@@ -1456,6 +1474,20 @@ export function ReaderApp({
     );
   }
 
+  // ---------- Teacher view ----------
+  function renderTeacher() {
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Teacher" />
+        <TeacherView C={C} theme={theme} itemById={itemById}
+          topicMeta={topicMeta} topicUnit={topicUnit} writingById={writingById} unitNames={unitNames}
+          pendingAdd={pendingAdd} onConsumePending={() => setPendingAdd(null)}
+          onSetWork={() => {}} onBack={backToLibrary}
+          fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
+      </div>
+    );
+  }
+
   // ---------- Concept Cards (two-sided comparisons) ----------
   function renderConcepts() {
     const cards = comparisonCards;
@@ -2090,6 +2122,7 @@ export function ReaderApp({
           <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Teachers and tutors</div>
           <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Send your progress to your teacher as a link or QR code. <strong style={{ color: C.foam }}>Nothing is uploaded</strong> — you send it yourself.</div>
           <button onClick={() => setView("sendprogress")} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)" }}>Send progress to your teacher</button>
+          <button onClick={() => setView("teacher")} style={{ ...ghostBtn(C), width: "100%", marginTop: 8 }}>I'm a teacher</button>
           <details style={{ marginTop: 12 }}>
             <summary style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.accent, cursor: "pointer" }}>About sharing with teachers</summary>
             <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>Your progress only leaves the device when you send the link yourself. The link contains the name you typed, your scores and your recent wrong answers. Nothing is stored by Wildcat Education, there are no accounts, and there is no tracking.</div>
