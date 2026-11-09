@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createTeacherStore } from "./teacherStore.js";
-import { decodeReport, readHash } from "./reportCodec.js";
+import { decodeReport, decodeResult, readHash, encodeAssignment, assignmentUrl } from "./reportCodec.js";
 import { heatmap, classWeakestTopics, topMisconceptions, writingInsight, lessonStarterItems, studentsToCsv, cellState } from "./aggregate.js";
+import { pickAssignmentItems, buildAssignment, aggregateResults } from "./assignment.js";
+import { qrSvg } from "./qr.js";
 
 /* Teacher view (view: "teacher"). Free to open; no licence needed to read reports.
  * All data is local (its own IndexedDB store). Tabs: Class, Mistakes, Writing,
@@ -11,7 +13,7 @@ const BAND = { green: "#2Fae6a", amber: "#E7A42E", red: "#E2553D", grey: "#9aa" 
 
 export default function TeacherView({
   C, theme, itemById = {}, topicMeta = {}, topicUnit = {}, writingById = {}, unitNames = {},
-  pendingAdd, onConsumePending, onSetWork, onBack, fontUi, fontDisplay,
+  pendingAdd, onConsumePending, pendingResult, onConsumeResult, onSetWork, onBack, fontUi, fontDisplay,
 }) {
   const light = theme === "light";
   const F_UI = fontUi || "Karla, system-ui, sans-serif";
@@ -31,6 +33,16 @@ export default function TeacherView({
   const [lesson, setLesson] = useState(null); // { items, i, revealed }
   const [toast, setToast] = useState("");
   const [scanOpen, setScanOpen] = useState(false);
+  // Set work (phase E)
+  const [swMode, setSwMode] = useState("weak"); // weak | unit
+  const [swUnits, setSwUnits] = useState(() => new Set());
+  const [swN, setSwN] = useState(5);
+  const [swCount, setSwCount] = useState(10);
+  const [swTitle, setSwTitle] = useState("");
+  const [swDue, setSwDue] = useState("");
+  const [swMade, setSwMade] = useState(null); // { assignment, code, url, svg }
+  const [swResultsText, setSwResultsText] = useState("");
+  const [swResults, setSwResults] = useState([]); // decoded result payloads
 
   const canScan = typeof window !== "undefined" && "BarcodeDetector" in window;
 
@@ -51,6 +63,21 @@ export default function TeacherView({
       if (onConsumePending) onConsumePending();
     })();
   }, [pendingAdd]);
+
+  // A #x= result link that arrived in the URL → read it into the Set-work collector.
+  useEffect(() => {
+    if (!pendingResult) return;
+    (async () => {
+      try {
+        const parsed = readHash(pendingResult) || { code: pendingResult };
+        const res = await decodeResult(parsed.code || pendingResult);
+        setSwResults((prev) => [...prev, res]);
+        setTab("setwork");
+        flash("Result added.");
+      } catch { flash("That result link could not be read."); }
+      if (onConsumeResult) onConsumeResult();
+    })();
+  }, [pendingResult]);
 
   function flash(m) { setToast(m); setTimeout(() => setToast(""), 2600); }
 
@@ -244,9 +271,7 @@ export default function TeacherView({
         )}
       </div>
 
-      {empty ? (
-        <div style={{ ...card }}><p style={hint}>No students yet. Ask a student to open <strong style={{ color: C.foam }}>Send progress to your teacher</strong> and send you the link or QR code, then add it above.</p></div>
-      ) : (
+      {(
         <>
           {/* class selector */}
           {classes.length > 1 && (
@@ -293,6 +318,7 @@ export default function TeacherView({
 
   // ---------- Class tab ----------
   function renderClass() {
+    if (empty) return <div style={{ ...card }}><p style={hint}>No students yet. Ask a student to open <strong style={{ color: C.foam }}>Send progress to your teacher</strong> and send you the link or QR code, then add it above. You can still build an assignment under <strong style={{ color: C.foam }}>Set work</strong>.</p></div>;
     const cols = heatMode === "units" ? hm.units : topicCols;
     const colLabel = (id) => heatMode === "units" ? `U${id}` : (topicMeta[id]?.name || id);
     const cellFor = (s, id) => {
@@ -368,7 +394,7 @@ export default function TeacherView({
         </div>
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <button style={btnP} onClick={() => { if (onSetWork) onSetWork({ topicIds: weakest.slice(0, 5).map((w) => w.topicId), classId: activeClassId }); setTab("setwork"); }}>Set these as homework</button>
+          <button style={btnP} onClick={() => { setSwMode("weak"); setSwN(5); setSwMade(null); setTab("setwork"); }}>Set these as homework</button>
           <button style={btnS} onClick={startLesson}>Lesson starter</button>
           {activeClassId !== "all" && <button style={{ ...btnS, borderColor: C.coral, color: C.coral }} onClick={() => delClass(classes.find((c) => c.id === activeClassId))}>Delete class</button>}
         </div>
@@ -430,12 +456,141 @@ export default function TeacherView({
     );
   }
 
-  // ---------- Set work tab (phase E fills this) ----------
+  // ---------- Set work tab (build an assignment + collect results) ----------
+  function makeAssignment() {
+    const pool = Object.values(itemById);
+    const activeClass = activeClassId === "all" ? null : classes.find((c) => c.id === activeClassId);
+    let opts = { count: swCount, seed: Date.now() & 0xffff };
+    if (swMode === "weak") {
+      opts.topicIds = weakest.slice(0, Math.max(1, swN)).map((w) => w.topicId);
+      if (!opts.topicIds.length) { flash("Not enough class data to pick weakest topics — choose by unit instead."); return; }
+    } else {
+      opts.unitIds = [...swUnits];
+      if (!opts.unitIds.length) { flash("Pick at least one unit."); return; }
+    }
+    const ids = pickAssignmentItems(pool, opts);
+    if (!ids.length) { flash("No questions matched — widen the selection."); return; }
+    const assignment = buildAssignment({ title: swTitle || "Marine science homework", due: swDue, classCode: activeClass ? activeClass.code : "", itemIds: ids });
+    encodeAssignment(assignment).then((code) => {
+      const url = assignmentUrl(code);
+      setSwMade({ assignment, code, url, svg: qrSvg(url) });
+    }).catch(() => flash("Couldn't build the assignment link."));
+  }
+  async function copyAssignmentLink() {
+    if (!swMade) return;
+    try { await navigator.clipboard.writeText(swMade.url); flash("Assignment link copied."); }
+    catch { flash("Select and copy the link."); }
+  }
+  async function readResults() {
+    const lines = swResultsText.split(/[\r\n]+/).map((s) => s.trim()).filter(Boolean);
+    const out = [];
+    for (const line of lines) {
+      try {
+        const parsed = readHash(line) || { code: line };
+        out.push(await decodeResult(parsed.code || line));
+      } catch { /* skip bad line */ }
+    }
+    if (!out.length) { flash("No results could be read."); return; }
+    setSwResults(out);
+    flash(`Read ${out.length} result${out.length === 1 ? "" : "s"}.`);
+  }
+
   function renderSetWork() {
+    const unitIds = Object.keys(unitNames).sort((a, b) => Number(a) - Number(b));
+    // group collected results by assignment id
+    const byAid = {};
+    for (const r of swResults) (byAid[r.aid] ||= []).push(r);
+    const radio = (checked) => ({ width: 18, height: 18, accentColor: light ? C.accent : C.glow });
     return (
-      <div style={{ ...card }}>
-        <strong style={{ fontFamily: F_UI, color: C.foam }}>Set work</strong>
-        <p style={hint}>Build an assignment to share with your class, then collect results. Coming in the next update.</p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ ...card, display: "flex", flexDirection: "column", gap: 12 }}>
+          <strong style={{ fontFamily: F_UI, color: C.foam }}>Build an assignment</strong>
+          <input value={swTitle} onChange={(e) => setSwTitle(e.target.value)} placeholder="Title (e.g. Tides homework)" maxLength={80}
+            style={{ fontFamily: F_UI, fontSize: 14, padding: "9px 11px", borderRadius: 10, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam }} />
+          <label style={{ ...hint, display: "flex", alignItems: "center", gap: 8 }}>Due (optional)
+            <input type="date" value={swDue} onChange={(e) => setSwDue(e.target.value)}
+              style={{ fontFamily: F_UI, fontSize: 14, padding: "7px 9px", borderRadius: 8, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam }} /></label>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <label style={{ ...hint, display: "flex", alignItems: "center", gap: 8, color: C.foam }}>
+              <input type="radio" name="swmode" checked={swMode === "weak"} onChange={() => setSwMode("weak")} style={radio()} />
+              Class weakest topics
+              {swMode === "weak" && <input type="number" min={1} max={12} value={swN} onChange={(e) => setSwN(Number(e.target.value) || 1)} style={{ width: 56, marginLeft: 6, fontFamily: F_UI, padding: "4px 6px", borderRadius: 8, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam }} />}
+            </label>
+            <label style={{ ...hint, display: "flex", alignItems: "center", gap: 8, color: C.foam }}>
+              <input type="radio" name="swmode" checked={swMode === "unit"} onChange={() => setSwMode("unit")} style={radio()} />
+              By unit
+            </label>
+            {swMode === "unit" && (
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginLeft: 26 }}>
+                {unitIds.map((u) => (
+                  <label key={u} style={{ ...btnS, display: "inline-flex", alignItems: "center", gap: 6, background: swUnits.has(u) ? (light ? C.accent : C.glow) : (light ? C.raise : C.shelf), color: swUnits.has(u) ? (light ? "#fff" : C.abyss) : C.foam, border: swUnits.has(u) ? "none" : `1px solid ${C.line}` }}>
+                    <input type="checkbox" checked={swUnits.has(u)} onChange={() => setSwUnits((s) => { const n = new Set(s); n.has(u) ? n.delete(u) : n.add(u); return n; })} style={{ display: "none" }} />
+                    U{u}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <label style={{ ...hint, display: "flex", alignItems: "center", gap: 10, color: C.foam }}>
+            Questions: <strong style={{ color: C.foam }}>{swCount}</strong>
+            <input type="range" min={5} max={25} value={swCount} onChange={(e) => setSwCount(Number(e.target.value))} style={{ flex: 1, accentColor: light ? C.accent : C.glow }} />
+          </label>
+
+          <div><button style={btnP} onClick={makeAssignment}>Make assignment</button></div>
+
+          {swMade && (
+            <div style={{ ...card, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, background: light ? C.raise : C.shelf }}>
+              <div style={{ fontFamily: F_UI, fontWeight: 800, color: C.foam, textAlign: "center" }}>{swMade.assignment.t}</div>
+              <div style={hint}>{swMade.assignment.n} questions{swMade.assignment.due ? ` · due ${swMade.assignment.due}` : ""}{swMade.assignment.cls ? ` · ${swMade.assignment.cls}` : ""}</div>
+              <div style={{ width: 180, height: 180, background: "#fff", borderRadius: 10, padding: 8, boxSizing: "border-box" }} dangerouslySetInnerHTML={{ __html: swMade.svg }} />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button style={btnS} onClick={copyAssignmentLink}>Copy link</button>
+              </div>
+              <div style={hint}>Share this link or QR in Google Classroom, Teams or email.</div>
+            </div>
+          )}
+        </div>
+
+        {/* collect results */}
+        <div style={{ ...card, display: "flex", flexDirection: "column", gap: 10 }}>
+          <strong style={{ fontFamily: F_UI, color: C.foam }}>Collect results</strong>
+          <p style={hint}>Paste the result codes or links students send back, one per line.</p>
+          <textarea value={swResultsText} onChange={(e) => setSwResultsText(e.target.value)} rows={3}
+            placeholder={"WR1.… or https://app.wildcateducation.co.uk/#x=WR1.…"}
+            style={{ fontFamily: "monospace", fontSize: 12.5, width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 10, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam }} />
+          <div><button style={btnP} onClick={readResults} disabled={!swResultsText.trim()}>Read results</button></div>
+
+          {Object.entries(byAid).map(([aid, list]) => {
+            const agg = aggregateResults(list, itemById);
+            return (
+              <div key={aid} style={{ marginTop: 8 }}>
+                <div style={{ fontFamily: F_UI, fontWeight: 700, color: C.foam, marginBottom: 6 }}>Assignment {aid} · {list.length} returned</div>
+                <div style={{ overflowX: "auto" }}>
+                  <table style={{ borderCollapse: "collapse", width: "100%" }}>
+                    <thead><tr><th style={{ ...th, textAlign: "left" }}>Student</th><th style={th}>Score</th><th style={th}>%</th><th style={th}>Done</th></tr></thead>
+                    <tbody>
+                      {agg.students.map((s) => (
+                        <tr key={s.name}><td style={{ ...nameTd, position: "static" }}>{s.name}</td><td style={th}>{s.correct}/{s.total}</td><td style={th}>{s.pct}%</td><td style={{ ...th, fontWeight: 600 }}>{(s.d || "").slice(0, 10)}</td></tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {agg.questions.filter((q) => q.wrong > 0).length > 0 && (
+                  <div style={{ marginTop: 8 }}>
+                    <div style={{ ...hint, color: C.foam, fontWeight: 700 }}>Most got wrong</div>
+                    <ul style={{ ...hint, paddingLeft: 18, marginTop: 4 }}>
+                      {agg.questions.filter((q) => q.wrong > 0).slice(0, 6).map((q) => (
+                        <li key={q.itemId}>{(q.stem || q.itemId).slice(0, 80)} — {q.wrong}/{q.total} wrong{q.picks[0] && q.picks[0].text ? ` · most chose “${q.picks[0].text}”` : ""}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

@@ -16,7 +16,9 @@ import WritingPractice from "../writing/WritingPractice.jsx";
 import SendProgress from "../teacher/SendProgress.jsx";
 import TeacherView from "../teacher/TeacherView.jsx";
 import { contentIndex } from "../teacher/buildReport.js";
-import { readHash } from "../teacher/reportCodec.js";
+import { readHash, decodeAssignment, encodeResult, resultUrl } from "../teacher/reportCodec.js";
+import { qrSvg } from "../teacher/qr.js";
+import { assignmentNeedsLicence, buildResult, scoreResult } from "../teacher/assignment.js";
 import UpdateBanner from "../updates/UpdateBanner.jsx";
 import { shuffleDeck, mixedDeck } from "../flashcards/order.js";
 
@@ -83,16 +85,6 @@ function useIsDesktop() {
     mq.addEventListener ? mq.addEventListener("change", on) : mq.addListener(on);
     return () => { mq.removeEventListener ? mq.removeEventListener("change", on) : mq.removeListener(on); };
   }, []);
-
-  // Teacher-tools hash routing: a #r= link opens the teacher view with that
-  // student ready to add. (#a assignment and #x result arrive in phase E.)
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const parsed = readHash(window.location.hash);
-    if (!parsed) return;
-    if (parsed.kind === "report") { setPendingAdd(parsed.code); setView("teacher"); }
-    try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch {}
-  }, []);
   return desktop;
 }
 
@@ -121,7 +113,14 @@ export function ReaderApp({
 
   const [view, setView] = useState("library");
   const [pendingAdd, setPendingAdd] = useState(null); // a #r= report code that arrived in the URL
-  const [mode, setMode] = useState("read");       // read | smart | retry
+  const [pendingResult, setPendingResult] = useState(null); // a #x= result code (teacher device)
+  const [assignment, setAssignment] = useState(null); // current assignment (student side)
+  const [assignName, setAssignName] = useState("");   // name sent on the result
+  const [assignResultCode, setAssignResultCode] = useState("");
+  const [toastMsg, setToastMsg] = useState("");
+  const [schoolLockNote, setSchoolLockNote] = useState(false);
+  const assignResultsRef = useRef([]);                // per-item outcomes during an assign run
+  const [mode, setMode] = useState("read");       // read | smart | retry | assign
   const [queue, setQueue] = useState([]);          // itemIds for read/retry
   const [pos, setPos] = useState(0);
   const [maxPos, setMaxPos] = useState(0);         // furthest position reached this run (earlier = reviewable)
@@ -135,6 +134,32 @@ export function ReaderApp({
   const [figData, setFigData] = useState({}); // Figures & data practice stats (per template key)
   const [writingData, setWritingData] = useState({}); // Writing practice self-marks (per question id)
   const [session, setSession] = useState({ answered: [], wrong: [], count: 0, correct: 0 });
+
+  // Teacher-tools hash routing: #r opens the teacher view with a student ready to
+  // add; #a opens the assignment a student was sent; #x hands a result to the teacher.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const parsed = readHash(window.location.hash);
+    if (!parsed) return;
+    if (parsed.kind === "report") { setPendingAdd(parsed.code); setView("teacher"); }
+    else if (parsed.kind === "assignment") { decodeAssignment(parsed.code).then((a) => { setAssignment(a); setView("assignment"); }).catch(() => {}); }
+    else if (parsed.kind === "result") { setPendingResult(parsed.code); setView("teacher"); }
+    try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch {}
+  }, []);
+
+  // Encode the assignment result once the student reaches the result screen (or
+  // changes the name they're sending under).
+  useEffect(() => {
+    if (view !== "assignresult") return;
+    const map = new Map();
+    for (const r of assignResultsRef.current) map.set(r.itemId, r); // dedupe by item (Back/redo)
+    const perItem = [...map.values()];
+    const result = buildResult(assignment || {}, perItem, { name: assignName || "Student", classCode: (assignment && assignment.cls) || settings.classCode || "" });
+    let live = true;
+    encodeResult(result).then((c) => { if (live) setAssignResultCode(c); }).catch(() => { if (live) setAssignResultCode(""); });
+    return () => { live = false; };
+  }, [view, assignName, assignment, settings.classCode]);
+
   const [checkpointSec, setCheckpointSec] = useState(null);
   const [browse, setBrowse] = useState({ ids: [], pos: 0, title: "" });
   const [reveal, setReveal] = useState(null);
@@ -387,6 +412,21 @@ export function ReaderApp({
     setSession({ answered: [], wrong: [], count: 0, correct: 0 });
     setView("reader"); loadItem(wrongIds[0]);
   }
+  // Teacher assignment: run its items through the normal graded loop (records
+  // progress as usual) while capturing per-item outcomes for the result code.
+  // Locks Units 2–6 behind the licence; Unit 1 always works.
+  function startAssign(a) {
+    const ids = (a?.ids || []).filter((id) => itemById[id]);
+    if (!ids.length) { setView("library"); return; }
+    if (assignmentNeedsLicence(ids, itemById, topicUnit) && !isEntitled(entitlement)) {
+      setSchoolLockNote(true); setView("unlock"); return;
+    }
+    assignResultsRef.current = [];
+    setAssignName(settings.teacherName || "");
+    setMode("assign"); setSectionId(null); setQueue(ids); setPos(0); setMaxPos(0);
+    setSession({ answered: [], wrong: [], count: 0, correct: 0 });
+    setView("reader"); loadItem(ids[0]);
+  }
   // Revise an explicit id list sourced from persisted progress (the "Revise these N"
   // action). Grades + persists exactly like normal practice, so a correct answer
   // clears wrongFlag and the item leaves the revise list next time. Ends at summary.
@@ -638,6 +678,10 @@ export function ReaderApp({
     if (!canSubmit(item, answer)) return;
     const right = grade(item, answer);
     setWasRight(right); setLocked(true);
+    if (mode === "assign") {
+      const pick = right ? undefined : lastPickOf(item.type, answer);
+      assignResultsRef.current.push({ itemId: item.id, right, pick });
+    }
     record(item, right);
   }
 
@@ -652,6 +696,7 @@ export function ReaderApp({
     const np = pos + 1;
     if (np >= queue.length) {
       if (mode === "read") { markSectionComplete(sectionId); setCheckpointSec(sectionId); setView("checkpoint"); }
+      else if (mode === "assign") setView("assignresult");
       else setView("summary"); // retry finished
       return;
     }
@@ -682,6 +727,8 @@ export function ReaderApp({
   else if (view === "writing") viewContent = renderWriting();
   else if (view === "sendprogress") viewContent = renderSendProgress();
   else if (view === "teacher") viewContent = renderTeacher();
+  else if (view === "assignment") viewContent = renderAssignmentIntro();
+  else if (view === "assignresult") viewContent = renderAssignResult();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else if (view === "profiles") viewContent = renderProfilePicker();
@@ -1482,8 +1529,65 @@ export function ReaderApp({
         <TeacherView C={C} theme={theme} itemById={itemById}
           topicMeta={topicMeta} topicUnit={topicUnit} writingById={writingById} unitNames={unitNames}
           pendingAdd={pendingAdd} onConsumePending={() => setPendingAdd(null)}
+          pendingResult={pendingResult} onConsumeResult={() => setPendingResult(null)}
           onSetWork={() => {}} onBack={backToLibrary}
           fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
+      </div>
+    );
+  }
+
+  // ---------- Assignment intro (student opens a #a= link) ----------
+  function renderAssignmentIntro() {
+    const a = assignment;
+    if (!a) return <div style={pad} className="rl-pad"><TopBar C={C} left="Assignment" /><p style={sub(C)}>This assignment link could not be read.</p><button style={ghostBtn(C)} onClick={() => setView("library")}>Home</button></div>;
+    const count = (a.ids || []).filter((id) => itemById[id]).length;
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Assignment" />
+        <button onClick={() => setView("library")} style={linkBtn(C)}>‹ Back</button>
+        <p style={kicker(C)}>SET BY YOUR TEACHER</p>
+        <h1 style={{ ...h1(C), marginTop: 2 }}>{a.t}</h1>
+        <p style={{ ...sub(C), marginTop: 4 }}>{count} question{count === 1 ? "" : "s"}{a.due ? ` · due ${a.due}` : ""}{a.cls ? ` · ${a.cls}` : ""}</p>
+        <button onClick={() => startAssign(a)} style={{ ...primaryBtn(C), marginTop: 16 }}>Start ›</button>
+      </div>
+    );
+  }
+
+  // ---------- Assignment result (student sends it back) ----------
+  function renderAssignResult() {
+    const map = new Map();
+    for (const r of assignResultsRef.current) map.set(r.itemId, r);
+    const perItem = [...map.values()];
+    const sc = scoreResult({ r: perItem.map((p) => [p.itemId, p.right ? 1 : 0]) });
+    const url = assignResultCode ? resultUrl(assignResultCode) : "";
+    const svg = url ? qrSvg(url) : "";
+    const copy = async () => { try { await navigator.clipboard.writeText(url); setToastMsg("Link copied."); } catch { setToastMsg("Select and copy the link."); } };
+    const share = async () => { if (navigator.share && url) { try { await navigator.share({ title: assignment?.t || "My result", url }); return; } catch (e) { if (e?.name === "AbortError") return; } } copy(); };
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Result" />
+        <div style={{ maxWidth: 520, margin: "0 auto", display: "flex", flexDirection: "column", gap: 14, alignItems: "center", textAlign: "center" }}>
+          <p style={kicker(C)}>WELL DONE</p>
+          <h1 style={{ ...h1(C), margin: 0 }}>{sc.correct} / {sc.total}</h1>
+          <p style={sub(C)}>Send your result to your teacher. Nothing is uploaded — you send the link yourself.</p>
+          <div style={{ width: "100%", textAlign: "left" }}>
+            <label style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.foam }}>The name your teacher knows you by
+              <input value={assignName} maxLength={30} placeholder="e.g. Maya R" onChange={(e) => setAssignName(e.target.value)}
+                onBlur={() => saveShareInfo({ teacherName: assignName.trim(), classCode: settings.classCode || "" })}
+                style={{ width: "100%", boxSizing: "border-box", marginTop: 4, fontFamily: FONT_UI, fontSize: 15, padding: "11px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} /></label>
+          </div>
+          {assignName.trim() ? (
+            <>
+              <div style={{ width: 200, height: 200, background: "#fff", borderRadius: 12, padding: 10, boxSizing: "border-box" }} dangerouslySetInnerHTML={{ __html: svg }} />
+              <div style={{ display: "flex", gap: 10 }}>
+                <button style={ghostBtn(C)} onClick={copy} disabled={!url}>Copy link</button>
+                <button style={primaryBtn(C)} onClick={share} disabled={!url}>Share…</button>
+              </div>
+            </>
+          ) : <p style={sub(C)}>Type your name to make your result link.</p>}
+          {toastMsg && <p role="status" style={{ fontFamily: FONT_UI, fontSize: 13, color: C.accent, fontWeight: 700 }}>{toastMsg}</p>}
+          <button style={linkBtn(C)} onClick={() => { setToastMsg(""); setView("library"); }}>Done</button>
+        </div>
       </div>
     );
   }
@@ -1929,7 +2033,12 @@ export function ReaderApp({
     return (
       <div style={pad} className="rl-pad">
         <TopBar C={C} left="Unlock" />
-        <button onClick={() => setView("library")} style={linkBtn(C)}>‹ Back</button>
+        <button onClick={() => { setSchoolLockNote(false); setView("library"); }} style={linkBtn(C)}>‹ Back</button>
+        {schoolLockNote && (
+          <div style={{ ...card(C), marginTop: 10, border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)" }}>
+            <div style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, lineHeight: 1.5 }}>This homework includes Units 2–6, which are locked on this device. <strong>Your school may have a licence key: ask your teacher.</strong> Unit 1 work always opens.</div>
+          </div>
+        )}
         <p style={kicker(C)}>UNLOCK ALL SIX UNITS</p>
         <h1 style={{ ...h1(C), marginTop: 2 }}>One payment, lifetime access</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Unit 1 is free forever. Unlock Units 2–6 and every premium feature with a one-off purchase — no subscription, keep it for good.</p>
