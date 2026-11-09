@@ -8,6 +8,7 @@ import { answer as schedAnswer } from "../engine/scheduler.js";
 import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY, WRITING_ENTRY } from "./exploreEntries.js";
 import { WRITING } from "../content/writing-bank.js";
+import { lastPickOf } from "../teacher/capture.js";
 import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
@@ -446,6 +447,10 @@ export function ReaderApp({
     const s = store();
     const prev = progressMap[it.id];
     const np = boxAfter(prev, right, it.id);
+    // Teacher tools: on a wrong answer keep the chosen option(s) (original index, pre-shuffle);
+    // clear it on a correct answer. Only choice/multi are captured.
+    const lp = right ? undefined : lastPickOf(it.type, answer);
+    if (lp !== undefined) np.lastPick = lp; else delete np.lastPick;
     // ── middle-path resume: readSeen gates the Reading "Continue". It is set by
     // reading modes (read/retry/revise) only, never by Mixed Practice (smart), so
     // mixed practice can't skip the first read. Legacy records (no readSeen) are
@@ -1386,7 +1391,7 @@ export function ReaderApp({
   // ---------- Writing practice (write it, then self-mark — isolated, no scoring) ----------
   // keepWriting (answers kept on device, on by default) is read inline from settings
   // to avoid a temporal-dead-zone on the first render dispatch.
-  function saveWritingResult(qid, { score, of, text }) {
+  function saveWritingResult(qid, { score, of, text, ticks }) {
     setWritingData((prev) => {
       const cur = prev[qid] || { bestScore: 0, attempts: 0 };
       const rec = {
@@ -1395,6 +1400,7 @@ export function ReaderApp({
         attempts: (cur.attempts || 0) + 1,
         lastAt: Date.now(),
       };
+      if (Array.isArray(ticks)) rec.lastTicks = ticks; // which marking points were ticked (for the teacher writing report; not personal text)
       if (settings.keepWriting !== false && text) rec.text = text; // store the answer only if the toggle is on
       const nextMap = { ...prev, [qid]: rec };
       const s = store(); if (s) s.putWriting(nextMap);

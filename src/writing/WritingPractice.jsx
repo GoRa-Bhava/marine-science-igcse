@@ -78,7 +78,7 @@ export default function WritingPractice({
     if (!q) return;
     const score = scoreWritingItem(q, [...ticks]);
     setDone(true);
-    if (onSaveResult) onSaveResult(q.id, { score, of: q.marks, text: paper ? "" : text });
+    if (onSaveResult) onSaveResult(q.id, { score, of: q.marks, text: paper ? "" : text, ticks: [...ticks] });
   }
   function tryAgain() {
     setText(""); setPaper(false); setTicks(new Set()); setDone(false); setScreen("q");

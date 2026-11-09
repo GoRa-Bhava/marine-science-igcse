@@ -17,6 +17,22 @@ test("memory store: item progress put/get round-trips and stamps updatedAt + log
   assert.equal(await s.getItemProgress("nope"), null);
 });
 
+test("teacher tools: lastPick round-trips on item progress and lastTicks on writing", async () => {
+  const s = createMemoryStore();
+  await s.ready();
+  // lastPick stored on a wrong answer (schemaless passthrough), absent after a clearing correct answer.
+  await s.putItemProgress({ id: "Q1", box: 1, wrongFlag: true, lastPick: 2 });
+  assert.equal((await s.getItemProgress("Q1")).lastPick, 2);
+  await s.putItemProgress({ id: "Q1", box: 2, wrongFlag: false }); // correct answer rewrites the record without lastPick
+  assert.equal((await s.getItemProgress("Q1")).lastPick, undefined, "a correct answer leaves no lastPick");
+  await s.putItemProgress({ id: "Q2", box: 1, wrongFlag: true, lastPick: [0, 2, 3] });
+  assert.deepEqual((await s.getItemProgress("Q2")).lastPick, [0, 2, 3]);
+  // writing: lastTicks stored alongside the existing fields.
+  await s.putWriting({ "W1-01": { lastScore: 3, bestScore: 3, attempts: 1, lastAt: 1, lastTicks: [0, 1, 4] } });
+  assert.deepEqual((await s.getWriting())["W1-01"].lastTicks, [0, 1, 4]);
+  assert.equal((await s.getWriting())["W1-01"].lastScore, 3);
+});
+
 test("getAllItemProgress returns the active profile's records, stripped to itemId", async () => {
   const s = createMemoryStore();
   await s.putItemProgress({ id: "Q1", box: 1 });
