@@ -16,8 +16,8 @@ export default function TeacherView({
   pendingAdd, onConsumePending, pendingResult, onConsumeResult, onSetWork, onBack, fontUi, fontDisplay,
 }) {
   const light = theme === "light";
-  const F_UI = fontUi || "Karla, system-ui, sans-serif";
-  const F_D = fontDisplay || "Fraunces, Georgia, serif";
+  const F_UI = fontUi || "'Source Sans 3', ui-sans-serif, system-ui, sans-serif";
+  const F_D = fontDisplay || "'Lexend', ui-sans-serif, system-ui, sans-serif";
   const storeRef = useRef(null);
   if (!storeRef.current) storeRef.current = createTeacherStore(typeof window !== "undefined" ? window.indexedDB : undefined);
   const store = storeRef.current;

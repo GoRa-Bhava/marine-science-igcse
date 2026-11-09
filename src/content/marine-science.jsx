@@ -74,12 +74,12 @@ const TOPICS = [
 ];
 
 const UNITS = [
-  { n: 1, name: "Earth and oceans" },
-  { n: 2, name: "Seawater" },
+  { n: 1, name: "The Earth and its oceans" },
+  { n: 2, name: "Sea water" },
   { n: 3, name: "Marine organisms" },
   { n: 4, name: "Nutrients and energy" },
   { n: 5, name: "Marine ecology" },
-  { n: 6, name: "Humans and marine environments" },
+  { n: 6, name: "Human influences on the marine environment" },
   /* Not a syllabus unit: `title` replaces the "Unit n · name" heading. */
 ];
 

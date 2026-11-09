@@ -26,8 +26,8 @@ import { useUpdateNotice } from "./updates/useUpdateNotice.js";
 let C = paletteFor("dark");
 function setPalette(theme) { C = paletteFor(theme); }
 
-const FONT_UI = "'Karla', ui-sans-serif, system-ui, sans-serif";
-const FONT_DISPLAY = "'Fraunces Variable', Georgia, serif";
+const FONT_UI = "'Source Sans 3', ui-sans-serif, system-ui, sans-serif";
+const FONT_DISPLAY = "'Lexend', ui-sans-serif, system-ui, sans-serif";
 
 /* ------------------------------------------------------------- content */
 /* The engine never names a subject. Everything it shows — topics, items,

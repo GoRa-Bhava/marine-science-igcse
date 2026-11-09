@@ -7,7 +7,7 @@ import React from "react";
    - { platform:"web" }                               → Update now / Later
    The primary action is first in the DOM so it is first in tab order. */
 
-const FONT_UI = "Karla, system-ui, sans-serif";
+const FONT_UI = "'Source Sans 3', ui-sans-serif, system-ui, sans-serif";
 
 export default function UpdateBanner({ C, notice, onDownload, onUpdate, onLater }) {
   if (!notice) return null;

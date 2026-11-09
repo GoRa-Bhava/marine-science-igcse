@@ -35,7 +35,7 @@
     overflow-y: auto;
   }
   .rl-brand {
-    font-family: Fraunces, Georgia, serif;
+    font-family: 'Lexend', ui-sans-serif, system-ui, sans-serif;
     font-weight: 600;
     font-size: 16px;
     color: var(--rl-ink);
@@ -44,7 +44,7 @@
   }
   .rl-nav { display: flex; flex-direction: column; gap: 2px; }
   .rl-nav-group {
-    font-family: Karla, system-ui, sans-serif;
+    font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
     font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
     color: var(--rl-accent);
     padding: 16px 10px 6px;
@@ -56,7 +56,7 @@
     padding: 10px 12px; border-radius: 10px;
     border: 1px solid transparent; background: transparent;
     color: var(--rl-ink);
-    font-family: Karla, system-ui, sans-serif; font-size: 14.5px; font-weight: 500;
+    font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif; font-size: 14.5px; font-weight: 500;
     cursor: pointer;
     transition: background .12s, border-color .12s;
   }
@@ -69,7 +69,7 @@
   }
   .rl-side-foot { margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; gap: 2px; }
   .rl-ready-chip {
-    font-family: Karla, system-ui, sans-serif; font-size: 12.5px; color: var(--rl-mist);
+    font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif; font-size: 12.5px; color: var(--rl-mist);
     padding: 10px 12px; border-radius: 10px;
     border: 1px solid color-mix(in srgb, var(--rl-line) 55%, transparent);
     background: var(--rl-panel);
@@ -89,13 +89,13 @@
     backdrop-filter: blur(8px);
   }
   .rl-topbar-title {
-    font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 20px; color: var(--rl-ink);
+    font-family: 'Lexend', ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-size: 20px; color: var(--rl-ink);
   }
   .rl-topbar-right { display: flex; align-items: center; gap: 16px; }
   .rl-theme-toggle { display: inline-flex; gap: 4px; border: 1px solid color-mix(in srgb, var(--rl-line) 60%, transparent); border-radius: 10px; padding: 3px; }
   .rl-theme-toggle button {
     appearance: none; cursor: pointer; border: none; background: transparent;
-    color: var(--rl-mist); font-family: Karla, system-ui, sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--rl-mist); font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif; font-size: 13px; font-weight: 600;
     padding: 6px 12px; border-radius: 8px;
   }
   .rl-theme-toggle button[aria-pressed="true"] { background: color-mix(in srgb, var(--rl-glow) 16%, transparent); color: var(--rl-accent); }
@@ -152,14 +152,14 @@
     padding: 18px;
   }
   .rl-rail h3 {
-    font-family: Karla, system-ui, sans-serif; font-size: 11px; font-weight: 700;
+    font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif; font-size: 11px; font-weight: 700;
     letter-spacing: .12em; text-transform: uppercase; color: var(--rl-accent);
     margin: 0 0 12px;
   }
   .rl-rail-stat { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-top: 1px solid color-mix(in srgb, var(--rl-line) 40%, transparent); }
   .rl-rail-stat:first-of-type { border-top: none; }
-  .rl-rail-stat b { font-family: Fraunces, Georgia, serif; font-size: 22px; color: var(--rl-ink); }
-  .rl-rail-stat span { font-family: Karla, system-ui, sans-serif; font-size: 12.5px; color: var(--rl-mist); }
+  .rl-rail-stat b { font-family: 'Lexend', ui-sans-serif, system-ui, sans-serif; font-size: 22px; color: var(--rl-ink); }
+  .rl-rail-stat span { font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif; font-size: 12.5px; color: var(--rl-mist); }
 }
 
 /* Respect reduced-motion for any layer we add. */
@@ -177,7 +177,7 @@
     display: block !important;
     position: absolute; left: 0; top: 0; width: 100%;
     color: #000; background: #fff;
-    font-family: Karla, system-ui, sans-serif; padding: 0 6mm;
+    font-family: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif; padding: 0 6mm;
   }
   #teacher-print h1 { font-size: 20pt; margin: 0 0 2mm; }
   #teacher-print h2 { font-size: 13pt; margin: 4mm 0 1mm; }

@@ -25,11 +25,11 @@ function capsLine(caps) {
  */
 export default function WritingPractice({
   C, theme, writingData = {}, onSaveResult, keepText = true,
-  isUnlocked = () => true, onLocked, onBack, fontUi, fontDisplay,
+  isUnlocked = () => true, onLocked, onBack, fontUi, fontDisplay, unitTitle,
 }) {
   const light = theme === "light";
-  const F_UI = fontUi || "Karla, system-ui, sans-serif";
-  const F_D = fontDisplay || "Fraunces, Georgia, serif";
+  const F_UI = fontUi || "'Source Sans 3', ui-sans-serif, system-ui, sans-serif";
+  const F_D = fontDisplay || "'Lexend', ui-sans-serif, system-ui, sans-serif";
 
   const [screen, setScreen] = useState("list"); // list | q | mark
   const [curId, setCurId] = useState(null);
@@ -104,7 +104,7 @@ export default function WritingPractice({
           return (
             <div key={unit} style={{ marginBottom: 18 }}>
               <h3 style={{ fontSize: 13, color: C.mist, textTransform: "uppercase", letterSpacing: 0.7, margin: "4px 2px 8px", fontWeight: 800 }}>
-                Unit {unit}{locked ? " · 🔒 locked" : ""}
+                Unit {unit}{unitTitle && unitTitle(unit) ? ` · ${unitTitle(unit)}` : ""}{locked ? " · 🔒 locked" : ""}
               </h3>
               <div style={{ display: "grid", gap: 10 }}>
                 {questions.map((w) => {

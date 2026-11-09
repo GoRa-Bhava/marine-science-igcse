@@ -10,12 +10,12 @@
 
 // Syllabus unit + section titles (0697). Stable reference data.
 export const SYLLABUS = {
-  1: { title: "Earth Processes", sections: { "1.1": "Earth in space and structure", "1.2": "Plate tectonics", "1.3": "Oceans and the sea floor", "1.4": "Tides and currents" } },
-  2: { title: "Sea Water", sections: { "2.1": "The water cycle", "2.2": "pH and salinity", "2.3": "Dissolved gases", "2.4": "Density", "2.5": "Effects of increasing depth", "2.6": "Upwelling" } },
-  3: { title: "Marine Organisms", sections: { "3.1": "Cell structure and function", "3.2": "Reproduction", "3.3": "Classification", "3.4": "The animal kingdom", "3.5": "Plant and protoctist kingdoms", "3.6": "Animal life cycles", "3.7": "Migration" } },
-  4: { title: "Nutrients and Energy", sections: { "4.1": "Nutrients", "4.2": "Respiration", "4.3": "Photosynthesis", "4.4": "Feeding relationships" } },
-  5: { title: "Marine Ecosystems", sections: { "5.1": "Components of ecosystems", "5.2": "Investigating ecosystems", "5.3": "Open-ocean ecosystem", "5.4": "Rocky shores", "5.5": "Sedimentary shores", "5.6": "Mangrove forest", "5.7": "Tropical coral reefs" } },
-  6: { title: "Human Influences on Marine Ecosystems", sections: { "6.1": "Overview of human interactions", "6.2": "Tourism", "6.3": "Fisheries", "6.4": "Aquaculture", "6.5": "Energy from the oceans", "6.6": "Plastic pollution", "6.7": "Eutrophication", "6.8": "Understanding climate change", "6.9": "Conservation strategies" } },
+  1: { title: "The Earth and its oceans", sections: { "1.1": "Earth in space and structure", "1.2": "Plate tectonics", "1.3": "Oceans and the sea floor", "1.4": "Tides and currents" } },
+  2: { title: "Sea water", sections: { "2.1": "The water cycle", "2.2": "pH and salinity", "2.3": "Dissolved gases", "2.4": "Density", "2.5": "Effects of increasing depth", "2.6": "Upwelling" } },
+  3: { title: "Marine organisms", sections: { "3.1": "Cell structure and function", "3.2": "Reproduction", "3.3": "Classification", "3.4": "The animal kingdom", "3.5": "Plant and protoctist kingdoms", "3.6": "Animal life cycles", "3.7": "Migration" } },
+  4: { title: "Nutrients and energy", sections: { "4.1": "Nutrients", "4.2": "Respiration", "4.3": "Photosynthesis", "4.4": "Feeding relationships" } },
+  5: { title: "Marine ecology", sections: { "5.1": "Components of ecosystems", "5.2": "Investigating ecosystems", "5.3": "Open-ocean ecosystem", "5.4": "Rocky shores", "5.5": "Sedimentary shores", "5.6": "Mangrove forest", "5.7": "Tropical coral reefs" } },
+  6: { title: "Human influences on the marine environment", sections: { "6.1": "Overview of human interactions", "6.2": "Tourism", "6.3": "Fisheries", "6.4": "Aquaculture", "6.5": "Energy from the oceans", "6.6": "Plastic pollution", "6.7": "Eutrophication", "6.8": "Understanding climate change", "6.9": "Conservation strategies" } },
 };
 
 export function secOf(item) {

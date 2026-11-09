@@ -16,8 +16,8 @@ export default function SendProgress({
   onSaveShareInfo, onBack, fontUi, fontDisplay,
 }) {
   const light = theme === "light";
-  const F_UI = fontUi || "Karla, system-ui, sans-serif";
-  const F_D = fontDisplay || "Fraunces, Georgia, serif";
+  const F_UI = fontUi || "'Source Sans 3', ui-sans-serif, system-ui, sans-serif";
+  const F_D = fontDisplay || "'Lexend', ui-sans-serif, system-ui, sans-serif";
 
   const [name, setName] = useState(initialName);
   const [classCode, setClassCode] = useState(initialClass);

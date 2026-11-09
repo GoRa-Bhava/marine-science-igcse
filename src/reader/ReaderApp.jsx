@@ -34,8 +34,8 @@ const PRACTICAL_ITEMS = PRACTICALS.flatMap((p) => p.items);
    the learn/reference surfaces (Interactive Lab, Concept Cards, Ocean
    discoveries) and the app's settings (theme, updates, back up / restore). */
 
-const FONT_UI = "Karla, system-ui, sans-serif";
-const FONT_DISPLAY = "Fraunces, Georgia, serif";
+const FONT_UI = "'Source Sans 3', system-ui, sans-serif";
+const FONT_DISPLAY = "'Lexend', system-ui, sans-serif";
 const TIER = { 1: "RECALL", 2: "APPLICATION" };
 
 // Decorative unit artwork (under public/images/units/). Relative paths — the app
@@ -1498,6 +1498,7 @@ export function ReaderApp({
         <WritingPractice C={C} theme={theme} writingData={writingData} keepText={settings.keepWriting !== false}
           isUnlocked={(u) => isUnlockedUnit(u, entitlement)} onLocked={() => setView("unlock")}
           onSaveResult={saveWritingResult} onBack={backToLibrary}
+          unitTitle={(u) => index.units.find((x) => x.unitId === u)?.title}
           fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
       </div>
     );

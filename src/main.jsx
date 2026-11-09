@@ -2,11 +2,14 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 
+
 // Fonts bundled into the app itself — no request to Google, works with no network.
-import "@fontsource-variable/fraunces";
-import "@fontsource/karla/400.css";
-import "@fontsource/karla/500.css";
-import "@fontsource/karla/600.css";
+// Brand match (wildcateducation.co.uk): Lexend for display, Source Sans 3 for UI.
+import "@fontsource/lexend/600.css";
+import "@fontsource/lexend/700.css";
+import "@fontsource/source-sans-3/400.css";
+import "@fontsource/source-sans-3/600.css";
+import "@fontsource/source-sans-3/700.css";
 // Desktop web layout (≥861px). Additive, layout-only; below the breakpoint it
 // contributes nothing, so the phone view and the Capacitor APK are unchanged.
 import "./responsive.css";
@@ -28,3 +31,4 @@ if (!isNativeApp && "serviceWorker" in navigator) {
     });
   });
 }
+

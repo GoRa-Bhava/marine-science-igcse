@@ -6,7 +6,7 @@
 //   example = an optional WORKED EXAMPLE (calculation sections only) — HTML with <b>; render as a callout.
 export const NOTES = {
  "1": {
-  "title": "Earth Processes",
+  "title": "The Earth and its oceans",
   "sections": [
    {
     "id": "1.1",
@@ -260,7 +260,7 @@ export const NOTES = {
   ]
  },
  "2": {
-  "title": "Sea Water",
+  "title": "Sea water",
   "sections": [
    {
     "id": "2.1",
@@ -619,7 +619,7 @@ export const NOTES = {
   ]
  },
  "3": {
-  "title": "Marine Organisms",
+  "title": "Marine organisms",
   "sections": [
    {
     "id": "3.1",
@@ -988,7 +988,7 @@ export const NOTES = {
   ]
  },
  "4": {
-  "title": "Nutrients and Energy",
+  "title": "Nutrients and energy",
   "sections": [
    {
     "id": "4.1",
@@ -1278,7 +1278,7 @@ export const NOTES = {
   ]
  },
  "5": {
-  "title": "Marine Ecosystems",
+  "title": "Marine ecology",
   "sections": [
    {
     "id": "5.1",
@@ -1719,7 +1719,7 @@ export const NOTES = {
   ]
  },
  "6": {
-  "title": "Human Influences",
+  "title": "Human influences on the marine environment",
   "sections": [
    {
     "id": "6.1",

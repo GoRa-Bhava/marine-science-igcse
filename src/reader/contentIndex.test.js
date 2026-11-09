@@ -30,7 +30,7 @@ test("unit rollup, itemLoc, nextSectionId, firstItemOf, flatOrder", () => {
   const items = [mk("a", "2.1/LO1", 1), mk("b", "2.2/LO1", 1), mk("c", "3.1/LO1", 1)];
   const idx = buildContentIndex(items);
   assert.deepEqual(idx.units.map((u) => u.unitId), [2, 3]);
-  assert.equal(idx.units[0].title, "Sea Water");
+  assert.equal(idx.units[0].title, "Sea water");
   assert.equal(idx.itemLoc.b.sectionId, "2.2");
   assert.equal(idx.itemLoc.b.unitId, 2);
   assert.equal(idx.nextSectionId("2.1"), "2.2");
