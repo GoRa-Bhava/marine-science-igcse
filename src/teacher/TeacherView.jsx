@@ -606,12 +606,12 @@ export default function TeacherView({
     const correct = it.options && typeof it.a === "number" ? it.options[it.a] : null;
     return (
       <div role="dialog" aria-modal="true" style={{ position: "fixed", inset: 0, background: C.abyss, zIndex: 50, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
-        <div style={{ fontFamily: F_UI, fontSize: 13, color: C.glow, marginBottom: 12 }}>Lesson starter · {lesson.i + 1} of {lesson.items.length}</div>
-        <div style={{ fontFamily: F_D, fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 800, color: C.foam, maxWidth: 900, lineHeight: 1.3 }}>{it.qRecall || it.q}</div>
+        <div style={{ fontFamily: F_UI, fontSize: 13, color: "#4FD8C4", marginBottom: 12 }}>Lesson starter · {lesson.i + 1} of {lesson.items.length}</div>
+        <div style={{ fontFamily: F_D, fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 800, color: "#EAF6F5", maxWidth: 900, lineHeight: 1.3 }}>{it.qRecall || it.q}</div>
         {lesson.revealed && (
           <div style={{ marginTop: 24, maxWidth: 820 }}>
-            {correct && <div style={{ fontFamily: F_D, fontSize: "clamp(18px,3vw,30px)", fontWeight: 800, color: C.glow }}>{correct}</div>}
-            {it.why && <p style={{ fontFamily: F_UI, fontSize: "clamp(14px,2vw,18px)", color: C.mist, marginTop: 12, lineHeight: 1.6 }}>{it.why}</p>}
+            {correct && <div style={{ fontFamily: F_D, fontSize: "clamp(18px,3vw,30px)", fontWeight: 800, color: "#4FD8C4" }}>{correct}</div>}
+            {it.why && <p style={{ fontFamily: F_UI, fontSize: "clamp(14px,2vw,18px)", color: "#A9C7D2", marginTop: 12, lineHeight: 1.6 }}>{it.why}</p>}
           </div>
         )}
         <div style={{ display: "flex", gap: 10, marginTop: 32 }}>
