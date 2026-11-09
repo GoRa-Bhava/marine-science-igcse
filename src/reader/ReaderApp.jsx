@@ -13,6 +13,8 @@ import { NOTES, notesUnits, notesByUnit } from "./notes.js";
 import { PRACTICALS, practicalsList, practicalById, practicalItemIds } from "./practicals.js";
 import FiguresPractice from "../figdata/FiguresPractice.jsx";
 import WritingPractice from "../writing/WritingPractice.jsx";
+import SendProgress from "../teacher/SendProgress.jsx";
+import { contentIndex } from "../teacher/buildReport.js";
 import UpdateBanner from "../updates/UpdateBanner.jsx";
 import { shuffleDeck, mixedDeck } from "../flashcards/order.js";
 
@@ -91,6 +93,7 @@ export function ReaderApp({
   const desktop = useIsDesktop();
   const index = useMemo(() => buildContentIndex(content.items, content.figures || {}), [content]);
   const itemById = useMemo(() => Object.fromEntries([...content.items, ...PRACTICAL_ITEMS].map((i) => [i.id, i])), [content]);
+  const reportIndex = useMemo(() => contentIndex(content, WRITING), [content]);
 
   const storeRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -660,6 +663,7 @@ export function ReaderApp({
   else if (view === "practicals") viewContent = renderPracticals();
   else if (view === "figdata") viewContent = renderFigData();
   else if (view === "writing") viewContent = renderWriting();
+  else if (view === "sendprogress") viewContent = renderSendProgress();
   else if (view === "collection") viewContent = <>{renderCollection()}{revealOverlay()}</>;
   else if (view === "settings") viewContent = renderSettings();
   else if (view === "profiles") viewContent = renderProfilePicker();
@@ -895,6 +899,12 @@ export function ReaderApp({
           );
         })}
         </div>
+
+        {(settings.classCode || entitlement?.tier === "school") && (
+          <div style={{ textAlign: "center", marginTop: 14 }}>
+            <button onClick={() => setView("sendprogress")} style={linkBtn(C)}>✉️ Send progress to your teacher</button>
+          </div>
+        )}
 
         <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
           <button style={entryBtn(C)} onClick={startSmart}>🔀 Mixed Practice / Spaced Repetition</button>
@@ -1424,6 +1434,24 @@ export function ReaderApp({
           isUnlocked={(u) => isUnlockedUnit(u, entitlement)} onLocked={() => setView("unlock")}
           onSaveResult={saveWritingResult} onBack={backToLibrary}
           fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
+      </div>
+    );
+  }
+
+  // ---------- Send progress to teacher (student side) ----------
+  function saveShareInfo({ teacherName, classCode }) {
+    setSettings((s) => ({ ...s, teacherName, classCode }));
+    const s = store(); if (s) s.putSettings({ teacherName, classCode });
+  }
+  function renderSendProgress() {
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Send progress" />
+        <SendProgress C={C} theme={theme} reportIndex={reportIndex}
+          progressMap={progressMap} writingData={writingData}
+          name={settings.teacherName || ""} classCode={settings.classCode || ""}
+          examDate={settings.examDate} onSaveShareInfo={saveShareInfo}
+          onBack={backToLibrary} fontUi={FONT_UI} fontDisplay={FONT_DISPLAY} />
       </div>
     );
   }
@@ -2055,6 +2083,17 @@ export function ReaderApp({
             Delete my written answers
           </button>
           {writingDeleteMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{writingDeleteMsg}</p>}
+        </div>
+
+        {/* Teachers and tutors */}
+        <div style={{ ...card(C), marginTop: 14 }}>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Teachers and tutors</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Send your progress to your teacher as a link or QR code. <strong style={{ color: C.foam }}>Nothing is uploaded</strong> — you send it yourself.</div>
+          <button onClick={() => setView("sendprogress")} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)" }}>Send progress to your teacher</button>
+          <details style={{ marginTop: 12 }}>
+            <summary style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.accent, cursor: "pointer" }}>About sharing with teachers</summary>
+            <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginTop: 8, lineHeight: 1.6 }}>Your progress only leaves the device when you send the link yourself. The link contains the name you typed, your scores and your recent wrong answers. Nothing is stored by Wildcat Education, there are no accounts, and there is no tracking.</div>
+          </details>
         </div>
 
         {/* About + updates */}
