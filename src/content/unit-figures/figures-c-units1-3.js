@@ -445,10 +445,10 @@ export const FIGURE_ITEMS_C13 = [
   "fig": "P-U1-05",
   "q": "One map shows the continents today. The other shows them hundreds of millions of years ago. Which map shows the past, and what has happened since then?",
   "options": [
-   "the lower map; the supercontinent broke up and the plates moved apart",
-   "the upper map; the continents moved together into one supercontinent",
-   "the lower map; the sea rose and split the land into separate continents",
-   "the lower map; one sudden event broke the land apart in a few years"
+   "the lower map; over millions of years the supercontinent broke up and the plates moved apart",
+   "the upper map; over millions of years the continents moved together into one supercontinent",
+   "the lower map; over thousands of years the sea rose and split the land into separate continents",
+   "the lower map; one sudden event broke the land apart within the space of just a few years"
   ],
   "a": 0,
   "why": "The lower map shows the past, with the continents joined as one supercontinent, while the upper map is today's layout. Over hundreds of millions of years the supercontinent broke up and the moving tectonic plates carried the pieces apart, and they are still moving. It did not happen in one sudden event, and the oceans between the continents opened as the plates moved apart, not because the sea rose."
@@ -516,17 +516,6 @@ export const FIGURE_ITEMS_C13 = [
   "q": "Each circle is an atom, and atoms that touch are joined. Different colours are different elements. Tap the box that shows a mixture, like sea water.",
   "target": "mixture",
   "why": "A mixture contains different substances that are not chemically joined, as in the middle box: water particles with separate dissolved salt particles between them, which is what sea water is. The left box is a compound, calcium carbonate, because every unit is the same, with different elements joined in a fixed ratio. The right box is an element, oxygen, because it has only one kind of atom."
- },
- {
-  "id": "PQ2-U2-54",
-  "topic": "u2-salinity",
-  "type": "tap",
-  "tier": 2,
-  "ref": "2.2/LO1",
-  "fig": "P-U2-07",
-  "q": "Each circle is an atom, and atoms that touch are joined. Different colours are different elements. Tap the box that shows an element.",
-  "target": "element",
-  "why": "An element is made of only one type of atom, so the right box, with one kind of atom joined in pairs, is the element oxygen (O₂). Two atoms joined together do not make a compound when they are atoms of the same element; a compound, as in the left box, has two or more different elements chemically joined. The middle box is a mixture of different substances that are not joined to each other."
  },
  {
   "id": "PQ2-U2-55",
@@ -660,6 +649,6 @@ export const FIGURE_ITEMS_C13 = [
    "the Arctic Ocean"
   ],
   "a": 0,
-  "why": "The map shows the ocean between Asia and Australia in the west and North America in the east: the Pacific Ocean, the largest ocean. The whale's northern end is in the Bering Sea, which is a sea within the Pacific, so it is not the Arctic Ocean. The Atlantic lies between the Americas and Europe and Africa, and the Indian Ocean lies south of Asia between Africa and Australia."
+  "why": "Both routes lie in the Pacific Ocean, the ocean between Asia in the west and North America in the east. The whale's northern end is in the Bering Sea, which is part of the Pacific, not the Arctic Ocean. The Atlantic lies between the Americas and Europe and Africa, and the Indian Ocean lies south of Asia."
  }
 ];

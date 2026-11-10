@@ -92,12 +92,12 @@ export const FIGURES_P13 = {
     { id: "sandbar", x: 900, y: 590, label: "sandbar" },
     { id: "beach", x: 300, y: 735, label: "beach" },
   ] },
-  // same image, escape directions for a swimmer in the channel (about y 470): shore end of the channel,
-  // water beside the channel at the same distance from the shore, and the plume beyond the breakers
-  "P-U1-12-swim": { art: { kind: "img", src: "figs-units/P-U1-12.webp", w: 1200, h: 800 }, hotspots: [
-    { id: "to-beach", x: 600, y: 615, label: "straight back to the beach" },
-    { id: "sideways", x: 420, y: 470, label: "sideways, parallel to the shore" },
-    { id: "out-to-sea", x: 600, y: 150, label: "further out to sea" },
+  // same photo with a swimmer (red cap) and three arrows baked in (P-U1-12-swim.webp, Don 11 Nov):
+  // markers on the arrow heads: towards the beach, sideways along the shore, out to sea
+  "P-U1-12-swim": { art: { kind: "img", src: "figs-units/P-U1-12-swim.webp", w: 1200, h: 800 }, hotspots: [
+    { id: "to-beach", x: 605, y: 618, label: "straight back to the beach" },
+    { id: "sideways", x: 410, y: 430, label: "sideways, parallel to the shore" },
+    { id: "out-to-sea", x: 605, y: 242, label: "further out to sea" },
   ] },
 
   /* ---------------- Unit 2 ---------------- */
@@ -211,9 +211,6 @@ export const FIGURE_ITEMS_P13 = [
   { id: "PQ2-U1-07", topic: "quakes", type: "tap", tier: 2, ref: "1.2/LO5", fig: "P-U1-06",
     q: "Tap the place between the two plates where they lock together, then suddenly slip and cause an earthquake.", target: "plate-contact",
     why: "Earthquakes start where the plates are in contact. They stick (lock), tension builds as the plates keep moving, and then they suddenly slip, releasing a large amount of energy. The trench is the dip in the sea floor where the sinking plate starts to go down, not the surface the plates grip along. Melting happens deeper, in the mantle, and the volcano is fed by magma, not by the slip." },
-  { id: "PQ2-U1-08", topic: "quakes", type: "tap", tier: 1, ref: "1.2/LO6", fig: "P-U1-07",
-    q: "The three panels show how a tsunami forms, from left to right. Tap the panel that shows the step that first creates the wave.", target: "panel-2",
-    why: "In the middle panel the plates suddenly slip and the seabed jolts upwards, displacing a large volume of water: that starts the wave. In the left panel the plates are still locked, so no water has moved yet. In the right panel the wave already exists and is growing taller as it reaches shallow water." },
   { id: "PQ2-U1-09", topic: "quakes", type: "choice", tier: 2, ref: "1.2/LO6", fig: "P-U1-07",
     q: "Why is the wave much taller in the right-hand panel than in the middle panel?",
     options: [
@@ -234,9 +231,6 @@ export const FIGURE_ITEMS_P13 = [
       "the sea made permanently less salty",
     ], a: [0, 1, 2],
     why: "Broken coral, uprooted mangroves and sediment clouding the water are damage to marine habitats and the organisms living in them. Wrecked boats and flooded fields are real tsunami effects, but they are effects on the human coastal community, not on the marine ecosystem. A tsunami does not make the sea permanently less salty, and nothing in the picture shows that." },
-  { id: "PQ2-U1-11", topic: "quakes", type: "tap", tier: 2, ref: "1.2/LO7", fig: "P-U1-08",
-    q: "Tap the effect on the human coastal community that comes from salt water reaching the land.", target: "flooded-fields",
-    why: "Sea water has flooded the farm fields: it destroys crops, and salt left in the soil and in fresh water can stop farming for a long time. The wrecked boats are also an effect on the community, but they come from the force of the water, not from salt on the land. Broken coral, uprooted mangroves and cloudy water are effects on the marine ecosystem." },
 
   /* ---------------- floor ---------------- */
   { id: "PQ2-U1-12", topic: "floor", type: "label", tier: 1, ref: "1.3/LO6", fig: "P-U1-10",
@@ -264,7 +258,7 @@ export const FIGURE_ITEMS_P13 = [
     q: "This beach is seen from above. Tap where a rip current is flowing.", target: "rip",
     why: "The rip current is the narrow channel of darker, calmer-looking water running out to sea through the gap in the breaking waves. Waves push water onto the shore, and it flows back out through the gap as a fast, narrow current. The calm look is what fools swimmers. The white breaking waves move towards the shore, the sandbar is the pale, shallow sand under the water beside the channel, and the beach is dry land." },
   { id: "PQ2-U1-17", topic: "tides", type: "tap", tier: 2, ref: "1.4/LO8", fig: "P-U1-12-swim",
-    q: "A swimmer is being carried out to sea in this rip current. Tap the way they should swim first.", target: "sideways",
+    q: "A swimmer (red cap) is being carried out to sea in this rip current. The arrows show three ways they could swim. Tap the way they should swim first.", target: "sideways",
     why: "Swimming parallel to the shore takes the swimmer sideways out of the narrow current; then they can swim back to the beach with the waves. Swimming straight for the beach means fighting a current that flows faster than most people can swim, so they tire. Heading further out makes the way back longer. A rip current carries swimmers out to sea; it does not pull them under." },
 
   /* ================= Unit 2 ================= */
@@ -278,9 +272,6 @@ export const FIGURE_ITEMS_P13 = [
       "the left-hand sea, as its ice adds extra water at the surface to evaporate",
     ], a: 0,
     why: "In the warm tropical sea the water particles have more kinetic energy, so more of them can escape from the surface and evaporation is faster. In the cold polar sea the particles have less energy, and the ice cover stops evaporation from much of the surface. Being fresher does not make water evaporate faster, and evaporation happens at any temperature, far below the boiling point." },
-  { id: "PQ2-U2-02", topic: "u2-water", type: "tap", tier: 1, ref: "2.1/LO8", fig: "P-U2-02",
-    q: "Tap the feature that stops water from evaporating from part of the cold sea.", target: "ice",
-    why: "Where the sea is covered by ice there is no open water surface for particles to escape from, so evaporation stops there. The open water between the floes can still evaporate, though slowly because it is cold. The warm tropical water evaporates fastest of all." },
 
   /* ---------------- u2-salinity ---------------- */
   { id: "PQ2-U2-03", topic: "u2-salinity", type: "tap", tier: 1, ref: "2.2/LO11", fig: "P-U2-03",
@@ -316,9 +307,6 @@ export const FIGURE_ITEMS_P13 = [
       "the left, as its narrow entrance lets more salt flow in from the ocean",
     ], a: 0,
     why: "In the hot, dry sea strong sunshine evaporates water and leaves the salts behind, and there is little rain and almost no river water to dilute it; the Red Sea is a real example. The cool, wet coast gets plenty of rain and river water, which lower salinity, as in the Baltic Sea. Rivers carry a little salt from eroded rocks, but their main effect is dilution. The narrow entrance limits mixing with the ocean rather than bringing salt in, and density does not decide how much salt a sea holds." },
-  { id: "PQ2-U2-08", topic: "u2-salinity", type: "tap", tier: 1, ref: "2.2/LO9", fig: "P-U2-06",
-    q: "Tap the feature that lowers the salinity of the sea next to it.", target: "river-mouth",
-    why: "The river brings fresh water (run-off) into the sea, diluting it and lowering the salinity near its mouth. Strong sunshine over the hot sea raises salinity by evaporating water. The narrow entrance limits mixing with the open ocean, and the dry desert shore adds no fresh water." },
 
   /* ---------------- u2-gases ---------------- */
   { id: "PQ2-U2-09", topic: "u2-gases", type: "tap", tier: 1, ref: "2.3/LO1", fig: "P-U2-08",
