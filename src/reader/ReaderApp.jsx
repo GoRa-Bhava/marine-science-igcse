@@ -1066,7 +1066,7 @@ export function ReaderApp({
             <div style={{ ...card(C), border: `1px solid ${C.ok}55` }}>
               <p style={{ ...kicker(C), color: C.ok }}>ANSWER</p>
               {answerText(it) && <div style={{ fontFamily: FONT_UI, fontSize: 16, color: C.foam, fontWeight: 600, lineHeight: 1.5 }}>{answerText(it)}</div>}
-              <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }}>{it.why}</div>
+              <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }} dangerouslySetInnerHTML={{ __html: it.why }} />
               {resetDoneId === it.id ? (
                 <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 10 }}>
                   ↺ Reset — this question is fresh again.
@@ -1095,7 +1095,7 @@ export function ReaderApp({
                 <div style={{ fontFamily: FONT_DISPLAY, fontSize: 17, fontWeight: 600, color: wasRight ? C.ok : C.no, marginBottom: 6 }}>
                   {wasRight ? "Correct" : "Not quite"}
                 </div>
-                <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }}>{it.why}</div>
+                <div style={{ fontFamily: FONT_UI, fontSize: 14.5, color: C.foam, lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: it.why }} />
                 <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 8 }}>Ref: syllabus {secOf(it)}.</div>
                 {resetDoneId === it.id ? (
                   <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 10 }}>
@@ -1269,7 +1269,7 @@ export function ReaderApp({
         <div style={{ ...card(C), border: `1px solid ${C.ok}55` }}>
           <p style={{ ...kicker(C), color: C.ok }}>ANSWER</p>
           {answerText(it) && <div style={{ fontFamily: FONT_UI, fontSize: 16, color: C.foam, fontWeight: 600, lineHeight: 1.5 }}>{answerText(it)}</div>}
-          <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }}>{it.why}</div>
+          <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }} dangerouslySetInnerHTML={{ __html: it.why }} />
         </div>
         {resetDoneId === it.id ? (
           <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "4px 0 10px" }}>

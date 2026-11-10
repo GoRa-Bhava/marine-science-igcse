@@ -677,7 +677,7 @@ function MistakeRow({ m, C, light, F_UI }) {
         {m.n} of {m.total} students chose this
         {m.why && <> · <button onClick={() => setOpen((v) => !v)} style={{ background: "none", border: "none", color: light ? C.accent : C.glow, cursor: "pointer", fontSize: 12, fontWeight: 700, padding: 0 }}>{open ? "hide why" : "why"}</button></>}
       </div>
-      {open && m.why && <div style={{ fontFamily: F_UI, fontSize: 12.5, color: C.mist, marginTop: 4, lineHeight: 1.5 }}>{m.why}</div>}
+      {open && m.why && <div style={{ fontFamily: F_UI, fontSize: 12.5, color: C.mist, marginTop: 4, lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: m.why }} />}
     </div>
   );
 }
