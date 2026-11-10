@@ -165,7 +165,7 @@ function HotspotLayer({ figId, mode, tappedId, assign, order, locked, item, onHo
         const ring = v === "right" ? C.ok : v === "wrong" ? C.no : v === "missed" ? C.no : (on ? C.glow : C.foam);
         return (
           <button key={h.id} onClick={() => !locked && onHotspot(i, h)} disabled={locked}
-            aria-label={h.label}
+            aria-label={`Marker ${i + 1}`}
             style={{
               position: "absolute", left: `${(h.x / dims.w) * 100}%`, top: `${(h.y / dims.h) * 100}%`,
               transform: "translate(-50%, -50%)", width: 30, height: 30, borderRadius: "50%",
@@ -411,6 +411,7 @@ function MultiQ({ item, locked, picked, setPicked }) {
   return (
     <>
       <Prompt>{item.q}</Prompt>
+      {item.fig && <FigureStage figId={item.fig} mode="static" item={item} locked={false} onHotspot={() => {}} />}
       {order.map((i) => {
         const on = picked.includes(i);
         const right = item.a.includes(i);
