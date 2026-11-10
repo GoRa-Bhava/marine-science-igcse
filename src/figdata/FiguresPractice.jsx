@@ -142,10 +142,11 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
     const q = run.qs[i];
     const phase = checked ? "done" : "ask";
     const sl = w.scrollLeft;
+    const st = w.scrollTop;
     const opt = figOpt(q, phase, state, ok);
     const note = phase === "done" && q.doneNote && q.doneNote(state, ok);
     w.innerHTML = run.t.svg(run.F, opt) + (note ? `<p class="plothint">${note}</p>` : "");
-    w.scrollLeft = sl;
+    w.scrollLeft = sl; w.scrollTop = st;
 
     // ---- reading guide (the ✕ with guide lines and mini axis scales) ----
     const svgEl = w.querySelector("svg.figsvg");
@@ -215,6 +216,30 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
       });
     }
   }, [screen, i, checked, ok, state, run, guide]);
+
+  // Scroll the zoomed figure so the reading guide's ✕ sits in the middle of the
+  // view (otherwise zoom starts top-left, away from where the student is reading).
+  function centerCrossInView() {
+    const w = figWrapRef.current; if (!w) return;
+    const pt = guidePtRef.current; if (!pt || pt.x == null) return; // only when a ✕ is placed
+    const svgEl = w.querySelector("svg.figsvg");
+    if (!svgEl || !svgEl.viewBox || !svgEl.viewBox.baseVal) return;
+    const vb = svgEl.viewBox.baseVal, r = svgEl.getBoundingClientRect();
+    if (!r.width || !r.height || !vb.width || !vb.height) return;
+    const fx = (pt.x - vb.x) / vb.width, fy = (pt.y - vb.y) / vb.height;
+    const maxL = Math.max(0, r.width - w.clientWidth), maxT = Math.max(0, r.height - w.clientHeight);
+    w.scrollLeft = Math.max(0, Math.min(maxL, fx * r.width - w.clientWidth / 2));
+    w.scrollTop = Math.max(0, Math.min(maxT, fy * r.height - w.clientHeight / 2));
+  }
+  // Toggle Zoom; when turning it on with the ✕ placed, centre the view on it once
+  // the .zoom class has resized the figure. A timeout (not rAF) so it still runs
+  // in a backgrounded WebView; 0 is after React commits the class, 60 is a retry
+  // in case layout for the 200% width settles a frame later.
+  function toggleZoom() {
+    const next = !zoom;
+    setZoom(next);
+    if (next && guide) { setTimeout(centerCrossInView, 0); setTimeout(centerCrossInView, 60); }
+  }
 
   // ================= list =================
   if (screen === "list") {
@@ -314,7 +339,7 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
               <button onClick={() => { setGuide((g) => { if (!g) guideUsedRef.current = true; return !g; }); }} aria-pressed={guide} style={pillBtn}>📏 Guide</button>
             )}
             {!run.t.noZoom && (
-              <button onClick={() => setZoom((z) => !z)} aria-pressed={zoom}
+              <button onClick={toggleZoom} aria-pressed={zoom}
                 style={{ flex: "0 0 auto", fontFamily: F_UI, fontSize: 12.5, fontWeight: 800, padding: "6px 10px", borderRadius: 999, border: `1px solid ${C.line}`, background: light ? C.raise : C.shelf, color: C.foam, cursor: "pointer" }}>
                 {zoom ? "⤡ Fit" : "⤢ Zoom"}
               </button>
