@@ -5,40 +5,21 @@
    Shape as src/content/figures.js:
      FIGURES[id] = { art: { kind: "img", src, w, h }, hotspots: [{ id, x, y, label }] }
    Hotspots are points in the image's natural pixels. Choice items show the figure without markers.
-   Composites and the fish-head crop live in public/figs-units/ (made from existing app images only). */
+   Composites and the fish-head crop live in public/figs-units/.
+   Batch 3 (10 Nov 2026): the plant cell, fish, seagrass and kelp items moved to replacement art R-U3-01,
+   R-U3-05, R-U3-04 and R-U3-06 (figures-r-units1-3.js) and G-U3-plantcell, G-U3-fish, G-U3-seagrass and
+   G-U3-kelp were deleted. The composites G-U3-cells3, -domains, -kingdoms, -grasskelp and the -fishhead crop
+   were rebuilt from the new panels (same layout, same hotspot ids; batch3/tools/build-r-units1-3.py). */
 
 export const FIGURES_U3 = {
-  // D01 bony fish
-  "G-U3-fish": { art: { kind: "img", src: "figdata-img/lp-fish.webp", w: 800, h: 800 }, hotspots: [
-    { id: "nares", x: 59, y: 386, label: "nares (nostrils)" },
-    { id: "operculum", x: 180, y: 440, label: "operculum (gill cover)" },
-    { id: "pectoral-fin", x: 320, y: 430, label: "pectoral fin" },
-    { id: "scales", x: 430, y: 475, label: "scales" },
-    { id: "lateral-line", x: 500, y: 367, label: "lateral line" },
-    { id: "dorsal-fin", x: 400, y: 228, label: "dorsal fin" },
-    { id: "caudal-fin", x: 730, y: 400, label: "caudal (tail) fin" },
-    { id: "anal-fin", x: 540, y: 505, label: "anal fin" },
-    { id: "pelvic-fin", x: 285, y: 575, label: "pelvic fin" },
-  ] },
-  // close-up of the head of lp-fish (crop 0,270 to 340,520, enlarged 2x) so the nares can be seen
+  // close-up of the head of R-U3-05 (crop 112,248 to 452,498, enlarged 2x) so the nares can be seen
+  // (batch 3: on the whole R-U3-05 fish each naris is about 2.5 px at 390 px, so U3-D05 stays here)
   "G-U3-fishhead": { art: { kind: "img", src: "figs-units/G-U3-fishhead.webp", w: 680, h: 500 }, hotspots: [
-    { id: "nares", x: 117, y: 232, label: "nares (nostrils)" },
-    { id: "operculum", x: 370, y: 330, label: "operculum (gill cover)" },
-    { id: "lateral-line", x: 560, y: 152, label: "lateral line" },
-    { id: "pectoral-fin", x: 600, y: 330, label: "pectoral fin" },
-    { id: "scales", x: 590, y: 50, label: "scales" },
-  ] },
-  // D03 plant cell. 10 Nov 2026: the cell wall is the key plant-cell structure, so it stays, with its marker
-  // moved inward to the middle of the thick wall band (x 30). The membrane is a hairline just inside the wall,
-  // so it is not marked on this art; wall and membrane are both marked on replacement art R-U3-01.
-  // "large permanent vacuole" is now the syllabus term "vacuole".
-  "G-U3-plantcell": { art: { kind: "img", src: "figdata-img/lp-plantcell.webp", w: 800, h: 800 }, hotspots: [
-    { id: "cell-wall", x: 30, y: 440, label: "cell wall" },
-    { id: "cytoplasm", x: 710, y: 640, label: "cytoplasm" },
-    { id: "nucleus", x: 690, y: 300, label: "nucleus" },
-    { id: "chloroplast", x: 410, y: 90, label: "chloroplast" },
-    { id: "vacuole", x: 360, y: 390, label: "vacuole" },
-    { id: "mitochondrion", x: 276, y: 686, label: "mitochondrion" },
+    { id: "nares", x: 86, y: 248, label: "nares (nostrils)" },
+    { id: "operculum", x: 412, y: 324, label: "operculum (gill cover)" },
+    { id: "lateral-line", x: 616, y: 121, label: "lateral line" },
+    { id: "pectoral-fin", x: 636, y: 304, label: "pectoral fin" },
+    { id: "scales", x: 560, y: 55, label: "scales" },
   ] },
   // D02 animal cell
   "G-U3-animalcell": { art: { kind: "img", src: "figdata-img/lp-animalcell.webp", w: 800, h: 800 }, hotspots: [
@@ -47,44 +28,30 @@ export const FIGURES_U3 = {
     { id: "cytoplasm", x: 400, y: 175, label: "cytoplasm" },
     { id: "mitochondrion", x: 108, y: 395, label: "mitochondrion" },
   ] },
-  // composite: plant cell (top left), animal cell (top right), bacterial cell (bottom)
-  "G-U3-cells3": { art: { kind: "img", src: "figs-units/G-U3-cells3.webp", w: 824, h: 606 }, hotspots: [
-    { id: "plant-cell", x: 200, y: 200, label: "plant cell" },
+  // composite: plant cell (top left, R-U3-01), animal cell (top right, lp-animalcell), bacterial cell (bottom, R-U3-03)
+  "G-U3-cells3": { art: { kind: "img", src: "figs-units/G-U3-cells3.webp", w: 824, h: 627 }, hotspots: [
+    { id: "plant-cell", x: 200, y: 196, label: "plant cell" },
     { id: "animal-cell", x: 624, y: 200, label: "animal cell" },
-    { id: "bacterial-cell", x: 340, y: 515, label: "bacterial cell" },
+    { id: "bacterial-cell", x: 412, y: 525, label: "bacterial cell" },
   ] },
-  // composite: bacterial cell (top), dinoflagellate (bottom left), animal cell (bottom right)
-  "G-U3-domains": { art: { kind: "img", src: "figs-units/G-U3-domains.webp", w: 824, h: 606 }, hotspots: [
-    { id: "bacterial-cell", x: 300, y: 90, label: "bacterial cell" },
-    { id: "dinoflagellate", x: 190, y: 360, label: "dinoflagellate" },
-    { id: "animal-cell", x: 627, y: 400, label: "animal cell" },
+  // composite: bacterial cell (top, R-U3-03, no flagellum), dinoflagellate (bottom left), animal cell (bottom right)
+  "G-U3-domains": { art: { kind: "img", src: "figs-units/G-U3-domains.webp", w: 824, h: 627 }, hotspots: [
+    { id: "bacterial-cell", x: 412, y: 101, label: "bacterial cell" },
+    { id: "dinoflagellate", x: 190, y: 310, label: "dinoflagellate" },
+    { id: "animal-cell", x: 627, y: 421, label: "animal cell" },
   ] },
-  // composite 2x2: kelp, bony fish / seagrass, diatom
+  // composite 2x2: kelp (R-U4-01), bony fish (lp-fish) / seagrass (R-U3-04), diatom (lp-diatom)
   "G-U3-kingdoms": { art: { kind: "img", src: "figs-units/G-U3-kingdoms.webp", w: 824, h: 824 }, hotspots: [
-    { id: "kelp", x: 180, y: 200, label: "kelp" },
+    { id: "kelp", x: 190, y: 185, label: "kelp" },
     { id: "fish", x: 610, y: 200, label: "bony fish" },
-    { id: "seagrass", x: 200, y: 620, label: "seagrass" },
+    { id: "seagrass", x: 185, y: 600, label: "seagrass" },
     { id: "diatom", x: 615, y: 620, label: "diatom" },
   ] },
   // anemone budding, card art cmp-sexual-asexual__b used whole (review: the __a spawning panel shows
   // gametes leaving the fishes' mouths, so the two-panel composite was dropped)
   "G-U3-budding": { art: { kind: "img", src: "card-art/cmp-sexual-asexual__b.webp", w: 1000, h: 750 }, hotspots: [] },
-  // D07 seagrass
-  "G-U3-seagrass": { art: { kind: "img", src: "figdata-img/lp-seagrass.webp", w: 800, h: 800 }, hotspots: [
-    { id: "leaf", x: 180, y: 170, label: "leaf" },
-    { id: "flower", x: 420, y: 322, label: "flower" },
-    { id: "rhizome", x: 250, y: 590, label: "rhizome (underground stem)" },
-    { id: "roots", x: 130, y: 700, label: "roots" },
-  ] },
-  // D06 kelp
-  "G-U3-kelp": { art: { kind: "img", src: "figdata-img/lp-kelp.webp", w: 800, h: 800 }, hotspots: [
-    { id: "blade", x: 150, y: 150, label: "blade" },
-    { id: "gas-bladder", x: 462, y: 458, label: "gas bladder" },
-    { id: "stipe", x: 350, y: 600, label: "stipe" },
-    { id: "holdfast", x: 362, y: 728, label: "holdfast" },
-  ] },
-  // composite: kelp (left, cmp-seagrass-kelp__b), seagrass (right, __a)
-  "G-U3-grasskelp": { art: { kind: "img", src: "figs-units/G-U3-grasskelp.webp", w: 1624, h: 600 }, hotspots: [] },
+  // composite: kelp on a boulder (left, R-U3-06, 600 px square), seagrass (right, cmp-seagrass-kelp__a)
+  "G-U3-grasskelp": { art: { kind: "img", src: "figs-units/G-U3-grasskelp.webp", w: 1424, h: 600 }, hotspots: [] },
   // composite: dinoflagellate (left, cmp-dino-diatom__a, both flagella clear), diatom (right, __b)
   "G-U3-microalgae": { art: { kind: "img", src: "figs-units/G-U3-microalgae.webp", w: 1624, h: 600 }, hotspots: [
     { id: "dino-flagellum", x: 650, y: 360, label: "flagellum" },
@@ -97,23 +64,23 @@ export const FIGURES_U3 = {
 
 export const FIGURE_ITEMS_U3 = [
   /* ---------------- u3-cells ---------------- */
-  { id: "U3-D16", topic: "u3-cells", type: "label", tier: 1, ref: "3.1/LO3", fig: "G-U3-plantcell",
-    q: "Label the six marked structures of this plant cell.",
+  { id: "U3-D16", topic: "u3-cells", type: "label", tier: 1, ref: "3.1/LO1 · 3.1/LO3", fig: "R-U3-01",
+    q: "Label the seven marked structures of this plant cell.",
     extra: ["flagellum", "silica skeleton"],
-    why: "The thick dark-green outer layer is the cell wall, which supports the cell and keeps its shape. The large pale-blue central space is the vacuole, which stores cell sap, and the purple rounded body beside it is the nucleus, which contains the genetic material and controls the cell. The small green ovals are chloroplasts, which absorb light for photosynthesis, an orange sausage shape is a mitochondrion, where respiration releases energy, and the pale green ground between them is the cytoplasm, where most of the cell's reactions happen. Students most often swap the vacuole and the nucleus, and a flagellum or a silica skeleton belongs to other organisms, not to a plant cell." },
-  { id: "U3-D17", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO3 · 3.1/LO4", fig: "G-U3-plantcell",
+    why: "The thick dark-green outer layer is the cell wall, which supports the cell, and the thin dark-blue line just inside it is the cell membrane, which controls what enters and leaves; a plant cell has both, not a wall instead of a membrane. The large pale-blue central space is the vacuole, which stores cell sap, and the purple rounded body is the nucleus, which contains the genetic material and controls the cell. The green ovals are chloroplasts, which absorb light for photosynthesis, the small orange shapes are mitochondria, where respiration releases energy, and the ground around them is the cytoplasm, where most reactions happen; a flagellum or a silica skeleton belongs to other organisms." },
+  { id: "U3-D17", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO3 · 3.1/LO4", fig: "R-U3-01",
     q: "Tap the structure that absorbs light energy for photosynthesis.", target: "chloroplast",
     why: "Chloroplasts are the small green ovals in the cytoplasm, and they absorb light energy for photosynthesis. The nucleus controls the cell, the vacuole stores cell sap, and mitochondria release energy by respiration; none of these absorbs light." },
-  { id: "U3-D18", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO3 · 3.1/LO4", fig: "G-U3-plantcell",
+  { id: "U3-D18", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO3 · 3.1/LO4", fig: "R-U3-01",
     q: "Tap the structure that contains the genetic material and controls the cell's activities.", target: "nucleus",
     why: "The nucleus is the purple rounded body beside the vacuole; it contains the genetic material and controls the cell. The vacuole is bigger, but it only stores water and dissolved substances (cell sap). Mixing up the vacuole and the nucleus is a common labelling error." },
-  { id: "U3-D19", topic: "u3-cells", type: "choice", tier: 2, ref: "3.1/LO1 · 3.1/LO3", fig: "G-U3-plantcell",
+  { id: "U3-D19", topic: "u3-cells", type: "choice", tier: 2, ref: "3.1/LO1 · 3.1/LO3", fig: "R-U3-01",
     q: "Which structure is present in this plant cell but would be ABSENT from an animal cell?",
     options: ["the chloroplasts", "the nucleus", "the cell membrane", "the mitochondria"], a: 0,
     why: "Chloroplasts, like the cell wall and the large vacuole, are found in plant cells only. The nucleus, the cell membrane and the mitochondria are found in both plant and animal cells." },
   { id: "U3-D20", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO2", fig: "G-U3-cells3",
     q: "Tap the cell that has a cell wall, a cell membrane and cytoplasm but no nucleus.", target: "bacterial-cell",
-    why: "The bottom cell has a wall, a membrane and cytoplasm, with its genetic material loose in the cytoplasm and no nucleus: it is a bacterial cell. The plant cell also has a wall, but it has a nucleus. The animal cell has a nucleus and no wall." },
+    why: "The bottom cell has a cell wall, a cell membrane and cytoplasm but no nucleus: it is a bacterial cell. The plant cell also has a wall, but it has a nucleus. The animal cell has a nucleus and no wall." },
   { id: "U3-D21", topic: "u3-cells", type: "choice", tier: 2, ref: "3.1/LO1", fig: "G-U3-cells3",
     q: "Which of these cells has a nucleus but no cell wall and no chloroplasts?",
     options: ["the top-right cell", "the top-left cell", "the bottom cell", "none of these three cells"], a: 0,
@@ -138,20 +105,20 @@ export const FIGURE_ITEMS_U3 = [
     why: "Seagrass is a true plant, with roots, leaves and flowers. Kelp is a seaweed and the diatom is a single cell; both photosynthesise, but they are protoctists, not plants. The fish is an animal." },
   { id: "PQ-U3-05", topic: "u3-classify", type: "tap", tier: 1, ref: "3.3/LO3", fig: "G-U3-domains",
     q: "Each picture shows a single cell. Tap the cell that is not in the domain Eukarya.", target: "bacterial-cell",
-    why: "The top cell has a cell wall, a cell membrane and cytoplasm, with its genetic material loose inside and no nucleus, so it is a bacterium, in the domain Bacteria. The dinoflagellate (bottom left, a protoctist) and the animal cell (bottom right, with its nucleus) both belong to kingdoms within the domain Eukarya. The dinoflagellate's nucleus is hidden by its outer covering in this picture, but it does have one." },
+    why: "The top cell has a cell wall, a cell membrane and cytoplasm but no nucleus, so it is a bacterium, in the domain Bacteria. The dinoflagellate (bottom left, a protoctist) and the animal cell (bottom right, with its nucleus) both belong to kingdoms within the domain Eukarya. The dinoflagellate's nucleus is hidden by its outer covering in this picture, but it does have one." },
 
   /* ---------------- u3-animals ---------------- */
-  { id: "U3-D01", topic: "u3-animals", type: "label", tier: 1, ref: "3.4/LO3", fig: "G-U3-fish",
+  { id: "U3-D01", topic: "u3-animals", type: "label", tier: 1, ref: "3.4/LO3", fig: "R-U3-05",
     q: "Label the external features of this bony fish.",
     extra: ["flipper", "hair"],
     why: "On the head, the nares are the small openings in front of the eye that detect chemicals, and the operculum is the bony gill cover; the scales cover and protect the body, and the lateral line is the thin line along the side that detects vibrations. The caudal (tail) fin gives the forward thrust, while the dorsal fin on the back, the anal fin underneath near the tail, the pectoral fin just behind the operculum and the pelvic fin below it control pitching, rolling, yawing and changes of direction. Students often swap the nares and the lateral line, or the pectoral and pelvic fins; fish have fins, not flippers, and scales, not hair." },
-  { id: "U3-D02", topic: "u3-animals", type: "tap", tier: 1, ref: "3.4/LO3", fig: "G-U3-fish",
+  { id: "U3-D02", topic: "u3-animals", type: "tap", tier: 1, ref: "3.4/LO3", fig: "R-U3-05",
     q: "Tap the fin that provides the forward thrust that pushes the fish through the water.", target: "caudal-fin",
     why: "The caudal (tail) fin sweeps from side to side and gives the forward thrust. The dorsal, pectoral, pelvic and anal fins work together to control pitching, rolling, yawing and changes of direction, but they do not drive the fish forward." },
-  { id: "U3-D03", topic: "u3-animals", type: "tap", tier: 1, ref: "3.4/LO3", fig: "G-U3-fish",
+  { id: "U3-D03", topic: "u3-animals", type: "tap", tier: 1, ref: "3.4/LO3", fig: "R-U3-05",
     q: "Tap the feature that detects vibrations from a predator approaching from behind.", target: "lateral-line",
     why: "The lateral line is the thin line running along the side of the body, and it detects vibrations (water movements). The nares detect chemicals, not vibrations. The operculum covers the gills and the scales protect the body; neither is a sense organ." },
-  { id: "U3-D04", topic: "u3-animals", type: "choice", tier: 2, ref: "3.4/LO1", fig: "G-U3-fish",
+  { id: "U3-D04", topic: "u3-animals", type: "choice", tier: 2, ref: "3.4/LO1", fig: "R-U3-05",
     q: "The animal shown has gills, fins supported by fin rays, and fertilises its eggs externally in the water. Which group of marine vertebrates is it in?",
     options: ["fish", "reptiles", "marine mammals", "birds"], a: 0,
     why: "Gills for gas exchange and external fertilisation place it among the fish. Reptiles also have scales, but they breathe with lungs and fertilise internally. Marine mammals and birds also use lungs and internal fertilisation, and have hair or feathers rather than scales." },
@@ -168,31 +135,31 @@ export const FIGURE_ITEMS_U3 = [
     why: "Jointed legs on a segmented body are a crustacean feature that no mollusc has; a crab's segmented abdomen is folded under its body. A hard outer covering does not decide it, because many molluscs have a hard shell, and both groups have bilateral symmetry. An unsegmented body is a mollusc feature, so it points the wrong way." },
 
   /* ---------------- u3-plants ---------------- */
-  { id: "U3-D08", topic: "u3-plants", type: "label", tier: 1, ref: "3.5/LO1", fig: "G-U3-seagrass",
+  { id: "U3-D08", topic: "u3-plants", type: "label", tier: 1, ref: "3.5/LO1", fig: "R-U3-04",
     q: "Label the four main features of this seagrass.",
     extra: ["holdfast", "gas bladder"],
-    why: "The long green leaves carry out photosynthesis, and the small white flower on a short stalk among them is for sexual reproduction. In the sediment, the horizontal rhizome (underground stem) joins the plants and produces new ones asexually, and the fine roots below it secure the plant and take up minerals. Students often call the rhizome a root, and a holdfast and gas bladders belong to kelp, a seaweed, not to seagrass." },
-  { id: "U3-D09", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO1", fig: "G-U3-seagrass",
+    why: "The long green leaves carry out photosynthesis, and the cream-white flower cluster on its own tall stalk is for sexual reproduction. In the sediment, the horizontal rhizome (underground stem) joins the plants and produces new ones asexually, and the fine roots below it secure the plant and take up minerals. Students often call the rhizome a root, and a holdfast and gas bladders belong to kelp, a seaweed, not to seagrass." },
+  { id: "U3-D09", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO1", fig: "R-U3-04",
     q: "Tap the part that secures the plant in the sediment and takes up minerals.", target: "roots",
     why: "The roots spread down into the sediment; they secure the seagrass and take up minerals, and they are a feature of true plants. The rhizome is the sideways underground stem that links the plants, and it is easily mistaken for a root." },
-  { id: "U3-D10", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO1", fig: "G-U3-seagrass",
+  { id: "U3-D10", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO1", fig: "R-U3-04",
     q: "Tap the underground stem that connects plants and produces new plants asexually.", target: "rhizome",
     why: "The rhizome is the horizontal underground stem joining the plants, and new plants grow from it by asexual reproduction. The roots below it anchor the plant and absorb minerals, and the flower is for sexual reproduction. The rhizome does not float the leaves." },
-  { id: "U3-D11", topic: "u3-plants", type: "choice", tier: 2, ref: "3.5/LO1", fig: "G-U3-seagrass",
+  { id: "U3-D11", topic: "u3-plants", type: "choice", tier: 2, ref: "3.5/LO1", fig: "R-U3-04",
     q: "A seagrass grows new plants from its rhizome. Which feature shows that it can ALSO reproduce sexually?",
     options: ["the flower", "the rhizome", "the roots", "the leaf"], a: 0,
     why: "Flowers are the organs of sexual reproduction. The rhizome produces new plants asexually, the roots secure the plant and take in minerals, and the leaves carry out photosynthesis." },
-  { id: "U3-D12", topic: "u3-plants", type: "label", tier: 1, ref: "3.5/LO2", fig: "G-U3-kelp",
+  { id: "U3-D12", topic: "u3-plants", type: "label", tier: 1, ref: "3.5/LO2", fig: "R-U3-06",
     q: "Label the four main features of this kelp.",
     extra: ["roots", "flower"],
-    why: "The flat blades carry out photosynthesis, and the small round gas bladders where the blades join the stalks float them up towards the light. The stipe is the stem-like stalk from which the blades develop, and the holdfast at the base grips the rock and anchors the kelp. The holdfast looks like roots but only anchors, because kelp is a seaweed (a protoctist) with no true roots and no flowers." },
-  { id: "U3-D13", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO2", fig: "G-U3-kelp",
+    why: "The flat blades carry out photosynthesis, and the small round gas bladders where the blades join the stipe float them up towards the light. The stipe is the stem-like stalk from which the blades develop, and the holdfast at the base grips the rock and anchors the kelp. The holdfast is not a root: kelp is a seaweed (a protoctist) with no true roots and no flowers." },
+  { id: "U3-D13", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO2", fig: "R-U3-06",
     q: "Tap the structure that floats the blades up towards the light.", target: "gas-bladder",
-    why: "The gas bladders are the small round floats where the blades join the stalks. They float the blades up towards the surface, where the light is brightest, which helps photosynthesis. They do not store oxygen, and the stipe and holdfast do not float the kelp." },
-  { id: "U3-D14", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO2", fig: "G-U3-kelp",
+    why: "The gas bladders are the small round floats where the blades join the stipe. They float the blades up towards the surface, where the light is brightest, which helps photosynthesis. They do not store oxygen, and the stipe and holdfast do not float the kelp." },
+  { id: "U3-D14", topic: "u3-plants", type: "tap", tier: 1, ref: "3.5/LO2", fig: "R-U3-06",
     q: "Tap the part that anchors the kelp to the substrate.", target: "holdfast",
-    why: "The holdfast grips the rock and anchors the kelp. It looks branched like roots, but it only anchors: kelp is a protoctist and has no true roots. The stipe is the stem-like stalk above it, from which the blades develop." },
-  { id: "U3-D15", topic: "u3-plants", type: "choice", tier: 2, ref: "3.3/LO4", fig: "G-U3-kelp",
+    why: "The holdfast grips the rock and anchors the kelp. It is not a root: kelp is a protoctist and has no true roots, and the holdfast only anchors. The stipe is the stem-like stalk above it, from which the blades develop." },
+  { id: "U3-D15", topic: "u3-plants", type: "choice", tier: 2, ref: "3.3/LO4", fig: "R-U3-06",
     q: "Kelp has a holdfast, a stipe, blades and gas bladders, but no true roots and no flowers. In which kingdom is it placed?",
     options: ["protoctists", "plants", "animals", "bacteria"], a: 0,
     why: "Kelp is a macroalga (a seaweed) in the protoctist kingdom. It photosynthesises, but that does not make it a plant: its holdfast, stipe and blades are not true roots, stems or leaves, and it has no flowers." },
@@ -213,7 +180,7 @@ export const FIGURE_ITEMS_U3 = [
   { id: "PQ-U3-08", topic: "u3-plants", type: "choice", tier: 2, ref: "3.5/LO1 · 3.5/LO2 · 3.3/LO4", fig: "G-U3-grasskelp",
     q: "One of these organisms is anchored by a holdfast, not by roots. Which picture shows it, and which kingdom is it in?",
     options: ["left picture, protoctist kingdom", "left picture, plant kingdom", "right picture, protoctist kingdom", "right picture, plant kingdom"], a: 0,
-    why: "The left picture is kelp, with blades, gas bladders and a holdfast gripping bare rock; the holdfast looks branched like roots but only anchors, and kelp is a seaweed (macroalga) in the protoctist kingdom. The right picture is seagrass, held in the sand by true roots, so it is a plant. Photosynthesising does not make kelp a plant." },
+    why: "The left picture is kelp, with blades, gas bladders, a stipe and a holdfast gripping a bare boulder; the holdfast only anchors and is not a root, and kelp is a seaweed (macroalga) in the protoctist kingdom. The right picture is seagrass, held in the sand by true roots, so it is a plant. Photosynthesising does not make kelp a plant." },
   { id: "PQ-U3-09", topic: "u3-plants", type: "choice", tier: 2, ref: "3.5/LO3 · 3.5/LO4", fig: "G-U3-microalgae",
     q: "Which feature, visible in the pictures, shows that the organism in the right picture is a diatom and not a dinoflagellate?",
     options: ["It has no flagella.", "It has chloroplasts.", "It is a single cell.", "It has no nucleus."], a: 0,

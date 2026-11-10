@@ -4,15 +4,18 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { UNIT_FIGURES, UNIT_FIGURE_ITEMS } from "./index.js";
 import { UNIT_FIGURES_C, UNIT_FIGURE_ITEMS_C } from "./index-c.js";
+import { UNIT_FIGURES_P, UNIT_FIGURE_ITEMS_P } from "./index-p.js";
+import { FIGURES as FQ_FIGURES, FIGURE_ITEMS as FQ_ITEMS } from "../figures.js";
 
 // public/ is three levels up from this file (src/content/unit-figures/).
 const PUBLIC = fileURLToPath(new URL("../../../public/", import.meta.url));
 
-// Every picture figure/item across the unit batches (batch 1 + batch 2C).
-const FIGURES = { ...UNIT_FIGURES, ...UNIT_FIGURES_C };
-const ITEMS = [...UNIT_FIGURE_ITEMS, ...UNIT_FIGURE_ITEMS_C];
+// The whole figure lookup the app assembles (figures.js + the three unit batches).
+// Batch-1 items moved onto new art point at R- figures defined in batch 3, so the
+// image/fig checks must run against the merged map, not any single batch.
+const MERGED = { ...FQ_FIGURES, ...UNIT_FIGURES, ...UNIT_FIGURES_C, ...UNIT_FIGURES_P };
+const ALL_ITEMS = [...FQ_ITEMS, ...UNIT_FIGURE_ITEMS, ...UNIT_FIGURE_ITEMS_C, ...UNIT_FIGURE_ITEMS_P];
 
-// Pull every image src a figure references (img figures carry a path; svg figures are inline).
 function imgSrc(fig) {
   const art = fig.art || fig;
   if (!art || art.kind !== "img") return null;
@@ -24,8 +27,8 @@ const typeCounts = (items) => {
   return t;
 };
 
-test("batch 1 (on existing art): 79 figures, 136 items (tap 59, choice 61, label 14, multi 2)", () => {
-  assert.equal(Object.keys(UNIT_FIGURES).length, 79);
+test("batch 1 (on existing + new art): 64 figures, 136 items (tap 59, choice 61, label 14, multi 2)", () => {
+  assert.equal(Object.keys(UNIT_FIGURES).length, 64);
   assert.equal(UNIT_FIGURE_ITEMS.length, 136);
   assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS), { tap: 59, choice: 61, label: 14, multi: 2 });
 });
@@ -36,40 +39,50 @@ test("batch 2C (code-drawn): 20 figures, 47 items (tap 21, choice 21, label 5)",
   assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_C), { tap: 21, choice: 21, label: 5 });
 });
 
-test("the two unit batches share no figure id and no item id", () => {
-  const figClash = Object.keys(UNIT_FIGURES_C).filter((k) => k in UNIT_FIGURES);
-  assert.deepEqual(figClash, [], "figure id reused across batches");
-  const ids = new Set(UNIT_FIGURE_ITEMS.map((i) => i.id));
-  const itemClash = UNIT_FIGURE_ITEMS_C.filter((i) => ids.has(i.id)).map((i) => i.id);
-  assert.deepEqual(itemClash, [], "item id reused across batches");
+test("batch 3 (new art + replacements): 75 figures, 106 items (tap 47, choice 53, label 5, multi 1)", () => {
+  assert.equal(Object.keys(UNIT_FIGURES_P).length, 75);
+  assert.equal(UNIT_FIGURE_ITEMS_P.length, 106);
+  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 47, choice: 53, label: 5, multi: 1 });
 });
 
-test("every figs-units file a figure references exists in public/", () => {
+test("figures.js carries the 22 FQ items", () => {
+  assert.equal(FQ_ITEMS.length, 22);
+});
+
+test("no figure id and no item id is shared across the three batches or with figures.js", () => {
+  const figGroups = { FQ: FQ_FIGURES, b1: UNIT_FIGURES, c: UNIT_FIGURES_C, p: UNIT_FIGURES_P };
+  const seenFig = {};
+  const figClash = [];
+  for (const [g, map] of Object.entries(figGroups)) {
+    for (const k of Object.keys(map)) {
+      if (seenFig[k]) figClash.push(`${k} in ${seenFig[k]} and ${g}`); else seenFig[k] = g;
+    }
+  }
+  assert.deepEqual(figClash, [], "figure id reused");
+
+  const itemGroups = { FQ: FQ_ITEMS, b1: UNIT_FIGURE_ITEMS, c: UNIT_FIGURE_ITEMS_C, p: UNIT_FIGURE_ITEMS_P };
+  const seenItem = {};
+  const itemClash = [];
+  for (const [g, list] of Object.entries(itemGroups)) {
+    for (const it of list) {
+      if (seenItem[it.id]) itemClash.push(`${it.id} in ${seenItem[it.id]} and ${g}`); else seenItem[it.id] = g;
+    }
+  }
+  assert.deepEqual(itemClash, [], "item id reused");
+});
+
+test("every figure item references a figure that exists in the merged lookup", () => {
+  const missing = ALL_ITEMS.filter((it) => it.fig && !MERGED[it.fig]).map((it) => `${it.id} -> ${it.fig}`);
+  assert.deepEqual(missing, [], "item(s) reference a figure missing from the merged lookup");
+});
+
+test("every image a figure references exists under public/", () => {
   const missing = [];
-  for (const [key, fig] of Object.entries(FIGURES)) {
+  for (const [key, fig] of Object.entries(MERGED)) {
     const src = imgSrc(fig);
-    if (!src || !/figs-units\//.test(src)) continue;
+    if (!src) continue;                       // inline SVG figures carry no file
     const rel = src.replace(/^\.?\//, "");
     if (!fs.existsSync(PUBLIC + rel)) missing.push(`${key}: ${src}`);
   }
-  assert.deepEqual(missing, [], "figs-units image(s) referenced but not present under public/");
-});
-
-test("every other public image a figure references exists (figdata-img, card-art, figs)", () => {
-  const missing = [];
-  for (const [key, fig] of Object.entries(FIGURES)) {
-    const src = imgSrc(fig);
-    if (!src || /figs-units\//.test(src)) continue;      // figs-units covered above
-    if (!/(figdata-img|card-art|figs)\//.test(src)) continue; // only our known public dirs
-    const rel = src.replace(/^\.?\//, "");
-    if (!fs.existsSync(PUBLIC + rel)) missing.push(`${key}: ${src}`);
-  }
-  assert.deepEqual(missing, [], "public image(s) referenced but not present");
-});
-
-test("every unit-figure item references a figure that exists in its batch", () => {
-  for (const it of ITEMS) {
-    assert.ok(it.fig, `${it.id}: has a fig`);
-    assert.ok(FIGURES[it.fig], `${it.id}: references missing figure ${it.fig}`);
-  }
+  assert.deepEqual(missing, [], "image(s) referenced but not present under public/");
 });

@@ -5,6 +5,7 @@ import marineScience from "./marine-science.jsx";
 import { FIGURES, FIGURE_ITEMS } from "./figures.js";
 import { UNIT_FIGURES, UNIT_FIGURE_ITEMS } from "./unit-figures/index.js";
 import { UNIT_FIGURES_C, UNIT_FIGURE_ITEMS_C } from "./unit-figures/index-c.js";
+import { UNIT_FIGURES_P, UNIT_FIGURE_ITEMS_P } from "./unit-figures/index-p.js";
 import { TRUEFALSE } from "./truefalse-bank.js";
 import { MARKTRUE } from "./mark-true-bank.js";
 
@@ -40,8 +41,8 @@ const BANK_ITEMS = [...TRUEFALSE.map(fromBank), ...MARKTRUE.map(fromBank)];
    here so the giant content file stays untouched. */
 const withFigures = {
   ...marineScience,
-  items: [...marineScience.items, ...FIGURE_ITEMS, ...UNIT_FIGURE_ITEMS, ...UNIT_FIGURE_ITEMS_C, ...BANK_ITEMS],
-  figures: { ...FIGURES, ...UNIT_FIGURES, ...UNIT_FIGURES_C },
+  items: [...marineScience.items, ...FIGURE_ITEMS, ...UNIT_FIGURE_ITEMS, ...UNIT_FIGURE_ITEMS_C, ...UNIT_FIGURE_ITEMS_P, ...BANK_ITEMS],
+  figures: { ...FIGURES, ...UNIT_FIGURES, ...UNIT_FIGURES_C, ...UNIT_FIGURES_P },
 };
 
 export const SUBJECTS = {

@@ -1,23 +1,17 @@
 /* Picture questions batch 1, Unit 2 (Sea water). Existing art only.
    Same shapes as src/content/figures.js. Hotspots are points in the image's
-   natural pixel space. G-U2-watercycle, -states and -elnino reuse
-   F8, F10 and F11 with their own hotspot sets. (PQ-U2-07 and its
+   natural pixel space. G-U2-states and -elnino reuse
+   F10 and F11 with their own hotspot sets. (PQ-U2-07 and its
    composite G-U2-solubility were removed in review: the picture was bolted on.)
    Audit 10 Nov 2026: PQ-U2-04 and G-U2-convection retired, because F9 draws the
    surface arrows double-headed and pointing inwards (wrong circulation); restore
    on replacement art R-U2-01. The run-off hotspot moved off F8's double-headed
-   arrow onto the single-headed river arrow. */
+   arrow onto the single-headed river arrow.
+   Batch 3 (10 Nov 2026): PQ-U2-01 moved to replacement art R-U2-02 and
+   G-U2-watercycle (F8) deleted; PQ-U2-04 restored on R-U2-01-tap. Both figures
+   and PQ-U2-04 are in figures-r-units1-3.js. */
 
 export const FIGURES_U2 = {
-  "G-U2-watercycle": {
-    art: { kind: "img", src: "figs/F8.jpg", w: 370, h: 262 },
-    hotspots: [
-      { id: "evap", x: 50, y: 150, label: "evaporation" },
-      { id: "cond", x: 52, y: 86, label: "condensation" },
-      { id: "precip", x: 268, y: 92, label: "precipitation" },
-      { id: "runoff", x: 215, y: 199, label: "surface run-off" },
-    ],
-  },
   "G-U2-states": {
     art: { kind: "img", src: "figs/F10.jpg", w: 280, h: 310 },
     hotspots: [
@@ -40,7 +34,7 @@ export const FIGURES_U2 = {
 export const FIGURE_ITEMS_U2 = [
   // u2-water
   {
-    id: "PQ-U2-01", topic: "u2-water", type: "tap", tier: 2, ref: "2.1/LO5 · 2.1/LO7", fig: "G-U2-watercycle",
+    id: "PQ-U2-01", topic: "u2-water", type: "tap", tier: 2, ref: "2.1/LO5 · 2.1/LO7", fig: "R-U2-02",
     q: "Tap the stage of the water cycle where a change of state gives out energy to the surroundings.",
     target: "cond",
     why: "Condensation: water vapour cools and turns into the liquid droplets that make up clouds, and changing from a gas to a liquid gives out energy. Evaporation from the sea is the opposite change, so it takes in energy (from the Sun), even though the vapour it makes is warm. Precipitation and surface run-off move water that is already liquid, so there is no change of state at those stages.",
