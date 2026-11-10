@@ -33,18 +33,16 @@ const RULES = {
     const others = L.filter((_, i) => i !== it.a);
     return others.length && others.every((x) => k >= x * 1.15 && k - x >= 8) ? `key ${k} chars vs max distractor ${Math.max(...others)}` : null;
   },
-  // absolute words appear only in wrong options. Figure items are exempt: the
-  // answer comes from the picture, so an option's wording isn't a usable tell
-  // (e.g. positional options like "Bottom right only", or "none of these three cells").
+  // absolute words appear only in wrong options. Picture items are NOT exempt:
+  // a choice/multi can still give its answer away through option wording. The
+  // two genuine positional exceptions (U3-D21, PQ-U5-07) are in the baseline.
   "absolute-tell": (it) => {
-    if (it.fig) return null;
     const { t, f } = split(it); if (!t) return null;
     const ft = f.filter((o) => ABSOLUTE.test(strip(o))), tt = t.filter((o) => ABSOLUTE.test(strip(o)));
     return ft.length >= 1 && tt.length === 0 && (it.type === "multi" ? ft.length >= 2 : true) ? `absolutes only in wrong options (${ft.length})` : null;
   },
   // hedges appear only in correct options (multi: at least two hedged true options and no hedged false ones)
   "hedge-tell": (it) => {
-    if (it.fig) return null;   // figure items: answer is in the picture (see absolute-tell)
     const { t, f } = split(it); if (!t) return null;
     const th = t.filter((o) => HEDGE.test(strip(o))), fh = f.filter((o) => HEDGE.test(strip(o)));
     const need = it.type === "multi" ? 2 : 1;
@@ -52,7 +50,6 @@ const RULES = {
   },
   // a distinctive stem word appears in the key and in no distractor (choice only)
   "stem-echo": (it) => {
-    if (it.fig) return null;   // figure items: the stem describes the picture, not a text tell
     if (it.type !== "choice" || !Array.isArray(it.options)) return null;
     const stem = new Set(words(it.q).filter((w) => w.length >= 6 && !STOP.has(w)));
     const key = new Set(words(it.options[it.a]));
@@ -92,8 +89,10 @@ const all = [...content.items.map((it) => ({ ...it, _src: "bank" })), ...PRACTIC
 const found = {};
 for (const it of all) for (const [rule, fn] of Object.entries(RULES)) { const m = fn(it); if (m) (found[rule] ||= {})[it.id] = m; }
 
-// duplicate stems across the bank (same question text in two items)
-{ const seen = {}; for (const it of all) { if (it.fig) continue; if (!["choice","multi","truefalse"].includes(it.type)) continue; const k = strip(it.q).toLowerCase(); if (k.length < 25) continue; if (seen[k]) (found["dup-stem"] ||= {})[it.id] = `same stem as ${seen[k]}`; else seen[k] = it.id; } }
+// duplicate stems across the bank (same question text in two items). Keyed on
+// stem PLUS figure, so two picture items may share a stem when they point at
+// different figures; a genuine same-stem/same-figure (or same-stem text) pair still fires.
+{ const seen = {}; for (const it of all) { if (!["choice","multi","truefalse"].includes(it.type)) continue; const stem = strip(it.q).toLowerCase(); if (stem.length < 25) continue; const k = `${stem}\u0000${it.fig || ""}`; if (seen[k]) (found["dup-stem"] ||= {})[it.id] = `same stem as ${seen[k]}`; else seen[k] = it.id; } }
 
 if (process.env.LINT_WRITE_BASELINE) {
   const out = Object.fromEntries(Object.entries(found).map(([r, ids]) => [r, Object.keys(ids).sort()]));

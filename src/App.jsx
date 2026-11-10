@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { figureDims, labelPool } from "./engine/figures.js";
+import { figureDims, labelPool, labelMarkerNumber, labelResultLine } from "./engine/figures.js";
 import { ComparisonCard, COMPARISON_CARDS } from "./comparison/index.js";
 import { pillLabel } from "./comparison/pills.js";
 import { InteractiveLab } from "./interactives/index.js";
@@ -154,29 +154,58 @@ function HotspotLayer({ figId, mode, tappedId, assign, order, locked, item, onHo
     if (mode === "tap") return h.id === item.target ? "right" : (h.id === tappedId ? "wrong" : null);
     return assign?.[i] === i ? "right" : (assign?.[i] != null ? "wrong" : "missed");
   };
+  const pool = mode === "label" ? labelPool(item, fig) : null;
+  // A short label chip pinned just below a marker. Used while answering (the
+  // label the student placed) and after Check on tap items (the correct/tapped
+  // label). Label items show numbers, not chips, after Check — the list does the rest.
+  const tagFor = (h, i) => {
+    if (mode === "label" && !locked && assign?.[i] != null) return { text: pool[assign[i]], kind: "set" };
+    if (mode === "tap" && locked) {
+      if (h.id === item.target) return { text: h.label, kind: "right" };
+      if (h.id === tappedId) return { text: h.label, kind: "wrong" };
+    }
+    return null;
+  };
+  const tagColors = { set: { bg: C.raise, bd: C.glow, fg: C.foam }, right: { bg: "rgba(79,216,196,.2)", bd: C.ok, fg: C.ok }, wrong: { bg: "rgba(255,158,125,.18)", bd: C.no, fg: C.no } };
   return (
     <div style={{ position: "relative", width: "100%", lineHeight: 0 }}>
       <FigureArt figId={figId} />
       {fig.hotspots.map((h, i) => {
         const v = targetOk(h, i);
         const assigned = mode === "label" && assign?.[i] != null;
-        const num = assigned ? order.indexOf(i) + 1 : null;
+        // After Check, label markers carry their hotspot number (1-based), so
+        // the number on the figure matches the answer list. While answering,
+        // the placed label shows as a chip instead of a number.
+        const num = mode === "label" && locked ? labelMarkerNumber(i) : null;
         const on = mode === "tap" ? tappedId === h.id : assigned;
         const ring = v === "right" ? C.ok : v === "wrong" ? C.no : v === "missed" ? C.no : (on ? C.glow : C.foam);
+        const tag = tagFor(h, i);
+        const left = `${(h.x / dims.w) * 100}%`, top = `${(h.y / dims.h) * 100}%`;
         return (
-          <button key={h.id} onClick={() => !locked && onHotspot(i, h)} disabled={locked}
-            aria-label={`Marker ${i + 1}`}
-            style={{
-              position: "absolute", left: `${(h.x / dims.w) * 100}%`, top: `${(h.y / dims.h) * 100}%`,
-              transform: "translate(-50%, -50%)", width: 30, height: 30, borderRadius: "50%",
-              border: `2.5px solid ${ring}`, borderStyle: v === "missed" ? "dashed" : "solid",
-              background: on || v === "right" ? "rgba(79,216,196,.25)" : v === "wrong" ? "rgba(255,158,125,.25)" : "rgba(4,20,31,.35)",
-              color: C.foam, fontFamily: FONT_UI, fontSize: 13, fontWeight: 700,
-              display: "grid", placeItems: "center", cursor: locked ? "default" : "pointer", padding: 0,
-              boxShadow: "0 0 0 2px rgba(4,20,31,.5)",
-            }}>
-            {num || ""}
-          </button>
+          <React.Fragment key={h.id}>
+            <button onClick={() => !locked && onHotspot(i, h)} disabled={locked}
+              aria-label={`Marker ${i + 1}`}
+              style={{
+                position: "absolute", left, top,
+                transform: "translate(-50%, -50%)", width: 30, height: 30, borderRadius: "50%",
+                border: `2.5px solid ${ring}`, borderStyle: v === "missed" ? "dashed" : "solid",
+                background: on || v === "right" ? "rgba(79,216,196,.25)" : v === "wrong" ? "rgba(255,158,125,.25)" : "rgba(4,20,31,.35)",
+                color: C.foam, fontFamily: FONT_UI, fontSize: 13, fontWeight: 700,
+                display: "grid", placeItems: "center", cursor: locked ? "default" : "pointer", padding: 0,
+                boxShadow: "0 0 0 2px rgba(4,20,31,.5)", zIndex: 1,
+              }}>
+              {num || ""}
+            </button>
+            {tag && (
+              <span aria-hidden="true" style={{
+                position: "absolute", left, top, transform: "translate(-50%, 16px)",
+                fontFamily: FONT_UI, fontSize: 11, lineHeight: 1.2, fontWeight: 600, whiteSpace: "nowrap",
+                padding: "2px 6px", borderRadius: 7, pointerEvents: "none", zIndex: 2,
+                background: tagColors[tag.kind].bg, border: `1px solid ${tagColors[tag.kind].bd}`, color: tagColors[tag.kind].fg,
+                boxShadow: "0 1px 3px rgba(4,20,31,.5)",
+              }}>{tag.text}</span>
+            )}
+          </React.Fragment>
         );
       })}
     </div>
@@ -280,16 +309,22 @@ function FigureLabelQ({ item, locked, state, setState }) {
       {!locked && (
         <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 10 }}>
           {selLab == null ? "Tap a label, then tap its spot on the figure." : "Now tap where it belongs."}
-          {order.length ? ` ${order.length} of ${fig.hotspots.length} placed — tap a numbered spot to undo it.` : ""}
+          {order.length ? ` ${order.length} of ${fig.hotspots.length} placed — tap a placed spot to undo it.` : ""}
         </p>
       )}
       {locked && (
         <div style={{ marginTop: 6 }}>
-          {fig.hotspots.map((h, i) => (
-            <p key={h.id} style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, margin: "0 0 4px" }}>
-              <span style={{ color: C.accent }}>{i + 1}.</span> {h.label}
-            </p>
-          ))}
+          {fig.hotspots.map((h, i) => {
+            const r = labelResultLine(fig, item, assign, i);
+            return (
+              <p key={h.id} style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, margin: "0 0 4px" }}>
+                <span style={{ color: C.accent }}>{r.n}.</span> {r.label}{" "}
+                {r.correct
+                  ? <span style={{ color: C.ok }}>✓</span>
+                  : <span style={{ color: C.no }}>✗ {r.placed ? `(you placed: ${r.placed})` : "(you placed nothing)"}</span>}
+              </p>
+            );
+          })}
         </div>
       )}
     </>

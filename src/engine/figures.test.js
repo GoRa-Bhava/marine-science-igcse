@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { build } from "esbuild";
-import { figureDims, labelPool, gradeTap, gradeLabel } from "./figures.js";
+import { figureDims, labelPool, gradeTap, gradeLabel, labelMarkerNumber, labelResultLine } from "./figures.js";
 
 async function loadContent() {
   const res = await build({ entryPoints: ["src/content/index.js"], bundle: true, write: false,
@@ -73,4 +73,32 @@ test("figure-choice keeps the normal choice shape, author-first-correct", () => 
 
 test("a missing figure resolves to no dims (renderer skips it, fails safe)", () => {
   assert.equal(figureDims(FIG.__nope__), null);
+});
+
+test("after Check, a label marker is numbered by its hotspot index + 1, matching the list", () => {
+  const lab = figItems.find((i) => i.type === "label");
+  const fig = FIG[lab.fig];
+  const allRight = Object.fromEntries(fig.hotspots.map((_, k) => [k, k]));
+  fig.hotspots.forEach((h, i) => {
+    assert.equal(labelMarkerNumber(i), i + 1, `marker ${i} numbers to ${i + 1}`);
+    const r = labelResultLine(fig, lab, allRight, i);
+    assert.equal(r.n, i + 1, "answer-list number equals the figure marker number");
+    assert.equal(r.label, h.label);
+    assert.ok(r.correct);
+    assert.equal(r.placed, h.label);
+  });
+  // A wrong placement keeps the same 1-based number and names what was placed.
+  if (fig.hotspots.length >= 2) {
+    const swapped = { ...allRight, 0: 1, 1: 0 };
+    const r0 = labelResultLine(fig, lab, swapped, 0);
+    assert.equal(r0.n, 1);
+    assert.equal(r0.correct, false);
+    assert.equal(r0.placed, fig.hotspots[1].label);
+  }
+  // A spot left empty: still 1-based, nothing placed.
+  const partial = { ...allRight }; delete partial[0];
+  const rm = labelResultLine(fig, lab, partial, 0);
+  assert.equal(rm.n, 1);
+  assert.equal(rm.correct, false);
+  assert.equal(rm.placed, null);
 });

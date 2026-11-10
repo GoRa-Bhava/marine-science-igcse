@@ -29,6 +29,29 @@ export function labelPool(item, figure) {
   return [...figure.hotspots.map((h) => h.label), ...(item.extra || [])];
 }
 
+/* After Check, a label marker is numbered by its hotspot's position in the
+   figure (1-based), so the number drawn on the figure matches the answer-list
+   line for that hotspot. (While answering, a placed marker shows the label the
+   student placed as a tag, not a number.) */
+export function labelMarkerNumber(i) {
+  return i + 1;
+}
+
+/* One line of the label answer review, for hotspot i after Check: its 1-based
+   number (same as the marker on the figure), its correct label, whether the
+   student placed its own label there, and what they did place (null if the
+   spot was left empty). */
+export function labelResultLine(figure, item, assign, i) {
+  const pool = labelPool(item, figure);
+  const placedIdx = assign?.[i];
+  return {
+    n: labelMarkerNumber(i),
+    label: figure.hotspots[i].label,
+    correct: placedIdx === i,
+    placed: placedIdx == null ? null : pool[placedIdx],
+  };
+}
+
 export function gradeTap(item, tappedId) {
   return tappedId != null && tappedId === item.target;
 }

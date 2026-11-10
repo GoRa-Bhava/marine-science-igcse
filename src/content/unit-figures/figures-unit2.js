@@ -1,8 +1,12 @@
 /* Picture questions batch 1, Unit 2 (Sea water). Existing art only.
    Same shapes as src/content/figures.js. Hotspots are points in the image's
-   natural pixel space. G-U2-watercycle, -states, -convection and -elnino reuse
-   F8, F10, F9 and F11 with their own hotspot sets. (PQ-U2-07 and its
-   composite G-U2-solubility were removed in review: the picture was bolted on.) */
+   natural pixel space. G-U2-watercycle, -states and -elnino reuse
+   F8, F10 and F11 with their own hotspot sets. (PQ-U2-07 and its
+   composite G-U2-solubility were removed in review: the picture was bolted on.)
+   Audit 10 Nov 2026: PQ-U2-04 and G-U2-convection retired, because F9 draws the
+   surface arrows double-headed and pointing inwards (wrong circulation); restore
+   on replacement art R-U2-01. The run-off hotspot moved off F8's double-headed
+   arrow onto the single-headed river arrow. */
 
 export const FIGURES_U2 = {
   "G-U2-watercycle": {
@@ -11,7 +15,7 @@ export const FIGURES_U2 = {
       { id: "evap", x: 50, y: 150, label: "evaporation" },
       { id: "cond", x: 52, y: 86, label: "condensation" },
       { id: "precip", x: 268, y: 92, label: "precipitation" },
-      { id: "runoff", x: 272, y: 176, label: "surface run-off" },
+      { id: "runoff", x: 215, y: 199, label: "surface run-off" },
     ],
   },
   "G-U2-states": {
@@ -20,14 +24,6 @@ export const FIGURES_U2 = {
       { id: "solid", x: 46, y: 130, label: "vibrate about fixed positions" },
       { id: "liquid", x: 140, y: 140, label: "move past one another" },
       { id: "gas", x: 234, y: 140, label: "move quickly in all directions" },
-    ],
-  },
-  "G-U2-convection": {
-    art: { kind: "img", src: "figs/F9.jpg", w: 260, h: 310 },
-    hotspots: [
-      { id: "heated", x: 128, y: 190, label: "just heated, least dense" },
-      { id: "cooled", x: 72, y: 72, label: "cooled at the surface, denser" },
-      { id: "sinking", x: 196, y: 158, label: "sinking, denser" },
     ],
   },
   "G-U2-elnino": {
@@ -53,7 +49,7 @@ export const FIGURE_ITEMS_U2 = [
     id: "PQ-U2-02", topic: "u2-water", type: "label", tier: 1, ref: "2.1/LO1", fig: "G-U2-states",
     q: "Each box shows the particles in one state of matter. Label each box with how its particles move.",
     extra: ["do not move at all", "move only when they are stirred"],
-    why: "In a solid the particles are packed in a regular pattern and vibrate about fixed positions; they still move, so \"do not move at all\" is wrong. In a liquid they are close but irregular and move past one another, which is why a liquid flows. In a gas they are far apart and move quickly in all directions. Particles in every state move all the time; stirring is not needed.",
+    why: "Box A is a solid: its particles are packed in a regular pattern and vibrate about fixed positions, so they still move and \"do not move at all\" is wrong. Box B is a liquid: its particles are close together but irregular and move past one another, which is why a liquid flows. Box C is a gas: its particles are far apart and move quickly in all directions, and particles in every state move all the time without being stirred.",
   },
   {
     id: "PQ-U2-03", topic: "u2-water", type: "tap", tier: 1, ref: "2.1/LO1", fig: "G-U2-states",
@@ -61,24 +57,17 @@ export const FIGURE_ITEMS_U2 = [
     target: "gas",
     why: "The gas: its particles are far apart with large spaces between them, so they can be pushed closer together. In the solid and the liquid the particles are already touching, so squeezing hardly changes their volume. A liquid can flow because its particles move past one another, but that does not make it easy to compress.",
   },
-  // u2-density
-  {
-    id: "PQ-U2-04", topic: "u2-density", type: "tap", tier: 2, ref: "2.4/LO4 · 2.4/LO5", fig: "G-U2-convection",
-    q: "The arrows show a convection current in water heated from below. Tap where the water is least dense.",
-    target: "heated",
-    why: "Just above the heat source. Heating gives the particles more kinetic energy, so they move further apart; the same mass takes up more volume, so the density falls and this water rises. At the surface the water loses heat, becomes denser, moves aside and sinks down the sides of the beaker, which is why the arrows point down there.",
-  },
   // u2-elnino
   {
     id: "PQ-U2-05", topic: "u2-elnino", type: "tap", tier: 2, ref: "2.6/LO3", fig: "G-U2-elnino",
     q: "One of these panels shows an El Niño year. Tap the place where drought becomes more likely in that El Niño year.",
     target: "aus2",
-    why: "Australia in panel 2. Panel 2 is the El Niño year: the trade winds have reversed and warm surface water has spread east across the Pacific. The rain moves east with the warm water, so Australia and Asia get less rain and drought becomes more likely. The South American coast gets more rain in an El Niño year, not drought. Panel 1 is a normal year, so its markers show usual conditions.",
+    why: "Panel 2 is the El Niño year: the trade winds have reversed and warm surface water has spread east across the Pacific, taking the rain with it. So in panel 2 Australia (and Asia) gets less rain and drought becomes more likely, while the South American coast gets more rain, not drought. The panel 1 markers show a normal year, with usual conditions.",
   },
   {
     id: "PQ-U2-06", topic: "u2-elnino", type: "tap", tier: 2, ref: "2.6/LO3", fig: "G-U2-elnino",
     q: "One of these panels shows an El Niño year. Tap the place where heavy rain and flooding become more likely in that El Niño year.",
     target: "sam2",
-    why: "The South American coast in panel 2. In the El Niño year warm surface water spreads to the eastern Pacific, more water evaporates from it, and rainfall rises on this coast, bringing flooding. The effects are opposite on the two sides of the Pacific: Australia becomes drier, not wetter. Panel 1 is a normal year, with no extra rain on this coast.",
+    why: "In the El Niño year (panel 2) warm surface water spreads to the eastern Pacific, more water evaporates from it, and rainfall rises on the South American coast, bringing flooding. The effects are opposite on the two sides of the Pacific, so Australia becomes drier, not wetter. Panel 1 is a normal year, with no extra rain on this coast.",
   },
 ];
