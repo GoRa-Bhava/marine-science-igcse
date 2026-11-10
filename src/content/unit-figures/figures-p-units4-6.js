@@ -50,9 +50,9 @@ export const FIGURES_P46 = {
   "P-U5-08": { art: IMG("P-U5-08", 1720, 600), hotspots: [] },
   "P-U5-09": { art: IMG("P-U5-09", 1220, 600), hotspots: [] },
   "P-U5-10": { art: IMG("P-U5-10", 800, 800), hotspots: [
-    H("holdfast", 175, 698, "holdfast"),
-    H("stipe", 163, 585, "stipe (stem)"),
-    H("frond", 640, 300, "frond"),
+    H("holdfast", 365, 664, "holdfast"),
+    H("stipe", 364, 605, "stipe (stem)"),
+    H("frond", 650, 500, "frond"),
   ] },
   "P-U5-11": { art: IMG("P-U5-11", 1200, 800), hotspots: [
     H("lugworm", 240, 568, "lugworm in its U-shaped burrow"),
@@ -299,10 +299,6 @@ export const FIGURE_ITEMS_P46 = [
     q: "Tap the panel that shows a healthy coral.",
     target: "panel1",
     why: "A healthy coral is golden-brown because huge numbers of zooxanthellae live in the polyps' tissue. The patchy coral is losing them, and the white coral has lost them." },
-  { id: "U5-D26", topic: "u5-coral", type: "tap", tier: 1, ref: "5.7/LO5", fig: "P-U5-15",
-    q: "Tap the panel that shows a fully bleached coral.",
-    target: "panel3",
-    why: "A fully bleached coral is white all over: the polyps have expelled their zooxanthellae, so the white calcium carbonate skeleton shows through the clear tissue. The patchy coral is only part of the way there." },
   { id: "U5-D27", topic: "u5-coral", type: "choice", tier: 2, ref: "5.7/LO5", fig: "P-U5-15",
     q: "The coral in the last panel has turned white. What has happened?",
     options: [

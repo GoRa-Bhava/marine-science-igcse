@@ -125,10 +125,10 @@ export const FIGURES_P13 = {
   // composite: hot dry almost-enclosed sea (left), cool wet coast with a river (right). The sun sits in the
   // top-left corner: its point is at the minimum edge margin, on the lower part of the sun's glow.
   "P-U2-06": { art: { kind: "img", src: "figs-units/P-U2-06.webp", w: 1220, h: 600 }, hotspots: [
-    { id: "sun", x: 48, y: 46, label: "strong sunshine" },
+    { id: "sun", x: 93, y: 70, label: "strong sunshine" },
     { id: "strait", x: 345, y: 186, label: "narrow entrance to the ocean" },
     { id: "desert", x: 530, y: 265, label: "dry desert shore" },
-    { id: "river-mouth", x: 930, y: 300, label: "river mouth" },
+    { id: "river-mouth", x: 895, y: 308, label: "river mouth" },
   ] },
   // sea-surface section; phytoplankton are drawn but deliberately NOT a target (tiny specks)
   "P-U2-08": { art: { kind: "img", src: "figs-units/P-U2-08.webp", w: 800, h: 800 }, hotspots: [
@@ -165,12 +165,12 @@ export const FIGURES_P13 = {
   ] },
   // coral cycle; budding pair (bottom right) sits apart from the sexual loop
   "P-U3-06": { art: { kind: "img", src: "figs-units/P-U3-06.webp", w: 1200, h: 800 }, hotspots: [
-    { id: "budding", x: 1100, y: 620, label: "budding" },
-    { id: "spawning", x: 170, y: 500, label: "release of eggs and sperm" },
-    { id: "surface-eggs", x: 330, y: 125, label: "eggs at the surface" },
+    { id: "budding", x: 1092, y: 600, label: "budding" },
+    { id: "spawning", x: 178, y: 385, label: "release of eggs and sperm" },
+    { id: "surface-eggs", x: 330, y: 122, label: "eggs at the surface" },
     { id: "larvae", x: 698, y: 165, label: "drifting larvae" },
     { id: "settling", x: 825, y: 378, label: "larva attaching to rock" },
-    { id: "new-polyp", x: 640, y: 575, label: "new polyp" },
+    { id: "new-polyp", x: 630, y: 575, label: "new polyp" },
   ] },
   "P-U3-07": { art: { kind: "img", src: "figs-units/P-U3-07.webp", w: 1200, h: 800 }, hotspots: [] }, // nesting leatherback photo (choice only)
   "P-U3-08": { art: { kind: "img", src: "figs-units/P-U3-08.webp", w: 1200, h: 800 }, hotspots: [] }, // day/night water column, LEFT = night (choice only)

@@ -27,10 +27,10 @@ const typeCounts = (items) => {
   return t;
 };
 
-test("batch 1 (on existing + new art): 64 figures, 136 items (tap 59, choice 61, label 14, multi 2)", () => {
-  assert.equal(Object.keys(UNIT_FIGURES).length, 64);
-  assert.equal(UNIT_FIGURE_ITEMS.length, 136);
-  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS), { tap: 59, choice: 61, label: 14, multi: 2 });
+test("batch 1 (on existing + new art, after Don's removals): 62 figures, 133 items (tap 58, choice 60, label 14, multi 1)", () => {
+  assert.equal(Object.keys(UNIT_FIGURES).length, 62);
+  assert.equal(UNIT_FIGURE_ITEMS.length, 133);
+  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS), { tap: 58, choice: 60, label: 14, multi: 1 });
 });
 
 test("batch 2C (code-drawn): 20 figures, 47 items (tap 21, choice 21, label 5)", () => {
@@ -39,14 +39,23 @@ test("batch 2C (code-drawn): 20 figures, 47 items (tap 21, choice 21, label 5)",
   assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_C), { tap: 21, choice: 21, label: 5 });
 });
 
-test("batch 3 (new art + replacements): 75 figures, 106 items (tap 47, choice 53, label 5, multi 1)", () => {
+test("batch 3 (new art + replacements): 75 figures, 105 items (tap 46, choice 53, label 5, multi 1)", () => {
   assert.equal(Object.keys(UNIT_FIGURES_P).length, 75);
-  assert.equal(UNIT_FIGURE_ITEMS_P.length, 106);
-  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 47, choice: 53, label: 5, multi: 1 });
+  assert.equal(UNIT_FIGURE_ITEMS_P.length, 105);
+  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 46, choice: 53, label: 5, multi: 1 });
 });
 
-test("figures.js carries the 22 FQ items", () => {
-  assert.equal(FQ_ITEMS.length, 22);
+test("figures.js carries the 21 FQ items (FQ2 retired)", () => {
+  assert.equal(FQ_ITEMS.length, 21);
+});
+
+test("Don's removed items are gone from every batch (stale progress for them is ignored by scoring)", () => {
+  // Removed 10 Nov 2026: duplicates and weak-picture items. Their saved review
+  // state becomes an unknown id, which scoring.js ignores (see scoring.test.js:
+  // "stale progress for a deleted id is ignored"). Here we just lock in the removal.
+  const gone = ["U5-D26", "PQ-U4-03", "PQ-U5-08", "PQ-U6-31", "FQ2"];
+  const present = new Set(ALL_ITEMS.map((it) => it.id));
+  assert.deepEqual(gone.filter((id) => present.has(id)), [], "a removed id is still in content");
 });
 
 test("no figure id and no item id is shared across the three batches or with figures.js", () => {
