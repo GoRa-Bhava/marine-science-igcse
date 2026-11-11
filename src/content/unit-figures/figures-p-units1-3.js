@@ -8,9 +8,8 @@
    Figure ids are the image codes. Where one image needs a second hotspot set, the variant id adds a
    suffix (P-U1-02-layers, P-U1-12-swim) and points at the same src.
    Composites (made by us in PIL from the delivered files, white background, 20 px gap, no text):
-     P-U2-02 = P-U2-02a (left, x 0-600) + P-U2-02b (right, x 620-1220)
+     (P-U2-02 and P-U2-06 composites removed 11 Nov 2026 with their questions: the picture was not needed to answer.)
      P-U2-04 = P-U2-04 low-tide edit (left) + P-U2-03 high tide (right)
-     P-U2-06 = P-U2-06a (left, x 0-600) + P-U2-06b (right, x 620-1220)
      P-U3-03 = P-U3-03 shark (left, style A on white) + existing figdata-img/lp-fish.webp (right)
    Review (prompts): P-U3-10 and PQ2-U3-14 deleted (hatchlings head for the brighter seaward horizon,
    not the Moon's position, so the key taught a wrong mechanism).
@@ -37,13 +36,6 @@ export const FIGURES_P13 = {
     { id: "inner-core", x: 400, y: 400, label: "solid iron" },
   ] },
   // Earth with magnetic-field loops; crust point on South American land, field point on the second loop out
-  "P-U1-03": { art: { kind: "img", src: "figs-units/P-U1-03.webp", w: 800, h: 800 }, hotspots: [
-    { id: "core", x: 420, y: 392, label: "iron core" },
-    { id: "crust", x: 330, y: 470, label: "rocks of the crust" },
-    { id: "ocean", x: 228, y: 420, label: "ocean water" },
-    { id: "moon", x: 738, y: 62, label: "Moon" },
-    { id: "field", x: 112, y: 400, label: "field lines" },
-  ] },
   // subduction block section; plate-contact point on the black contact line below and landward of the
   // trench; melting zone on the glowing patch of mantle ABOVE the slab, below the volcano
   "P-U1-06": { art: { kind: "img", src: "figs-units/P-U1-06.webp", w: 1200, h: 800 }, hotspots: [
@@ -55,19 +47,7 @@ export const FIGURES_P13 = {
     { id: "volcano", x: 985, y: 185, label: "volcano" },
   ] },
   // three-panel tsunami strip (panels x 5-395, 405-795, 805-1195); one point in each panel's water
-  "P-U1-07": { art: { kind: "img", src: "figs-units/P-U1-07.webp", w: 1200, h: 407 }, hotspots: [
-    { id: "panel-1", x: 150, y: 192, label: "plates locked" },
-    { id: "panel-2", x: 500, y: 182, label: "seabed jolts and displaces water" },
-    { id: "panel-3", x: 900, y: 182, label: "wave grows in shallow water" },
-  ] },
   // split-level tsunami aftermath (below water: coral, cloudy water; above: mangroves, boats, fields)
-  "P-U1-08": { art: { kind: "img", src: "figs-units/P-U1-08.webp", w: 1200, h: 800 }, hotspots: [
-    { id: "broken-coral", x: 200, y: 590, label: "broken coral" },
-    { id: "cloudy-water", x: 960, y: 560, label: "sediment clouding the water" },
-    { id: "uprooted-mangroves", x: 150, y: 250, label: "uprooted mangroves" },
-    { id: "wrecked-boats", x: 680, y: 252, label: "wrecked boats and harbour" },
-    { id: "flooded-fields", x: 1060, y: 265, label: "farm fields flooded with sea water" },
-  ] },
   // second sea-floor profile, coast on the RIGHT (F2 has it on the left)
   "P-U1-10": { art: { kind: "img", src: "figs-units/P-U1-10.webp", w: 1200, h: 421 }, hotspots: [
     { id: "shelf", x: 1020, y: 179, label: "continental shelf" },
@@ -102,11 +82,6 @@ export const FIGURES_P13 = {
 
   /* ---------------- Unit 2 ---------------- */
   // composite: polar sea (left), tropical sea (right)
-  "P-U2-02": { art: { kind: "img", src: "figs-units/P-U2-02.webp", w: 1220, h: 600 }, hotspots: [
-    { id: "ice", x: 400, y: 340, label: "sea ice" },
-    { id: "polar-water", x: 350, y: 490, label: "open polar water" },
-    { id: "tropical-water", x: 920, y: 400, label: "warm tropical water" },
-  ] },
   // estuary at high tide
   "P-U2-03": { art: { kind: "img", src: "figs-units/P-U2-03.webp", w: 1200, h: 800 }, hotspots: [
     { id: "upstream", x: 160, y: 135, label: "river, upstream" },
@@ -124,19 +99,7 @@ export const FIGURES_P13 = {
   ] },
   // composite: hot dry almost-enclosed sea (left), cool wet coast with a river (right). The sun sits in the
   // top-left corner: its point is at the minimum edge margin, on the lower part of the sun's glow.
-  "P-U2-06": { art: { kind: "img", src: "figs-units/P-U2-06.webp", w: 1220, h: 600 }, hotspots: [
-    { id: "sun", x: 93, y: 70, label: "strong sunshine" },
-    { id: "strait", x: 345, y: 186, label: "narrow entrance to the ocean" },
-    { id: "desert", x: 530, y: 265, label: "dry desert shore" },
-    { id: "river-mouth", x: 895, y: 308, label: "river mouth" },
-  ] },
   // sea-surface section; phytoplankton are drawn but deliberately NOT a target (tiny specks)
-  "P-U2-08": { art: { kind: "img", src: "figs-units/P-U2-08.webp", w: 800, h: 800 }, hotspots: [
-    { id: "surface", x: 470, y: 110, label: "sea surface with breaking waves" },
-    { id: "seaweed", x: 110, y: 285, label: "seaweed" },
-    { id: "fish", x: 560, y: 350, label: "fish" },
-    { id: "deep", x: 400, y: 700, label: "deep, dark water" },
-  ] },
   // layered salt solutions with an egg at the middle/bottom boundary
   "P-U2-09": { art: { kind: "img", src: "figs-units/P-U2-09.webp", w: 800, h: 1200 }, hotspots: [
     { id: "top", x: 380, y: 260, label: "top layer" },
@@ -189,9 +152,6 @@ export const FIGURE_ITEMS_P13 = [
   { id: "PQ2-U1-03", topic: "inside", type: "tap", tier: 1, ref: "1.1/LO3", fig: "P-U1-02",
     q: "Tap the magma.", target: "magma",
     why: "Magma is molten rock below the surface: here, the glowing channel rising from the mantle to the volcano. The outer core is also liquid, but it is liquid iron, not magma. The mantle is solid rock that can melt to make magma, so the mantle itself is not magma, and the crust is solid rock." },
-  { id: "PQ2-U1-04", topic: "inside", type: "tap", tier: 1, ref: "1.1/LO4", fig: "P-U1-03",
-    q: "The curved lines show the magnetic field around the Earth. Tap the part that creates this field.", target: "core",
-    why: "The Earth's core is made of iron, and the iron core creates the magnetic field. The rocks of the crust and the salty ocean water do not create it. The Moon plays no part: its gravity affects the tides, not magnetism. The lines show the field; they are not its source." },
 
   /* ---------------- plates ---------------- */
   { id: "PQ2-U1-05", topic: "plates", type: "tap", tier: 1, ref: "1.2/LO5", fig: "P-U1-06",
@@ -211,26 +171,6 @@ export const FIGURE_ITEMS_P13 = [
   { id: "PQ2-U1-07", topic: "quakes", type: "tap", tier: 2, ref: "1.2/LO5", fig: "P-U1-06",
     q: "Tap the place between the two plates where they lock together, then suddenly slip and cause an earthquake.", target: "plate-contact",
     why: "Earthquakes start where the plates are in contact. They stick (lock), tension builds as the plates keep moving, and then they suddenly slip, releasing a large amount of energy. The trench is the dip in the sea floor where the sinking plate starts to go down, not the surface the plates grip along. Melting happens deeper, in the mantle, and the volcano is fed by magma, not by the slip." },
-  { id: "PQ2-U1-09", topic: "quakes", type: "choice", tier: 2, ref: "1.2/LO6", fig: "P-U1-07",
-    q: "Why is the wave much taller in the right-hand panel than in the middle panel?",
-    options: [
-      "It has reached shallow water near the coast.",
-      "The wind blows more strongly close to land.",
-      "The Moon's pull is stronger near the coast.",
-      "More of the seabed moves as the wave travels.",
-    ], a: 0,
-    why: "A tsunami grows in height as it moves into shallow water near land; out in the deep ocean it is low. It is not a wind wave, so wind does not build it, and it is not a tide, so the Moon is not involved. The seabed moves once, at the start; it does not keep moving as the wave travels." },
-  { id: "PQ2-U1-10", topic: "quakes", type: "multi", tier: 2, ref: "1.2/LO7", fig: "P-U1-08",
-    q: "A tsunami has just hit this coast. Tick every effect on the marine ecosystem that the picture shows.",
-    options: [
-      "coral broken into pieces on the seabed",
-      "mangrove trees pulled out by their roots",
-      "seabed sediment stirred up, clouding the water",
-      "fishing boats wrecked in the harbour",
-      "farm fields flooded with sea water",
-      "the sea made permanently less salty",
-    ], a: [0, 1, 2],
-    why: "Broken coral, uprooted mangroves and sediment clouding the water are damage to marine habitats and the organisms living in them. Wrecked boats and flooded fields are real tsunami effects, but they are effects on the human coastal community, not on the marine ecosystem. A tsunami does not make the sea permanently less salty, and nothing in the picture shows that." },
 
   /* ---------------- floor ---------------- */
   { id: "PQ2-U1-12", topic: "floor", type: "label", tier: 1, ref: "1.3/LO6", fig: "P-U1-10",
@@ -263,15 +203,6 @@ export const FIGURE_ITEMS_P13 = [
 
   /* ================= Unit 2 ================= */
   /* ---------------- u2-water ---------------- */
-  { id: "PQ2-U2-01", topic: "u2-water", type: "choice", tier: 2, ref: "2.1/LO8", fig: "P-U2-02",
-    q: "From which sea will water evaporate faster, and why?",
-    options: [
-      "the right-hand sea, as its warm particles have more energy to escape",
-      "the left-hand sea, as cold water is fresher and so evaporates more easily",
-      "neither sea, as water needs to reach its boiling point before it evaporates",
-      "the left-hand sea, as its ice adds extra water at the surface to evaporate",
-    ], a: 0,
-    why: "In the warm tropical sea the water particles have more kinetic energy, so more of them can escape from the surface and evaporation is faster. In the cold polar sea the particles have less energy, and the ice cover stops evaporation from much of the surface. Being fresher does not make water evaporate faster, and evaporation happens at any temperature, far below the boiling point." },
 
   /* ---------------- u2-salinity ---------------- */
   { id: "PQ2-U2-03", topic: "u2-salinity", type: "tap", tier: 1, ref: "2.2/LO11", fig: "P-U2-03",
@@ -298,23 +229,8 @@ export const FIGURE_ITEMS_P13 = [
       "It has a very high salinity.",
     ], a: 0,
     why: "Blue-green lies just past green, on the alkaline side of the chart, so the sea water is slightly alkaline (about pH 8). A slightly acidic sample turns yellow or orange, and a neutral one is green. Universal indicator shows pH only; it does not measure how salty the water is." },
-  { id: "PQ2-U2-07", topic: "u2-salinity", type: "choice", tier: 2, ref: "2.2/LO8 · 2.2/LO9", fig: "P-U2-06",
-    q: "Which of these two seas will have the higher salinity, and why?",
-    options: [
-      "the left, as high evaporation and few rivers concentrate the salts",
-      "the right, as its rivers wash extra salt from the rocks into the sea",
-      "the right, as the cool water is denser, so it holds more dissolved salt",
-      "the left, as its narrow entrance lets more salt flow in from the ocean",
-    ], a: 0,
-    why: "In the hot, dry sea strong sunshine evaporates water and leaves the salts behind, and there is little rain and almost no river water to dilute it; the Red Sea is a real example. The cool, wet coast gets plenty of rain and river water, which lower salinity, as in the Baltic Sea. Rivers carry a little salt from eroded rocks, but their main effect is dilution. The narrow entrance limits mixing with the ocean rather than bringing salt in, and density does not decide how much salt a sea holds." },
 
   /* ---------------- u2-gases ---------------- */
-  { id: "PQ2-U2-09", topic: "u2-gases", type: "tap", tier: 1, ref: "2.3/LO1", fig: "P-U2-08",
-    q: "Tap where oxygen from the atmosphere enters the sea water.", target: "surface",
-    why: "Gases from the air dissolve into the sea at the surface, and breaking waves mix air into the water and help this. The seaweed adds oxygen too, but it makes it by photosynthesis rather than taking it from the atmosphere. The fish use oxygen up in respiration, and the deep water is furthest from the air." },
-  { id: "PQ2-U2-10", topic: "u2-gases", type: "tap", tier: 1, ref: "2.3/LO1 · 2.5/LO6", fig: "P-U2-08",
-    q: "Tap the organism that adds oxygen to the water by photosynthesis.", target: "seaweed",
-    why: "The seaweed lives in the sunlit water and photosynthesises, giving out oxygen that dissolves in the water around it. The tiny green specks are phytoplankton, which photosynthesise too, but they are not marked. The surface is where oxygen dissolves from the atmosphere, not where it is made. The fish take oxygen in for respiration rather than adding it. In the dark deep water there is no light, so no photosynthesis can happen." },
 
   /* ---------------- u2-density ---------------- */
   { id: "PQ2-U2-11", topic: "u2-density", type: "tap", tier: 2, ref: "2.4/LO3", fig: "P-U2-09",
@@ -416,8 +332,4 @@ export const FIGURE_ITEMS_P13 = [
       "because the water pressure is lower in the deep water",
     ], a: 0,
     why: "This is the daytime panel. By day the sunlit surface water is dangerous, because predators such as the fish near the surface hunt by sight; in the dim twilight zone the shrimp are much harder to see. There is little food at depth, which is why they rise at night to feed. They are not avoiding warm water, and the pressure is higher in the deep, not lower." },
-  { id: "PQ2-U3-15", topic: "u3-migration", type: "choice", tier: 2, ref: "3.7/LO5 · 1.1/LO4", fig: "P-U1-03",
-    q: "A turtle crossing the open ocean has no landmarks to follow. It finds its way using what the curved lines around this Earth show. Which method is it using?",
-    options: ["the Earth's magnetic field", "the location of the Moon and stars", "olfaction (smell)", "mental maps and landmarks"], a: 0,
-    why: "The curved lines show the magnetic field created by the Earth's iron core. Turtles can sense it, and it works in the open ocean where there are no landmarks. The Moon is in the picture, and the location of the Moon and stars is another navigation cue, but the lines do not show it. Olfaction (detecting chemicals) and mental maps of landmarks do not use the field at all." },
 ];

@@ -39,10 +39,10 @@ test("batch 2C (code-drawn, after Don's vetting round 1): 20 figures, 46 items (
   assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_C), { tap: 20, choice: 21, label: 5 });
 });
 
-test("batch 3 (new art + replacements, after Don's vetting round 1): 75 figures, 101 items (tap 42, choice 53, label 5, multi 1)", () => {
-  assert.equal(Object.keys(UNIT_FIGURES_P).length, 75);
-  assert.equal(UNIT_FIGURE_ITEMS_P.length, 101);
-  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 42, choice: 53, label: 5, multi: 1 });
+test("batch 3 (new art + replacements, after Don's vetting round 2): 65 figures, 88 items (tap 37, choice 46, label 5, no multi)", () => {
+  assert.equal(Object.keys(UNIT_FIGURES_P).length, 65);
+  assert.equal(UNIT_FIGURE_ITEMS_P.length, 88);
+  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 37, choice: 46, label: 5 });
 });
 
 test("figures.js carries the 21 FQ items (FQ2 retired)", () => {
@@ -58,6 +58,9 @@ test("Don's removed items are gone from every batch (stale progress for them is 
     "U5-D26", "PQ-U4-03", "PQ-U5-08", "PQ-U6-31", "FQ2",
     // Don's vetting round 1, 11 Nov 2026 (Units 1-2)
     "PQ2-U1-08", "PQ2-U1-11", "PQ2-U2-02", "PQ2-U2-08", "PQ2-U2-54",
+    // Don's vetting round 2, 11 Nov 2026 (answerable from the words, or no precedent)
+    "PQ2-U1-04", "PQ2-U3-15", "PQ2-U1-09", "PQ2-U1-10", "PQ2-U2-01", "PQ2-U2-07",
+    "PQ2-U2-09", "PQ2-U2-10", "PQ2-U6-54", "PQ2-U6-65", "PQ2-U6-69", "PQ-U5-01", "PQ2-U5-94",
   ];
   const present = new Set(ALL_ITEMS.map((it) => it.id));
   assert.deepEqual(gone.filter((id) => present.has(id)), [], "a removed id is still in content");

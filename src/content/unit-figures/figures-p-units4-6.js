@@ -81,7 +81,6 @@ export const FIGURES_P46 = {
 
   // ---------- Unit 6 ----------
   "P-U6-01": { art: IMG("P-U6-01", 1200, 800), hotspots: [] },
-  "P-U6-02": { art: IMG("P-U6-02", 1200, 800), hotspots: [] },
   "P-U6-03": { art: IMG("P-U6-03", 1200, 800), hotspots: [
     H("anchor", 160, 583, "anchor and chain on the coral"),
     H("boat", 130, 160, "boat hull at the surface"),
@@ -101,7 +100,6 @@ export const FIGURES_P46 = {
   ] },
   "P-U6-09": { art: IMG("P-U6-09", 1200, 800), hotspots: [] },
   "P-U6-10": { art: IMG("P-U6-10", 1200, 800), hotspots: [] },
-  "P-U6-12": { art: IMG("P-U6-12", 1200, 800), hotspots: [] },
   "P-U6-13": { art: IMG("P-U6-13", 1200, 800), hotspots: [
     H("outer-hull", 1018, 450, "outer hull"),
     H("hole", 208, 462, "hole in the outer hull"),
@@ -110,7 +108,6 @@ export const FIGURES_P46 = {
     H("cargo", 620, 430, "oil cargo"),
   ] },
   "P-U6-15": { art: IMG("P-U6-15", 1220, 600), hotspots: [] },
-  "P-U6-18": { art: IMG("P-U6-18", 1200, 800), hotspots: [] },
   "P-U6-20": { art: IMG("P-U6-20", 1200, 800), hotspots: [] },
   "P-U6-22": { art: IMG("P-U6-22", 1820, 600), hotspots: [] },
 };
@@ -350,10 +347,6 @@ export const FIGURE_ITEMS_P46 = [
       "Fish catches nearby rise, and the ponds stop sediment reaching the reefs.",
     ], a: 0,
     why: "Mangrove roots reduce wave energy and erosion, so clearing them leaves the coast unprotected, and waste food and faeces from the ponds are released into the coastal water. The ponds replace the mangrove nursery areas, so young fish lose their shelter, and the ponds neither add oxygen to the sea nor clean it." },
-  { id: "PQ2-U6-54", topic: "u6-overview", type: "choice", tier: 1, ref: "6.1/LO2", fig: "P-U6-02",
-    q: "Which human activity most likely caused the damage shown in the photo?",
-    options: ["Blast fishing with explosives", "Coral bleaching in warm water", "Snorkellers trampling the coral", "Sediment from land reclamation"], a: 0,
-    why: "An explosion shatters all the coral, and kills the fish, in one patch, leaving a crater of broken rubble beside reef that is untouched. Bleached coral stays standing but turns white, trampling breaks a few branches, and sediment smothers coral over a wide area without smashing it into rubble." },
 
   // ---- u6-tourism ----
   { id: "PQ2-U6-55", topic: "u6-tourism", type: "tap", tier: 1, ref: "6.2/LO3", fig: "P-U6-03",
@@ -418,15 +411,6 @@ export const FIGURE_ITEMS_P46 = [
     why: "Aquaculture includes raising organisms in controlled, protected conditions, here in a shaded nursery, before planting them out to restock the coast. These trees are for restoring the forest, not for timber. They are not fed, and salt is not a food for them: like other plants, they make their own food by photosynthesis." },
 
   // ---- u6-energy ----
-  { id: "PQ2-U6-65", topic: "u6-energy", type: "choice", tier: 2, ref: "6.5/LO5", fig: "P-U6-12",
-    q: "This seabird has not swallowed any of the oil. Why may it still die?",
-    options: [
-      "Its feathers no longer keep it warm or dry, so it chills or drowns.",
-      "The oil soaks through its skin and raises the salt level in its blood.",
-      "The oil reflects sunlight onto the bird, so its body temperature soars.",
-      "The oil makes it too heavy to fly to the fresh water it needs to drink.",
-    ], a: 0,
-    why: "Oil mats the feathers together so they no longer trap air: the bird loses its insulation and waterproofing, becomes chilled and can drown. It may also swallow oil as it preens, which poisons it. Oil does not raise the salt level in the blood or overheat the bird, and weight and thirst are not the danger." },
   { id: "PQ2-U6-66", topic: "u6-energy", type: "tap", tier: 1, ref: "6.5/LO4", fig: "P-U6-13",
     q: "This tanker has run onto a rock and its outer hull is holed. Tap the part that stops the oil escaping into the sea.",
     target: "inner-hull",
@@ -453,15 +437,6 @@ export const FIGURE_ITEMS_P46 = [
     why: "An animal tangled in lost netting or line cannot swim freely and may be held below the surface, so an air-breather such as a turtle drowns. Plastic does not dissolve a shell, netting does not stop its food growing, and a turtle is a reptile that breathes with lungs, not gills." },
 
   // ---- u6-eutrophication ----
-  { id: "PQ2-U6-69", topic: "u6-eutrophication", type: "choice", tier: 2, ref: "6.7/LO2", fig: "P-U6-18",
-    q: "Why has this bloom of algae formed where the river meets the sea?",
-    options: [
-      "Rain has washed dissolved fertiliser off the farmland into the river.",
-      "Fertiliser has evaporated from the fields and fallen on the sea as rain.",
-      "The river water is less salty, and these algae grow best in fresh water.",
-      "The river carries extra oxygen, which the algae need in order to grow.",
-    ], a: 0,
-    why: "Fertilisers are soluble in water, so rain dissolves them and the run-off carries the nutrients (nitrates and phosphates) down the river to the sea, where algae multiply into a bloom. Fertiliser does not evaporate, these marine algae grow in salt water, and oxygen is not what limits their growth." },
 
   // ---- u6-climate ----
   { id: "PQ2-U6-51", topic: "u6-climate", type: "choice", tier: 2, ref: "6.8/LO6", fig: "P-U5-15",
