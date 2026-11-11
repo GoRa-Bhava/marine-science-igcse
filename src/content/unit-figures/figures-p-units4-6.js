@@ -120,7 +120,7 @@ export const FIGURE_ITEMS_P46 = [
     options: ["A rocky shore", "A muddy shore", "A kelp forest", "A seagrass bed"], a: 0,
     why: "Boulders and rock platforms covered in brown seaweed, with rock pools left by the falling tide, make a rocky shore. A muddy shore is flat, fine sediment with no rock. A kelp forest is underwater, with tall kelp rising from the seabed, and a seagrass bed is a flowering plant rooted in sand or mud." },
   { id: "PQ2-U5-55", topic: "u5-components", type: "choice", tier: 2, ref: "5.1/LO1", fig: "P-U5-02",
-    q: "Which of these is the community in this rock pool?",
+    q: "Which of these is the community in this rock pool?", qRecall: "What makes up the community in this rock pool?",
     options: [
       "The limpets, anemones and seaweed living there together",
       "The group of limpets clamped onto the rock above the water",
@@ -339,7 +339,7 @@ export const FIGURE_ITEMS_P46 = [
     ], a: 0,
     why: "Rectangular, water-filled ponds with banks between them, cut into cleared mangrove, are shrimp farms. Land reclamation builds up dry land for buildings, dredging removes mud from a channel, and a sea wall is a single barrier along the shore." },
   { id: "PQ2-U6-53", topic: "u6-overview", type: "choice", tier: 2, ref: "6.1/LO2", fig: "P-U6-01",
-    q: "Which pair of impacts does the change shown in the photo have?",
+    q: "Which pair of impacts does the change shown in the photo have?", qRecall: "Describe two impacts of the change shown in the photo.",
     options: [
       "The coast loses its protection from waves, and pond waste pollutes the sea.",
       "Nursery areas for young fish increase, and the ponds add oxygen to the sea.",

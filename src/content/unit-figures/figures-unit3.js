@@ -82,7 +82,7 @@ export const FIGURE_ITEMS_U3 = [
     q: "Tap the cell that has a cell wall, a cell membrane and cytoplasm but no nucleus.", target: "bacterial-cell",
     why: "The bottom cell has a cell wall, a cell membrane and cytoplasm but no nucleus: it is a bacterial cell. The plant cell also has a wall, but it has a nucleus. The animal cell has a nucleus and no wall." },
   { id: "U3-D21", topic: "u3-cells", type: "choice", tier: 2, ref: "3.1/LO1", fig: "G-U3-cells3",
-    q: "Which of these cells has a nucleus but no cell wall and no chloroplasts?",
+    q: "Which of these cells has a nucleus but no cell wall and no chloroplasts?", qRecall: "Which cell in the picture has a nucleus but no cell wall and no chloroplasts?",
     options: ["the top-right cell", "the top-left cell", "the bottom cell", "none of these three cells"], a: 0,
     why: "The top-right cell is an animal cell: it has a cell membrane, cytoplasm, a nucleus and mitochondria, but no wall and no chloroplasts. The top-left plant cell has a wall and chloroplasts. The bottom bacterial cell has a wall and no nucleus." },
   { id: "PQ-U3-01", topic: "u3-cells", type: "label", tier: 1, ref: "3.1/LO3", fig: "G-U3-animalcell",

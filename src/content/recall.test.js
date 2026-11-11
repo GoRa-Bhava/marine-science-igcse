@@ -18,7 +18,14 @@ for (const it of [...content.items, ...PRACTICALS.flatMap((p) => p.items || []),
 }
 const all = [...byId.values()];
 const strip = (s) => String(s || "").replace(/<[^>]+>/g, "");
-const OPTION_REF = /\b(which (of the following|of these|option|statement|one of|pair|row|sequence|list)|the following|options?)\b|\b(NOT|EXCEPT)\b/;
+// A choice stem "needs the options in view" when it names them. The option phrases
+// (which of these / which statement / which pair / the following / option(s)) match
+// in any case, so a capital-"Which" picture stem is caught. NOT and EXCEPT match
+// only in capitals, as the original test did, so an ordinary lower-case "not"
+// ("not to scale", "a fish and not a reptile") is not flagged.
+const OPTION_WORDS = /\b(which (of the following|of these|option|statement|one of|pair|row|sequence|list)|the following|options?)\b/i;
+const CAPS_ONLY = /\b(NOT|EXCEPT)\b/;
+const needsOptionsInView = (s) => OPTION_WORDS.test(strip(s)) || CAPS_ONLY.test(strip(s));
 
 test("recall fields: only on choice items, well-formed", () => {
   for (const it of all) {
@@ -26,14 +33,17 @@ test("recall fields: only on choice items, well-formed", () => {
       assert.equal(it.type, "choice", `${it.id}: qRecall only on choice items`);
       assert.ok(typeof it.qRecall === "string" && it.qRecall.trim().length > 10, `${it.id}: qRecall must be a real question`);
       assert.ok(!/—/.test(it.qRecall), `${it.id}: no em-dashes in qRecall`);
-      assert.ok(!OPTION_REF.test(strip(it.qRecall)), `${it.id}: qRecall must not refer to options`);
+      assert.ok(!needsOptionsInView(it.qRecall), `${it.id}: qRecall must not refer to options`);
     }
     if ("recall" in it) assert.equal(it.recall, false, `${it.id}: recall may only be false`);
   }
 });
 
 test("every choice stem that needs the options in view has a qRecall or recall:false", () => {
-  const missing = all.filter((it) => it.type === "choice" && OPTION_REF.test(strip(it.q)) && !it.qRecall && it.recall !== false).map((it) => it.id);
+  // Hard check over the main bank, the practicals and all unit-figure items (batch
+  // 1, 2C and 3 are in `all`). Any choice stem that names the options and has no
+  // qRecall or recall:false fails the build.
+  const missing = all.filter((it) => it.type === "choice" && needsOptionsInView(it.q) && !it.qRecall && it.recall !== false).map((it) => it.id);
   assert.deepEqual(missing, [], "add qRecall (or recall:false) to these choice items");
 });
 
@@ -47,18 +57,6 @@ test("recallEligible / recallStem / recallOn", () => {
   assert.equal(recallEligible({ type: "multi" }, {}), false);
   assert.equal(recallStem(c), "Name X.");
   assert.equal(recallStem({ q: "What is Y?" }), "What is Y?");
-});
-
-test("report: unit-figure choice stems that read as option-dependent but have no qRecall", () => {
-  // The hard check above is case-sensitive, so it misses picture stems that start
-  // "Which statement is correct?" (capital W). This reports, without failing the
-  // build, every unit-figure (fig) choice item whose stem looks option-dependent
-  // and still lacks a qRecall, so a recall stem can be written for it later.
-  const OPTION_REF_CI = new RegExp(OPTION_REF.source, "i");
-  const flagged = all
-    .filter((it) => it.fig && it.type === "choice" && OPTION_REF_CI.test(strip(it.q)) && !it.qRecall && it.recall !== false)
-    .map((it) => it.id);
-  if (flagged.length) console.log(`# picture-question stems that still need a qRecall (${flagged.length}): ${flagged.join(", ")}`);
 });
 
 test("the picture-question player shows recallStem(item) and the figure while the options are hidden", () => {
