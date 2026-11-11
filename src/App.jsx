@@ -378,7 +378,10 @@ function ChoiceQ({ item, locked, picked, setPicked, settings }) {
         </>
       ) : (
         <>
-          <Prompt>{item.q}</Prompt>
+          {/* Keep the stem the student answered: when recall-first is eligible, show
+              recallStem(item) (the qRecall, or q if none) rather than switching to
+              item.q once the options are revealed. Plain item.q only when ineligible. */}
+          <Prompt>{eligible ? recallStem(item) : item.q}</Prompt>
           {item.fig && <FigureStage figId={item.fig} mode="static" item={item} locked={locked} onHotspot={() => {}} />}
           {eligible && text.trim() && (
             <div style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, background: C.shelf, border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 12px", marginBottom: 14, lineHeight: 1.5 }}>

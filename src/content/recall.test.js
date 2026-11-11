@@ -71,3 +71,17 @@ test("the picture-question player shows recallStem(item) and the figure while th
   assert.ok(branch.includes("recallStem(item)"), "hidden branch shows recallStem(item)");
   assert.ok(/item\.fig && <FigureStage/.test(branch), "hidden branch renders the figure for picture questions");
 });
+
+test("the revealed choice branch keeps recallStem(item) when eligible, and uses item.q when recall-first is off", () => {
+  // After "Show the options", the stem must not switch from the qRecall the student
+  // answered back to item.q. The revealed branch shows recallStem(item) for a
+  // recall-eligible item, and the plain item.q only when recall-first is off.
+  const it = { type: "choice", q: "Which of these is X?", qRecall: "Name X.", options: ["a", "b"], a: 0 };
+  const shownStem = (item, settings) => (recallEligible(item, settings) ? recallStem(item) : item.q);
+  assert.equal(shownStem(it, {}), "Name X.", "eligible → recallStem (the qRecall)");
+  assert.equal(shownStem(it, { recallFirst: false }), "Which of these is X?", "recall-first off → item.q");
+  const src = fs.readFileSync(new URL("../App.jsx", import.meta.url), "utf8");
+  const start = src.indexOf("hidden ? (");
+  const revealed = src.slice(src.indexOf(") : (", start));
+  assert.ok(/eligible \? recallStem\(item\) : item\.q/.test(revealed), "revealed branch shows recallStem(item) when eligible, else item.q");
+});
