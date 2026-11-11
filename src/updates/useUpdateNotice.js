@@ -21,6 +21,9 @@ const APK_URL = `https://github.com/${REPO}/releases/latest/download/marine-scie
 const BUILD = Number(import.meta.env.VITE_BUILD_NUMBER) || 0;
 const IS_NATIVE = typeof window !== "undefined" && !!window.Capacitor?.isNativePlatform?.();
 const FETCH_TIMEOUT_MS = 6000;
+// Set when the user taps "Update now"; read once on the next load so we can
+// confirm "Update complete" after the page has reloaded onto the new version.
+const UPDATED_FLAG = "marine_update_done";
 
 /* Latest published APK build number, from the GitHub releases API tag build-N.
    Aborts after 6 s; the caller treats any rejection as "no update". */
@@ -94,6 +97,18 @@ export function useUpdateNotice() {
     }
   }, [surfaceWeb]);
 
+  // 0) If the previous load just finished a web update, confirm it once, then
+  //    auto-hide. Runs before the update check, which finds nothing more to do.
+  useEffect(() => {
+    let flag = null;
+    try { flag = localStorage.getItem(UPDATED_FLAG); } catch (e) { /* ignore */ }
+    if (!flag) return;
+    try { localStorage.removeItem(UPDATED_FLAG); } catch (e) { /* ignore */ }
+    setNotice({ platform: "web", phase: "done" });
+    const t = setTimeout(() => setNotice((n) => (n && n.phase === "done" ? null : n)), 6000);
+    return () => clearTimeout(t);
+  }, []);
+
   // 1) On app start, after the first render (does not block it).
   useEffect(() => {
     const t = setTimeout(() => { runCheck(); }, 0);
@@ -131,9 +146,27 @@ export function useUpdateNotice() {
     setNotice({ ...n, phase: "downloading" });
   }, []);
 
+  // Web "Update now": show "Updating…" so the user knows something is happening,
+  // promote the waiting worker, and reload once it has taken control so the new
+  // version is actually live. The flag lets the next load confirm "Update
+  // complete". Falls back to a plain reload if there is no worker to wait on.
   const update = useCallback(() => {
-    // Called only from the home banner, so no run is in progress.
-    try { window.location.reload(); } catch (e) { /* ignore */ }
+    try { localStorage.setItem(UPDATED_FLAG, String(Date.now())); } catch (e) { /* ignore */ }
+    setNotice({ platform: "web", phase: "updating" });
+    let done = false;
+    const reload = () => { if (done) return; done = true; try { window.location.reload(); } catch (e) { /* ignore */ } };
+    try {
+      const sw = navigator.serviceWorker;
+      if (sw && sw.controller) {
+        sw.addEventListener("controllerchange", reload, { once: true });
+        sw.getRegistration()
+          .then((reg) => { if (reg && reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" }); else reload(); })
+          .catch(reload);
+        setTimeout(reload, 3500);   // fallback if controllerchange never fires
+      } else {
+        reload();
+      }
+    } catch (e) { reload(); }
   }, []);
 
   const onManualFound = useCallback((latest) => {

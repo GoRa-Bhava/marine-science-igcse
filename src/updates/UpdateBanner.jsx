@@ -39,6 +39,25 @@ export default function UpdateBanner({ C, notice, onDownload, onUpdate, onLater 
     );
   }
 
+  // Web: the user has tapped Update and the new version is being applied. The
+  // page reloads a moment later, so this shows only briefly.
+  if (notice.platform === "web" && notice.phase === "updating") {
+    return (
+      <div role="status" aria-live="polite" style={wrap}>
+        <span style={textStyle}>Updating to the latest version…</span>
+      </div>
+    );
+  }
+
+  // Web: confirmation after the reload. Auto-hides after a few seconds.
+  if (notice.platform === "web" && notice.phase === "done") {
+    return (
+      <div role="status" aria-live="polite" style={{ ...wrap, borderColor: C.ok }}>
+        <span style={textStyle}><span aria-hidden="true">✓ </span>Update complete — you're on the latest version.</span>
+      </div>
+    );
+  }
+
   const isNative = notice.platform === "native";
   const message = isNative
     ? `A new version of Marine Science is ready (build ${notice.latest}).`
