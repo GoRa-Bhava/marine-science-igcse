@@ -275,7 +275,7 @@ export const FIGURE_ITEMS_P13 = [
     options: ["reptiles", "bony fish", "mammals", "seabirds"], a: 0,
     why: "Its head and flippers are covered in scales, and it breathes with lungs: scales together with lungs place it with the reptiles. Fish also have scales, but they use gills. Mammals breathe with lungs but are covered in hair, and birds have feathers. Coming up to breathe air does not make an animal a mammal." },
   { id: "PQ2-U3-04", topic: "u3-animals", type: "choice", tier: 2, ref: "3.4/LO2", fig: "P-U3-03",
-    q: "Both of these animals are fish. Which statement about them is correct?",
+    q: "Both of these animals are fish. Which statement about them is correct?", qRecall: "Both of these animals are fish. Is each one a cartilaginous fish or a bony fish?",
     options: [
       "The left fish is cartilaginous; the right fish is bony.",
       "The left fish is bony; the right fish is cartilaginous.",
@@ -315,7 +315,7 @@ export const FIGURE_ITEMS_P13 = [
 
   /* ---------------- u3-migration ---------------- */
   { id: "PQ2-U3-12", topic: "u3-migration", type: "choice", tier: 2, ref: "3.7/LO3 · 3.7/LO2", fig: "P-U3-08",
-    q: "The two panels show the same shrimp and lanternfish, once by day and once at night. Which statement is correct?",
+    q: "The two panels show the same shrimp and lanternfish, once by day and once at night. Which statement is correct?", qRecall: "The two panels show the same shrimp and lanternfish, once by day and once at night. Which panel shows night, and why are the animals there?",
     options: [
       "The left is night: they rise to feed in the sunlit water in the dark.",
       "The right is night: they sink to feed in the twilight zone in the dark.",

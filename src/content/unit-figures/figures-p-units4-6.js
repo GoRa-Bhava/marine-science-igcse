@@ -386,7 +386,7 @@ export const FIGURE_ITEMS_P46 = [
     target: "smallfish",
     why: "Algae grow on the hanging ropes, small fish gather there to shelter and feed, and the tuna are drawn in to feed on the small fish. The boat then fishes for the tuna around the device. The algae feed the small fish, not the tuna." },
   { id: "PQ2-U6-62", topic: "u6-fisheries", type: "choice", tier: 2, ref: "6.3/LO7", fig: "P-U6-07",
-    q: "Which pair of statements describes ecological impacts of this device?",
+    q: "Which pair of statements describes ecological impacts of this device?", qRecall: "Describe two ecological impacts of using this device.",
     options: [
       "Huge tuna catches are easy, and turtles and sharks are caught too.",
       "Tuna alone are drawn in, and the device keeps other fish away.",

@@ -136,6 +136,7 @@ export const FIGURE_ITEMS_U1 = [
   "ref": "1.4/LO1 · 1.4/LO2",
   "fig": "G-U1-tides-spring",
   "q": "A tide gauge recorded the water height on two days, a week apart. One of the days had a spring tide. Which statement is correct?",
+  "qRecall": "A tide gauge recorded the water height on two days, a week apart. One of the days had a spring tide. Which day was it, and how can you tell from the trace?",
   "options": [
    "Day 8, because its tidal amplitude is larger",
    "Day 1, because its tidal amplitude is smaller",
