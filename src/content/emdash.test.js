@@ -28,11 +28,9 @@ const res = await build({
 });
 const mod = await import(`data:text/javascript;base64,${Buffer.from(res.outputFiles[0].text).toString("base64")}`);
 
-// The em-dash sweep (12 Nov) missed one authored explanation; its id is listed
-// here and reported so the content team can clear it in a later batch. The test
-// still guards every other string from a new em-dash. Keep this list empty once
-// U6-98's why is fixed upstream.
-const KNOWN_GAPS = new Set(["U6-98"]);
+// Every content string is now em-dash free, so there are no exceptions: the test
+// guards every item.
+const KNOWN_GAPS = new Set([]);
 
 const EMDASH = /—| -- /;
 const hits = [];
