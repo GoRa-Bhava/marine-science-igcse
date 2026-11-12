@@ -373,7 +373,7 @@ function treeQs(F, r) {
   for (let t = 0; t < 30; t++) { pick = shuffleR(r, COND).slice(0, 4).map((c) => ({ c, v: r() < 0.5 })); if (pick.some((x) => x.v) && pick.some((x) => !x.v)) break; }
   if (!pick.some((x) => x.v)) pick[0].v = true; if (pick.every((x) => x.v)) pick[1].v = false;
   qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is true about the place where this tree grows.", options: pick.map((x) => (x.v ? x.c.T : x.c.F)), a: pick.map((x, i) => (x.v ? i : -1)).filter((i) => i >= 0), hl: {}, _st: pick,
-    why: pick.map((x) => (x.v ? `✓ ${x.c.T}` : `✗ ${x.c.F} — ${x.c.w}.`)).join("<br>") + "<br>The tree's adaptations let it live with these conditions." });
+    why: pick.map((x) => (x.v ? `✓ ${x.c.T}` : `✗ ${x.c.F}: ${x.c.w}.`)).join("<br>") + "<br>The tree's adaptations let it live with these conditions." });
   // 3. tap the part that does a stated job
   if (F.T === "prop") qs.push(tapQ(F, { q: "Tap the part of the tree that holds it firmly in the soft mud against the flow of the tides.", a: ["prop"], ansTxt: "the prop roots", _leak: /prop root/i,
     why: "The <b>prop roots</b> arch out from the trunk and down into the soft mud. Like the ropes of a tent, they hold the tree firmly in place so that the tidal flow does not wash it over." }));
@@ -434,7 +434,7 @@ function mudQs(F, r) {
   const pool = MUD_ST[F.g3].map((x) => x.concat(F.g3)).concat([pickR(r, MUD_GEN).concat("gen"), MUD_LOW.concat("low")]);
   const st = pickMixed(r, pool, 4);
   qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is true for the mudskipper.", options: st.map((x) => x[0]), a: st.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, _st: st,
-    _leak: MUD_LEAK[F.g3], why: st.map((x) => (x[1] ? `✓ ${x[0]}` : `✗ ${x[0]} — ${x[2]}.`)).join("<br>") });
+    _leak: MUD_LEAK[F.g3], why: st.map((x) => (x[1] ? `✓ ${x[0]}` : `✗ ${x[0]}: ${x[2]}.`)).join("<br>") });
   // 5. the lungs misconception: how it gets oxygen out of water
   const ds = [["They do have lungs, which take over from the gills as soon as the fish leaves the water at low tide.", null],
     ["They have no lungs; they absorb oxygen through their moist fins as they push themselves across the mud.", "fins"],
@@ -482,7 +482,7 @@ function archerQs(F, r) {
   // 5. tick the true statements about the group not tested yet
   const st = pickMixed(r, AR_ST[F.g3].map((x) => x.concat(F.g3)), 4);
   qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is true for the banded archerfish.", options: st.map((x) => x[0]), a: st.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, _st: st, _leak: AR_LEAK[F.g3],
-    why: st.map((x) => (x[1] ? `✓ ${x[0]}` : `✗ ${x[0]} — ${x[2]}.`)).join("<br>") });
+    why: st.map((x) => (x[1] ? `✓ ${x[0]}` : `✗ ${x[0]}: ${x[2]}.`)).join("<br>") });
   return qs;
 }
 

@@ -61,8 +61,8 @@ const BUILD = {
       ] };
   },
   biomass(r) {
-    const chains = [["phytoplankton", "zooplankton", "herring", "seal"], ["kelp", "sea urchin", "sea otter", "orca"], ["seagrass", "sea turtle", "tiger shark", "—"], ["diatoms", "krill", "squid", "sperm whale"]];
-    const ch = pickR(r, chains.filter((c) => c[3] !== "—"));
+    const chains = [["phytoplankton", "zooplankton", "herring", "seal"], ["kelp", "sea urchin", "sea otter", "orca"], ["seagrass", "sea turtle", "tiger shark", "–"], ["diatoms", "krill", "squid", "sperm whale"]];
+    const ch = pickR(r, chains.filter((c) => c[3] !== "–"));
     const b1 = int(r, 400, 1600), p1 = int(r, 6, 18) / 100, p2 = int(r, 6, 18) / 100, p3 = int(r, 5, 15) / 100;
     const b2 = rnd(b1 * p1, 1), b3 = rnd(b2 * p2, 2), b4 = rnd(b3 * p3, 3);
     const t12 = b2 / b1 * 100, t23 = b3 / b2 * 100, t14 = b4 / b1 * 100;
@@ -83,7 +83,7 @@ const BUILD = {
           { kind: "num", q: `What percentage of the biomass of ${ch[0]} ends up in the ${ch[3]}? Give your answer <b>to 2 decimal places</b>.`, ans: rnd(t14, 2), tol: 0, dp: 2, unit: "%", check: eq(rnd(t14, 2)), hl: { rows: ["b1", "b4"] },
             why: `${fmt(b4, 3)} ÷ ${fmt(b1)} × 100 = ${t14.toFixed(4)}%, which is <b>${fmt(rnd(t14, 2), 2)}%</b>. Only a tiny fraction reaches the top of the chain.` },
           ...(pick ? [{ kind: "multi", q: "Tick every statement that helps to explain why biomass decreases at each trophic level.", options: pick.map((s) => s[0]), a: pick.map((s, i) => (s[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-            why: pick.map((s) => `${s[1] ? "✓" : "✗"} ${s[0]} — ${s[2]}`).join("<br>") }] : []),
+            why: pick.map((s) => `${s[1] ? "✓" : "✗"} ${s[0]}: ${s[2]}`).join("<br>") }] : []),
         ];
       } };
   },
@@ -130,7 +130,7 @@ const BUILD = {
         { kind: "num", q: `Density = mass ÷ volume. Calculate the density of sample ${L[0]} in g per cm³. Give your answer <b>to 3 decimal places</b>.`, ans: ds[0], tol: 0, dp: 3, unit: "g per cm³", check: eq(ds[0]), hl: { rows: ["s0"] },
           why: `${fmt(mass[0], 1)} ÷ ${vol[0]} = ${d[0].toFixed(5)}, which is <b>${fmt(ds[0], 3)} g per cm³</b>.` },
         { kind: "tap", q: "Tap the sample with the <b>highest density</b>.", a: [`s${hi}`], ansTxt: `sample ${L[hi]}`, labelOf: (id) => (id === "ppt" ? "salinity" : `sample ${L[+id.slice(1)]}`), hl: { rows: [`s${hi}`] },
-          why: `Densities: ${L.map((l, i) => `${l} ${fmt(ds[i], 3)}`).join(", ")} g per cm³. Sample <b>${L[hi]}</b> is the densest — most likely the saltiest water.` },
+          why: `Densities: ${L.map((l, i) => `${l} ${fmt(ds[i], 3)}`).join(", ")} g per cm³. Sample <b>${L[hi]}</b> is the densest: most likely the saltiest water.` },
         { kind: "choice", q: "Which unit is correct for density calculated from mass in grams and volume in cm³?", a: 0, hl: {},
           options: ["g per cm³", "cm³ per g", "g × cm³", "g per cm"],
           why: "Density = mass ÷ volume, so the unit is mass unit per volume unit: <b>g per cm³</b>." },

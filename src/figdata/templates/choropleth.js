@@ -159,7 +159,7 @@ function questions(F, r) {
     st.push([`Site ${sx.id} is ${say(k)}.`, k === sx.c, `Site ${sx.id} is ${say(sx.c)}.`]); }
   const pick = pickMixed(r, st.filter((x, i, arr) => arr.findIndex((y) => y[0] === x[0]) === i), 4);
   if (pick) qs.push({ kind: "multi", q: "Tick every statement the map supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: { cls: top },
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 5. explain the pattern (syllabus mechanism; distractors are knowledge-model misconceptions)
   if (F.v === "plastic") qs.push({ kind: "choice", q: "This area is near the centre of an ocean gyre. Why does floating plastic collect here?",
     options: ["Circulating surface currents carry floating plastic towards the calm centre", "Tides carry plastic into the centre twice a day and leave it there", "Currents on the seabed drag the plastic down towards the centre", "Winds blow the plastic out from the coasts and drop it in the centre"], a: 0, hl: { cls: top },

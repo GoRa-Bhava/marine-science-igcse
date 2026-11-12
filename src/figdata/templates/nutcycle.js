@@ -257,7 +257,7 @@ function questions(F, r) {
     if (pool.length >= 4) pick = pickMixed(r, pool, Math.min(5, pool.length));
   }
   qs.push({ kind: "multi", q: "Tick <b>every</b> true statement about nutrient cycling in marine ecosystems.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}.`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}.`).join("<br>") });
   return qs;
 }
 

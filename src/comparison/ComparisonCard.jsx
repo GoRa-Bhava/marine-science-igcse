@@ -109,7 +109,7 @@ function AccentSide({
 
               {hidden ? (
                 <span className="cc-recall">
-                  <span>Hidden — recall it</span>
+                  <span>Hidden: recall it</span>
                   <span
                     role="button"
                     tabIndex={0}
@@ -349,7 +349,7 @@ export function ComparisonCard({
               {testState.correct ? "Correct. " : "Not quite. "}{card.quickTest.feedback}
             </p>
           ) : null}
-          <p className="cc-testNote">Self-check only — this does not affect mastery, rewards or scheduling.</p>
+          <p className="cc-testNote">Self-check only: this does not affect mastery, rewards or scheduling.</p>
         </div>
       ) : null}
     </section>

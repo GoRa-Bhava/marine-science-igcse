@@ -230,7 +230,7 @@ export default function WritingPractice({
       )}
 
       {!done ? (
-        <button onClick={finish} style={{ ...btnP, width: "100%", marginTop: 16 }}>Done — show my score</button>
+        <button onClick={finish} style={{ ...btnP, width: "100%", marginTop: 16 }}>Done: show my score</button>
       ) : (
         <div style={{ marginTop: 16 }}>
           <div style={{ ...card, textAlign: "center", borderColor: light ? C.accent : C.glow }}>

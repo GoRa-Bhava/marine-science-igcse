@@ -123,8 +123,8 @@ function evidence(F) {
   const word = C.dir > 0 ? "higher" : "lower";
   for (let i = 0; i < rows.length; i++) for (let j = i + 1; j < rows.length; j++) {
     const A = rows[i], B = rows[j], dd = (B.dmean - A.dmean) * C.dir;
-    if (Math.abs(dd) >= tolD) st.push([`The mean at ${B.short} is ${dd * C.dir > 0 ? "higher" : "lower"} than the mean at ${A.short}.`, dd > 0, `${A.short}: ${fx(A.dmean, C.dp)}, ${B.short}: ${fx(B.dmean, C.dp)} — ${dd > 0 ? `${word} at the larger ${C.iv}, so it supports the conclusion` : "the opposite direction, so it does not support it"}.`]);
-    else if (Math.abs(B.dmean - A.dmean) <= flat && j === i + 1) st.push([`The mean at ${B.short} is about the same as the mean at ${A.short}.`, false, `${A.short}: ${fx(A.dmean, C.dp)}, ${B.short}: ${fx(B.dmean, C.dp)} — no change, so it does not support the conclusion.`]);
+    if (Math.abs(dd) >= tolD) st.push([`The mean at ${B.short} is ${dd * C.dir > 0 ? "higher" : "lower"} than the mean at ${A.short}.`, dd > 0, `${A.short}: ${fx(A.dmean, C.dp)}, ${B.short}: ${fx(B.dmean, C.dp)}: ${dd > 0 ? `${word} at the larger ${C.iv}, so it supports the conclusion` : "the opposite direction, so it does not support it"}.`]);
+    else if (Math.abs(B.dmean - A.dmean) <= flat && j === i + 1) st.push([`The mean at ${B.short} is about the same as the mean at ${A.short}.`, false, `${A.short}: ${fx(A.dmean, C.dp)}, ${B.short}: ${fx(B.dmean, C.dp)}: no change, so it does not support the conclusion.`]);
   }
   // overlapping repeats in neighbouring rows (counter-evidence)
   for (let i = 0; i + 1 < rows.length; i++) {
@@ -158,10 +158,10 @@ function questions(F, r) {
     qs.push({ kind: "choice", q: askIV ? "What is the independent variable in this investigation?" : "What is the dependent variable in this investigation?", options: opts.map(cap), a: 0,
       why: `The independent variable is the one that is changed on purpose: the <b>${C.iv}</b>. The dependent variable is the one that is measured: the <b>${C.dv}</b>. ${cap(cv[0])} and ${cv[1]} are control variables, kept the same.` });
   } else {
-    const st = [[cv[0], true], [cv[1], true], [cv[2], true], [C.iv, false], [C.dv, false]].map((x) => [cap(x[0]), x[1], x[1] ? "a control variable — keep it the same" : x[0] === C.iv ? "the independent variable — it is changed on purpose" : "the dependent variable — it is measured"]);
+    const st = [[cv[0], true], [cv[1], true], [cv[2], true], [C.iv, false], [C.dv, false]].map((x) => [cap(x[0]), x[1], x[1] ? "a control variable: keep it the same" : x[0] === C.iv ? "the independent variable: it is changed on purpose" : "the dependent variable: it is measured"]);
     const pick = shuffleR(r, st);
     qs.push({ kind: "multi", q: "Tick every <b>control variable</b> (a variable that should be kept the same).", options: pick.map((s) => s[0]), a: pick.map((s, i) => (s[1] ? i : -1)).filter((i) => i >= 0),
-      why: pick.map((s) => `${s[1] ? "✓" : "✗"} ${s[0]} — ${s[2]}`).join("<br>") });
+      why: pick.map((s) => `${s[1] ? "✓" : "✗"} ${s[0]}: ${s[2]}`).join("<br>") });
   }
   // 5. why repeat
   qs.push({ kind: "choice", q: `Why did the ${C.id === "secchi" || C.id === "moisture" ? "students" : "student"} take four repeats at each ${C.iv.split(" ")[0] === "time" ? "time" : "level"}?`, a: 0,

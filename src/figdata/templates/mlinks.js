@@ -174,7 +174,7 @@ function axes(F) {
 
 /* ---------------- questions ---------------- */
 const multiQ = (pick, q) => ({ kind: "multi", q: q || "Tick every statement the graph supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-  why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+  why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
 
 function qPhoto(F, r) {
   const { D, R, mi, drops, counts } = F, qs = [], vis = [0, 1, 2, 3, 4, 5].filter((i) => i !== mi), u = " bubbles per minute";

@@ -165,7 +165,7 @@ function questions(F, r) {
   for (const want of [true, false]) if (!st.some((x) => x[1] === want)) { const si = Math.floor(r() * F.ns), p = pair(si); if (p) { let [a, b] = p; if ((V[si][a] > V[si][b]) !== want) [a, b] = [b, a];
     st.push([`The ${M(si)} was higher ${pin(a)} than ${pin(b)}.`, want, `${cin(a)}: ${val(si, a)}; ${cin(b)}: ${val(si, b)}.`]); } }
   const uniq = st.filter((x, i) => st.findIndex((y) => y[0] === x[0]) === i), pick = pickMixed(r, uniq, Math.min(4, uniq.length));
-  if (pick) qs.push({ kind: "multi", q: "Tick every statement the bar chart supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+  if (pick) qs.push({ kind: "multi", q: "Tick every statement the bar chart supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 6. limitations of a conclusion drawn from the chart (tick every valid one)
   const goodLim = [C.limit, "The chart does not show how many samples each bar is based on."];
   const badLim = shuffleR(r, BADLIM.concat(["The y-axis does not start at zero, so the bars cannot be compared fairly."])).slice(0, 3);

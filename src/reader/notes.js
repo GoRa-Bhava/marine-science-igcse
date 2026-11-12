@@ -12,17 +12,17 @@ export const NOTES = {
     "id": "1.1",
     "title": "Earth in space and structure",
     "intro": "Where the Earth and Moon sit in space, what holds them there, and what the Earth is made of inside.",
-    "tip": "Get the layer order right from the centre out — inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. Some textbooks call the mantle semi-molten; in the exam, write that it is solid rock that can melt to form magma.",
+    "tip": "Get the layer order right from the centre out: inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. Some textbooks call the mantle semi-molten; in the exam, write that it is solid rock that can melt to form magma.",
     "notes": [
      {
       "h": "Earth, Moon and the Sun",
       "ref": "1.1/LO1",
-      "body": "The Earth is a <b>planet</b> that orbits the Sun. The Moon is the Earth's <b>natural satellite</b> — a body that orbits the Earth. So the Moon goes around the Earth, and the Earth goes around the Sun."
+      "body": "The Earth is a <b>planet</b> that orbits the Sun. The Moon is the Earth's <b>natural satellite</b>: a body that orbits the Earth. So the Moon goes around the Earth, and the Earth goes around the Sun."
      },
      {
       "h": "What keeps them in orbit",
       "ref": "1.1/LO2",
-      "body": "<b>Gravity</b> — the pull between masses — keeps the Earth orbiting the Sun and the Moon orbiting the Earth. This same gravity is what raises the tides (topic 1.4)."
+      "body": "<b>Gravity</b> (the pull between masses) keeps the Earth orbiting the Sun and the Moon orbiting the Earth. This same gravity is what raises the tides (topic 1.4)."
      },
      {
       "h": "Inside the Earth: four layers",
@@ -32,18 +32,18 @@ export const NOTES = {
      {
       "h": "Magma",
       "ref": "1.1/LO3",
-      "body": "The mantle is solid rock, but it can melt to form <b>magma</b> — a thick, sticky (viscous) liquid. This matters later: magma is what rises to make volcanoes."
+      "body": "The mantle is solid rock, but it can melt to form <b>magma</b>: a thick, sticky (viscous) liquid. This matters later: magma is what rises to make volcanoes."
      },
      {
       "h": "The Earth's magnetic field",
       "ref": "1.1/LO4",
-      "body": "Because the core is made of <b>iron</b>, it creates a <b>magnetic field</b> around the whole Earth. (Some animals use this field to navigate — Unit 3.)"
+      "body": "Because the core is made of <b>iron</b>, it creates a <b>magnetic field</b> around the whole Earth. (Some animals use this field to navigate: Unit 3.)"
      }
     ],
     "terms": [
      [
       "Natural satellite",
-      "a body that orbits a planet — the Moon orbiting Earth"
+      "a body that orbits a planet: the Moon orbiting Earth"
      ],
      [
       "Gravity",
@@ -67,7 +67,7 @@ export const NOTES = {
     "id": "1.2",
     "title": "Plate tectonics",
     "intro": "The crust is broken into moving plates. Where they meet, we get earthquakes, volcanoes and tsunamis.",
-    "tip": "The cause of plate movement you need is <b>convection currents in the mantle</b>. Don't write 'slab pull' or 'ridge push' — they're not required for 0697.",
+    "tip": "The cause of plate movement you need is <b>convection currents in the mantle</b>. Don't write 'slab pull' or 'ridge push': they're not required for 0697.",
     "notes": [
      {
       "h": "The crust is made of plates",
@@ -77,12 +77,12 @@ export const NOTES = {
      {
       "h": "What moves the plates",
       "ref": "1.2/LO2",
-      "body": "The plates rest (“float”) on the solid rock of the mantle, which flows extremely slowly. They move because of <b>convection currents</b> in the mantle — hot rock rises, cooler rock sinks, and this slow circulation drags the plates along."
+      "body": "The plates rest (“float”) on the solid rock of the mantle, which flows extremely slowly. They move because of <b>convection currents</b> in the mantle: hot rock rises, cooler rock sinks, and this slow circulation drags the plates along."
      },
      {
       "h": "Supercontinents",
       "ref": "1.2/LO3",
-      "body": "The continents were once joined in <b>supercontinents</b>. Over hundreds of millions of years the plates moved and the pieces drifted apart, giving today's continents and oceans — and they are still moving."
+      "body": "The continents were once joined in <b>supercontinents</b>. Over hundreds of millions of years the plates moved and the pieces drifted apart, giving today's continents and oceans, and they are still moving."
      },
      {
       "h": "Three types of plate boundary",
@@ -194,19 +194,19 @@ export const NOTES = {
     "id": "1.4",
     "title": "Tides and currents",
     "intro": "Why the sea rises and falls, and how ocean water keeps moving around the planet.",
-    "tip": "Tidal amplitude = (high − low) ÷ 2 — always halve. The formula is given, so the marks are for using it correctly: subtract, then ÷ 2, with the right units.",
+    "tip": "Tidal amplitude = (high − low) ÷ 2: always halve. The formula is given, so the marks are for using it correctly: subtract, then ÷ 2, with the right units.",
     "example": "High water 4.8 m, low water 1.0 m → range = 3.8 m → amplitude = 3.8 ÷ 2 = <b>1.9 m</b>.",
     "notes": [
      {
       "h": "High and low tides",
       "ref": "1.4/LO1",
       "body": "The Moon's gravity (and the Sun's) pulls on the ocean water, so the sea rises to a <b>high tide</b> and falls to a <b>low tide</b> about twice a day. The Moon's effect is about twice the Sun's because the Moon is much closer.",
-      "linked": "Interactive · Tides — drag the Moon"
+      "linked": "Interactive · Tides: drag the Moon"
      },
      {
       "h": "Spring and neap tides",
       "ref": "1.4/LO1",
-      "body": "<b>Spring tide</b>: when the Sun and Moon are <b>in a line</b>, their pulls combine — high tide is higher and low tide is lower (a larger <b>tidal amplitude</b>). <b>Neap tide</b>: when they are <b>at right angles</b>, their effects partly cancel, giving a smaller amplitude. (Spring tides have nothing to do with the season.)"
+      "body": "<b>Spring tide</b>: when the Sun and Moon are <b>in a line</b>, their pulls combine, high tide is higher and low tide is lower (a larger <b>tidal amplitude</b>). <b>Neap tide</b>: when they are <b>at right angles</b>, their effects partly cancel, giving a smaller amplitude. (Spring tides have nothing to do with the season.)"
      },
      {
       "h": "Measuring tidal amplitude",
@@ -221,12 +221,12 @@ export const NOTES = {
      {
       "h": "Gyres",
       "ref": "1.4/LO5–7",
-      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres — North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean. They form as prevailing winds and the spinning of the Earth drive surface currents round in huge circular paths."
+      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres: North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean. They form as prevailing winds and the spinning of the Earth drive surface currents round in huge circular paths."
      },
      {
       "h": "Rip currents",
       "ref": "1.4/LO8",
-      "body": "Waves push water onto the shore; it flows back out through a narrow gap as a fast, narrow current heading away from the beach. A rip can carry a swimmer out to sea and tire them, but it does <b>not</b> pull them under — the safe response is to swim <b>parallel to the shore</b> until out of it."
+      "body": "Waves push water onto the shore; it flows back out through a narrow gap as a fast, narrow current heading away from the beach. A rip can carry a swimmer out to sea and tire them, but it does <b>not</b> pull them under: the safe response is to swim <b>parallel to the shore</b> until out of it."
      },
      {
       "h": "Measuring a current",
@@ -253,7 +253,7 @@ export const NOTES = {
      ],
      [
       "Rip current",
-      "a fast narrow flow back out to sea — swim parallel to escape"
+      "a fast narrow flow back out to sea: swim parallel to escape"
      ]
     ]
    }
@@ -428,7 +428,7 @@ export const NOTES = {
     "id": "2.3",
     "title": "Dissolved gases",
     "intro": "How oxygen and carbon dioxide get into sea water, how much of each there is, and why warming changes it.",
-    "tip": "Watch the direction trap: gases dissolve <b>less</b> as water warms — the opposite of solids. So warm sea water holds less oxygen for organisms.",
+    "tip": "Watch the direction trap: gases dissolve <b>less</b> as water warms (the opposite of solids). So warm sea water holds less oxygen for organisms.",
     "notes": [
      {
       "h": "Where dissolved gases come from",
@@ -523,7 +523,7 @@ export const NOTES = {
     "id": "2.5",
     "title": "Effects of increasing depth",
     "intro": "The conditions in the sea that change as you go deeper, and why each one changes.",
-    "tip": "Learn the five conditions that change with depth — light, pressure, temperature, salinity, dissolved oxygen. Light doesn't stop suddenly; it fades, and is gone by about 1000 m.",
+    "tip": "Learn the five conditions that change with depth: light, pressure, temperature, salinity, dissolved oxygen. Light doesn't stop suddenly; it fades, and is gone by about 1000 m.",
     "notes": [
      {
       "h": "What changes with depth",
@@ -625,7 +625,7 @@ export const NOTES = {
     "id": "3.1",
     "title": "Cell structure and function",
     "intro": "What the parts of plant, animal and bacterial cells look like, and the job each part does.",
-    "tip": "Plant cells have a wall <b>in addition to</b> a membrane, not instead of it. Magnification = image size ÷ actual size — convert both to the same units first.",
+    "tip": "Plant cells have a wall <b>in addition to</b> a membrane, not instead of it. Magnification = image size ÷ actual size: convert both to the same units first.",
     "example": "An image is 30 mm across; the real cell is 0.5 mm → magnification = 30 ÷ 0.5 = <b>×60</b> (convert to the same units first).",
     "notes": [
      {
@@ -766,7 +766,7 @@ export const NOTES = {
     "id": "3.4",
     "title": "The animal kingdom",
     "intro": "How vertebrates and invertebrates are sorted into groups, the outside parts of a fish, and the practical skills of drawing, comparing and using keys.",
-    "tip": "Sort invertebrates by a defining feature — body segments, jointed legs, radial symmetry — not by 'has a hard bit'. A crab is a crustacean because of jointed legs and an exoskeleton.",
+    "tip": "Sort invertebrates by a defining feature (body segments, jointed legs, radial symmetry), not by 'has a hard bit'. A crab is a crustacean because of jointed legs and an exoskeleton.",
     "notes": [
      {
       "h": "Sorting vertebrates into groups",
@@ -898,7 +898,7 @@ export const NOTES = {
     "id": "3.6",
     "title": "Animal life cycles",
     "intro": "How leatherback turtles and coral polyps reproduce and grow.",
-    "tip": "Planktonic larvae aid dispersal and reduce competition with the adults — state the benefit, not just the stage name.",
+    "tip": "Planktonic larvae aid dispersal and reduce competition with the adults: state the benefit, not just the stage name.",
     "notes": [
      {
       "h": "The leatherback turtle life cycle",
@@ -1069,7 +1069,7 @@ export const NOTES = {
     "id": "4.2",
     "title": "Respiration",
     "intro": "How every living cell releases energy from nutrients, why this differs from gas exchange, and how you can measure the energy in food.",
-    "tip": "All living cells respire all the time — including plants at night, which is why dissolved oxygen falls and CO₂ rises after dark. Respiration <b>releases</b> energy, it doesn't make it.",
+    "tip": "All living cells respire all the time: including plants at night, which is why dissolved oxygen falls and CO₂ rises after dark. Respiration <b>releases</b> energy, it doesn't make it.",
     "notes": [
      {
       "h": "What respiration is",
@@ -1204,7 +1204,7 @@ export const NOTES = {
     "id": "4.4",
     "title": "Feeding relationships",
     "intro": "How energy moves from the Sun through producers and consumers, the words used to describe who eats what, why energy is lost along the way, and how pyramids show it.",
-    "tip": "Food-chain arrows point the way energy flows (prey → predator). Only a small fraction passes to the next level, so give a reason for the loss — respiration, movement, excretion, harvesting, not all of it eaten.",
+    "tip": "Food-chain arrows point the way energy flows (prey → predator). Only a small fraction passes to the next level, so give a reason for the loss: respiration, movement, excretion, harvesting, not all of it eaten.",
     "example": "Biomass at one level 5.000 kg, the next 0.052 kg → transfer = 0.052 ÷ 5.000 × 100 = <b>1.04%</b>.",
     "notes": [
      {
@@ -1413,7 +1413,7 @@ export const NOTES = {
     "id": "5.3",
     "title": "Open-ocean zones, plankton, adaptations",
     "intro": "How the open ocean is divided by depth, the drifting plankton, and how animals are suited to each zone.",
-    "tip": "Learn the zone depths — sunlight 0–200 m, twilight 200–1000 m, midnight below 1000 m — and don't use 'photic/aphotic' as the required terms.",
+    "tip": "Learn the zone depths (sunlight 0–200 m, twilight 200–1000 m, midnight below 1000 m), and don't use 'photic/aphotic' as the required terms.",
     "notes": [
      {
       "h": "Pelagic and benthic zones",
@@ -1646,7 +1646,7 @@ export const NOTES = {
     "id": "5.7",
     "title": "Coral reefs",
     "intro": "What corals are, how they live with tiny algae, what controls where reefs grow, and why reefs are so rich in life.",
-    "tip": "Coral and zooxanthellae are <b>mutualistic</b> — both benefit. Bleaching is the loss of the algae when the coral is stressed, mainly by water that is too warm; say what each partner gives.",
+    "tip": "Coral and zooxanthellae are <b>mutualistic</b>: both benefit. Bleaching is the loss of the algae when the coral is stressed, mainly by water that is too warm; say what each partner gives.",
     "notes": [
      {
       "h": "Corals are animals",
@@ -1725,7 +1725,7 @@ export const NOTES = {
     "id": "6.1",
     "title": "Human interactions with marine ecosystems",
     "intro": "Why the sea matters to people, how our activities damage it, and what it means for a species or a way of using the sea to be safe for the future.",
-    "tip": "When a question says 'evaluate' or 'discuss', give a benefit AND a drawback, then a judgement — don't argue only one side.",
+    "tip": "When a question says 'evaluate' or 'discuss', give a benefit AND a drawback, then a judgement: don't argue only one side.",
     "notes": [
      {
       "h": "What the sea gives us",
@@ -1998,7 +1998,7 @@ export const NOTES = {
     "id": "6.5",
     "title": "Energy from the seas",
     "intro": "Oil from beneath the seabed, the pollution it can cause, and how energy from the sea can also be renewable.",
-    "tip": "For each energy source give a benefit and a drawback — 'renewable' does not mean 'no impact'.",
+    "tip": "For each energy source give a benefit and a drawback: 'renewable' does not mean 'no impact'.",
     "notes": [
      {
       "h": "Oil under the seabed",
@@ -2072,7 +2072,7 @@ export const NOTES = {
     "id": "6.6",
     "title": "Plastic pollution",
     "intro": "Why plastic lasts so long in the sea, the harm it does to animals, and how it gathers into giant patches.",
-    "tip": "Be specific about plastic harm: entanglement, blocked guts from ingestion, and microplastics passing up the food chain — not just 'it's bad'.",
+    "tip": "Be specific about plastic harm: entanglement, blocked guts from ingestion, and microplastics passing up the food chain (not just 'it's bad').",
     "notes": [
      {
       "h": "Plastic does not rot",

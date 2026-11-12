@@ -244,7 +244,7 @@ function questions(F, r) {
   if (choice.every((c) => c === choice[0])) { const k = Math.floor(r() * G.length); choice[k] = 1 - choice[k]; }
   const uniq = G.map((g, k) => g[choice[k]]), pick = pickMixed(r, uniq, 5);
   qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is true.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   return qs;
 }
 

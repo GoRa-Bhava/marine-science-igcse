@@ -314,7 +314,7 @@ function questions(F, r) {
     if (two) st.push(["Both samples are passed through the same set of sieves.", true, "the same mesh sizes are needed for a fair comparison"]);
     const pick = pickMixed(r, st, 4);
     qs.push(keepFill({ kind: "multi", q: "Which of these describe a good method for this investigation? Tick <b>every</b> correct statement.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-      why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}.`).join("<br>") }));
+      why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}.`).join("<br>") }));
   }
   // 7. plot the missing bar (last)
   {

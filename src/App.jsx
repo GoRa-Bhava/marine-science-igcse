@@ -309,7 +309,7 @@ function FigureLabelQ({ item, locked, state, setState }) {
       {!locked && (
         <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginTop: 10 }}>
           {selLab == null ? "Tap a label, then tap its spot on the figure." : "Now tap where it belongs."}
-          {order.length ? ` ${order.length} of ${fig.hotspots.length} placed — tap a placed spot to undo it.` : ""}
+          {order.length ? ` ${order.length} of ${fig.hotspots.length} placed: tap a placed spot to undo it.` : ""}
         </p>
       )}
       {locked && (
@@ -459,14 +459,14 @@ function MultiQ({ item, locked, picked, setPicked }) {
         let bg = C.shelf, bd = C.line, col = C.foam;
         let box = null, label = null, aria = null;
         if (locked) {
-          if (right && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; box = "✓"; label = "Correct"; aria = "Correct — you selected this correct answer"; }
-          else if (right && !on) { bg = "rgba(240,166,60,.16)"; bd = C.amber; col = C.amber; box = "○"; label = "Missed"; aria = "Missed — this was a correct answer you did not select"; }
-          else if (!right && on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; box = "✗"; label = "Not correct"; aria = "Incorrect — this is not a correct answer"; }
+          if (right && on) { bg = "rgba(79,216,196,.16)"; bd = C.ok; col = C.ok; box = "✓"; label = "Correct"; aria = "Correct: you selected this correct answer"; }
+          else if (right && !on) { bg = "rgba(240,166,60,.16)"; bd = C.amber; col = C.amber; box = "○"; label = "Missed"; aria = "Missed: this was a correct answer you did not select"; }
+          else if (!right && on) { bg = "rgba(255,158,125,.13)"; bd = C.no; col = C.no; box = "✗"; label = "Not correct"; aria = "Incorrect: this is not a correct answer"; }
           else { col = C.mist; aria = "Correctly left out"; }
         } else if (on) { bg = C.raise; bd = C.glow; }
         return (
           <button key={i} onClick={() => !locked && toggle(i)} disabled={locked}
-            aria-label={locked && aria ? `${item.options[i]} — ${aria}` : undefined}
+            aria-label={locked && aria ? `${item.options[i]}: ${aria}` : undefined}
             style={{ ...btnBase, background: bg, borderColor: bd, color: col, display: "flex", gap: 12, alignItems: "center" }}>
             <span aria-hidden="true" style={{
               width: 20, height: 20, flexShrink: 0, borderRadius: 6,
@@ -666,7 +666,7 @@ function MatchQ({ item, locked, state, setState }) {
           ? "Now tap its description."
           : linkedCount === item.pairs.length
           ? "All paired. Change any of them, or press Check."
-          : `Tap a term, then its description. ${linkedCount} of ${item.pairs.length} paired — tap a pair again to undo it.`}
+          : `Tap a term, then its description. ${linkedCount} of ${item.pairs.length} paired: tap a pair again to undo it.`}
       </p>
 
       {allWrong && (
@@ -676,7 +676,7 @@ function MatchQ({ item, locked, state, setState }) {
           </p>
           {item.pairs.map(([a, b], i) => (
             <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px", lineHeight: 1.4 }}>
-              <span style={{ color: C.accent }}>{a}</span> — {b}
+              <span style={{ color: C.accent }}>{a}</span>: {b}
             </p>
           ))}
         </div>

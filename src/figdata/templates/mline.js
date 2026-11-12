@@ -129,7 +129,7 @@ function questions(F, r) {
   if (monoD(0) && !C.isPH) st.push([`${cap(A)} decreased in every interval.`, true, "Each cross is lower than the one before."]);
   const pick = pickMixed(r, st, 4);
   if (pick) qs.push({ kind: "multi", q: "Tick every statement the graph supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 6. point to point, not best fit
   qs.push({ kind: "choice", q: "The points on this graph are joined point to point with straight lines, not with a best-fit line. Why is this correct here?",
     options: ["The readings were taken one after another in time, so each is joined to the next.", "The points lie close to a straight line, so a best-fit line is not needed.", "The two lines are on the same axes, so a best-fit line would be confusing.", "Joining point to point removes the effect of any anomalous points."], a: 0, hl: {},

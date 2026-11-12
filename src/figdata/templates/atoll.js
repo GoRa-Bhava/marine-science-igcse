@@ -236,7 +236,7 @@ function questions(F, r) {
   // 5. tick the processes in the theory
   const pick = pickMixed(r, PROC, 5);
   qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is part of the Darwin–Dana–Daly theory of atoll formation.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: allNames,
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}.`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}.`).join("<br>") });
   // 6. why the coral grows upwards
   qs.push({ kind: "choice", q: "As the island sinks, the coral keeps growing upwards. Why does the reef need to stay near the surface?", options: UP.map((x) => x[0]), a: 0, hl: allNames,
     why: "Coral polyps have <b>zooxanthellae</b> in their tissues. These photosynthesise and pass sugars to the polyp, so they need <b>light</b>, and light is only strong enough in <b>shallow water</b>. Coral that grows upwards as fast as the island sinks stays in the light; coral left in deep water would die. Pressure, air and predators on the seabed are not the reason." });

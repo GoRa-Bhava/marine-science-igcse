@@ -163,8 +163,8 @@ function questions(F, r) {
       why: `${cap(sayT(hi))} and ${sayT(lo)}. Benedict's solution changes from blue through green, yellow and orange to brick-red: the further along this series, the more reducing sugar. So <b>sample ${hi.sample}</b> contains more. This compares the amounts by colour only; it does not measure them.` });
   } else {
     const t = y2, nn = NUTS[t.test], c = CNAME[t.test];
-    const O = [[`${c[1]} — ${nn} present`, pos(t)], [`${c[0]} — ${nn} absent`, !pos(t)], [`${c[1]} — ${nn} absent`, false], [`${c[0]} — ${nn} present`, false],
-      [t.test === "I" ? `purple — starch present` : `cloudy white — protein present`, false]];
+    const O = [[`${c[1]}: ${nn} present`, pos(t)], [`${c[0]}: ${nn} absent`, !pos(t)], [`${c[1]}: ${nn} absent`, false], [`${c[0]}: ${nn} present`, false],
+      [t.test === "I" ? `purple: starch present` : `cloudy white: protein present`, false]];
     const ai = O.findIndex((o) => o[1]);
     qs.push({ kind: "choice", q: `A results table records the colour seen and the conclusion for each tube. Which entry is correct for <b>${tl(t)}</b>?`,
       options: O.map((o) => o[0]), a: ai, hl: { read: [t.id], ring: [t.id] },

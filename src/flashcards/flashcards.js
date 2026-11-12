@@ -37,13 +37,13 @@ export const FLASHCARDS = [
 
   // ================= UNIT 3 — Marine organisms =================
   { id:"FC-U3-01", unit:3, topic:"3.3 Classification", spec:"3.3/LO2",
-    front:"Binomial system", back:"The internationally agreed two-part naming system — genus then species." },
+    front:"Binomial system", back:"The internationally agreed two-part naming system: genus then species." },
   { id:"FC-U3-02", unit:3, topic:"3.1 Cells", spec:"3.1/LO4",
     front:"Chloroplast", back:"The cell structure that absorbs light for photosynthesis." },
   { id:"FC-U3-03", unit:3, topic:"3.1 Cells", spec:"3.1/LO4",
     front:"Mitochondrion", back:"The cell structure where respiration releases energy." },
   { id:"FC-U3-04", unit:3, topic:"3.3 Classification", spec:"3.3/LO3",
-    front:"Domain", back:"The largest grouping in classification — Bacteria, Archaea or Eukarya." },
+    front:"Domain", back:"The largest grouping in classification: Bacteria, Archaea or Eukarya." },
   { id:"FC-U3-05", unit:3, topic:"3.2 Reproduction", spec:"3.2/LO1",
     front:"Asexual reproduction", back:"One parent producing genetically identical offspring." },
   { id:"FC-U3-06", unit:3, topic:"3.7 Migration", spec:"3.7",

@@ -167,7 +167,7 @@ function questionsEarth(F, r) {
   if (!uniq.some((x) => x[1])) { const k = G.findIndex((g) => g.some((v) => v[1])); uniq[k] = G[k].find((v) => v[1]); }
   const pick = pickMixed(r, uniq, Math.min(5, uniq.length));
   qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is true.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>"), told: [], facts: pick.map((x) => x[3]).flat(), toldBefore: [...told] });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>"), told: [], facts: pick.map((x) => x[3]).flat(), toldBefore: [...told] });
   return qs;
 }
 
@@ -306,7 +306,7 @@ function questionsBounds(F, r) {
   // 4. earthquakes: every boundary (never keyed "only at X")
   const all = F.order.map((t) => Lt[t]);
   qs.push(Object.assign({}, tapBase, { multi: true, q: "Tap <b>every</b> panel showing a boundary where earthquakes can happen.", a: F.order.slice(), ansTxt: `all three panels (${all.slice(0, 2).join(", ")} and ${all[2]})`, hint: "Tap every panel that applies, then press Check.",
-    why: "Earthquakes happen at <b>all three</b> types of plate boundary — convergent, divergent and transform. Wherever plates move against each other they can become stuck; pressure builds up until the plates suddenly slip, releasing a large amount of energy as an earthquake." }));
+    why: "Earthquakes happen at <b>all three</b> types of plate boundary: convergent, divergent and transform. Wherever plates move against each other they can become stuck; pressure builds up until the plates suddenly slip, releasing a large amount of energy as an earthquake." }));
 
   // 5. what happens to the subducted plate (features, once the convergent panel has been identified)
   if (fate) {
@@ -341,7 +341,7 @@ function questionsBounds(F, r) {
   if (!uniq.some((x) => !x[1])) { const k = G.findIndex((g) => g.some((v) => !v[1])); if (k >= 0) uniq[k] = G[k].find((v) => !v[1]); }
   const pick = pickMixed(r, uniq, Math.min(5, uniq.length));
   qs.push({ kind: "multi", q: `Look at panel <b>${Lp}</b>. Tick <b>every</b> statement about this boundary that is true.`, options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: { p: [P] },
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   return qs;
 }
 

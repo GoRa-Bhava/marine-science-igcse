@@ -274,7 +274,7 @@ function questions(F, r) {
   const pick = pickMixed(r, st, 4);
   qs.push({ kind: "multi", q: "Tick every precaution that makes sampling on a rocky shore safer.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
     askOpt: { panel: "transect" }, hl: {},
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   return qs;
 }
 

@@ -110,7 +110,7 @@ function questions(F, r) {
     why: `The mistake: ${EW[F.err]}` });
   // 3. order: put five of the readings into the order they go in the table
   const five = shuffleR(r, F.xs.map((_, i) => i)).slice(0, 5).sort((a, b) => a - b);
-  const chips = five.map((i) => `${fmt(F.xs[i])} ${C.iv.u} — ${cell(C, F.ys[i], 1)}${C.dv.u ? " " + C.dv.u : ""}`);
+  const chips = five.map((i) => `${fmt(F.xs[i])} ${C.iv.u}: ${cell(C, F.ys[i], 1)}${C.dv.u ? " " + C.dv.u : ""}`);
   qs.push({ kind: "order", q: `These five readings were written down in the wrong order. Put them in the order they should appear in the results table, top row first.`, options: chips, a: chips.map((_, k) => k),
     doneOpt: () => ({ mode: "correct", hl: { rows: five } }),
     why: `Rows go in order of the <b>independent variable</b> (${C.iv.q}), from smallest to largest: ${five.map((i) => fmt(F.xs[i])).join(", ")} ${C.iv.u}. Do not sort by the results.` });
@@ -143,7 +143,7 @@ function questions(F, r) {
   ];
   const pk = pickMixed(r, st, 5);
   if (pk) qs.push({ kind: "multi", q: "Tick every feature of a correctly drawn results table.", options: pk.map((x) => x[0]), a: pk.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
-    why: pk.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pk.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   return qs;
 }
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);

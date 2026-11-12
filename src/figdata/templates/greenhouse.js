@@ -178,7 +178,7 @@ function questions(F, r) {
   for (let n = 0; n < 200 && !pick; n++) { const c = pickMixed(r, MULTI, 5), tg = c.map((x) => x[3]).filter(Boolean); if (new Set(tg).size === tg.length) pick = c; }
   if (!pick) pick = shuffleR(r, [0, 1, 3, 8, 6].map((i) => MULTI[i]));
   qs.push({ kind: "multi", q: "Use the diagram and your own knowledge. Tick <b>every</b> statement that is true.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}.`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}.`).join("<br>") });
   // 2. what does a lettered arrow show (never R: that is the tap target or appears in the comparison)
   const cand = ["S", "U", "E", "O"].filter((a) => L(a) && F.arrows.includes(a));
   const wts = cand.map((a) => (a === "S" ? 0.5 : 1)); let u = r() * wts.reduce((x, y) => x + y), x2 = cand[0];

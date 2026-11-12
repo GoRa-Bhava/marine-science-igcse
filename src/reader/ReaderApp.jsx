@@ -655,7 +655,7 @@ export function ReaderApp({
       setEntitlement(r.entitlement);
       setMaxProfiles(maxProfilesOf(r.entitlement));
       setKeyInput(""); setLicenceBusy(false);
-      setLicenceMsg("Unlocked — thank you! All six units are now available.");
+      setLicenceMsg("Unlocked: thank you! All six units are now available.");
       setView("library");
     } else {
       setLicenceMsg(r.code === "limit" ? `${r.error} You can remove a device in Settings, or email ${LICENCE_CONFIG.supportEmail}.` : r.error);
@@ -872,13 +872,13 @@ export function ReaderApp({
             // Locked unit: a lock badge + CTA; tapping it goes to the Unlock screen.
             return (
               <button key={u.unitId} className="rl-unit-card" onClick={() => setView("unlock")}
-                aria-label={`Unit ${u.unitId} ${u.title} — locked. Unlock all units.`}
+                aria-label={`Unit ${u.unitId} ${u.title}: locked. Unlock all units.`}
                 style={{ ...card(C), marginTop: 14, width: "100%", textAlign: "left", cursor: "pointer", border: `1px dashed ${C.line}`, display: "flex", gap: 14, alignItems: "center" }}>
                 {thumbImg}
                 <span aria-hidden="true" style={{ width: 52, height: 52, flexShrink: 0, borderRadius: "50%", border: `1px solid ${C.line}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: C.mist }}>🔒</span>
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: "block", fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Unit {u.unitId} · {u.title}</span>
-                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.accent, marginTop: 2, fontWeight: 700 }}>Unlock all units — £20 ›</span>
+                  <span style={{ display: "block", fontFamily: FONT_UI, fontSize: 13.5, color: C.accent, marginTop: 2, fontWeight: 700 }}>Unlock all units: £20 ›</span>
                 </span>
               </button>
             );
@@ -1057,9 +1057,9 @@ export function ReaderApp({
         {reviewed ? (
           <>
             <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>
-              Already answered — shown read-only, not scored.{" "}
+              Already answered: shown read-only, not scored.{" "}
               {progressMap[it.id] && (progressMap[it.id].wrongFlag
-                ? <b style={{ color: C.no }}>Last time: not quite — it's in your Revise list</b>
+                ? <b style={{ color: C.no }}>Last time: not quite, it's in your Revise list</b>
                 : <b style={{ color: C.ok }}>Last time: correct ✓</b>)}
             </div>
             <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, fontWeight: 600, color: C.foam, lineHeight: 1.25, margin: "6px 0 14px", whiteSpace: "pre-line" }}>{it.q}</div>
@@ -1069,7 +1069,7 @@ export function ReaderApp({
               <div style={{ fontFamily: FONT_UI, fontSize: 15, color: C.mist, lineHeight: 1.55, marginTop: answerText(it) ? 10 : 0 }} dangerouslySetInnerHTML={{ __html: it.why }} />
               {resetDoneId === it.id ? (
                 <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 10 }}>
-                  ↺ Reset — this question is fresh again.
+                  ↺ Reset: this question is fresh again.
                 </div>
               ) : (
                 <button onClick={() => resetAndRetry(it.id)}
@@ -1084,7 +1084,7 @@ export function ReaderApp({
           <>
             {resetDoneId === it.id && !locked && (
               <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "2px 0 8px" }}>
-                ↺ Reset — this question is fresh again. Have another go.
+                ↺ Reset: this question is fresh again. Have another go.
               </div>
             )}
             <div style={{ marginTop: 6 }}>
@@ -1099,7 +1099,7 @@ export function ReaderApp({
                 <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 8 }}>Ref: syllabus {secOf(it)}.</div>
                 {resetDoneId === it.id ? (
                   <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, marginTop: 10 }}>
-                    ↺ Reset — this question is fresh again.
+                    ↺ Reset: this question is fresh again.
                   </div>
                 ) : (
                   <button onClick={() => resetAndRetry(it.id)}
@@ -1196,7 +1196,7 @@ export function ReaderApp({
         <TopBar C={C} left="Session paused" />
         <p style={kicker(C)}>SESSION PAUSED</p>
         <h1 style={h1(C)}>How that went</h1>
-        <p style={sub(C)}>No streaks, no timer — you set the pace. Your place is bookmarked.</p>
+        <p style={sub(C)}>No streaks, no timer: you set the pace. Your place is bookmarked.</p>
         <div style={{ display: "flex", gap: 40, margin: "22px 0" }}>
           <Stat C={C} n={session.count} label="QUESTIONS" />
           <Stat C={C} n={session.correct} label="CORRECT" />
@@ -1237,7 +1237,7 @@ export function ReaderApp({
             {wrongIds.map((id) => (
               <div key={id} style={{ display: "flex", gap: 10, padding: "10px 0", borderTop: `1px solid ${C.line}22`, fontFamily: FONT_UI, fontSize: 14.5, color: C.foam }}>
                 <span style={{ color: C.no }}>✗</span>
-                <span>{secOf(itemById[id])} — {(itemById[id].q || "").slice(0, 90)}</span>
+                <span>{secOf(itemById[id])}: {(itemById[id].q || "").slice(0, 90)}</span>
               </div>
             ))}
           </div>
@@ -1260,7 +1260,7 @@ export function ReaderApp({
       <div style={pad} className="rl-pad">
         <TopBar C={C} left="Read" />
         <p style={kicker(C)}>👁 READ-ONLY</p>
-        <p style={{ ...sub(C), marginTop: 2 }}>Question and answer together, nothing to attempt — just to jog the memory.</p>
+        <p style={{ ...sub(C), marginTop: 2 }}>Question and answer together, nothing to attempt: just to jog the memory.</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "10px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
           <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{secOf(it)} · {browse.pos + 1} of {browse.ids.length}</span>
@@ -1273,7 +1273,7 @@ export function ReaderApp({
         </div>
         {resetDoneId === it.id ? (
           <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.mist, margin: "4px 0 10px" }}>
-            ↺ Reset — this question is fresh again.
+            ↺ Reset: this question is fresh again.
           </div>
         ) : (
           <button onClick={async () => { await resetItem(it.id); setResetDoneId(it.id); }}
@@ -1308,7 +1308,7 @@ export function ReaderApp({
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>READ · SYLLABUS NOTES</p>
           <h1 style={{ ...h1(C), marginTop: 2 }}>Syllabus notes</h1>
-          <p style={{ ...sub(C), marginTop: 4 }}>Plain-English notes for every syllabus point, unit by unit. Just to read — nothing here is graded or tracked.</p>
+          <p style={{ ...sub(C), marginTop: 4 }}>Plain-English notes for every syllabus point, unit by unit. Just to read: nothing here is graded or tracked.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
             {notesUnits.map((u) => {
               const unit = NOTES[u];
@@ -1570,7 +1570,7 @@ export function ReaderApp({
         <div style={{ maxWidth: 520, margin: "0 auto", display: "flex", flexDirection: "column", gap: 14, alignItems: "center", textAlign: "center" }}>
           <p style={kicker(C)}>WELL DONE</p>
           <h1 style={{ ...h1(C), margin: 0 }}>{sc.correct} / {sc.total}</h1>
-          <p style={sub(C)}>Send your result to your teacher. Nothing is uploaded — you send the link yourself.</p>
+          <p style={sub(C)}>Send your result to your teacher. Nothing is uploaded: you send the link yourself.</p>
           <div style={{ width: "100%", textAlign: "left" }}>
             <label style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.foam }}>The name your teacher knows you by
               <input value={assignName} maxLength={30} placeholder="e.g. Maya R" onChange={(e) => setAssignName(e.target.value)}
@@ -1646,7 +1646,7 @@ export function ReaderApp({
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>FLASHCARDS · REVISION</p>
           <h1 style={{ ...h1(C), marginTop: 2 }}>Flip to learn</h1>
-          <p style={{ ...sub(C), marginTop: 4 }}>A separate revision deck — flip a card to reveal the answer. Pure practice; kept apart from your unit progress.</p>
+          <p style={{ ...sub(C), marginTop: 4 }}>A separate revision deck: flip a card to reveal the answer. Pure practice; kept apart from your unit progress.</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
             <button onClick={() => fcOpenDeck("all")} style={{ ...card(C), border: `1.5px solid ${C.glow}`, textAlign: "left", cursor: "pointer" }}>
               <div style={{ fontFamily: FONT_DISPLAY, fontSize: 18, fontWeight: 600, color: C.foam }}>Mixed deck</div>
@@ -1770,7 +1770,7 @@ export function ReaderApp({
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>PRACTICALS · REQUIRED PROCEDURES</p>
           <h1 style={{ ...h1(C), marginTop: 2 }}>Practicals</h1>
-          <p style={{ ...sub(C), marginTop: 4 }}>Learn a required syllabus practical, then test yourself — the questions feed the same revise loop as the rest of the app.</p>
+          <p style={{ ...sub(C), marginTop: 4 }}>Learn a required syllabus practical, then test yourself: the questions feed the same revise loop as the rest of the app.</p>
           {units.map((u) => (
             <div key={u} style={{ marginTop: 18 }}>
               <p style={kicker(C)}>UNIT {u}{unitTitle(u) ? ` · ${unitTitle(u)}` : ""}</p>
@@ -1986,7 +1986,7 @@ export function ReaderApp({
       try { await navigator.clipboard.writeText(json); setBackupMsg("Copied your progress to the clipboard. Paste it somewhere safe."); return; }
       catch (e) { /* fall through */ }
     }
-    setBackupMsg("Couldn't save automatically — try again from a browser.");
+    setBackupMsg("Couldn't save automatically: try again from a browser.");
   }
 
   function readRestoreFile(e) {
@@ -2025,9 +2025,9 @@ export function ReaderApp({
         </div>
         <div style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.mist, lineHeight: 1.5 }}>{line}</div>
         <a href={CHECKOUT_READY ? url : undefined} target="_blank" rel="noopener noreferrer"
-          onClick={(e) => { if (!CHECKOUT_READY) { e.preventDefault(); setLicenceMsg("Checkout opens once the store is live — if you already have a key, enter it below."); } }}
+          onClick={(e) => { if (!CHECKOUT_READY) { e.preventDefault(); setLicenceMsg("Checkout opens once the store is live: if you already have a key, enter it below."); } }}
           style={{ ...primaryBtn(C), textAlign: "center", textDecoration: "none", marginTop: 4, opacity: CHECKOUT_READY ? 1 : 0.6 }}>
-          {CHECKOUT_READY ? `Buy ${title} — ${price}` : "Checkout coming soon"}
+          {CHECKOUT_READY ? `Buy ${title}: ${price}` : "Checkout coming soon"}
         </a>
       </div>
     );
@@ -2042,13 +2042,13 @@ export function ReaderApp({
         )}
         <p style={kicker(C)}>UNLOCK ALL SIX UNITS</p>
         <h1 style={{ ...h1(C), marginTop: 2 }}>One payment, lifetime access</h1>
-        <p style={{ ...sub(C), marginTop: 4 }}>Unit 1 is free forever. Unlock Units 2–6 and every premium feature with a one-off purchase — no subscription, keep it for good.</p>
+        <p style={{ ...sub(C), marginTop: 4 }}>Unit 1 is free forever. Unlock Units 2–6 and every premium feature with a one-off purchase: no subscription, keep it for good.</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 16 }}>
           {planCard("Single", "£20", "All six units + premium, for one learner. Lifetime access.", LICENCE_CONFIG.checkoutUrlSingle, "single")}
-          {planCard("Family", "£40", "All six units + premium, with up to 3 learner profiles — each with its own progress. Lifetime access.", LICENCE_CONFIG.checkoutUrlFamily, "family")}
+          {planCard("Family", "£40", "All six units + premium, with up to 3 learner profiles: each with its own progress. Lifetime access.", LICENCE_CONFIG.checkoutUrlFamily, "family")}
         </div>
         <div style={{ ...card(C), marginTop: 16 }}>
-          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>I already bought — enter my licence key</div>
+          <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>I already bought: enter my licence key</div>
           <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>Lemon Squeezy emailed your key after purchase. It unlocks this device.</div>
           <input value={keyInput} onChange={(e) => { setKeyInput(e.target.value); setLicenceMsg(""); }}
             placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" aria-label="Licence key"
@@ -2167,7 +2167,7 @@ export function ReaderApp({
           {isEntitled(entitlement) ? (
             <>
               <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>
-                ✓ Unlocked · {entitlement.tier === "family" ? "Family" : "Single"} plan — all six units, lifetime.
+                ✓ Unlocked · {entitlement.tier === "family" ? "Family" : "Single"} plan: all six units, lifetime.
                 {graceExpired(entitlement) ? " Reconnect to the internet soon to keep your unlock verified." : ""}
               </div>
               <button onClick={removeDevice} disabled={licenceBusy} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.coral}`, color: C.coral }}>
@@ -2176,8 +2176,8 @@ export function ReaderApp({
             </>
           ) : (
             <>
-              <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>Free — Unit 1 only. Unlock all six units with a one-off purchase (no subscription).</div>
-              <button onClick={() => setView("unlock")} style={{ ...primaryBtn(C), width: "100%" }}>Unlock all units — £20</button>
+              <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, marginBottom: 10, lineHeight: 1.5 }}>Free: Unit 1 only. Unlock all six units with a one-off purchase (no subscription).</div>
+              <button onClick={() => setView("unlock")} style={{ ...primaryBtn(C), width: "100%" }}>Unlock all units: £20</button>
               <div style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "12px 0 8px", lineHeight: 1.5 }}>Already bought? Restore on this device with your licence key:</div>
               <input value={keyInput} onChange={(e) => { setKeyInput(e.target.value); setLicenceMsg(""); }}
                 placeholder="Licence key" aria-label="Licence key"
@@ -2193,7 +2193,7 @@ export function ReaderApp({
         {/* Exam date */}
         <div style={{ ...card(C), marginTop: 14 }}>
           <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Exam date</div>
-          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10 }}>Optional — drives the readiness countdown.</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10 }}>Optional: drives the readiness countdown.</div>
           <input type="date" value={settings.examDate ? settings.examDate.slice(0, 10) : ""}
             onChange={async (e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, examDate: v })); if (store()) await store().putSettings({ examDate: v }); }}
             style={{ fontFamily: FONT_UI, fontSize: 15, padding: "10px 12px", borderRadius: 10, border: `1px solid ${C.line}`, background: C.shelf, color: C.foam }} />
@@ -2230,7 +2230,7 @@ export function ReaderApp({
         {/* Teachers and tutors */}
         <div style={{ ...card(C), marginTop: 14 }}>
           <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>Teachers and tutors</div>
-          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Send your progress to your teacher as a link or QR code. <strong style={{ color: C.foam }}>Nothing is uploaded</strong> — you send it yourself.</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>Send your progress to your teacher as a link or QR code. <strong style={{ color: C.foam }}>Nothing is uploaded</strong>: you send it yourself.</div>
           <button onClick={() => setView("sendprogress")} style={{ ...ghostBtn(C), width: "100%", border: `1px solid ${C.glow}`, background: "rgba(79,216,196,.1)" }}>Send progress to your teacher</button>
           <button onClick={() => setView("teacher")} style={{ ...ghostBtn(C), width: "100%", marginTop: 8 }}>I'm a teacher</button>
           <details style={{ marginTop: 12 }}>

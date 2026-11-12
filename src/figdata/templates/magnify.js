@@ -175,7 +175,7 @@ function questions(F, r) {
     const k = outCm ? 0.1 : 1;
     qs.push({ kind: "num", q: `The magnification of the ${F.what} is <b>×${fmt(F.M)}</b>.<br>Magnification = image size ÷ actual size. Calculate the actual length of the ${o.name} ${o.part}, in <b>${outCm ? "cm" : "mm"}</b>. Give your answer to 1 decimal place.`,
       ans, tol: 0, unit: outCm ? "cm" : "mm", check: rangeCheck(lo * k, hi * k, dp), ansTxt: `${fmt(ans, dp)} ${outCm ? "cm" : "mm"} (any value from ${fmt(rnd(lo * k, dp), dp)} to ${fmt(rnd(hi * k, dp), dp)} is accepted, from a measurement within 1 mm)`, hl: { seg: true },
-      why: `Rearrange: actual size = image size ÷ magnification = ${L} mm ÷ ${fmt(F.M)} = ${fmt(rnd(ansMm, 2))} mm${outCm ? ` = <b>${fmt(ans, dp)} cm</b> (÷ 10 to change mm to cm)` : ` = <b>${fmt(ans, dp)} mm</b>`}. Multiplying by the magnification instead would give ${fmt(rnd(L * F.M, 1))} mm — far too ${F.M > 1 ? "large" : "small"}.` });
+      why: `Rearrange: actual size = image size ÷ magnification = ${L} mm ÷ ${fmt(F.M)} = ${fmt(rnd(ansMm, 2))} mm${outCm ? ` = <b>${fmt(ans, dp)} cm</b> (÷ 10 to change mm to cm)` : ` = <b>${fmt(ans, dp)} mm</b>`}. Multiplying by the magnification instead would give ${fmt(rnd(L * F.M, 1))} mm: far too ${F.M > 1 ? "large" : "small"}.` });
   }
   // 3. rearrangement (choice)
   const target = pickR(r, ["actual", "image", "mag"]);
@@ -208,7 +208,7 @@ function questions(F, r) {
   ];
   const pick = pickMixed(r, st, 5);
   if (pick) qs.push({ kind: "multi", q: "Tick every feature of a good biological drawing.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 6. tap the drawing that follows the rules; 7. what is wrong with one of the others
   const labs = ["A", "B", "C"], good = labs[F.goodPos], FAULT = { shading: "It uses shading", sketchy: "Its outline is sketchy and broken", arrows: "Its label lines end in arrowheads", small: "It is too small for the space" };
   const FWHY = { shading: "shading is used inside the body", sketchy: "the outline is drawn with broken, sketchy lines", arrows: "the label lines end in arrowheads and stop short of the parts", small: "it is drawn small in one corner instead of using most of the space" };
@@ -219,7 +219,7 @@ function questions(F, r) {
   const bl = pickR(r, badIdx.map((i) => labs[i])), fk = faultOf[bl];
   qs.push({ kind: "choice", q: `What is wrong with drawing <b>${bl}</b>?`, options: [FAULT[fk], ...Object.keys(FAULT).filter((k) => k !== fk && k !== faultOf[labs[badIdx.find((i) => labs[i] !== bl)]]).map((k) => FAULT[k]), "Its labels are written in pencil, not pen"].slice(0, 4), a: 0,
     askOpt: { mode: "drawings" }, doneOpt: () => ({ mode: "drawings" }),
-    why: `In drawing ${bl}, ${FWHY[fk]}. Labels in pencil are fine — a sharp pencil is what the rules ask for.` });
+    why: `In drawing ${bl}, ${FWHY[fk]}. Labels in pencil are fine: a sharp pencil is what the rules ask for.` });
   return qs;
 }
 

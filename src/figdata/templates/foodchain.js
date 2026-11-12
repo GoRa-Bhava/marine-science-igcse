@@ -205,7 +205,7 @@ function questions(F, r) {
   const pick = pickMixed(r, st, 5);
   qs.push({ kind: "multi", q: `Only a small part of the ${what} at one trophic level reaches the next. Tick every statement that helps to explain why.`, options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
     askOpt: { panel: "chain" }, hl: { panel: "chain" },
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 4. tap a level on the pyramid (bars unlabelled while asking)
   const lv = pickR(r, [1, 2, 3]);
   qs.push({ kind: "tap", q: `This pyramid is for the food chain shown above it. Tap the bar for the <b>${LV[lv]}</b> (${nm(C[lv])}).`, a: [`L${lv}`], ansTxt: `bar ${lv + 1} from the bottom`, labelOf: (id) => `bar ${+id.slice(1) + 1} from the bottom`,

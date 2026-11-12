@@ -102,22 +102,22 @@ function questions(F, r) {
     ansTxt: F.blanks.map((i) => `${FEAT[F.rows[i][0]]}: ${F.rows[i][1] ? "present" : "absent"}`).join("; "),
     labelOf: (id) => { const i = +id.slice(1, -1); return `${FEAT[F.rows[i][0]]} ${id.endsWith("p") ? "present" : "absent"}`; },
     askOpt: cls, doneOpt: () => ({ panel: "class", reveal: true }),
-    why: `This organism is a ${F.org.name}, one of the <b>${G}</b>. The syllabus features of ${G} are: ${GROUPS[G].has.map((f) => FEAT[f]).join(", ")}. So: ${F.blanks.map((i) => `${FEAT[F.rows[i][0]]} — ${F.rows[i][1] ? "present" : "absent"}`).join("; ")}.` });
+    why: `This organism is a ${F.org.name}, one of the <b>${G}</b>. The syllabus features of ${G} are: ${GROUPS[G].has.map((f) => FEAT[f]).join(", ")}. So: ${F.blanks.map((i) => `${FEAT[F.rows[i][0]]}: ${F.rows[i][1] ? "present" : "absent"}`).join("; ")}.` });
   // 2. which group
   const others = shuffleR(r, Object.keys(GROUPS).filter((h) => h !== G));
   const gopts = [G, ...(G === "crustaceans" ? ["annelids", ...others.filter((h) => h !== "annelids")] : others)].slice(0, 4);
   qs.push({ kind: "choice", q: "Use the completed table. Which group of invertebrates does this organism belong to?", options: gopts.map(gName), a: 0, askOpt: cls, doneOpt: () => ({ panel: "class", reveal: true }),
-    why: `${F.rows.filter((x) => x[1]).map((x) => FEAT[x[0]]).join(", ")} — together these are features of the <b>${G}</b>. ${G === "crustaceans" ? "Annelids are segmented too, but they have soft bodies and setae, not an exoskeleton and jointed legs." : ""}`.trim() });
+    why: `${F.rows.filter((x) => x[1]).map((x) => FEAT[x[0]]).join(", ")}: together these are features of the <b>${G}</b>. ${G === "crustaceans" ? "Annelids are segmented too, but they have soft bodies and setae, not an exoskeleton and jointed legs." : ""}`.trim() });
   // 3. domain (examiner-report misconceptions as distractors)
   qs.push({ kind: "choice", q: "Which domain does this organism belong to?", options: ["Eukarya", ...shuffleR(r, ["Bacteria", "Archaea", "Animals", "Invertebrates"]).slice(0, 3)], a: 0, askOpt: cls,
-    why: "The three domains are Bacteria, Archaea and <b>Eukarya</b>. All animals — invertebrates included — have cells with a nucleus, so they are in the domain Eukarya. \"Animals\" is a kingdom, and \"invertebrates\" is not a classification group at that level." });
+    why: "The three domains are Bacteria, Archaea and <b>Eukarya</b>. All animals (invertebrates included) have cells with a nucleus, so they are in the domain Eukarya. \"Animals\" is a kingdom, and \"invertebrates\" is not a classification group at that level." });
   // 4. feature that tells it apart from a second group
   qs.push({ kind: "choice", q: `Which feature would tell this organism apart from one of the <b>${F.g2}</b>?`, options: [FEAT[F.disc], ...F.same.map((f) => FEAT[f])], a: 0, askOpt: cls,
-    why: `${FEAT[F.disc][0].toUpperCase() + FEAT[F.disc].slice(1)}: ${G} have it and ${F.g2} do not. The other features are the same for both groups (${F.same.map((f) => `${FEAT[f]} — ${truth(G, f) ? "both have it" : "neither has it"}`).join("; ")}), so they cannot tell them apart.` });
+    why: `${FEAT[F.disc][0].toUpperCase() + FEAT[F.disc].slice(1)}: ${G} have it and ${F.g2} do not. The other features are the same for both groups (${F.same.map((f) => `${FEAT[f]}: ${truth(G, f) ? "both have it" : "neither has it"}`).join("; ")}), so they cannot tell them apart.` });
   // 5. which substances are present (food tests)
   const st = TESTS.map((T) => [T.sub[0].toUpperCase() + T.sub.slice(1), F.present.includes(T.id), F.present.includes(T.id) ? `the ${T.test.split(",")[0]} test turned ${T.pos}.` : `the ${T.test.split(",")[0]} test stayed ${T.start}, so it is absent.`]);
   qs.push({ kind: "multi", q: `Use the food-test results. Tick every substance present in ${F.sample}.`, options: st.map((s) => s[0]), a: st.map((s, i) => (s[1] ? i : -1)).filter((i) => i >= 0), askOpt: food, doneOpt: () => ({ panel: "food", hl: { rows: F.present } }),
-    why: st.map((s) => `${s[1] ? "✓" : "✗"} ${s[0]} — ${s[2]}`).join("<br>") });
+    why: st.map((s) => `${s[1] ? "✓" : "✗"} ${s[0]}: ${s[2]}`).join("<br>") });
   // 6. a positive colour that the table does NOT show (a negative test in this sample), with cross-wired colours as distractors
   const neg = TESTS.filter((T) => !F.present.includes(T.id)), T6 = pickR(r, neg);
   qs.push({ kind: "choice", q: `The sample gave a negative result with ${T6.test.split(",")[0]}. What colour would it have turned if ${T6.sub} <b>had</b> been present?`, options: [T6.pos, ...TESTS.filter((x) => x.id !== T6.id).map((x) => x.pos)], a: 0, askOpt: food,

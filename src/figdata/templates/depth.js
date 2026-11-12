@@ -138,7 +138,7 @@ function lightQuestions(F, r) {
   const pct = cand.length ? pickR(r, cand) : null;
   if (pct != null) { const i = Sx.findIndex((v) => v < pct), d = F.depths[i - 1] + (Sx[i - 1] - pct) / (Sx[i - 1] - Sx[i]) * 10;
     qs.push({ kind: "num", q: `At what depth did the light intensity at <b>${SITES[s2]}</b> fall to <b>${pct}%</b> of surface light?`, ans: round1(d), tol: 2.5, unit: "m", ansTxt: `about ${fmt(round1(d))} m`, hl: { mark: { p: 0, v: pct, d } },
-      why: `Find ${pct}% on the light axis, go straight down to the ${siteLine(s2)} (${SITES[s2]}) — between the readings at ${F.depths[i - 1]} m (${Sx[i - 1]}%) and ${F.depths[i]} m (${Sx[i]}%) — then across to the depth axis: about <b>${fmt(Math.round(d))} m</b>. Accepted to within half a small square (2.5 m).` }); }
+      why: `Find ${pct}% on the light axis, go straight down to the ${siteLine(s2)} (${SITES[s2]}): between the readings at ${F.depths[i - 1]} m (${Sx[i - 1]}%) and ${F.depths[i]} m (${Sx[i]}%): then across to the depth axis: about <b>${fmt(Math.round(d))} m</b>. Accepted to within half a small square (2.5 m).` }); }
   // 3. clearer water
   qs.push({ kind: "choice", q: "At which site is the water clearer?", options: [SITES[cs], SITES[ts], "The water is equally clear at both sites"], a: 0, hl: {},
     why: `In clearer water, light penetrates deeper. At ${SITES[cs]} the light falls more slowly with depth (for example ${F.series[cs][2]}% at 20 m, against ${F.series[ts][2]}% at ${SITES[ts]}), so its water is clearer. Murky water has more particles, which absorb and scatter the light.` });
@@ -158,7 +158,7 @@ function lightQuestions(F, r) {
   st.push([`At both sites, each reading from the surface down to 30 m is lower than the one above it.`, true, "Both lines keep falling over the first 30 m."]);
   st.push([`Light reaches the same depth at both sites before it is almost gone.`, false, `Light fades much faster at ${SITES[ts]} than at ${SITES[cs]}.`]);
   const pick = pickMixed(r, st, 4);
-  if (pick) qs.push({ kind: "multi", q: "Tick every statement the graph supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+  if (pick) qs.push({ kind: "multi", q: "Tick every statement the graph supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 7. plot a missing point
   const ps = r() < 0.5 ? 0 : 1, pi = pickR(r, F.depths.map((_, i) => i).filter((i) => i >= 1 && i <= 8 && F.series[ps][i] >= 8));
   qs.push(plotQ(F, G, 0, ps, pi, `${SITES[ps]}`));
@@ -180,7 +180,7 @@ function columnQuestions(F, r) {
   const most = r() < 0.5;
   qs.push({ kind: "tap", q: `Tap the <b>zone</b> of the ocean where the temperature changes the ${most ? "most" : "least"}. (Tap on the temperature graph.)`, a: [most ? "twi" : "mid"], ansTxt: most ? "the twilight zone (200–1000 m)" : "the midnight zone (below 1000 m)", labelOf: (id) => ({ sun: "sunlight zone", twi: "twilight zone", mid: "midnight zone" }[id]),
     hint: "Tap a depth on the temperature graph to choose that zone.", askOpt: { tapZones: true }, doneOpt: () => ({ tapZones: true, hl: { zones: true } }),
-    why: `Sunlight zone (0–200 m): changes by ${fmt(round1(chg.sun))} °C. Twilight zone (200–1000 m): ${fmt(round1(chg.twi))} °C. Midnight zone (below 1000 m): only ${fmt(round1(chg.mid))} °C — the deep water has a <b>very stable, low temperature</b>. ${most ? "The biggest change is in the <b>twilight zone</b>, where the warm surface water gives way to cold deep water." : ""}` });
+    why: `Sunlight zone (0–200 m): changes by ${fmt(round1(chg.sun))} °C. Twilight zone (200–1000 m): ${fmt(round1(chg.twi))} °C. Midnight zone (below 1000 m): only ${fmt(round1(chg.mid))} °C: the deep water has a <b>very stable, low temperature</b>. ${most ? "The biggest change is in the <b>twilight zone</b>, where the warm surface water gives way to cold deep water." : ""}` });
   // 4–5. second quantity
   if (two === "oxy") {
     const d4 = pickR(r, [100, 200, 300, 400, 500, 600].filter((d) => O[di(d)] < O[0] - 0.3));
@@ -189,7 +189,7 @@ function columnQuestions(F, r) {
     qs.push({ kind: "choice", q: "Why is the dissolved oxygen concentration highest near the surface?", options: ["Oxygen dissolves from the air and is released by photosynthesis", "Warm surface water can hold more dissolved oxygen than cold water", "Breaking waves split the water molecules to release oxygen gas", "Fish near the surface breathe out oxygen into the water around them"], a: 0, hl: {},
       why: "Near the surface, oxygen dissolves into the water from the atmosphere, and producers in the sunlight zone release oxygen by photosynthesis. Warm water actually holds <b>less</b> dissolved gas than cold water, and animals take oxygen in rather than give it out." });
     qs.push({ kind: "choice", q: "Why is there little dissolved oxygen in deep water?", options: ["There is no light for photosynthesis, and respiration uses oxygen up", "Cold deep water is not able to hold any dissolved oxygen at all", "The very high pressure at depth squeezes the oxygen out of the water", "Bioluminescent animals use up nearly all of the oxygen to make light"], a: 0, hl: {},
-      why: "Below the sunlight zone there is no light, so there is no photosynthesis to add oxygen. Organisms respiring, and the decomposition of organic matter sinking from above, use up oxygen, and little mixes down from the surface. Cold water can hold dissolved oxygen — there is just no source of it at depth." });
+      why: "Below the sunlight zone there is no light, so there is no photosynthesis to add oxygen. Organisms respiring, and the decomposition of organic matter sinking from above, use up oxygen, and little mixes down from the surface. Cold water can hold dissolved oxygen: there is just no source of it at depth." });
   } else {
     const d4 = pickR(r, [300, 500, 700, 900, 1100, 1300]), v4 = O[di(d4)];
     qs.push({ kind: "num", q: `What was the pressure at <b>${d4} m</b>?`, ans: v4, tol: 5, unit: "atm", hl: { mark: { p: 1, v: v4, d: d4 } },
@@ -198,7 +198,7 @@ function columnQuestions(F, r) {
     qs.push({ kind: "num", q: `By how much did the pressure increase between <b>${a5} m</b> and <b>${b5} m</b>?`, ans: inc, tol: 10, unit: "atm", hl: { mark: [{ p: 1, v: O[di(a5)], d: a5 }, { p: 1, v: O[di(b5)], d: b5 }] },
       why: `At ${a5} m the pressure is ${O[di(a5)]} atm; at ${b5} m it is ${O[di(b5)]} atm. Increase = ${O[di(b5)]} − ${O[di(a5)]} = <b>${inc} atm</b>. Each reading may be half a small square out, so answers within 10 atm are accepted.` });
     qs.push({ kind: "choice", q: "Why does pressure increase with depth?", options: ["The weight of the water above increases with depth", "Deeper water is saltier, so it presses down harder", "Colder deep water pushes sideways more strongly", "The seabed pushes up on the water above it"], a: 0, hl: {},
-      why: "Pressure is caused by the weight of the water above. The deeper you go, the more water there is above, so the pressure increases steadily — the graph is a straight line. It does not depend on how salty or cold the water is." });
+      why: "Pressure is caused by the weight of the water above. The deeper you go, the more water there is above, so the pressure increases steadily: the graph is a straight line. It does not depend on how salty or cold the water is." });
   }
   // 6. tick statements
   const st = [];
@@ -210,7 +210,7 @@ function columnQuestions(F, r) {
   if (two === "oxy") { const ratio = O[0] / O[di(1000)]; if (Math.abs(ratio - 3) > 0.3) st.push(["The dissolved oxygen at the surface was more than three times the value at 1000 m.", ratio > 3, `Surface ${fmt(O[0], 1)}; 1000 m ${fmt(O[di(1000)], 1)} mg per dm³.`]); }
   else st.push(["The pressure increased by the same amount for every 100 m of depth.", true, "The pressure line is straight: about 10 atm more for every 100 m."]);
   const pick = pickMixed(r, st, 4);
-  if (pick) qs.push({ kind: "multi", q: "Tick every statement the graphs support.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+  if (pick) qs.push({ kind: "multi", q: "Tick every statement the graphs support.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {}, why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 7. plot a missing point (temperature panel, a point on the steep part)
   const pi = pickR(r, [2, 3, 4, 5, 6, 7].filter((i) => T[i] !== T[i - 1]));
   qs.push(plotQ(F, G, 0, 0, pi, "temperature"));

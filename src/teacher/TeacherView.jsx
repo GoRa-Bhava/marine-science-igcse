@@ -447,7 +447,7 @@ export default function TeacherView({
             <strong style={{ fontFamily: F_UI, color: C.foam }}>Marking points missed most</strong>
             <ul style={{ ...hint, marginTop: 8, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 4 }}>
               {missedPoints.slice(0, 10).map((p, i) => (
-                <li key={i}><span style={{ color: C.foam }}>{p.text}</span> — missed by {p.missed} of {p.attempts}</li>
+                <li key={i}><span style={{ color: C.foam }}>{p.text}</span>: missed by {p.missed} of {p.attempts}</li>
               ))}
             </ul>
           </div>
@@ -463,13 +463,13 @@ export default function TeacherView({
     let opts = { count: swCount, seed: Date.now() & 0xffff };
     if (swMode === "weak") {
       opts.topicIds = weakest.slice(0, Math.max(1, swN)).map((w) => w.topicId);
-      if (!opts.topicIds.length) { flash("Not enough class data to pick weakest topics — choose by unit instead."); return; }
+      if (!opts.topicIds.length) { flash("Not enough class data to pick weakest topics: choose by unit instead."); return; }
     } else {
       opts.unitIds = [...swUnits];
       if (!opts.unitIds.length) { flash("Pick at least one unit."); return; }
     }
     const ids = pickAssignmentItems(pool, opts);
-    if (!ids.length) { flash("No questions matched — widen the selection."); return; }
+    if (!ids.length) { flash("No questions matched: widen the selection."); return; }
     const assignment = buildAssignment({ title: swTitle || "Marine science homework", due: swDue, classCode: activeClass ? activeClass.code : "", itemIds: ids });
     encodeAssignment(assignment).then((code) => {
       const url = assignmentUrl(code);
@@ -582,7 +582,7 @@ export default function TeacherView({
                     <div style={{ ...hint, color: C.foam, fontWeight: 700 }}>Most got wrong</div>
                     <ul style={{ ...hint, paddingLeft: 18, marginTop: 4 }}>
                       {agg.questions.filter((q) => q.wrong > 0).slice(0, 6).map((q) => (
-                        <li key={q.itemId}>{(q.stem || q.itemId).slice(0, 80)} — {q.wrong}/{q.total} wrong{q.picks[0] && q.picks[0].text ? ` · most chose “${q.picks[0].text}”` : ""}</li>
+                        <li key={q.itemId}>{(q.stem || q.itemId).slice(0, 80)}: {q.wrong}/{q.total} wrong{q.picks[0] && q.picks[0].text ? ` · most chose “${q.picks[0].text}”` : ""}</li>
                       ))}
                     </ul>
                   </div>
@@ -635,11 +635,11 @@ export default function TeacherView({
   function buildPrintHtml() {
     const esc = (s) => String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
     const unitIds = hm.units;
-    let html = `<h1>Class report — ${esc(activeClassId === "all" ? "All classes" : (classes.find((c) => c.id === activeClassId)?.name || ""))}</h1>`;
+    let html = `<h1>Class report: ${esc(activeClassId === "all" ? "All classes" : (classes.find((c) => c.id === activeClassId)?.name || ""))}</h1>`;
     html += `<p class="tp-date">Generated ${new Date().toISOString().slice(0, 10)} · ${activeStudents.length} students · on this device only</p>`;
     // class summary: weakest topics
     html += `<h2>Weakest topics</h2><ol>`;
-    for (const w of weakest.slice(0, 10)) html += `<li>${esc(w.name)} — ${Math.round(w.accuracy * 100)}% (${w.attempts} answers)</li>`;
+    for (const w of weakest.slice(0, 10)) html += `<li>${esc(w.name)}: ${Math.round(w.accuracy * 100)}% (${w.attempts} answers)</li>`;
     html += `</ol>`;
     // per student
     for (const s of activeStudents) {

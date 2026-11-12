@@ -53,7 +53,7 @@ export default function UpdateBanner({ C, notice, onDownload, onUpdate, onLater 
   if (notice.platform === "web" && notice.phase === "done") {
     return (
       <div role="status" aria-live="polite" style={{ ...wrap, borderColor: C.ok }}>
-        <span style={textStyle}><span aria-hidden="true">✓ </span>Update complete — you're on the latest version.</span>
+        <span style={textStyle}><span aria-hidden="true">✓ </span>Update complete: you're on the latest version.</span>
       </div>
     );
   }

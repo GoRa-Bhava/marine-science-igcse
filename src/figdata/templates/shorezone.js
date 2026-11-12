@@ -246,7 +246,7 @@ function questions(F, r) {
   const pick = pickMixed(r, ST, 4);
   qs.push({ kind: "multi", q: `Tick <b>every</b> statement that is true for the zone labelled <b>${L3}</b>.`, options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
     askOpt: { letters: true }, doneOpt: () => ({ letters: true, names: [z3], hl: { zone: z3 } }),
-    why: `Zone ${L3} is ${ZPOS[z3]}, so it is the <b>${ZN[z3]}</b>: ${COND[z3]}.<br>` + pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}.`).join("<br>") });
+    why: `Zone ${L3} is ${ZPOS[z3]}, so it is the <b>${ZN[z3]}</b>: ${COND[z3]}.<br>` + pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}.`).join("<br>") });
   // 6. an organism or sediment item for this shore type, at an intertidal point
   const ints = byZ("int"), key6 = pickR(r, ORG_BANK[F.type]);
   const P6 = key6 === "mussel" ? ints.reduce((a, b) => (b.h < a.h ? b : a)) : pickR(r, ints);

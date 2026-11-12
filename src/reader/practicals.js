@@ -52,7 +52,7 @@ export const PRACTICALS = [
         negative: "Stays blue",
         negColor: "#1f6feb",
         scale: ["#1f6feb", "#3aa66b", "#f2c744", "#f08a24", "#b7410e"], // the graded colour run
-        why: "Reducing sugars react with warm Benedict's solution and shift its colour from blue toward brick-red — the more sugar, the further the change goes.",
+        why: "Reducing sugars react with warm Benedict's solution and shift its colour from blue toward brick-red: the more sugar, the further the change goes.",
       },
       {
         nutrient: "Protein",
@@ -77,18 +77,18 @@ export const PRACTICALS = [
     ],
 
     safety: [
-      "Ethanol is highly flammable — keep it away from naked flames.",
-      "The reagents are irritants — wear eye protection.",
+      "Ethanol is highly flammable: keep it away from naked flames.",
+      "The reagents are irritants: wear eye protection.",
       "Heat Benedict's in a hot water bath, never directly over a flame.",
     ],
 
     // Exam-technique / AO3 points (the examiner's mark-scheme logic).
     technique: [
-      "“No colour change” is a real result — it means that nutrient is absent, not that the test failed.",
+      "“No colour change” is a real result: it means that nutrient is absent, not that the test failed.",
       "Benedict's only reacts when heated; it stays blue if you test it cold.",
       "Judge each colour against an untested (control) sample.",
       "The white emulsion in the lipid test is lipid, not protein.",
-      "In the exam, give BOTH colours — the starting colour and the positive one (e.g. 'orange-brown → blue-black', 'blue → brick-red'), not just the final colour.",
+      "In the exam, give BOTH colours: the starting colour and the positive one (e.g. 'orange-brown → blue-black', 'blue → brick-red'), not just the final colour.",
       "Use a separate sample of the food for each test, with equal volumes of sample and reagent, so the tests don't interfere and comparisons are fair.",
     ],
 
@@ -144,7 +144,7 @@ export const PRACTICALS = [
           "Heat for a few minutes",
           "Record the final colour",
         ],
-        why: "Add Benedict's, put the tube in a hot water bath, heat for a few minutes, then read the colour it has reached — blue means no reducing sugar, brick-red means a lot. (4.1/LO2)",
+        why: "Add Benedict's, put the tube in a hot water bath, heat for a few minutes, then read the colour it has reached: blue means no reducing sugar, brick-red means a lot. (4.1/LO2)",
         status: "human_review",
       },
       {
@@ -170,7 +170,7 @@ export const PRACTICALS = [
           "Protein is present",
         ],
         a: 0,
-        why: "Iodine turns blue-black only when starch is present; staying orange-brown is a valid negative result meaning there is no starch — not a failed test. (4.1/LO2)",
+        why: "Iodine turns blue-black only when starch is present; staying orange-brown is a valid negative result meaning there is no starch, not a failed test. (4.1/LO2)",
         status: "human_review",
       },
       {
@@ -178,12 +178,12 @@ export const PRACTICALS = [
         q: "A student sees a blue-black colour with iodine and says the food contains protein. What is the mistake?",
         options: [
           "Blue-black shows starch, not protein",
-          "Nothing — blue-black does show protein",
+          "Nothing: blue-black does show protein",
           "Blue-black shows reducing sugar, not protein",
           "Blue-black shows lipid, not protein",
         ],
         a: 0,
-        why: "Iodine turning blue-black shows starch. Protein is shown by biuret solution turning lilac / purple — mixing up these two tests is a common slip. Reducing sugar is shown by Benedict's going brick-red. Lipid is shown by a cloudy white emulsion, not by any blue-black colour. (4.1/LO2)",
+        why: "Iodine turning blue-black shows starch. Protein is shown by biuret solution turning lilac / purple: mixing up these two tests is a common slip. Reducing sugar is shown by Benedict's going brick-red. Lipid is shown by a cloudy white emulsion, not by any blue-black colour. (4.1/LO2)",
         status: "human_review",
       },
       {
@@ -197,7 +197,7 @@ export const PRACTICALS = [
           "Point the open end of the tube towards you so you can see the colour change",
         ],
         a: [0, 1, 2],
-        why: "Ethanol is flammable, so keep it away from naked flames. The reagents irritate the eyes, so wear eye protection. Heat Benedict's in a water bath, not straight on a flame. Never seal a tube with a bung and then heat it — pressure builds up and the bung can fly out. Never point the open end of a tube at yourself or anyone else — hot liquid or reagent can spit out. (4.1/LO2)",
+        why: "Ethanol is flammable, so keep it away from naked flames. The reagents irritate the eyes, so wear eye protection. Heat Benedict's in a water bath, not straight on a flame. Never seal a tube with a bung and then heat it: pressure builds up and the bung can fly out. Never point the open end of a tube at yourself or anyone else: hot liquid or reagent can spit out. (4.1/LO2)",
         status: "human_review",
       },
       {
@@ -231,7 +231,7 @@ export const PRACTICALS = [
           "Heat every test in a water bath",
         ],
         a: [0, 1],
-        why: "Use a fresh sample for each test (so reagents don't interfere) and equal volumes for a fair comparison. Mixing all reagents in one sample confuses the results, and only the Benedict's test is heated — the others are done cold. (4.1/LO2)",
+        why: "Use a fresh sample for each test (so reagents don't interfere) and equal volumes for a fair comparison. Mixing all reagents in one sample confuses the results, and only the Benedict's test is heated: the others are done cold. (4.1/LO2)",
         status: "human_review",
       },
       {
@@ -244,7 +244,7 @@ export const PRACTICALS = [
           "A colour change happens",
         ],
         a: 0,
-        why: "State BOTH colours — the starting orange-brown and the positive blue-black. 'Black', 'dark' or just 'a colour change' can lose the mark; name the actual colours. (4.1/LO2)",
+        why: "State BOTH colours: the starting orange-brown and the positive blue-black. 'Black', 'dark' or just 'a colour change' can lose the mark; name the actual colours. (4.1/LO2)",
         status: "human_review", qRecall: "In an exam, how should you record a positive iodine test for starch so that your answer is complete?"
       },
     ],
@@ -340,7 +340,7 @@ export const PRACTICALS = [
       "Record the highest (high water) and lowest (low water) levels",
       "Calculate amplitude = (high water − low water) ÷ 2",
     ],
-    result: "The tidal amplitude — half the difference between high water and low water.",
+    result: "The tidal amplitude: half the difference between high water and low water.",
     controls: [
       "Take readings at regular, frequent intervals so the true high and low are not missed",
       "Use two methods (e.g. a fixed scale and a recording gauge) to check reliability",
@@ -348,9 +348,9 @@ export const PRACTICALS = [
     ],
     safety: ["Check the tide times first, and never let the rising tide cut you off from the shore.", "Wear shoes with a good grip: wet rock and seaweed are slippery.", "Work with a partner, and tell someone where you are going."],
     technique: [
-      "Amplitude = (high − low) ÷ 2 — not high − low.",
+      "Amplitude = (high − low) ÷ 2, not high − low.",
       "More frequent readings capture the true high and low more accurately.",
-      "The formula is given in the question — you don't need to recall it.",
+      "The formula is given in the question: you don't need to recall it.",
     ],
     items: [
       { id: "P1.4-01", type: "choice", tier: 1, ref: "1.4/LO2", family: "tide-formula",
@@ -552,14 +552,14 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     ],
     result: "Sea water is slightly alkaline, fresh water about neutral, rain water slightly acidic.",
     swatches: [
-      { label: "Sea water — slightly alkaline", color: "#2f8f9d" },
-      { label: "Fresh water — neutral", color: "#4aa84a" },
-      { label: "Rain water — slightly acidic", color: "#e8a13a" },
+      { label: "Sea water: slightly alkaline", color: "#2f8f9d" },
+      { label: "Fresh water: neutral", color: "#4aa84a" },
+      { label: "Rain water: slightly acidic", color: "#e8a13a" },
     ],
     controls: ["Same volume of each water sample", "Same number of drops of indicator", "Clean the equipment between samples"],
     safety: ["Universal indicator solution contains ethanol, which is flammable: keep it away from flames.", "Wear eye protection in case of splashes.", "Do not drink or taste any of the water samples."],
     technique: [
-      "Universal indicator shows pH by its colour — match it to the chart.",
+      "Universal indicator shows pH by its colour: match it to the chart.",
       "The amount of indicator doesn't change the pH; only the sample does.",
       "Rain water is slightly acidic, not neutral.",
     ],
@@ -568,7 +568,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         q: "Match each water sample to its pH.",
         pairs: [["Sea water", "Slightly alkaline"], ["Fresh water", "Neutral"], ["Rain water", "Slightly acidic"]],
         extra: ["Strongly acidic", "Strongly alkaline"],
-        why: "Sea water is slightly alkaline, fresh water is about neutral, and rain water is slightly acidic — none of these is strongly acidic or strongly alkaline. (2.2/LO3)", status: "human_review" },
+        why: "Sea water is slightly alkaline, fresh water is about neutral, and rain water is slightly acidic: none of these is strongly acidic or strongly alkaline. (2.2/LO3)", status: "human_review" },
       { id: "P2.2a-02", type: "choice", tier: 1, ref: "2.2/LO3", family: "ph-what",
         q: "What does universal indicator measure?",
         options: ["The pH of the water", "The salinity of the water", "The temperature of the water", "The oxygen in the water"],
@@ -637,7 +637,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same volume of sea water", "Same amount of indicator", "Compare with a sample that has no CO₂ added"],
     safety: ["Blow out gently through the straw, and never suck the liquid up.", "Use your own clean straw and do not share it.", "Wear eye protection; the indicator is flammable."],
     technique: [
-      "Dissolving CO₂ makes the water more acidic — the pH goes down.",
+      "Dissolving CO₂ makes the water more acidic: the pH goes down.",
       "This is a lab model of ocean acidification (links to 6.8).",
       "'More acidic' means a lower pH, not a higher one.",
     ],
@@ -719,7 +719,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same volume of water", "Same solid", "Stir the same way each time"],
     safety: ["Take care with hot water and heaters, and let equipment cool before you handle it.", "Wear eye protection when stirring hot solutions.", "Potassium nitrate is an oxidiser (it makes things burn more fiercely): keep it away from flames, and heat the water with a water bath or electric heater.", "Do not taste the solute, and wash your hands afterwards."],
     technique: [
-      "Solids dissolve MORE as temperature rises — the opposite of gases.",
+      "Solids dissolve MORE as temperature rises: the opposite of gases.",
       "'Saturated' means no more will dissolve, not 'full of water'.",
       "Stirring changes the rate of dissolving, not the total amount that dissolves.",
     ],
@@ -783,7 +783,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <rect width="880" height="560" fill="var(--bg)"/>
 <text x="24" y="43" class="title">Temperature and the solubility of a gas</text>
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
-<rect x="95" y="193" width="270" height="175" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M90 128V355Q90 373 108 373H352Q370 373 370 355V128" class="apparatus" /><path d="M95 193H365" class="rule" /><rect x="430" y="144" width="28" height="190" rx="14" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><g class="" transform="translate(439 326)"><g class="grow" ><rect x="0" y="-174" width="10" height="174" rx="5" fill="var(--coral)" /></g></g><circle cx="444" cy="334" r="22" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><circle cx="444" cy="334" r="13" fill="var(--coral)" /><text x="425" y="108" class="small">Warm</text><text x="413" y="395" class="small">Cool</text><circle cx="122" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="122" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="122" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="135" cy="290" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.0s"/><circle cx="171" cy="310" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.2s"/><circle cx="207" cy="290" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.4s"/><circle cx="243" cy="310" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.6000000000000001s"/><circle cx="279" cy="290" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.8s"/><circle cx="315" cy="310" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:1.0s"/><circle cx="144" cy="300" r="4" fill="var(--deep)" /><circle cx="210" cy="317" r="4" fill="var(--deep)" /><circle cx="315" cy="276" r="4" fill="var(--deep)" /><text x="565" y="117" class="">Dissolved gas</text><rect x="610" y="156" width="90" height="196" rx="8" fill="var(--line)" /><g class="" transform="translate(610 352)"><g class="shrink" ><rect x="0" y="-196" width="90" height="196" rx="8" fill="var(--teal)" /></g></g><text x="720" y="176" class="small">More</text><text x="720" y="351" class="small">Less</text><text x="84" y="415" class="small">Gas escaping — not boiling</text><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Warmer water → LESS gas stays dissolved</text><text x="440" y="514" class="accent" text-anchor="middle">Warm sea water holds less oxygen.</text></g>
+<rect x="95" y="193" width="270" height="175" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M90 128V355Q90 373 108 373H352Q370 373 370 355V128" class="apparatus" /><path d="M95 193H365" class="rule" /><rect x="430" y="144" width="28" height="190" rx="14" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><g class="" transform="translate(439 326)"><g class="grow" ><rect x="0" y="-174" width="10" height="174" rx="5" fill="var(--coral)" /></g></g><circle cx="444" cy="334" r="22" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><circle cx="444" cy="334" r="13" fill="var(--coral)" /><text x="425" y="108" class="small">Warm</text><text x="413" y="395" class="small">Cool</text><circle cx="122" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="228" r="4" fill="var(--deep)" class="dissolve"/><circle cx="122" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="267" r="4" fill="var(--deep)" class="dissolve"/><circle cx="122" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="306" r="4" fill="var(--deep)" class="dissolve"/><circle cx="135" cy="290" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.0s"/><circle cx="171" cy="310" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.2s"/><circle cx="207" cy="290" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.4s"/><circle cx="243" cy="310" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.6000000000000001s"/><circle cx="279" cy="290" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.8s"/><circle cx="315" cy="310" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:1.0s"/><circle cx="144" cy="300" r="4" fill="var(--deep)" /><circle cx="210" cy="317" r="4" fill="var(--deep)" /><circle cx="315" cy="276" r="4" fill="var(--deep)" /><text x="565" y="117" class="">Dissolved gas</text><rect x="610" y="156" width="90" height="196" rx="8" fill="var(--line)" /><g class="" transform="translate(610 352)"><g class="shrink" ><rect x="0" y="-196" width="90" height="196" rx="8" fill="var(--teal)" /></g></g><text x="720" y="176" class="small">More</text><text x="720" y="351" class="small">Less</text><text x="84" y="415" class="small">Gas escaping, not boiling</text><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Warmer water → LESS gas stays dissolved</text><text x="440" y="514" class="accent" text-anchor="middle">Warm sea water holds less oxygen.</text></g>
 </svg>`,
     apparatus: ["Water", "Thermometer", "Dissolved-oxygen probe or kit (or observe bubbles)", "Heat source"],
     steps: [
@@ -792,11 +792,11 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Measure the dissolved oxygen again (or note the bubbles forming)",
       "Record how the dissolved gas changes with temperature",
     ],
-    result: "Less gas stays dissolved as the water warms — gas comes out of warm water.",
+    result: "Less gas stays dissolved as the water warms: gas comes out of warm water.",
     controls: ["Same volume and source of water", "Same time for each reading", "Repeat the readings"],
     safety: ["Hot water and heaters can scald or burn: use tongs or heat-proof gloves.", "Keep electrical meters and probes away from spilt water.", "Wear eye protection when heating water."],
     technique: [
-      "Gases dissolve LESS as temperature rises — the opposite of solids.",
+      "Gases dissolve LESS as temperature rises: the opposite of solids.",
       "Bubbles forming on gentle warming are dissolved gas escaping, not the water boiling.",
       "So warmer sea water holds less oxygen for organisms.",
       "Another method: weigh a flask of carbonated water, keep it at one temperature for a fixed time and weigh it again. A bigger loss in mass at a higher temperature shows less carbon dioxide stays dissolved. A flask of plain water at each temperature shows how much of the loss is just evaporation.",
@@ -808,7 +808,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         a: 0, why: "Gases become less soluble as temperature rises, so warm water holds less oxygen. Saying it increases applies the solid rule to a gas. It doesn't stay the same. And the gas doesn't wait for boiling: it starts leaving as soon as the water warms. (2.3/LO4)", status: "human_review" },
       { id: "P2.3-02", type: "truefalse", tier: 2, ref: "2.3/LO4", family: "gas-vs-solid",
         q: "Solids and gases both become more soluble as temperature rises.",
-        answer: false, why: "False — they behave oppositely: most solids dissolve more as it warms, but gases dissolve less. (2.3/LO4)", status: "human_review" },
+        answer: false, why: "False. They behave oppositely: most solids dissolve more as it warms, but gases dissolve less. (2.3/LO4)", status: "human_review" },
       { id: "P2.3-03", type: "choice", tier: 2, ref: "2.3/LO4", family: "gas-bubbles",
         q: "Small bubbles appear as the water is warmed, well below boiling. These bubbles are:",
         options: ["dissolved gas leaving the water", "the water beginning to boil", "salt coming out of solution", "water vapour from evaporation"],
@@ -877,7 +877,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "The volume change is small (only about 1–1.5 cm³ for 100 cm³ of water warmed by 40 °C, roughly 1 %), too small to read reliably on a measuring cylinder, so a narrow tube is used to make it visible.",
       "Colder water is denser, so it sinks below warmer water.",
       "Heating spreads the particles out, so the same mass fills a bigger volume → lower density.",
-      "Mass does not change on heating — the volume does.",
+      "Mass does not change on heating: the volume does.",
     ],
     items: [
       { id: "P2.4a-01", type: "choice", tier: 1, ref: "2.4/LO2", family: "tempdens-trend",
@@ -957,7 +957,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Wipe up spilt salt solution straight away, so nobody slips.", "If eggs are used, wash your hands after handling them."],
     technique: [
       "Adding salt adds mass to the same volume, so density rises.",
-      "Salt doesn't disappear when it dissolves — its mass is still there.",
+      "Salt doesn't disappear when it dissolves: its mass is still there.",
       "An object floats higher in saltier (denser) water.",
       "To make a range of salinities, mix a stock solution with distilled water to the same total volume, e.g. 8 cm³ of 50 ppt stock + 2 cm³ of water = 40 ppt.",
     ],
@@ -1030,7 +1030,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Raise it slightly until it just reappears; the mean of the two depths gives a more reliable value",
       "Repeat and record the Secchi depth",
     ],
-    result: "The Secchi depth — a greater depth means clearer water and deeper light penetration.",
+    result: "The Secchi depth: a greater depth means clearer water and deeper light penetration.",
     controls: ["Same observer each time", "Same shaded side of the boat/shore, away from glare", "Same time of day; repeat and average"],
     safety: ["Work from a stable boat or jetty, and wear a life jacket.", "Do not lean far out over deep water; always work with a partner or an adult.", "Keep the line tidy so it cannot tangle around hands or feet."],
     technique: [
@@ -1195,7 +1195,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Draw only what is actually seen", "Keep proportions and positions correct"],
     technique: [
       "No shading and no colour in a biological drawing.",
-      "Draw only what is seen — not extra detail like every scale.",
+      "Draw only what is seen, not extra detail like every scale.",
       "Label lines are ruled straight and touch the feature.",
     ],
     items: [
@@ -1360,7 +1360,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     improvements: ["Shield the apparatus to cut heat loss", "Relight the food if it goes out", "Repeat and take a mean"],
     safety: ["Tie back long hair and keep loose clothing away from the flame.", "Check for food allergies (for example, to nuts) before choosing the foods.", "Wear eye protection, and let the hot needle and boiling tube cool before touching them.", "Keep flammable materials away, and stand up while you work."],
     technique: [
-      "The energy from the burning food heats the water, so the temperature rise measures the energy released — burning transfers energy, it doesn't destroy it.",
+      "The energy from the burning food heats the water, so the temperature rise measures the energy released: burning transfers energy, it doesn't destroy it.",
       "Compare foods per gram, not per piece.",
       "Heat lost to the air and the glass means the water warms less than it should, so the energy you calculate from the temperature rise is an underestimate (too low).",
     ],
@@ -1371,7 +1371,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         a: 0, why: "The burning food heats the water; the temperature rise measures the energy released. (4.2/LO5)", status: "human_review" },
       { id: "P4.2-02", type: "truefalse", tier: 2, ref: "4.2/LO5", family: "burn-loss",
         q: "Some heat is lost to the surroundings, so the measured energy is lower than the true value.",
-        answer: true, why: "True. Heat escapes to the air and the glass, so the temperature rise — and the energy found — is an underestimate. (4.2/LO5)", status: "human_review" },
+        answer: true, why: "True. Heat escapes to the air and the glass, so the temperature rise (and the energy found) is an underestimate. (4.2/LO5)", status: "human_review" },
       { id: "P4.2-03", type: "multi", tier: 2, ref: "4.2/LO5", family: "burn-fairtest",
         q: "Which should be controlled to make it a fair test? Select all that apply.",
         options: ["The volume of water heated", "The distance from the food to the tube", "The starting temperature of the water", "The type of food being burned"],
@@ -1379,7 +1379,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       { id: "P4.2-04", type: "choice", tier: 2, ref: "4.2/LO5", family: "burn-incomplete",
         q: "The food does not burn completely. This makes the temperature rise:",
         options: ["smaller than it should be", "larger than it should be", "unchanged, because the food was weighed first", "smaller for some foods but larger for others"],
-        a: 0, why: "If not all the food burns, less energy is released, so the water warms less than it should. Weighing the food first doesn't fix this, because the unburnt part gave out no heat. The error doesn't change direction with the food — it always makes the rise too small. (4.2/LO5)", status: "human_review" },
+        a: 0, why: "If not all the food burns, less energy is released, so the water warms less than it should. Weighing the food first doesn't fix this, because the unburnt part gave out no heat. The error doesn't change direction with the food: it always makes the rise too small. (4.2/LO5)", status: "human_review" },
       { id: "P4.2-05", type: "chain", tier: 2, ref: "4.2/LO5", family: "burn-method",
         q: "Put the steps of the burning-food experiment in order.",
         chunks: ["Measure the food's mass and the water's volume and starting temperature", "Set light to the food under the tube of water", "Let it burn so the heat warms the water", "Record the highest temperature the water reaches"],
@@ -1443,7 +1443,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Count the bubbles of gas given off in a set time",
       "Move the lamp further away and repeat at each distance",
     ],
-    result: "Fewer bubbles as the lamp moves away — lower light intensity gives a slower rate.",
+    result: "Fewer bubbles as the lamp moves away: lower light intensity gives a slower rate.",
     controls: ["Temperature (stand the tube in a water bath, since the lamp heats it)", "Same plant and same length of time", "Same CO₂ supply", "Let the plant adjust after moving the lamp; repeat and mean"],
     improvements: ["Collect the gas and measure its volume, since bubble size varies"],
     safety: ["Keep the lamp and its cable away from the water, and dry your hands before touching it.", "The lamp gets hot: do not touch the bulb or the shade.", "Wash your hands after handling the pondweed."],
@@ -1464,7 +1464,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       { id: "P4.3-03", type: "choice", tier: 2, ref: "4.3/LO6", family: "photo-waterbath",
         q: "Why stand the tube in a water bath?",
         options: ["To keep the temperature constant, since the lamp heats the water", "To add carbon dioxide", "To warm the plant so it gives off more bubbles", "To give the plant the extra water it needs to photosynthesise"],
-        a: 0, why: "The lamp warms the water, and temperature also changes the rate. A water bath holds the temperature steady, so light is the only variable changing. It isn't there to warm the plant up. It doesn't add carbon dioxide. It doesn't give the plant extra water — the plant is already sitting in water. (4.3/LO6)", status: "human_review" },
+        a: 0, why: "The lamp warms the water, and temperature also changes the rate. A water bath holds the temperature steady, so light is the only variable changing. It isn't there to warm the plant up. It doesn't add carbon dioxide. It doesn't give the plant extra water: the plant is already sitting in water. (4.3/LO6)", status: "human_review" },
       { id: "P4.3-04", type: "truefalse", tier: 2, ref: "4.3/LO6", family: "photo-oxygen",
         q: "The bubbles collected in this experiment are oxygen from photosynthesis.",
         answer: true, why: "True. In the light, the plant photosynthesises and releases oxygen as the bubbles. (4.3/LO6)", status: "human_review" },
@@ -1536,7 +1536,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Random placement to remove sampler bias", "More quadrats for a more reliable mean", "Same size quadrat throughout"],
     safety: ["Check the tide times, and finish before the tide comes in.", "Wear shoes with a good grip: rocks and seaweed are slippery.", "Work in a group with a teacher present, and put any organisms back where you found them."],
     technique: [
-      "'Random' means chosen by random numbers, not spread out evenly by eye — that is what removes the sampler's bias.",
+      "'Random' means chosen by random numbers, not spread out evenly by eye: that is what removes the sampler's bias.",
       "Species richness = the number of different species, not the total count.",
       "More quadrats → a more reliable estimate, because the mean of many is closer to the true average.",
     ],
@@ -1574,7 +1574,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     subtitle: "Show how organisms are distributed along a gradient",
     aim: "Investigate how organisms are distributed along a gradient using transects.",
     diagram: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 880 560" role="img" aria-labelledby="title desc">
-<title id="title">Transects — distribution up a shore</title><desc id="desc">A side view shows a transect tape running from high shore towards the sea. Five quadrats, shown from above for clarity, are placed at equal distances along the tape. Periwinkles have coiled shells, limpets have ridged conical shells and seaweed has branching fronds. Record species at each station to reveal distribution and zonation along the gradient. The species bands are illustrative, not fixed boundaries. The completed quadrats and result remain visible.</desc>
+<title id="title">Transects: distribution up a shore</title><desc id="desc">A side view shows a transect tape running from high shore towards the sea. Five quadrats, shown from above for clarity, are placed at equal distances along the tape. Periwinkles have coiled shells, limpets have ridged conical shells and seaweed has branching fronds. Record species at each station to reveal distribution and zonation along the gradient. The species bands are illustrative, not fixed boundaries. The completed quadrats and result remain visible.</desc>
 <style>:root{--bg:#e9f1f2;--panel:#ffffff;--ink:#0d2a37;--soft:#4d6c77;--line:#d2e0e3;--teal:#12a7bb;--deep:#0b6b79;--coral:#ff6a4d;--good:#1a9b6c;--amber:#f0a63c;--violet:#7a5bb0}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#071820;--panel:#0e2733;--ink:#e9f4f5;--soft:#9dbcc5;--line:#1c3d49;--teal:#3ac6d8;--deep:#8fdce7;--coral:#ff7d63;--good:#57c98b;--amber:#f3b75e;--violet:#b79be6}}
 :root[data-theme="dark"]{--bg:#071820;--panel:#0e2733;--ink:#e9f4f5;--soft:#9dbcc5;--line:#1c3d49;--teal:#3ac6d8;--deep:#8fdce7;--coral:#ff7d63;--good:#57c98b;--amber:#f3b75e;--violet:#b79be6}
@@ -1606,7 +1606,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 </style>
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L10 5 0 10Z" fill="var(--coral)"/></marker></defs>
 <rect width="880" height="560" fill="var(--bg)"/>
-<text x="24" y="43" class="title">Transects — distribution up a shore</text>
+<text x="24" y="43" class="title">Transects: distribution up a shore</text>
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <text x="440" y="86" class="small" text-anchor="middle">Equal intervals · quadrats shown from above</text><path d="M24 163L851 345V367H24Z" class="" fill="var(--line)"/><path d="M752 334Q778 328 804 334T858 334V367H752Z" class="" fill="var(--teal)" opacity=".35"/><path d="M24 163L851 345" class="rule" /><text x="30" y="126" class="">High shore</text><text x="710" y="256" class="">Low shore</text><text x="800" y="361" class="small">Sea</text><path d="M65 135L49 162M804 266L838 325" class="rule" /><g class="transect-tape" ><path d="M48 168.36L815 337.1" class="" fill="none" stroke="var(--deep)" stroke-width="7" stroke-linecap="round"/><path d="M56.90 175.56L59.10 165.56" class="" stroke="var(--panel)" stroke-width="2"/><path d="M85.90 181.94L88.10 171.94" class="" stroke="var(--panel)" stroke-width="2"/><path d="M114.90 188.32L117.10 178.32" class="" stroke="var(--panel)" stroke-width="2"/><path d="M143.90 194.70L146.10 184.70" class="" stroke="var(--panel)" stroke-width="2"/><path d="M172.90 201.08L175.10 191.08" class="" stroke="var(--panel)" stroke-width="2"/><path d="M201.90 207.46L204.10 197.46" class="" stroke="var(--panel)" stroke-width="2"/><path d="M230.90 213.84L233.10 203.84" class="" stroke="var(--panel)" stroke-width="2"/><path d="M259.90 220.22L262.10 210.22" class="" stroke="var(--panel)" stroke-width="2"/><path d="M288.90 226.60L291.10 216.60" class="" stroke="var(--panel)" stroke-width="2"/><path d="M317.90 232.98L320.10 222.98" class="" stroke="var(--panel)" stroke-width="2"/><path d="M346.90 239.36L349.10 229.36" class="" stroke="var(--panel)" stroke-width="2"/><path d="M375.90 245.74L378.10 235.74" class="" stroke="var(--panel)" stroke-width="2"/><path d="M404.90 252.12L407.10 242.12" class="" stroke="var(--panel)" stroke-width="2"/><path d="M433.90 258.50L436.10 248.50" class="" stroke="var(--panel)" stroke-width="2"/><path d="M462.90 264.88L465.10 254.88" class="" stroke="var(--panel)" stroke-width="2"/><path d="M491.90 271.26L494.10 261.26" class="" stroke="var(--panel)" stroke-width="2"/><path d="M520.90 277.64L523.10 267.64" class="" stroke="var(--panel)" stroke-width="2"/><path d="M549.90 284.02L552.10 274.02" class="" stroke="var(--panel)" stroke-width="2"/><path d="M578.90 290.40L581.10 280.40" class="" stroke="var(--panel)" stroke-width="2"/><path d="M607.90 296.78L610.10 286.78" class="" stroke="var(--panel)" stroke-width="2"/><path d="M636.90 303.16L639.10 293.16" class="" stroke="var(--panel)" stroke-width="2"/><path d="M665.90 309.54L668.10 299.54" class="" stroke="var(--panel)" stroke-width="2"/><path d="M694.90 315.92L697.10 305.92" class="" stroke="var(--panel)" stroke-width="2"/><path d="M723.90 322.30L726.10 312.30" class="" stroke="var(--panel)" stroke-width="2"/><path d="M752.90 328.68L755.10 318.68" class="" stroke="var(--panel)" stroke-width="2"/><path d="M781.90 335.06L784.10 325.06" class="" stroke="var(--panel)" stroke-width="2"/></g><text x="355" y="147" class="small">Transect tape</text><path d="M454 156L493 257" class="rule" /><g class="reveal" style="--delay:1.0s"><g class="" transform="translate(110 182.00)"><g class="" transform="rotate(12.41)"><rect x="-40" y="-40" width="80" height="80" rx="2" fill="var(--panel)" stroke="var(--coral)" stroke-width="3"/></g><g class="" transform="scale(.72)"><path d="M-26 15Q-40-3-19-25Q1-42 23-19Q38-5 26 16L14 28Q-5 37-26 15Z" class="" fill="var(--good)" fill-opacity=".24" stroke="var(--deep)" stroke-width="3"/><path d="M-18 12Q-31-6-9-20Q12-29 23-10Q31 8 11 18Q-8 25-13 8Q-19-4-5-9Q8-13 12-2Q15 8 4 9Q-2 8 0 3" class="apparatus" /><path d="M17 19Q33 10 31 23L20 31Z" class="" fill="var(--deep)" opacity=".5"/></g><circle cx="0" cy="53" r="12" fill="var(--panel)" stroke="var(--line)" stroke-width="1.5"/><text x="0" y="61" class="small" text-anchor="middle">1</text></g></g><g class="reveal" style="--delay:1.65s"><g class="" transform="translate(268 216.76)"><g class="" transform="rotate(12.41)"><rect x="-40" y="-40" width="80" height="80" rx="2" fill="var(--panel)" stroke="var(--coral)" stroke-width="3"/></g><g class="" transform="scale(.72)"><path d="M-26 15Q-40-3-19-25Q1-42 23-19Q38-5 26 16L14 28Q-5 37-26 15Z" class="" fill="var(--good)" fill-opacity=".24" stroke="var(--deep)" stroke-width="3"/><path d="M-18 12Q-31-6-9-20Q12-29 23-10Q31 8 11 18Q-8 25-13 8Q-19-4-5-9Q8-13 12-2Q15 8 4 9Q-2 8 0 3" class="apparatus" /><path d="M17 19Q33 10 31 23L20 31Z" class="" fill="var(--deep)" opacity=".5"/></g><circle cx="0" cy="53" r="12" fill="var(--panel)" stroke="var(--line)" stroke-width="1.5"/><text x="0" y="61" class="small" text-anchor="middle">2</text></g></g><g class="reveal" style="--delay:2.3s"><g class="" transform="translate(426 251.52)"><g class="" transform="rotate(12.41)"><rect x="-40" y="-40" width="80" height="80" rx="2" fill="var(--panel)" stroke="var(--coral)" stroke-width="3"/></g><g class="" transform="scale(.72)"><path d="M-37 19Q-24-6-5-25Q2-32 11-20Q30 0 39 20Q2 38-37 19Z" class="" fill="var(--amber)" fill-opacity=".3" stroke="var(--deep)" stroke-width="3"/><path d="M-5-23L-28 19M-2-23L-12 25M2-23L5 28M5-21L21 25M8-19L32 19M-36 19Q1 32 38 20" class="" fill="none" stroke="var(--deep)" stroke-width="2" opacity=".8"/></g><circle cx="0" cy="53" r="12" fill="var(--panel)" stroke="var(--line)" stroke-width="1.5"/><text x="0" y="61" class="small" text-anchor="middle">3</text></g></g><g class="reveal" style="--delay:2.95s"><g class="" transform="translate(584 286.28)"><g class="" transform="rotate(12.41)"><rect x="-40" y="-40" width="80" height="80" rx="2" fill="var(--panel)" stroke="var(--coral)" stroke-width="3"/></g><g class="" transform="scale(.72)"><path d="M-37 19Q-24-6-5-25Q2-32 11-20Q30 0 39 20Q2 38-37 19Z" class="" fill="var(--amber)" fill-opacity=".3" stroke="var(--deep)" stroke-width="3"/><path d="M-5-23L-28 19M-2-23L-12 25M2-23L5 28M5-21L21 25M8-19L32 19M-36 19Q1 32 38 20" class="" fill="none" stroke="var(--deep)" stroke-width="2" opacity=".8"/></g><circle cx="0" cy="53" r="12" fill="var(--panel)" stroke="var(--line)" stroke-width="1.5"/><text x="0" y="61" class="small" text-anchor="middle">4</text></g></g><g class="reveal" style="--delay:3.6s"><g class="" transform="translate(742 321.04)"><g class="" transform="rotate(12.41)"><rect x="-40" y="-40" width="80" height="80" rx="2" fill="var(--panel)" stroke="var(--coral)" stroke-width="3"/></g><g class="" transform="scale(.72)"><path d="M-5 37Q0 11 3-31M-1 18L-22 1M1 4L22-14M3-12L-11-27" class="" fill="none" stroke="var(--deep)" stroke-width="4" stroke-linecap="round"/><path d="M-18 7Q-41 1-28-18Q-18-10-18 7ZM14-6Q16-30 34-30Q36-11 14-6ZM-8-19Q-26-26-16-39Q-7-35-8-19ZM3-18Q-3-40 11-43Q24-34 3-18ZM-2 27Q18 3 27 11Q26 28-2 27Z" class="" fill="var(--good)" stroke="var(--deep)" stroke-width="2"/><circle cx="-10" cy="13" r="4" fill="var(--amber)" stroke="var(--deep)" stroke-width="1.5"/><circle cx="9" cy="-1" r="4" fill="var(--amber)" stroke="var(--deep)" stroke-width="1.5"/><path d="M-5 34L-15 41M-5 34L5 41" class="rule" /></g><circle cx="0" cy="53" r="12" fill="var(--panel)" stroke="var(--line)" stroke-width="1.5"/><text x="0" y="61" class="small" text-anchor="middle">5</text></g></g><rect x="24" y="393" width="264" height="39" rx="10" fill="var(--panel)" /><g class="" transform="translate(54 413) scale(.43)"><path d="M-26 15Q-40-3-19-25Q1-42 23-19Q38-5 26 16L14 28Q-5 37-26 15Z" class="" fill="var(--good)" fill-opacity=".24" stroke="var(--deep)" stroke-width="3"/><path d="M-18 12Q-31-6-9-20Q12-29 23-10Q31 8 11 18Q-8 25-13 8Q-19-4-5-9Q8-13 12-2Q15 8 4 9Q-2 8 0 3" class="apparatus" /><path d="M17 19Q33 10 31 23L20 31Z" class="" fill="var(--deep)" opacity=".5"/></g><text x="86" y="423" class="">Periwinkles</text><rect x="308" y="393" width="264" height="39" rx="10" fill="var(--panel)" /><g class="" transform="translate(338 413) scale(.43)"><path d="M-37 19Q-24-6-5-25Q2-32 11-20Q30 0 39 20Q2 38-37 19Z" class="" fill="var(--amber)" fill-opacity=".3" stroke="var(--deep)" stroke-width="3"/><path d="M-5-23L-28 19M-2-23L-12 25M2-23L5 28M5-21L21 25M8-19L32 19M-36 19Q1 32 38 20" class="" fill="none" stroke="var(--deep)" stroke-width="2" opacity=".8"/></g><text x="370" y="423" class="">Limpets</text><rect x="592" y="393" width="264" height="39" rx="10" fill="var(--panel)" /><g class="" transform="translate(622 413) scale(.43)"><path d="M-5 37Q0 11 3-31M-1 18L-22 1M1 4L22-14M3-12L-11-27" class="" fill="none" stroke="var(--deep)" stroke-width="4" stroke-linecap="round"/><path d="M-18 7Q-41 1-28-18Q-18-10-18 7ZM14-6Q16-30 34-30Q36-11 14-6ZM-8-19Q-26-26-16-39Q-7-35-8-19ZM3-18Q-3-40 11-43Q24-34 3-18ZM-2 27Q18 3 27 11Q26 28-2 27Z" class="" fill="var(--good)" stroke="var(--deep)" stroke-width="2"/><circle cx="-10" cy="13" r="4" fill="var(--amber)" stroke="var(--deep)" stroke-width="1.5"/><circle cx="9" cy="-1" r="4" fill="var(--amber)" stroke="var(--deep)" stroke-width="1.5"/><path d="M-5 34L-15 41M-5 34L5 41" class="rule" /></g><text x="654" y="423" class="">Seaweed</text><g class="reveal" style="--delay:4.6s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Set intervals → record the species present</text><text x="440" y="514" class="accent" text-anchor="middle">Transects show distribution / zonation.</text></g>
 </svg>`,
@@ -1629,7 +1629,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       { id: "P5.2b-01", type: "choice", tier: 1, ref: "5.2/LO2", family: "trans-what",
         q: "A transect is used to show:",
         options: ["how organisms are distributed along a gradient", "the total population of the shore", "the average density of organisms across the whole area", "how the organisms change from season to season"],
-        a: 0, why: "A transect shows how species change along a gradient, such as from the top of the shore to the sea. It doesn't give the total population, or the average density over the whole area — random quadrats do that. It shows change across space, not change over time. (5.2/LO2)", status: "human_review" },
+        a: 0, why: "A transect shows how species change along a gradient, such as from the top of the shore to the sea. It doesn't give the total population, or the average density over the whole area: random quadrats do that. It shows change across space, not change over time. (5.2/LO2)", status: "human_review" },
       { id: "P5.2b-02", type: "choice", tier: 1, ref: "5.2/LO2", family: "trans-place",
         q: "Quadrats along a transect are placed:",
         options: ["systematically, at set intervals", "randomly, using random numbers", "where the most organisms can be seen", "along one level of the shore, parallel to the sea"],
@@ -1784,7 +1784,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Weigh the sediment caught on each sieve",
       "Measure any very large particles with a ruler or callipers",
     ],
-    result: "The size distribution of the particles — which sizes make up the sample.",
+    result: "The size distribution of the particles, which sizes make up the sample.",
     controls: ["Same mass of dried sediment", "Same set of sieves", "Dry each sample the same way"],
     safety: ["Tip the dried sediment gently, and avoid breathing in the dust.", "Wash your hands after handling shore sediment, which can contain bacteria."],
     technique: [
@@ -1796,11 +1796,11 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       { id: "P5.2d-01", type: "choice", tier: 1, ref: "5.2/LO4", family: "sieve-what",
         q: "Sediment is passed through a stack of sieves to find its:",
         options: ["particle-size distribution", "moisture content", "shape of the particles", "how tightly packed the particles are"],
-        a: 0, why: "The mass caught on each mesh shows how the particle sizes are distributed. Sieving doesn't find moisture — that's drying and weighing. It doesn't show particle shape, only size. It can't show how tightly packed the sediment was, because shaking breaks it up. (5.2/LO4)", status: "human_review" },
+        a: 0, why: "The mass caught on each mesh shows how the particle sizes are distributed. Sieving doesn't find moisture: that's drying and weighing. It doesn't show particle shape, only size. It can't show how tightly packed the sediment was, because shaking breaks it up. (5.2/LO4)", status: "human_review" },
       { id: "P5.2d-02", type: "choice", tier: 1, ref: "5.2/LO4", family: "sieve-dry",
         q: "Why is the sediment dried before sieving?",
         options: ["So the particles do not clump together", "So the particles shrink and fit through the mesh", "To measure the water content", "To kill organisms"],
-        a: 0, why: "Damp particles stick together, so drying first lets them separate by size properly. Drying doesn't shrink the grains. In this practical it isn't used to find the water content — that's a different method. It isn't done to kill organisms. (5.2/LO4)", status: "human_review" },
+        a: 0, why: "Damp particles stick together, so drying first lets them separate by size properly. Drying doesn't shrink the grains. In this practical it isn't used to find the water content: that's a different method. It isn't done to kill organisms. (5.2/LO4)", status: "human_review" },
       { id: "P5.2d-03", type: "truefalse", tier: 2, ref: "5.2/LO4", family: "sieve-moisture",
         q: "Sieving sediment measures how much water it contains.",
         answer: false, why: "False. Sieving sorts particles by size; the water content is found by drying and weighing (a different practical). (5.2/LO4)", status: "human_review" },
@@ -1866,7 +1866,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same mass, depth and tide/time for each sample", "Random sampling of each site", "Repeat and take a mean"],
     safety: ["Use heat-proof gloves or tongs to move samples in and out of the oven.", "Let the hot sediment cool before you weigh it.", "Wash your hands after handling shore sediment."],
     technique: [
-      "Heat until the mass stops changing, not for a fixed time — a constant mass is how you know all the water has gone.",
+      "Heat until the mass stops changing, not for a fixed time: a constant mass is how you know all the water has gone.",
       "% water = water lost ÷ starting mass × 100.",
       "Heat gently so organic matter isn't burned away.",
     ],
@@ -1889,7 +1889,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       { id: "P5.2e-05", type: "choice", tier: 2, ref: "5.2/LO5", family: "moist-gentle",
         q: "Why heat the sediment gently rather than strongly?",
         options: ["So organic matter is not burned away", "So it dries in a set, fixed time", "So some water is left in the sample", "So the salt does not boil off with the water"],
-        a: 0, why: "Strong heat would burn off organic matter as well as water, giving too high a water value. Gentle heat isn't about a fixed time — you heat until the mass stops changing. It isn't meant to leave water behind. Salt doesn't boil off, so it isn't the reason. (5.2/LO5)", status: "human_review" },
+        a: 0, why: "Strong heat would burn off organic matter as well as water, giving too high a water value. Gentle heat isn't about a fixed time: you heat until the mass stops changing. It isn't meant to leave water behind. Salt doesn't boil off, so it isn't the reason. (5.2/LO5)", status: "human_review" },
       { id: "P5.2e-06", type: "multi", tier: 2, ref: "5.2/LO5", family: "moist-describe",
         q: "A student finds the percentage of water in a sediment sample. Tick the statements that are true about how to do this.",
         options: ["A known mass of the fresh (wet) sediment is weighed.", "The sample is heated gently until its mass stops changing.", "The dried sediment is weighed.", "Water lost = starting mass − dried mass.", "Percentage water = water lost ÷ starting mass × 100.", "Percentage water = water lost ÷ dried mass × 100.", "The sample is heated for exactly five minutes.", "The sample is heated strongly until it turns black.", "Water lost = dried mass − starting mass."],

@@ -61,14 +61,14 @@ export default function SendProgress({
       await navigator.clipboard.writeText(url);
       flash("Link copied.");
     } catch {
-      legacyCopy(url) ? flash("Link copied.") : flash("Couldn't copy — select and copy the link.");
+      legacyCopy(url) ? flash("Link copied.") : flash("Couldn't copy: select and copy the link.");
     }
   }
   async function share() {
     if (!url) return;
     if (navigator.share) {
       try {
-        await navigator.share({ title: "My marine science progress", text: `${name.trim()} — progress`, url });
+        await navigator.share({ title: "My marine science progress", text: `${name.trim()}: progress`, url });
         return;
       } catch (e) {
         if (e && e.name === "AbortError") return; // user cancelled
@@ -96,7 +96,7 @@ export default function SendProgress({
       <div>
         <p style={kicker}>Share your progress</p>
         <h1 style={h1}>Send progress to your teacher</h1>
-        <p style={hint}>Nothing is uploaded: you send the link yourself. It contains the name you type below, your scores and your recent answers — nothing else, and nothing is stored by Wildcat Education.</p>
+        <p style={hint}>Nothing is uploaded: you send the link yourself. It contains the name you type below, your scores and your recent answers: nothing else, and nothing is stored by Wildcat Education.</p>
       </div>
 
       <div style={{ ...card, display: "flex", flexDirection: "column", gap: 14 }}>

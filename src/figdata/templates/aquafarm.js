@@ -443,7 +443,7 @@ function questions(F, r) {
   if (ch.every((x) => x[1] === ch[0][1])) { const i = groups.findIndex(([, v]) => v.length > 1); const v = groups[i][1]; ch[i] = v.find((x) => x[1] !== ch[0][1]); }
   const pick = pickMixed(r, ch, 5);
   qs.push(wq({ kind: "multi", q: `Tick <b>every</b> statement that is true for ${both ? `<b>${farm(k)}</b>` : "this farm"}.`, options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: both ? { panel: k } : {},
-    why: `This is ${k === "open" ? "an <b>open</b> system (net cages in the sea)" : "a <b>closed</b> system (tanks not connected to the sea)"}.<br>` + pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}.`).join("<br>") }));
+    why: `This is ${k === "open" ? "an <b>open</b> system (net cages in the sea)" : "a <b>closed</b> system (tanks not connected to the sea)"}.<br>` + pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}.`).join("<br>") }));
   return qs;
 }
 

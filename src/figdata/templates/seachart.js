@@ -186,7 +186,7 @@ function questions(F, r) {
   let pick = null;
   for (let t = 0; t < 12 && !pick; t++) { const seen = new Set(), uniq = shuffleR(r, st).filter((x) => { const k = pairOf(x[0]); if (seen.has(k)) return false; seen.add(k); return true; }); if (uniq.length >= 4) pick = pickMixed(r, uniq, Math.min(5, uniq.length)); }
   if (pick) qs.push({ kind: "multi", q: "Tick <b>every</b> statement that is true for this chart.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   return qs;
 }
 

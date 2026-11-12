@@ -101,7 +101,7 @@ function questions(F, r) {
   if (thr != null) st.push([`The water level on ${DAYS[np]} stayed above ${fmt(thr, 1)} m all day.`, N.low > thr, `The lowest level on ${DAYS[np]} is ${fmt(N.low, 1)} m.`]);
   const pick = pickMixed(r, st, 4);
   if (pick) qs.push({ kind: "multi", q: "Tick every statement the graph supports.", options: pick.map((x) => x[0]), a: pick.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0), hl: {},
-    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${x[2]}`).join("<br>") });
+    why: pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${x[2]}`).join("<br>") });
   // 7. plot: mark the low tide of a day with a cross (reads both axes)
   const pd = r() < 0.5 ? 0 : 1, PD = F.day[pd], hx = 0.25, hy = 0.05;
   const snap = (v, s) => Math.round(v / s) * s;

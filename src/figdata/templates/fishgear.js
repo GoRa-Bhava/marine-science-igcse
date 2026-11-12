@@ -436,7 +436,7 @@ function questions(F, r) {
   let pick = null;
   for (let t = 0; t < 20 && !pick; t++) { const seen = new Set(), st = shuffleR(r, pool).filter(([, , j]) => { const g = ST[j].g; if (!g) return true; if (seen.has(g)) return false; seen.add(g); return true; }); pick = pickMixed(r, st, Math.min(4, st.length)); }
   if (pick) qs.push({ kind: "multi", q: `Tick <b>every</b> statement that is true for the fishing method shown in panel <b>${L(F.iM)}</b>.`, options: pick.map((x) => x[0]), a: pick.map((x, j) => (x[1] ? j : -1)).filter((j) => j >= 0), hl: { panel: F.iM },
-    why: `Panel ${L(F.iM)} shows <b>${NAMEA[mM]}</b>.<br>` + pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]} — ${ST[x[2]].w}.`).join("<br>") });
+    why: `Panel ${L(F.iM)} shows <b>${NAMEA[mM]}</b>.<br>` + pick.map((x) => `${x[1] ? "✓" : "✗"} ${x[0]}: ${ST[x[2]].w}.`).join("<br>") });
   // 7. compare two methods (when both are shown)
   const iPo = ms.indexOf("pole"), iLo = ms.indexOf("longline"), iBe = ms.indexOf("beam"), iPe = ms.indexOf("pelagic");
   if (iPo >= 0 && iLo >= 0) qs.push({ kind: "choice", q: `Panels <b>${L(iPo)}</b> and <b>${L(iLo)}</b> both catch fish on hooks. Why does the method in panel <b>${L(iPo)}</b> have much less bycatch than the method in panel <b>${L(iLo)}</b>?`,
