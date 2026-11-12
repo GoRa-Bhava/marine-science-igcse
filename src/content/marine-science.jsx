@@ -710,7 +710,7 @@ const ITEMS = [
     q: "Explain why the Baltic Sea has a low salinity.",
     options: ["Rivers and high rainfall add fresh water, evaporation is low in the cool climate, and it is partly enclosed, so it mixes little with the ocean.", "Its water is very cold, and salt dissolves poorly in cold water, so most of it stays undissolved on the sea bed.", "It lies far from the equator, and because the sea's salt originates in warm tropical regions, little of it reaches these northern waters.", "Its water is constantly flushed out and replaced by fresh water flowing in from the open Atlantic Ocean, keeping the salinity low."],
     a: 0,
-    why: "The Baltic Sea gets lots of fresh water from rivers and rain, has low evaporation in its cool climate, and is fairly enclosed, so it mixes little with the saltier open ocean. Salt does dissolve in cold water, salt does not come only from the tropics, and the Atlantic is not fresh water." },
+    why: "The Baltic Sea gets lots of fresh water from rivers and rain, has low evaporation in its cool climate, and joins the salty ocean only through narrow, shallow straits, so little ocean water mixes in and its water stays diluted. Cold water does not explain it: even ice-cold water can dissolve about ten times more salt than sea water contains, so no salt is left undissolved on the sea bed. The sea's salt does not come only from the tropics, and the Atlantic water flowing in is salty, not fresh." },
   /* ---------------------------------------------- 2.3 Dissolved gases */
   { id: "U2-38", topic: "u2-gases", type: "choice", tier: 1, ref: "2.3/LO1",
     q: "Which statement about oxygen and water is correct?",
