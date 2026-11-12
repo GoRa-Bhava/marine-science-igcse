@@ -784,7 +784,7 @@ const ITEMS = [
     a: 0,
     why: "The egg floats in the salty water because dissolving salt makes the water denser than the egg. Salt does not decrease the density, does not warm the water, and does not change the egg's own weight." },
   { id: "U2-50", topic: "u2-density", type: "choice", tier: 2, ref: "2.4/LO5",
-    q: "Explain, in terms of particles, why warming a sample of water lowers its density.",
+    q: "Explain, in terms of particles, why warming a sample of sea water lowers its density.",
     options: ["The particles gain kinetic energy and move faster and further apart, so the same mass takes up a larger volume.", "The particles themselves swell and get bigger when they are heated, so they take up more space and the volume rises.", "Some of the water particles escape and are lost as the water warms, so the mass falls while the volume stays the same.", "The particles each become lighter when they gain energy, so the total mass falls even though the volume is unchanged."],
     a: 0,
     why: "When water warms, its particles gain energy, move faster and spread further apart, so the same mass takes up a larger volume, which lowers the density. The particles themselves do not grow, none are lost, and the mass does not fall." },
