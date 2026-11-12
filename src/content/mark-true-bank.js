@@ -10,7 +10,7 @@
 export const MARKTRUE = [
   // ============================ UNIT 1 ============================
   { id:"MT-U1-01", unit:1, topic:"1.1 Earth structure", spec:"1.1/LO3", tier:2, type:"multi",
-    stem:"Mark which statements are true about the structure of the Earth.",
+    stem:"Tick the statements that are true about the structure of the Earth.",
     options:[
       "The core is made mainly of iron.",
       "Magma is mainly melted iron from the Earth's core.",
@@ -23,7 +23,7 @@ export const MARKTRUE = [
     answer:[0,2,4,6],
     why:"From the centre out, the Earth has a solid iron inner core, a liquid iron outer core, a mantle of solid rock and a thin crust of solid rock. The iron core creates the Earth's magnetic field. Mantle rock can melt to form magma. Magma is melted mantle rock, not melted iron from the core. The crust is the thin outer layer, not a thick inner one. The order from the centre is core, mantle, crust, so the crust is on the outside. The atmosphere surrounds the Earth but is not one of its structural layers." },
   { id:"MT-U1-02", unit:1, topic:"1.2 Plate tectonics", spec:"1.2/LO4-5", tier:2, type:"multi",
-    stem:"Mark which statements are true about plate boundaries, earthquakes and volcanoes.",
+    stem:"Tick the statements that are true about plate boundaries, earthquakes and volcanoes.",
     options:[
       "At a divergent boundary the plates move apart.",
       "At a convergent boundary the plates slide past each other sideways.",
@@ -36,7 +36,7 @@ export const MARKTRUE = [
     answer:[0,2,3,6],
     why:"Divergent = apart, convergent = together (one subducted → melts → magma → volcano), transform = slide past. Earthquakes cluster at boundaries where locked plates slip." },
   { id:"MT-U1-03", unit:1, topic:"1.4 Tides & currents", spec:"1.4/LO1", tier:2, type:"multi",
-    stem:"Mark which statements are true about spring and neap tides.",
+    stem:"Tick the statements that are true about spring and neap tides.",
     options:[
       "Spring tides occur when the Sun and Moon are in line.",
       "Spring tides are caused by the change of season in spring.",
@@ -49,7 +49,7 @@ export const MARKTRUE = [
     answer:[0,2,3,6],
     why:"Tides are caused mainly by the Moon's gravity pulling on the oceans, with help from the Sun. When the Sun and Moon are in a line, their pulls combine, giving a spring tide with a large tidal amplitude. When they are at right angles, the pull is smaller, giving a neap tide with a small amplitude. Spring tides have nothing to do with the season. They are not caused by the Moon coming closer either. At a spring tide the high tide is higher but the low tide is lower, which is why the amplitude is bigger. The Earth's magnetic field does not cause tides." },
   { id:"MT-U1-04", unit:1, topic:"1.3 Oceans & sea floor", spec:"1.3/LO1-5", tier:2, type:"multi",
-    stem:"Mark which statements are true about oceans, seas and the World Ocean.",
+    stem:"Tick the statements that are true about oceans, seas and the World Ocean.",
     options:[
       "There are five oceans: Arctic, Atlantic, Pacific, Indian and Southern.",
       "The Pacific is the largest ocean.",
@@ -64,12 +64,12 @@ export const MARKTRUE = [
 
   // ============================ UNIT 2 ============================
   { id:"MT-U2-01", unit:2, topic:"2.1 Water cycle & states", spec:"2.1/LO6", tier:2, type:"multi",
-    stem:"Mark which statements are true about melting floating ice and land-based ice, and the investigation that compares them.",
+    stem:"Tick the statements that are true about melting floating ice and land-based ice, and the investigation that compares them.",
     options:["Melting floating sea ice does not change the sea level.","Melting land-based ice (glaciers, ice sheets) raises the sea level.","Melting land-based ice raises sea level mainly because the meltwater expands as it warms.","Melting ice makes the nearby sea water saltier.","In the investigation, a wider container makes the change in water level easier to see.","Melting land-based ice can cause flooding and habitat loss.","In the investigation, ice held above the water on a mesh models floating sea ice.","Floating ice already pushes aside (displaces) its own mass of water."],
     answer:[0,1,5,7],
     why:"Floating ice already pushes aside its own mass of water, so when it melts the sea level does not change. Land-based ice adds new water to the sea, so the level rises, and this can flood coasts and destroy habitats. Land ice raises sea level by adding water, not because the meltwater expands. Melting ice adds fresh water, so it makes the sea less salty, not saltier. A narrower container, not a wider one, makes the change in level bigger and easier to read. In the investigation, ice held above the water models land-based ice. Floating sea ice is modelled by ice placed in the water." },
   { id:"MT-U2-02", unit:2, topic:"2.2 pH & salinity", spec:"2.2/LO9", tier:2, type:"multi",
-    stem:"Mark which statements are true about the factors that change sea-water salinity.",
+    stem:"Tick the statements that are true about the factors that change sea-water salinity.",
     options:[
       "Evaporation raises salinity.",
       "Heavy rainfall raises salinity.",
@@ -82,7 +82,7 @@ export const MARKTRUE = [
     answer:[0,2,4,6],
     why:"Evaporation removes water but leaves the salt behind, so salinity rises. A hot, dry climate means more evaporation. Adding fresh water dilutes the salts, so river run-off lowers salinity. Rain is fresh water, so it lowers salinity rather than raising it. Melting ice sheets add fresh water too, so they lower salinity. Erosion of rocks on land releases salts that rivers carry to the sea, so it adds salt rather than lowering salinity. Evaporation raises salinity by removing water, not by adding salt from the air." },
   { id:"MT-U2-03", unit:2, topic:"2.3 Dissolved gases", spec:"2.3/LO1-3", tier:2, type:"multi",
-    stem:"Mark which statements are true about dissolved gases in sea water.",
+    stem:"Tick the statements that are true about dissolved gases in sea water.",
     options:[
       "Oxygen is more concentrated in air than in sea water.",
       "Carbon dioxide is more concentrated in sea water than in air.",
@@ -91,11 +91,11 @@ export const MARKTRUE = [
       "Respiration by marine organisms adds dissolved oxygen to sea water.",
       "As water warms, the solubility of oxygen and carbon dioxide falls.",
       "Carbon dioxide dissolves in the sea because it is heavier than air.",
-      "Dissolved oxygen in the sea comes mainly from rocks on the seabed." ],
+      "Seaweeds and phytoplankton take in dissolved oxygen to photosynthesise." ],
     answer:[0,1,3,5],
-    why:"Air holds far more oxygen than sea water does, because oxygen has a low solubility. Sea water holds far more carbon dioxide than air does, because carbon dioxide is very soluble. As water warms, both gases become less soluble. Fish take in dissolved oxygen gas through their gills; they cannot split water molecules. Respiration uses up dissolved oxygen, and it is photosynthesis that adds it. Carbon dioxide dissolves because it is very soluble, not because it is heavier than air. Dissolved oxygen comes from the atmosphere and from photosynthesis, not from seabed rocks." },
+    why:"Air holds far more oxygen than sea water does, because oxygen has a low solubility. Sea water holds far more carbon dioxide than air does, because carbon dioxide is very soluble. As water warms, both gases become less soluble. Fish take in dissolved oxygen gas through their gills; they cannot split water molecules. Respiration uses up dissolved oxygen. Photosynthesis by seaweeds and phytoplankton takes in carbon dioxide and releases oxygen, so it adds dissolved oxygen to the sea rather than using it. Carbon dioxide dissolves because it is very soluble, not because it is heavier than air." },
   { id:"MT-U2-04", unit:2, topic:"2.6 Upwelling", spec:"2.6/LO2-3", tier:2, type:"multi",
-    stem:"Mark the statements that are true about a normal year and an El Niño year in the Pacific.",
+    stem:"Tick the statements that are true about a normal year and an El Niño year in the Pacific.",
     options:[
       "In a normal year the trade winds blow from east to west.",
       "In a normal year, cold nutrient-rich water upwells off South America, supporting a rich fishery.",
@@ -110,7 +110,7 @@ export const MARKTRUE = [
 
   // ============================ UNIT 3 ============================
   { id:"MT-U3-01", unit:3, topic:"3.1 Cells", spec:"3.1/LO1-4", tier:2, type:"multi",
-    stem:"Mark which statements are true about plant and animal cells.",
+    stem:"Tick the statements that are true about plant and animal cells.",
     options:[
       "A plant cell has a cell wall; an animal cell does not.",
       "Mitochondria are found in plant cells but not in animal cells.",
@@ -123,7 +123,7 @@ export const MARKTRUE = [
     answer:[0,2,4,6],
     why:"Both plant and animal cells have a cell membrane, nucleus, cytoplasm and mitochondria. Plant cells also have a cell wall outside the membrane, chloroplasts and a large permanent vacuole. Chloroplasts absorb light for photosynthesis. Animal cells have mitochondria too, because both cell types need them for respiration. The wall is outside the membrane, not inside it. Animal cells do not have a large permanent vacuole. It is the cell membrane that controls what enters and leaves the cell; the wall supports it." },
   { id:"MT-U3-02", unit:3, topic:"3.3 Classification", spec:"3.3/LO1-4", tier:2, type:"multi",
-    stem:"Mark which statements are true about the classification of living things.",
+    stem:"Tick the statements that are true about the classification of living things.",
     options:[
       "A binomial name has two parts: genus then species.",
       "The three domains are Bacteria, Archaea and Eukarya.",
@@ -136,7 +136,7 @@ export const MARKTRUE = [
     answer:[0,1,3,6],
     why:"A binomial name has two parts, the genus and then the species. It is agreed internationally, so scientists everywhere use the same name. The three domains are Bacteria, Archaea and Eukarya. Organisms are grouped by the features they share. Kelp is a protoctist. Seagrass is a true plant with roots, leaves and flowers, so it is not a protoctist like kelp. The two parts of the name show the genus and the species, not where the organism lives. Each species has one scientific name that is used in every country. Dinoflagellates are single-celled protoctists; being single-celled does not make something a bacterium." },
   { id:"MT-U3-03", unit:3, topic:"3.2 Reproduction", spec:"3.2/LO1-2", tier:2, type:"multi",
-    stem:"Mark which statements are true about asexual and sexual reproduction.",
+    stem:"Tick the statements that are true about asexual and sexual reproduction.",
     options:[
       "Asexual reproduction needs only one parent.",
       "Asexual reproduction produces offspring identical to the parent.",
@@ -149,7 +149,7 @@ export const MARKTRUE = [
     answer:[0,1,3,5],
     why:"Asexual reproduction needs only one parent and gives offspring identical to that parent, for example coral polyps budding. In sexual reproduction, male and female sex cells fuse, so the offspring get a mix of characteristics from both parents. Sexual offspring are not identical copies of one parent. New seagrass plants that grow from rhizomes are made asexually, not sexually. Seagrass flowers are for sexual reproduction, not asexual. Coral larvae come from sexual reproduction, when eggs and sperm are released into the water. They are not made by budding." },
   { id:"MT-U3-04", unit:3, topic:"3.7 Migration", spec:"3.7", tier:2, type:"multi",
-    stem:"Mark which statements are true about animal migration.",
+    stem:"Tick the statements that are true about animal migration.",
     options:[
       "Animals migrate to find food.",
       "Animals migrate to reach breeding grounds.",
@@ -164,7 +164,7 @@ export const MARKTRUE = [
 
   // ============================ UNIT 4 ============================
   { id:"MT-U4-01", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO2-4", tier:2, type:"multi",
-    stem:"Mark which statements are true about food chains and food webs.",
+    stem:"Tick the statements that are true about food chains and food webs.",
     options:[
       "Food-chain arrows point from the eaten organism to the eater.",
       "A food chain begins with a producer.",
@@ -177,7 +177,7 @@ export const MARKTRUE = [
     answer:[0,1,3,4],
     why:"A food chain starts with a producer. Each arrow points from the organism that is eaten to the one that eats it, which is the direction energy moves. A food web is a network of linked food chains, so one organism can appear in several chains. An animal with two food sources is less affected by losing one, because it can switch to the other. Arrows show the flow of energy, not the order of body size. Energy flows up from producers to consumers; it does not flow back down. Trophic position depends on what an animal eats, not its size, and some very large animals feed on plankton." },
   { id:"MT-U4-02", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO12-13", tier:2, type:"multi",
-    stem:"Mark which statements are true about energy loss and ecological pyramids.",
+    stem:"Tick the statements that are true about energy loss and ecological pyramids.",
     options:[
       "Energy is lost between trophic levels through respiration.",
       "Energy is lost through movement and excretion.",
@@ -190,7 +190,7 @@ export const MARKTRUE = [
     answer:[0,1,3,5],
     why:"Energy is lost between trophic levels through respiration, movement and excretion, so only a small fraction passes to the next level. Because energy is lost at every level, an energy pyramid is always upright. Energy is not destroyed; it is transferred out of the food chain, for example as heat from respiration. A pyramid of numbers can be any shape, for example when one large producer feeds many consumers. Lost energy does not go back to the producers, which get new energy from sunlight. The width of each bar shows the amount of energy at that level, not the size of the organisms." },
   { id:"MT-U4-03", unit:4, topic:"4.2 & 4.3 Respiration/Photosynthesis", spec:"4.2-4.3", tier:2, type:"multi",
-    stem:"Mark which statements are true about photosynthesis and respiration.",
+    stem:"Tick the statements that are true about photosynthesis and respiration.",
     options:[
       "Photosynthesis releases oxygen.",
       "Respiration releases energy from glucose.",
@@ -203,7 +203,7 @@ export const MARKTRUE = [
     answer:[0,1,3,5],
     why:"Photosynthesis needs light; it makes glucose and releases oxygen. Respiration releases energy from glucose. It happens in every living cell, day and night, so producers both photosynthesise and respire. Respiration is a chemical reaction inside cells, while breathing just moves air or water in and out. Producers keep respiring at night; it is photosynthesis that stops in the dark. Respiration takes in oxygen and releases carbon dioxide, and photosynthesis does the reverse. Photosynthesis takes place in chloroplasts; mitochondria are where respiration happens." },
   { id:"MT-U4-04", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO6-9", tier:2, type:"multi",
-    stem:"Mark which statements are true about consumers, decomposers and detritivores.",
+    stem:"Tick the statements that are true about consumers, decomposers and detritivores.",
     options:[
       "A herbivore eats producers.",
       "A carnivore eats other animals.",
@@ -218,7 +218,7 @@ export const MARKTRUE = [
 
   // ============================ UNIT 5 ============================
   { id:"MT-U5-01", unit:5, topic:"5.3 Open ocean", spec:"5.3/LO3-11", tier:2, type:"multi",
-    stem:"Mark which statements are true about the three open-ocean zones.",
+    stem:"Tick the statements that are true about the three open-ocean zones.",
     options:[
       "The sunlight zone reaches from the surface to about 200 m.",
       "The midnight zone lies below about 1000 m.",
@@ -231,7 +231,7 @@ export const MARKTRUE = [
     answer:[0,1,3,5],
     why:"The sunlight zone runs from 0 to 200 m, the twilight zone from 200 to 1000 m, and the midnight zone lies below 1000 m. The sunlight zone is high in dissolved oxygen. Going deeper, light fades, pressure rises and temperature falls. The twilight zone is too dim for photosynthesis. The midnight zone has low biomass, because no food is made there. Temperature falls with depth; it does not rise. The midnight zone has little oxygen because there is no photosynthesis and respiration uses it up. Pressure does not squeeze the oxygen out." },
   { id:"MT-U5-02", unit:5, topic:"5.5 Sedimentary shore", spec:"5.5/LO2", tier:2, type:"multi",
-    stem:"Mark which statements are true about sandy and muddy shores.",
+    stem:"Tick the statements that are true about sandy and muddy shores.",
     options:[
       "Sandy shores have larger particles than muddy shores.",
       "Muddy shores are steeper than sandy shores.",
@@ -244,7 +244,7 @@ export const MARKTRUE = [
     answer:[0,2,3,5],
     why:"Sandy shores have larger grains with air spaces between them, so they hold more oxygen. Muddy shores form in sheltered, calm water. Their tiny particles stick together, so mud is more stable than loose sand. Muddy shores are almost flat, and sandy shores are steeper. On a muddy shore more sediment is deposited than eroded, which is why mud builds up. Lugworms cope with low oxygen using special haemoglobin, not by breathing air. Clams use a muscular foot to burrow into the sand rather than staying on the surface." },
   { id:"MT-U5-03", unit:5, topic:"5.6 Mangrove", spec:"5.6/LO3", tier:2, type:"multi",
-    stem:"Mark which statements are true about mangrove tree adaptations.",
+    stem:"Tick the statements that are true about mangrove tree adaptations.",
     options:[
       "Pneumatophores (aerial roots) take in oxygen for respiration.",
       "Prop roots support the tree in soft mud.",
@@ -257,7 +257,7 @@ export const MARKTRUE = [
     answer:[0,1,3,5],
     why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Aerial roots take in oxygen, not water vapour. Prop roots mainly support the tree; they do not store fresh water. Roots do not photosynthesise, because that happens in the leaves. Salt is secreted by the leaves, not by the pneumatophores." },
   { id:"MT-U5-04", unit:5, topic:"5.7 Coral reef", spec:"5.7/LO1-5", tier:2, type:"multi",
-    stem:"Mark which statements are true about coral reefs.",
+    stem:"Tick the statements that are true about coral reefs.",
     options:[
       "Coral polyps are animals.",
       "Zooxanthellae are photosynthetic algae in the polyp's tissues.",
@@ -272,7 +272,7 @@ export const MARKTRUE = [
 
   // ============================ UNIT 6 ============================
   { id:"MT-U6-01", unit:6, topic:"6.7 Eutrophication", spec:"6.7/LO5", tier:2, type:"multi",
-    stem:"Mark which statements are true about eutrophication.",
+    stem:"Tick the statements that are true about eutrophication.",
     options:[
       "Extra nutrients cause an algal bloom.",
       "When the algal bloom dies, decomposers break it down.",
@@ -285,7 +285,7 @@ export const MARKTRUE = [
     answer:[0,1,3,4],
     why:"Extra nutrients cause an algal bloom. When the algae die, decomposers break them down, and the decomposers' respiration uses up the dissolved oxygen. Organisms that need oxygen then die. Living algae release oxygen when they photosynthesise; the oxygen crash comes later, when the dead bloom is decomposed. Eutrophication is caused by nutrients, not salt, so it does not raise salinity. The bloom does not kill fish by warming the water. Fish die from lack of oxygen, not from starving because the algae took their nutrients." },
   { id:"MT-U6-02", unit:6, topic:"6.8 Climate", spec:"6.8/LO5-6", tier:2, type:"multi",
-    stem:"Mark which statements are true about climate change and the oceans.",
+    stem:"Tick the statements that are true about climate change and the oceans.",
     options:[
       "Melting land-based ice raises sea level.",
       "A warming ocean holds less dissolved oxygen.",
@@ -298,7 +298,7 @@ export const MARKTRUE = [
     answer:[0,1,3,4],
     why:"Sea level rises because melting land-based ice adds water and because warming water expands (thermal expansion). A warmer ocean holds less dissolved oxygen, and water that is too warm makes corals expel their zooxanthellae, which is bleaching. Floating sea ice already displaces its own mass of water, so it is not a major cause of sea-level rise. Rising carbon dioxide lowers the pH of sea water, making it more acidic. The ocean absorbs much of the extra heat, which helps keep global temperature stable. Bleaching is caused mainly by warming, not by sunscreen." },
   { id:"MT-U6-03", unit:6, topic:"6.6 Plastic", spec:"6.6/LO1-3", tier:2, type:"multi",
-    stem:"Mark which statements are true about plastic pollution.",
+    stem:"Tick the statements that are true about plastic pollution.",
     options:[
       "Plastic breaks down into ever-smaller microplastics.",
       "Microplastics can be taken up by plankton and pass along food chains.",
@@ -311,7 +311,7 @@ export const MARKTRUE = [
     answer:[0,1,3,4],
     why:"Plastic does not rot. Sunlight and waves break it into ever-smaller microplastics, which plankton take up and pass along food chains. Animals can eat large plastic, which blocks their guts so they starve. Gyres carry floating plastic to their calm centres, forming garbage patches. Bacteria do not break plastic down in months, because it lasts for a very long time. Plastic does not dissolve in salt water. Thicker bags last longer in the sea, not shorter. Garbage patches form at the surface in gyre centres, not on the seabed from tidal currents." },
   { id:"MT-U6-04", unit:6, topic:"6.9 Conservation", spec:"6.1 & 6.9", tier:2, type:"multi",
-    stem:"Mark which statements are true about sustainability and conservation.",
+    stem:"Tick the statements that are true about sustainability and conservation.",
     options:[
       "A sustainable activity does not cause the resource to run out.",
       "A marine protected area can help fish species recover.",
