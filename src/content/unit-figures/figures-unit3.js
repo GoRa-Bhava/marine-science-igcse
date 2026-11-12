@@ -162,7 +162,7 @@ export const FIGURE_ITEMS_U3 = [
   { id: "U3-D15", topic: "u3-plants", type: "choice", tier: 2, ref: "3.3/LO4", fig: "R-U3-06",
     q: "Kelp has a holdfast, a stipe, blades and gas bladders, but no true roots and no flowers. In which kingdom is it placed?",
     options: ["protoctists", "plants", "animals", "bacteria"], a: 0,
-    why: "Kelp is a macroalga (a seaweed) in the protoctist kingdom. It photosynthesises, but that does not make it a plant: its holdfast, stipe and blades are not true roots, stems or leaves, and it has no flowers." },
+    why: "Kelp is a macroalga (a seaweed) in the protoctist kingdom. It photosynthesises, but that does not make it a plant: its holdfast, stipe and blades are not true roots, stems or leaves, and it has no flowers. It is not an animal, because it makes its own food by photosynthesis, and it is not a bacterium, because it is a large organism made of many cells, each with a nucleus." },
   { id: "U3-D22", topic: "u3-plants", type: "label", tier: 1, ref: "3.5/LO3 · 3.5/LO4", fig: "G-U3-microalgae",
     q: "Label the main features of these two microalgae.",
     extra: ["calcium carbonate skeleton", "gas bladder"],

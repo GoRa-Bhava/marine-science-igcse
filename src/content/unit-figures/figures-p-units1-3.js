@@ -165,7 +165,7 @@ export const FIGURE_ITEMS_P13 = [
       "The plates moved apart, magma rose from the mantle into the gap between them, and it built up.",
       "The plates pushed together and squeezed the land upwards, folding it into a tall mountain of rock.",
     ], a: 0,
-    why: "At this convergent boundary, one plate is subducted beneath the other. Magma forms in the mantle above the sinking plate, rises through the crust and erupts. This is different from plates moving apart at a divergent boundary or the crust being folded into mountains." },
+    why: "At this convergent boundary, one plate is subducted beneath the other. Magma forms in the mantle above the sinking plate, rises through the crust and erupts. Friction between the plates does not melt the rock: the magma forms in the mantle above the sinking plate. Plates moving apart happens at a divergent boundary, and land folded into mountains has no magma, so neither matches this cross-section." },
 
   /* ---------------- quakes ---------------- */
   { id: "PQ2-U1-07", topic: "quakes", type: "tap", tier: 2, ref: "1.2/LO5", fig: "P-U1-06",
