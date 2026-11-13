@@ -5,6 +5,7 @@ import { pillLabel } from "./comparison/pills.js";
 import { InteractiveLab } from "./interactives/index.js";
 import { paletteFor } from "./theme.js";
 import { initAnswer as initAnswerShared, canSubmit as canSubmitShared, gradeItem } from "./quiz/grade.js";
+import { italicize, stripItalic } from "./quiz/richtext.js";
 import { ReaderApp } from "./reader/ReaderApp.jsx";
 import { recallEligible, recallStem } from "./reader/recallFirst.js";
 import { FLASHCARDS } from "./flashcards/flashcards.js";
@@ -117,7 +118,7 @@ function Prompt({ children }) {
       fontFamily: FONT_DISPLAY, fontSize: 21, lineHeight: 1.32, color: C.foam,
       fontWeight: 600, margin: "0 0 20px", letterSpacing: "-0.01em",
       whiteSpace: "pre-line",   // a stem may carry a formula on its own line
-    }}>{children}</h2>
+    }}>{italicize(children)}</h2>
   );
 }
 
@@ -203,7 +204,7 @@ function HotspotLayer({ figId, mode, tappedId, assign, order, locked, item, onHo
                 padding: "2px 6px", borderRadius: 7, pointerEvents: "none", zIndex: 2,
                 background: tagColors[tag.kind].bg, border: `1px solid ${tagColors[tag.kind].bd}`, color: tagColors[tag.kind].fg,
                 boxShadow: "0 1px 3px rgba(4,20,31,.5)",
-              }}>{tag.text}</span>
+              }}>{italicize(tag.text)}</span>
             )}
           </React.Fragment>
         );
@@ -300,7 +301,7 @@ function FigureLabelQ({ item, locked, state, setState }) {
                   background: armed ? C.raise : spent ? "transparent" : C.shelf,
                   color: spent ? C.line : C.foam, cursor: spent ? "default" : "pointer",
                 }}>
-                {pool[p]}
+                {italicize(pool[p])}
               </button>
             );
           })}
@@ -318,10 +319,10 @@ function FigureLabelQ({ item, locked, state, setState }) {
             const r = labelResultLine(fig, item, assign, i);
             return (
               <p key={h.id} style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, margin: "0 0 4px" }}>
-                <span style={{ color: C.accent }}>{r.n}.</span> {r.label}{" "}
+                <span style={{ color: C.accent }}>{r.n}.</span> {italicize(r.label)}{" "}
                 {r.correct
                   ? <span style={{ color: C.ok }}>✓</span>
-                  : <span style={{ color: C.no }}>✗ {r.placed ? `(you placed: ${r.placed})` : "(you placed nothing)"}</span>}
+                  : <span style={{ color: C.no }}>✗ {r.placed ? <>(you placed: {italicize(r.placed)})</> : "(you placed nothing)"}</span>}
               </p>
             );
           })}
@@ -398,7 +399,7 @@ function ChoiceQ({ item, locked, picked, setPicked, settings }) {
             return (
               <button key={i} ref={idx === 0 ? firstOptRef : null} onClick={() => !locked && setPicked(i)} disabled={locked}
                 style={{ ...btnBase, background: bg, borderColor: bd, color: col, cursor: locked ? "default" : "pointer" }}>
-                {item.options[i]}
+                {italicize(item.options[i])}
               </button>
             );
           })}
@@ -466,7 +467,7 @@ function MultiQ({ item, locked, picked, setPicked }) {
         } else if (on) { bg = C.raise; bd = C.glow; }
         return (
           <button key={i} onClick={() => !locked && toggle(i)} disabled={locked}
-            aria-label={locked && aria ? `${item.options[i]}: ${aria}` : undefined}
+            aria-label={locked && aria ? `${stripItalic(item.options[i])}: ${aria}` : undefined}
             style={{ ...btnBase, background: bg, borderColor: bd, color: col, display: "flex", gap: 12, alignItems: "center" }}>
             <span aria-hidden="true" style={{
               width: 20, height: 20, flexShrink: 0, borderRadius: 6,
@@ -475,7 +476,7 @@ function MultiQ({ item, locked, picked, setPicked }) {
               color: C.abyss, display: "flex", alignItems: "center", justifyContent: "center",
               fontSize: 13, fontWeight: 700, lineHeight: 1,
             }}>{locked && on ? box : ""}</span>
-            <span style={{ flex: 1, textAlign: "left" }}>{item.options[i]}</span>
+            <span style={{ flex: 1, textAlign: "left" }}>{italicize(item.options[i])}</span>
             {locked && label && (
               <span aria-hidden="true" style={{ flexShrink: 0, fontFamily: FONT_UI, fontSize: 12, fontWeight: 600, color: col, whiteSpace: "nowrap" }}>
                 {box} {label}
@@ -520,7 +521,7 @@ function GapQ({ item, locked, filled, setFilled }) {
       }}>
         {item.segments.map((seg, i) => (
           <React.Fragment key={i}>
-            {seg}
+            {italicize(seg)}
             {i < item.answers.length && (
               <span onClick={() => !locked && clear(i)} style={{
                 display: "inline-block", minWidth: 78, textAlign: "center", padding: "3px 10px",
@@ -529,7 +530,7 @@ function GapQ({ item, locked, filled, setFilled }) {
                 border: `1px ${filled[i] ? "solid" : "dashed"} ${locked ? (filled[i] === item.answers[i] ? C.ok : C.no) : filled[i] ? C.glow : C.line}`,
                 color: locked ? (filled[i] === item.answers[i] ? C.ok : C.no) : C.foam,
               }}>
-                {filled[i] || "\u00A0"}
+                {filled[i] ? italicize(filled[i]) : "\u00A0"}
               </span>
             )}
           </React.Fragment>
@@ -537,7 +538,7 @@ function GapQ({ item, locked, filled, setFilled }) {
       </p>
       {locked && filled.some((f, i) => f !== item.answers[i]) && (
         <p style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, margin: "-10px 0 16px" }}>
-          Correct: {item.answers.join(" · ")}
+          Correct: {italicize(item.answers.join(" · "))}
         </p>
       )}
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -550,7 +551,7 @@ function GapQ({ item, locked, filled, setFilled }) {
                 border: `1px solid ${C.line}`, background: spent ? "transparent" : C.shelf,
                 color: spent ? C.line : C.foam, cursor: locked || spent ? "default" : "pointer",
               }}>
-              {w}
+              {italicize(w)}
             </button>
           );
         })}
@@ -638,7 +639,7 @@ function MatchQ({ item, locked, state, setState }) {
             return (
               <div key={left.i} onClick={() => tapLeft(left.i)}
                 style={look(links[left.i] !== undefined, sel === left.i, lv)}>
-                {left.t}
+                {italicize(left.t)}
                 {links[left.i] !== undefined && badge(numberOf(left.i), lv)}
               </div>
             );
@@ -651,7 +652,7 @@ function MatchQ({ item, locked, state, setState }) {
             return (
               <div key={right.i} onClick={() => tapRight(right.i)}
                 style={look(owner !== undefined, false, rv)}>
-                {right.t}
+                {italicize(right.t)}
                 {owner !== undefined && badge(numberOf(owner), rv)}
               </div>
             );
@@ -676,7 +677,7 @@ function MatchQ({ item, locked, state, setState }) {
           </p>
           {item.pairs.map(([a, b], i) => (
             <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px", lineHeight: 1.4 }}>
-              <span style={{ color: C.accent }}>{a}</span>: {b}
+              <span style={{ color: C.accent }}>{italicize(a)}</span>: {italicize(b)}
             </p>
           ))}
         </div>
@@ -718,7 +719,7 @@ function ChainQ({ item, locked, order, setOrder }) {
               display: "flex", gap: 10,
             }}>
               <span style={{ color: C.mist, flexShrink: 0 }}>{pos + 1}</span>
-              <span>{item.chunks[k]}</span>
+              <span>{italicize(item.chunks[k])}</span>
             </div>
           );
         })}
@@ -728,7 +729,7 @@ function ChainQ({ item, locked, order, setOrder }) {
           <p style={{ fontFamily: FONT_UI, fontSize: 13, color: C.mist, margin: "0 0 6px" }}>Correct order</p>
           {item.chunks.map((c, i) => (
             <p key={i} style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, margin: "0 0 4px" }}>
-              <span style={{ color: C.accent }}>{i + 1}.</span> {c}
+              <span style={{ color: C.accent }}>{i + 1}.</span> {italicize(c)}
             </p>
           ))}
         </div>
@@ -744,7 +745,7 @@ function ChainQ({ item, locked, order, setOrder }) {
                 borderRadius: 11, border: `1px solid ${C.line}`, background: C.shelf,
                 color: C.foam, textAlign: "left", cursor: locked ? "default" : "pointer",
               }}>
-              {c}
+              {italicize(c)}
             </button>
           );
         })}

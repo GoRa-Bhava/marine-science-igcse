@@ -100,7 +100,7 @@ export const TRUEFALSE = [
   { id:"TF-U3-02", unit:3, topic:"3.3 Classification", spec:"3.3/LO2", tier:1, type:"truefalse",
     stem:"In a binomial name, the first part is the genus and the second is the species.",
     answer:true,
-    why:"The two-part scientific name gives the genus first, then the species (e.g. Orcinus orca).",
+    why:"The two-part scientific name gives the genus first, then the species (e.g. <i>Orcinus orca</i>).",
     misconception:"species written first" },
   { id:"TF-U3-03", unit:3, topic:"3.3 Classification", spec:"3.3/LO3", tier:1, type:"truefalse",
     stem:"The three domains of life are Bacteria, Archaea and Eukarya.",

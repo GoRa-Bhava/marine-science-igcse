@@ -466,7 +466,7 @@ export const WRITING = [
       { t: "The system is internationally agreed, so the same name is used worldwide", accept: "avoids confusion between local names" },
     ],
     noCredit: ["Every organism has a different name in every country with no shared system", "The binomial name has three parts", "The species name comes first, then the genus"],
-    model: "In the binomial system each species is given a two-part scientific name. The first part is the genus and the second part identifies the species within that genus; for example, the orca is Orcinus orca. The system is internationally agreed, so the same name is used by scientists everywhere, which avoids the confusion caused by different local names.",
+    model: "In the binomial system each species is given a two-part scientific name. The first part is the genus and the second part identifies the species within that genus; for example, the orca is <i>Orcinus orca</i>. The system is internationally agreed, so the same name is used by scientists everywhere, which avoids the confusion caused by different local names.",
     tip: "Give the key ideas: a two-part name, genus first, species second, and why it helps (one agreed name worldwide).",
     status: "human_review" },
 
@@ -851,17 +851,17 @@ export const WRITING = [
     status: "human_review" },
 
   { id: "W5-04", unit: 5, ref: "5.4/LO4", command: "Explain", marks: 5,
-    q: "Explain how limpets, mussels, sea anemones and seaweeds such as Fucus are adapted to survive on a rocky shore when the tide is out.",
+    q: "Explain how limpets, mussels, sea anemones and seaweeds such as <i>Fucus</i> are adapted to survive on a rocky shore when the tide is out.",
     points: [
       { t: "Limpets clamp their shells tightly against the rock, trapping water so they do not dry out", accept: "limpets clamp down to prevent water loss" },
       { t: "Mussels close their shells tightly, trapping water inside", accept: "mussels shut their shells to keep moist" },
       { t: "Their hard shells protect them from predators such as birds", accept: "hard shell for protection" },
       { t: "Sea anemones pull in (retract) their tentacles to reduce water loss", accept: "retract tentacles" },
       { t: "Sea anemones live in rock pools or under seaweed, where they stay moist", accept: "live where water is kept" },
-      { t: "Fucus has thick, leathery fronds that resist drying out", accept: "tough fronds keep water in" },
+      { t: "<i>Fucus</i> has thick, leathery fronds that resist drying out", accept: "tough fronds keep water in" },
     ],
     noCredit: ["The animals leave the shore and swim to deep water at every low tide", "Being exposed to air does no harm to shore animals", "Seaweed has true roots that stop it drying out"],
-    model: "When the tide is out, limpets clamp tightly onto the rock and mussels close their shells, trapping water inside so they do not dry out, and their hard shells protect them from predators such as birds. Sea anemones retract their tentacles to reduce water loss, and they live in rock pools or under seaweed where they stay moist. The seaweed Fucus has thick, leathery fronds that resist drying out.",
+    model: "When the tide is out, limpets clamp tightly onto the rock and mussels close their shells, trapping water inside so they do not dry out, and their hard shells protect them from predators such as birds. Sea anemones retract their tentacles to reduce water loss, and they live in rock pools or under seaweed where they stay moist. The seaweed <i>Fucus</i> has thick, leathery fronds that resist drying out.",
     tip: "For each organism, name the feature and link it to the low-tide problem it solves: drying out or predators.",
     status: "human_review" },
 
@@ -1065,22 +1065,22 @@ export const WRITING = [
     status: "human_review" },
 
   { id: "W5-16", unit: 5, ref: "5.4/LO3", command: "Explain", marks: 4,
-    q: "On a rocky shore, mussels are most common on the lower shore and become fewer further up. Very few mussels live below the low-tide mark, where starfish, which are predators of shellfish, are common. Fucus seaweed grows on the middle and lower shore but not at the top, and there is much less Fucus on a part of the shore that faces very strong waves. Explain how biotic and abiotic factors could cause this pattern.",
+    q: "On a rocky shore, mussels are most common on the lower shore and become fewer further up. Very few mussels live below the low-tide mark, where starfish, which are predators of shellfish, are common. <i>Fucus</i> seaweed grows on the middle and lower shore but not at the top, and there is much less <i>Fucus</i> on a part of the shore that faces very strong waves. Explain how biotic and abiotic factors could cause this pattern.",
     points: [
       { t: "Higher up the shore, organisms are uncovered by the tide for longer, so they are more likely to dry out", accept: "exposure to air increases up the shore / lower down they are covered by water for longer" },
       { t: "Higher up the shore, the temperature changes more, because air temperature varies more than water temperature", accept: "temperature is more stable lower down / organisms can overheat in the sun when uncovered" },
       { t: "Mussels can feed only when they are covered by water, so higher up they have less time to feed", accept: "less food is available higher up / they feed less when uncovered" },
       { t: "Below the low-tide mark the mussels are always under water, where the starfish can reach and eat them", accept: "predation by starfish keeps mussel numbers low there" },
-      { t: "Strong wave action can tear Fucus off the rocks, so there is less of it on the wave-exposed part", accept: "very strong waves remove it even though it has a holdfast" },
+      { t: "Strong wave action can tear <i>Fucus</i> off the rocks, so there is less of it on the wave-exposed part", accept: "very strong waves remove it even though it has a holdfast" },
     ],
     noCredit: [
       "Mussels live low on the shore because they need more light",
-      "Fucus is missing from the top of the shore because mussels eat it",
+      "<i>Fucus</i> is missing from the top of the shore because mussels eat it",
       "The starfish compete with the mussels for food",
       "Wave action is a biotic factor",
     ],
-    model: "Higher up the shore, organisms are uncovered by the tide for longer, so they are more likely to dry out. This is why Fucus cannot live at the top of the shore. When they are uncovered, the temperature also changes more, because air temperature varies more than water temperature. Mussels can only feed when they are covered by water, so higher up they have less time to feed. Below the low-tide mark the mussels are always under water, where starfish can reach and eat them, so predation keeps their numbers low. Where the waves are very strong, wave action can tear Fucus off the rocks, so there is much less of it there.",
-    tip: "For each mark, name a factor, say how it changes up or down the shore or between places, and link it to where the organism is common or missing. Cover both the mussels and the Fucus. Use biotic factors (predation, food) as well as abiotic ones (exposure to air, temperature, wave action).",
+    model: "Higher up the shore, organisms are uncovered by the tide for longer, so they are more likely to dry out. This is why <i>Fucus</i> cannot live at the top of the shore. When they are uncovered, the temperature also changes more, because air temperature varies more than water temperature. Mussels can only feed when they are covered by water, so higher up they have less time to feed. Below the low-tide mark the mussels are always under water, where starfish can reach and eat them, so predation keeps their numbers low. Where the waves are very strong, wave action can tear <i>Fucus</i> off the rocks, so there is much less of it there.",
+    tip: "For each mark, name a factor, say how it changes up or down the shore or between places, and link it to where the organism is common or missing. Cover both the mussels and the <i>Fucus</i>. Use biotic factors (predation, food) as well as abiotic ones (exposure to air, temperature, wave action).",
     status: "human_review" },
 
 

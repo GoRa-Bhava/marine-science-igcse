@@ -8,6 +8,9 @@ import { gradeTap, gradeLabel } from "../engine/figures.js";
 
 const FIGURES = content.figures || {};
 
+import { stripItalic } from "./richtext.js";
+export { stripItalic };
+
 export const sameSet = (a, b) => a.length === b.length && [...a].sort().every((v, i) => v === [...b].sort()[i]);
 
 export function initAnswer(it) {
@@ -40,7 +43,7 @@ export function gradeItem(item, answer) {
   if (item.type === "choice") return answer === item.a;
   if (item.type === "truefalse") return answer === item.answer; // answer is a boolean
   if (item.type === "multi") return sameSet(answer, item.a);
-  if (item.type === "gap") return answer.every((a, i) => a === item.answers[i]);
+  if (item.type === "gap") return answer.every((a, i) => stripItalic(a) === stripItalic(item.answers[i]));
   if (item.type === "match") return item.pairs.every((_, i) => answer.links[i] === i);
   if (item.type === "chain") return answer.every((k, i) => k === i);
   if (item.type === "tap") return gradeTap(item, answer);

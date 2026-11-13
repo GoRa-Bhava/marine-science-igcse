@@ -712,7 +712,7 @@ export const NOTES = {
     "id": "3.3",
     "title": "Classification",
     "intro": "How scientists sort living things into groups and give each one a worldwide name.",
-    "tip": "The binomial name has two parts, genus then species (e.g. Orcinus orca). Classification runs domain → kingdom → … → species.",
+    "tip": "The binomial name has two parts, genus then species (e.g. <i>Orcinus orca</i>). Classification runs domain → kingdom → … → species.",
     "notes": [
      {
       "h": "Grouping by shared features",
@@ -722,7 +722,7 @@ export const NOTES = {
      {
       "h": "The binomial name",
       "ref": "3.3/LO2",
-      "body": "The <b>binomial system</b> gives each organism a two-part scientific name, for example <b>Orcinus orca</b>. The first part is the <b>genus</b> and the second part is the <b>species</b>. It is agreed internationally, so the same name is used everywhere whatever the local language."
+      "body": "The <b>binomial system</b> gives each organism a two-part scientific name, for example <b><i>Orcinus orca</i></b>. The first part is the <b>genus</b> and the second part is the <b>species</b>. It is agreed internationally, so the same name is used everywhere whatever the local language."
      },
      {
       "h": "The three domains",
@@ -1507,12 +1507,12 @@ export const NOTES = {
      {
       "h": "How the factors work",
       "ref": "5.4/LO3",
-      "body": "Exposure to air causes drying, so <b>Fucus</b> (a macroalga) and <b>sea anemones</b> are limited higher up the shore, with anemones restricted to pools or under algae. Predation limits organisms such as mussels lower down. Wave action favours firmly attached organisms, and grazers follow their food. At low tide, high-shore rock pools are cut off: their small volume warms and cools quickly, so temperature swings widely, and at night, with no light for photosynthesis, oxygen can fall as everything in the pool keeps respiring."
+      "body": "Exposure to air causes drying, so <b><i>Fucus</i></b> (a macroalga) and <b>sea anemones</b> are limited higher up the shore, with anemones restricted to pools or under algae. Predation limits organisms such as mussels lower down. Wave action favours firmly attached organisms, and grazers follow their food. At low tide, high-shore rock pools are cut off: their small volume warms and cools quickly, so temperature swings widely, and at night, with no light for photosynthesis, oxygen can fall as everything in the pool keeps respiring."
      },
      {
       "h": "Adaptations to a rocky shore",
       "ref": "5.4/LO4",
-      "body": "<b>Limpets</b> and <b>mussels</b> close their hard shells to reduce water loss and resist predators. Sea anemones retract their tentacles and live in rock pools or under macroalgae to stay moist. <b>Fucus</b> has thick leathery fronds to resist drying and a <b>holdfast</b> to grip against currents and waves."
+      "body": "<b>Limpets</b> and <b>mussels</b> close their hard shells to reduce water loss and resist predators. Sea anemones retract their tentacles and live in rock pools or under macroalgae to stay moist. <b><i>Fucus</i></b> has thick leathery fronds to resist drying and a <b>holdfast</b> to grip against currents and waves."
      }
     ],
     "terms": [

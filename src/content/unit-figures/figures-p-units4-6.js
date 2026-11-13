@@ -237,7 +237,7 @@ export const FIGURE_ITEMS_P46 = [
 
   // ---- u5-sediment ----
   { id: "PQ2-U5-53", topic: "u5-sediment", type: "choice", tier: 2, ref: "5.5/LO3", fig: "P-U5-01-cmp",
-    q: "Seaweeds such as Fucus grow on only one of these shores. Which shore, and why?",
+    q: "Seaweeds such as <i>Fucus</i> grow on only one of these shores. Which shore, and why?",
     options: [
       "The left shore, because the solid rock gives the holdfast a stable surface to grip.",
       "The right shore, because the loose sand lets the seaweed's roots grow down deeply.",

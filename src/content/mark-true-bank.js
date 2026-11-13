@@ -139,15 +139,15 @@ export const MARKTRUE = [
     stem:"Tick the statements that are true about asexual and sexual reproduction.",
     options:[
       "Asexual reproduction needs only one parent.",
-      "Asexual reproduction produces offspring identical to the parent.",
-      "Sexual reproduction produces offspring identical to one parent.",
+      "Asexual reproduction produces offspring that are exact copies of the parent.",
+      "Sexual reproduction produces offspring that are exact copies of one parent.",
       "In sexual reproduction, male and female sex cells fuse.",
       "New seagrass plants that grow from rhizomes are made by sexual reproduction.",
       "Coral can reproduce asexually by budding.",
       "Seagrass flowers are used for asexual reproduction.",
       "Coral larvae are produced by budding from the parent polyp." ],
     answer:[0,1,3,5],
-    why:"Asexual reproduction needs only one parent and gives offspring identical to that parent, for example coral polyps budding. In sexual reproduction, male and female sex cells fuse, so the offspring get a mix of characteristics from both parents. Sexual offspring are not identical copies of one parent. New seagrass plants that grow from rhizomes are made asexually, not sexually. Seagrass flowers are for sexual reproduction, not asexual. Coral larvae come from sexual reproduction, when eggs and sperm are released into the water. They are not made by budding." },
+    why:"Asexual reproduction needs only one parent and gives offspring that are exact copies of that parent, for example coral polyps budding. In sexual reproduction, male and female sex cells fuse, so the offspring get a mix of characteristics from both parents and are not exact copies of either. New seagrass plants that grow from rhizomes are made asexually, not sexually. Seagrass flowers are for sexual reproduction, not asexual. Coral larvae come from sexual reproduction, when eggs and sperm are released into the water. They are not made by budding." },
   { id:"MT-U3-04", unit:3, topic:"3.7 Migration", spec:"3.7", tier:2, type:"multi",
     stem:"Tick the statements that are true about animal migration.",
     options:[
