@@ -250,10 +250,10 @@ export const FIGURE_ITEMS_P46 = [
     options: [
       "The right shore, where it can dig down into the soft sand.",
       "The left shore, where it can shelter from waves in rock pools.",
-      "The right shore, where it can grip the sand grains with its body.",
+      "The right shore, where it lives on top of the sand under the seaweed.",
       "The left shore, where it can scrape algae off the rocks to feed.",
     ], a: 0,
-    why: "A lugworm needs sediment that it can burrow into and swallow, so it lives on sandy or muddy shores; it cannot dig into rock. It does not grip the surface, and it feeds on the microorganisms in the sand it swallows, not on algae scraped from rock as a limpet does." },
+    why: "A lugworm needs sediment that it can burrow into and swallow, so it lives on sandy or muddy shores; it cannot dig into rock. It lives in a U-shaped burrow below the surface, not on top of the sand. It feeds on the microorganisms in the sand it swallows, not on algae scraped from rock as a limpet does, and it does not need rock pools for shelter. 5.5/LO4." },
   { id: "U5-D13", topic: "u5-sediment", type: "label", tier: 1, ref: "5.5/LO4", fig: "P-U5-11",
     q: "Label the shore animals and the two layers of sediment.",
     extra: ["rock pool", "holdfast"],

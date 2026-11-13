@@ -182,7 +182,7 @@ export const MARKTRUE = [
       "Energy is lost between trophic levels through respiration.",
       "Energy is lost through movement and excretion.",
       "Energy is destroyed as it passes along the chain.",
-      "An energy pyramid is always upright because of these losses.",
+      "An energy pyramid is always upright, because energy is lost at every trophic level.",
       "A pyramid of numbers is always pyramid-shaped.",
       "Only a small fraction of energy passes to the next level.",
       "Energy lost between trophic levels is recycled back to the producers.",
