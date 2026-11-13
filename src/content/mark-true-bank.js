@@ -104,9 +104,9 @@ export const MARKTRUE = [
       "In an El Niño the trade winds weaken or reverse.",
       "In an El Niño, warm surface water shifts east and the fish catch off South America falls.",
       "During an El Niño, upwelling in the eastern Pacific increases.",
-      "In an El Niño year, Australia and Asia get heavier rain and flooding." ],
+      "In an El Niño year, Australia and parts of South-east Asia get heavier rain and flooding." ],
     answer:[0,1,4,5],
-    why:"In a normal year, strong trade winds blow from east to west. They push warm surface water west, towards Australia and Asia, so cold, nutrient-rich water upwells off South America and supports a rich fishery. In an El Niño the trade winds weaken or reverse. Warm water shifts east, upwelling off South America is reduced, and the fish catch falls. In a normal year the trade winds push warm water away from South America, not towards it. El Niño does not come every year; it happens irregularly, every few years. Upwelling in the east decreases in an El Niño; it does not increase. In an El Niño, Australia and Asia get drought and bushfires, and the heavy rain and flooding hit the eastern Pacific." },
+    why:"In a normal year, strong trade winds blow from east to west. They push warm surface water west, towards Australia and Asia, so cold, nutrient-rich water upwells off South America and supports a rich fishery. In an El Niño the trade winds weaken or reverse. Warm water shifts east, upwelling off South America is reduced, and the fish catch falls. In a normal year the trade winds push warm water away from South America, not towards it. El Niño does not come every year; it happens irregularly, every few years. Upwelling in the east decreases in an El Niño; it does not increase. In an El Niño, Australia and parts of South-east Asia typically get drought and bushfires, and the heavy rain and flooding hit the eastern Pacific near South America." },
 
   // ============================ UNIT 3 ============================
   { id:"MT-U3-01", unit:3, topic:"3.1 Cells", spec:"3.1/LO1-4", tier:2, type:"multi",
