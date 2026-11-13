@@ -310,12 +310,12 @@ export const FIGURE_ITEMS_P13 = [
   { id: "PQ2-U3-12", topic: "u3-migration", type: "choice", tier: 2, ref: "3.7/LO3 · 3.7/LO2", fig: "P-U3-08",
     q: "The two panels show the same shrimp and lanternfish, once by day and once at night. Which statement is correct?", qRecall: "The two panels show the same shrimp and lanternfish, once by day and once at night. Which panel shows night, and why are the animals there?",
     options: [
-      "The left is night: they rise to feed in the sunlit water in the dark.",
+      "The left is night: they rise to feed near the surface in the dark.",
       "The right is night: they sink to feed in the twilight zone in the dark.",
       "The left is night: they rise to escape the cold deep water at night.",
       "The right is night: they sink because their food sinks after dark.",
     ], a: 0,
-    why: "These animals make a daily vertical migration. At dusk they rise from the twilight zone to the sunlight zone, where the plankton and other food are, and feed under cover of darkness, so the left panel is night. At dawn they sink back to the dim twilight zone. They are not escaping cold or following food downwards: there is little food at depth." },
+    why: "These animals make a daily vertical migration. At dusk they rise from the twilight zone to the sunlight zone, where the plankton and other food are, and feed under cover of darkness, so the left panel is night. At dawn they sink back to the dim twilight zone, where predators cannot easily see them. They are not escaping the cold, and they do not sink to feed or to follow their food: there is little food at depth. 3.7/LO3." },
   { id: "PQ2-U3-13", topic: "u3-migration", type: "choice", tier: 2, ref: "3.7/LO3", fig: "P-U3-08",
     q: "In the right-hand panel the shrimp and lanternfish are far below the predator, in the dim twilight zone. Why are they down there?",
     options: [

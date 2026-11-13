@@ -153,14 +153,14 @@ export const MARKTRUE = [
     options:[
       "Animals migrate to find food.",
       "Animals migrate to reach breeding grounds.",
-      "Migrating animals find their way by following the wind.",
+      "Migrating animals find their way by following the shape of the clouds.",
       "Some fish migrate to avoid predators.",
       "Migration means the everyday movements an animal makes around its home area.",
       "Lanternfish migrate towards the surface at night to feed.",
-      "Animals migrate because the water in their old habitat becomes too salty.",
-      "Animals migrate to escape strong ocean currents." ],
+      "Lanternfish migrate towards the surface by day to feed in the sunlight.",
+      "Animals migrate by drifting wherever the ocean currents take them." ],
     answer:[0,1,3,5],
-    why:"Animals migrate to find food, to reach breeding grounds and to avoid predators. Lanternfish rise to the surface at night to feed, hidden by the dark. Animals find their way using the Earth's magnetic field, the Sun, Moon and stars, smell, and mental maps of landmarks, not by following the wind. Migration is a journey from one place to another, not any movement within a home area. Animals migrate for food, breeding or safety, not to escape currents or because their water has become too salty." },
+    why:"Animals migrate to find food, to reach breeding grounds and to avoid predators. Lanternfish rise to the surface at night to feed, hidden by the dark, and go back down by day so that predators cannot see them. Animals find their way using the Earth's magnetic field, the Sun, Moon and stars, smell, and mental maps of landmarks, not the clouds, which keep moving and changing. Migration is a regular journey in a definite direction from one place to another, so it is not the everyday movements within a home area, and it is not drifting wherever the currents go. 3.7." },
 
   // ============================ UNIT 4 ============================
   { id:"MT-U4-01", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO2-4", tier:2, type:"multi",
