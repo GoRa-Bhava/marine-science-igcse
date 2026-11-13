@@ -114,14 +114,14 @@ export const MARKTRUE = [
     options:[
       "A plant cell has a cell wall; an animal cell does not.",
       "Mitochondria are found in plant cells but not in animal cells.",
-      "Plant cells contain chloroplasts; animal cells do not.",
+      "Plant leaf cells contain chloroplasts; animal cells do not.",
       "A plant cell's wall is inside its cell membrane.",
       "Both plant and animal cells have a nucleus, cytoplasm and cell membrane.",
       "Animal cells have a large permanent vacuole like plant cells.",
       "Chloroplasts absorb light for photosynthesis.",
       "The cell wall controls what enters and leaves the cell." ],
     answer:[0,2,4,6],
-    why:"Both plant and animal cells have a cell membrane, nucleus, cytoplasm and mitochondria. Plant cells also have a cell wall outside the membrane, chloroplasts and a large permanent vacuole. Chloroplasts absorb light for photosynthesis. Animal cells have mitochondria too, because both cell types need them for respiration. The wall is outside the membrane, not inside it. Animal cells do not have a large permanent vacuole. It is the cell membrane that controls what enters and leaves the cell; the wall supports it." },
+    why:"Both plant and animal cells have a cell membrane, nucleus, cytoplasm and mitochondria. Plant cells also have a cell wall outside the membrane and a large permanent vacuole, and leaf cells have chloroplasts, which absorb light for photosynthesis; plant cells that get no light, such as root cells, have none. Animal cells have mitochondria too, because both cell types need them for respiration. The wall is outside the membrane, not inside it. Animal cells do not have a large permanent vacuole. It is the cell membrane that controls what enters and leaves the cell; the wall supports it." },
   { id:"MT-U3-02", unit:3, topic:"3.3 Classification", spec:"3.3/LO1-4", tier:2, type:"multi",
     stem:"Tick the statements that are true about the classification of living things.",
     options:[

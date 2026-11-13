@@ -54,11 +54,11 @@ export const FIGURES_R13 = {
   // plant cell with all seven 3.1/LO1 structures. Wall marker on the left band, membrane marker on the
   // bottom line (different sides: the two are adjacent), cytoplasm in the clear top-right patch.
   "R-U3-01": { art: IMG("R-U3-01", 800, 800), hotspots: [
-    { id: "cell-wall", x: 74, y: 400, label: "cell wall" },
-    { id: "cell-membrane", x: 468, y: 613, label: "cell membrane" },
-    { id: "cytoplasm", x: 650, y: 228, label: "cytoplasm" },
-    { id: "nucleus", x: 640, y: 383, label: "nucleus" },
-    { id: "chloroplast", x: 380, y: 205, label: "chloroplast" },
+    { id: "cell-wall", x: 72, y: 380, label: "cell wall" },
+    { id: "cell-membrane", x: 465, y: 614, label: "cell membrane" },
+    { id: "cytoplasm", x: 640, y: 250, label: "cytoplasm" },
+    { id: "nucleus", x: 640, y: 385, label: "nucleus" },
+    { id: "chloroplast", x: 380, y: 207, label: "chloroplast" },
     { id: "vacuole", x: 360, y: 395, label: "vacuole" },
     { id: "mitochondrion", x: 153, y: 565, label: "mitochondrion" },
   ] },
@@ -110,7 +110,7 @@ export const FIGURE_ITEMS_R13 = [
   { id: "PQ2-U3-91", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO3 · 3.1/LO4", fig: "R-U3-01",
     q: "Tap the structure that controls which substances enter and leave the cell.",
     target: "cell-membrane",
-    why: "The cell membrane, the thin dark-blue line just inside the cell wall, controls which substances enter and leave the cell. The cell wall outside it supports the cell and stops it bursting, but it does not control what passes through. A plant cell has both a wall and a membrane." },
+    why: "The cell membrane, the deep-blue layer just inside the cell wall, controls which substances enter and leave the cell. The cell wall outside it supports the cell and stops it bursting, but it does not control what passes through. A plant cell has both a wall and a membrane." },
   { id: "PQ2-U3-92", topic: "u3-cells", type: "label", tier: 1, ref: "3.1/LO2 · 3.1/LO3", fig: "R-U3-03",
     q: "Label the three marked structures of this bacterial cell.",
     extra: ["nucleus", "chloroplast"],
