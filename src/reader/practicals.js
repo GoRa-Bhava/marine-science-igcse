@@ -188,7 +188,7 @@ export const PRACTICALS = [
       },
       {
         id: "P4.1-09", type: "multi", tier: 2, ref: "4.1/LO2", family: "ft-safety",
-        q: "Which are correct safety precautions for the food tests? Select all that apply.",
+        q: "Which are correct safety precautions for the food tests? Tick all that apply.",
         options: [
           "Keep ethanol away from naked flames",
           "Wear eye protection when using the reagents",
@@ -223,7 +223,7 @@ export const PRACTICALS = [
       },
       {
         id: "P4.1-12", type: "multi", tier: 2, ref: "4.1/LO2", family: "ft-fairtest",
-        q: "You test one food for several nutrients. Which make it a fair, valid test? Select all that apply.",
+        q: "You test one food for several nutrients. Which make it a fair, valid test? Tick all that apply.",
         options: [
           "Use a separate sample of the food for each test",
           "Use equal volumes of sample and reagent",
@@ -736,7 +736,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         options: ["rate of dissolving, not the total amount", "total amount that can dissolve", "temperature of the water", "rate of dissolving and the total amount"],
         a: 0, why: "Stirring makes the solid dissolve faster, but the total amount that can dissolve is set by the temperature. Thinking stirring raises the total confuses rate with amount. Stirring doesn't change both, just the rate. It doesn't noticeably warm the water either. (2.2/LO6)", status: "human_review" },
       { id: "P2.2c-04", type: "multi", tier: 2, ref: "2.2/LO6", family: "solid-fairtest",
-        q: "Which should be kept the same to make this a fair test? Select all that apply.",
+        q: "Which should be kept the same to make this a fair test? Tick all that apply.",
         options: ["The volume of water", "The solid being dissolved", "The way the mixture is stirred", "The temperature of the water"],
         a: [0, 1, 2], why: "Volume, solute and stirring are controlled; the temperature is the variable you change, so it is not kept the same. (2.2/LO6)", status: "human_review" },
       { id: "P2.2c-05", type: "chain", tier: 2, ref: "2.2/LO6", family: "solid-method",
@@ -1200,7 +1200,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     ],
     items: [
       { id: "P3.4b-01", type: "multi", tier: 1, ref: "3.4/LO6", family: "draw-rules",
-        q: "Which are rules for a biological drawing? Select all that apply.",
+        q: "Which are rules for a biological drawing? Tick all that apply.",
         options: ["Draw large, filling the space", "Use single, unbroken lines", "Use ruled label lines that touch the feature", "Add shading to show depth", "Colour it in to look realistic"],
         a: [0, 1, 2], why: "Large, single clean lines and ruled labels are correct; shading and colour are not used in a biological drawing. (3.4/LO6)", status: "human_review" },
       { id: "P3.4b-02", type: "truefalse", tier: 1, ref: "3.4/LO6", family: "draw-shade",
@@ -1373,7 +1373,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         q: "Some heat is lost to the surroundings, so the measured energy is lower than the true value.",
         answer: true, why: "True. Heat escapes to the air and the glass, so the temperature rise (and the energy found) is an underestimate. (4.2/LO5)", status: "human_review" },
       { id: "P4.2-03", type: "multi", tier: 2, ref: "4.2/LO5", family: "burn-fairtest",
-        q: "Which should be controlled to make it a fair test? Select all that apply.",
+        q: "Which should be controlled to make it a fair test? Tick all that apply.",
         options: ["The volume of water heated", "The distance from the food to the tube", "The starting temperature of the water", "The type of food being burned"],
         a: [0, 1, 2], why: "Water volume, distance and starting temperature are controlled; the type of food is the variable you are comparing. (4.2/LO5)", status: "human_review" },
       { id: "P4.2-04", type: "choice", tier: 2, ref: "4.2/LO5", family: "burn-incomplete",
@@ -1469,7 +1469,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
         q: "The bubbles collected in this experiment are oxygen from photosynthesis.",
         answer: true, why: "True. In the light, the plant photosynthesises and releases oxygen as the bubbles. (4.3/LO6)", status: "human_review" },
       { id: "P4.3-05", type: "multi", tier: 2, ref: "4.3/LO6", family: "photo-controls",
-        q: "Which are controlled variables in this experiment? Select all that apply.",
+        q: "Which are controlled variables in this experiment? Tick all that apply.",
         options: ["The temperature of the water", "The same piece of plant", "The length of time bubbles are counted", "The distance of the lamp from the plant"],
         a: [0, 1, 2], why: "Temperature, the plant and the counting time are controlled; the lamp distance (light intensity) is the variable you change. (4.3/LO6)", status: "human_review" },
       { id: "P4.3-06", type: "chain", tier: 2, ref: "4.3/LO6", family: "photo-method",
