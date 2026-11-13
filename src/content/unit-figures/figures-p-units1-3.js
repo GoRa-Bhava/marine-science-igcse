@@ -108,11 +108,7 @@ export const FIGURES_P13 = {
   ] },
   // Secchi pair: all three points in the RIGHT (murky) panel. Review: rope-top dropped (the cleat sits
   // too close to the water line to be 10% of the width from the surface point).
-  "P-U2-12": { art: { kind: "img", src: "figs-units/P-U2-12.webp", w: 1200, h: 800 }, hotspots: [
-    { id: "surface", x: 931, y: 172, label: "water surface" },
-    { id: "disc", x: 930, y: 358, label: "Secchi disc" },
-    { id: "seabed", x: 900, y: 720, label: "seabed" },
-  ] },
+  "P-U2-12": { art: { kind: "img", src: "figs-units/P-U2-12.webp", w: 1200, h: 800 }, hotspots: [] },
 
   /* ---------------- Unit 3 ---------------- */
   "P-U3-01": { art: { kind: "img", src: "figs-units/P-U3-01.webp", w: 1200, h: 800 }, hotspots: [] }, // seal hauled out (choice only)
@@ -256,9 +252,6 @@ export const FIGURE_ITEMS_P13 = [
       "the left site, as clear water there must be less salty",
     ], a: 0,
     why: "The deeper a Secchi disc can still be seen, the clearer the water and the further light penetrates. At the left site the disc is still visible deep down; at the right site, in murky water, it fades out close to the surface, so light penetrates less there. Light penetration varies with how clear the water is, not with how deep the seabed is, and a Secchi disc tells you nothing about salinity." },
-  { id: "PQ2-U2-14", topic: "u2-depth", type: "tap", tier: 2, ref: "2.5/LO3", fig: "P-U2-12",
-    q: "In the right-hand picture the disc has been lowered until it just disappears from view. The Secchi depth is measured from the water surface. Tap the point it is measured down to.", target: "disc",
-    why: "The Secchi depth is the depth at which the disc just disappears, measured along the rope from the water surface down to the disc. The water surface is the zero of the measurement, not the reading. The seabed is not involved: a Secchi disc measures how far light penetrates, not how deep the water is." },
 
   /* ================= Unit 3 ================= */
   /* ---------------- u3-animals ---------------- */

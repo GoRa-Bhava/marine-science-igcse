@@ -39,10 +39,10 @@ test("batch 2C (code-drawn, after Don's vetting round 1): 20 figures, 46 items (
   assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_C), { tap: 20, choice: 21, label: 5 });
 });
 
-test("batch 3 (new art + replacements, after Don's vetting round 2): 65 figures, 88 items (tap 37, choice 46, label 5, no multi)", () => {
+test("batch 3 (new art + replacements, after Don's vetting round 2): 65 figures, 87 items (tap 36, choice 46, label 5, no multi)", () => {
   assert.equal(Object.keys(UNIT_FIGURES_P).length, 65);
-  assert.equal(UNIT_FIGURE_ITEMS_P.length, 88);
-  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 37, choice: 46, label: 5 });
+  assert.equal(UNIT_FIGURE_ITEMS_P.length, 87);
+  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS_P), { tap: 36, choice: 46, label: 5 });
 });
 
 test("figures.js carries the 21 FQ items (FQ2 retired)", () => {
