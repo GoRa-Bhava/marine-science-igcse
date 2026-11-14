@@ -252,10 +252,10 @@ export const MARKTRUE = [
       "The leaves can secrete excess salt.",
       "Prop roots store fresh water for the tree at low tide.",
       "Waterlogged mud is low in oxygen.",
-      "Mangrove roots carry out photosynthesis.",
+      "The leaves absorb salt from the sea spray.",
       "The pneumatophores secrete the tree's excess salt." ],
     answer:[0,1,3,5],
-    why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Aerial roots take in oxygen, not water vapour. Prop roots mainly support the tree; they do not store fresh water. Roots do not photosynthesise, because that happens in the leaves. Salt is secreted by the leaves, not by the pneumatophores." },
+    why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Pneumatophores take in oxygen, not water vapour. Prop roots support the tree; they do not store fresh water. The leaves get rid of salt rather than absorbing it, and salt is secreted by the leaves, not by the pneumatophores. 5.6/LO3." },
   { id:"MT-U5-04", unit:5, topic:"5.7 Coral reef", spec:"5.7/LO1-5", tier:2, type:"multi",
     stem:"Tick the statements that are true about coral reefs.",
     options:[
@@ -266,9 +266,9 @@ export const MARKTRUE = [
       "Corals build a skeleton of calcium carbonate.",
       "Crown-of-thorns starfish grind coral skeletons into sand.",
       "Corals grow best in deep water where little light reaches.",
-      "The polyp digests its zooxanthellae for food." ],
+      "The zooxanthellae get their food by eating the polyp's tissues." ],
     answer:[0,1,3,4],
-    why:"Coral polyps are animals. They build a skeleton of calcium carbonate and have photosynthetic algae, called zooxanthellae, in their tissues. Both partners benefit, so this is mutualism, not parasitism. When the water is too warm, the polyps expel their zooxanthellae and turn white; this is bleaching. The polyp does not digest its zooxanthellae; it gets sugars from their photosynthesis. Crown-of-thorns starfish eat the living polyps, and it is parrot fish that grind coral. Corals need shallow, clear water, because their zooxanthellae need light." },
+    why:"Coral polyps are animals. They build a skeleton of calcium carbonate and have photosynthetic algae, called zooxanthellae, in their tissues. Both partners benefit, so this is mutualism, not parasitism. When the water is too warm, the polyps expel their zooxanthellae and turn white; this is bleaching. The zooxanthellae make their own food by photosynthesis and give sugars to the polyp, so they do not feed on its tissues. Crown-of-thorns starfish eat the living polyps, and it is parrot fish that grind coral. Corals need shallow, clear water, because their zooxanthellae need light. 5.7." },
 
   // ============================ UNIT 6 ============================
   { id:"MT-U6-01", unit:6, topic:"6.7 Eutrophication", spec:"6.7/LO5", tier:2, type:"multi",
