@@ -8,6 +8,7 @@ import {
   writingInsight,
   lessonStarterItems,
   studentsToCsv,
+  isCurrentKey,
 } from "./aggregate.js";
 
 function student(name, report, classCode = "10B") {
@@ -97,6 +98,28 @@ test("topMisconceptions filters by unit and skips items missing from the bank", 
   assert.deepEqual(u2.map((t) => t.itemId), ["Q1"]); // Q2 is unit 4, GONE missing
 });
 
+test("isCurrentKey matches a choice index or a multi set, and is false without a key", () => {
+  assert.equal(isCurrentKey({ a: 1 }, 1), true);
+  assert.equal(isCurrentKey({ a: 1 }, 2), false);
+  assert.equal(isCurrentKey({ a: 1 }, [1]), false); // choice key, array pick
+  assert.equal(isCurrentKey({ a: [0, 2] }, [2, 0]), true); // order-independent
+  assert.equal(isCurrentKey({ a: [0, 2] }, [0, 1]), false);
+  assert.equal(isCurrentKey({}, 0), false); // no answer key (e.g. test BANK)
+});
+
+test("topMisconceptions never lists what is now the correct answer (stale pick index)", () => {
+  const BANK2 = { Q: { q: "stem", options: ["opt0", "opt1", "opt2"], a: 1, why: "", topic: "t", unit: 2 } };
+  const students = [
+    student("A", { mp: [["Q", 1]] }), // now equals the key → skipped
+    student("B", { mp: [["Q", 2]] }),
+    student("C", { mp: [["Q", 2]] }),
+  ];
+  const top = topMisconceptions(students, BANK2, {});
+  assert.equal(top.length, 1);
+  assert.equal(top[0].pick, 2);
+  assert.equal(top[0].optionText, "opt2");
+});
+
 // ---- writing insight ----
 const WB = {
   W1: { q: "Explain tides", command: "Explain", marks: 4, points: [{ t: "Moon gravity" }, { t: "Sun adds" }, { t: "Alignment" }, { t: "Range" }] },
@@ -124,15 +147,29 @@ test("lessonStarterItems picks from weakest topics, deterministically", () => {
   const students = [student("A", { tp: { tides: [10, 1], cells: [10, 9] } })];
   const meta = { tides: { name: "Tides", unit: 1 }, cells: { name: "Cells", unit: 3 } };
   const itemById = {
-    T1: { id: "T1", topic: "tides", q: "Q about tides", qRecall: "Recall tides", options: ["a"], a: 0, why: "" },
-    T2: { id: "T2", topic: "tides", q: "Q2 tides", qRecall: "Recall tides 2", options: ["a"], a: 0, why: "" },
-    C1: { id: "C1", topic: "cells", q: "Q cells", qRecall: "Recall cells", options: ["a"], a: 0, why: "" },
+    T1: { id: "T1", topic: "tides", type: "choice", q: "Q about tides", qRecall: "Recall tides", options: ["a"], a: 0, why: "" },
+    T2: { id: "T2", topic: "tides", type: "choice", q: "Q2 tides", qRecall: "Recall tides 2", options: ["a"], a: 0, why: "" },
+    C1: { id: "C1", topic: "cells", type: "choice", q: "Q cells", qRecall: "Recall cells", options: ["a"], a: 0, why: "" },
   };
   const a = lessonStarterItems(students, itemById, meta, { n: 2, seed: 7 });
   const b = lessonStarterItems(students, itemById, meta, { n: 2, seed: 7 });
   assert.deepEqual(a.map((x) => x.id), b.map((x) => x.id)); // deterministic
   assert.equal(a[0].topic, "tides"); // weakest topic first
   assert.ok(a.length <= 2);
+});
+
+test("lessonStarterItems skips figure items and tap/match/multi items", () => {
+  const students = [student("A", { tp: { mix: [10, 1] } })];
+  const meta = { mix: { name: "Mix", unit: 1 } };
+  const itemById = {
+    FIG: { id: "FIG", topic: "mix", type: "choice", fig: true, q: "Figure Q", options: ["a", "b"], a: 0, why: "" },
+    TAP: { id: "TAP", topic: "mix", type: "tap", q: "Tap Q", why: "" },
+    MATCH: { id: "MATCH", topic: "mix", type: "match", q: "Match Q", why: "" },
+    MULTI: { id: "MULTI", topic: "mix", type: "multi", q: "Multi Q", options: ["a", "b"], a: [0], why: "" },
+    OK: { id: "OK", topic: "mix", type: "choice", q: "Choice Q", options: ["a", "b"], a: 0, why: "" },
+  };
+  const picked = lessonStarterItems(students, itemById, meta, { n: 5, seed: 1 });
+  assert.deepEqual(picked.map((x) => x.id), ["OK"]); // only the plain, non-figure choice item
 });
 
 // ---- CSV ----

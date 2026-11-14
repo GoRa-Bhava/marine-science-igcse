@@ -2,7 +2,7 @@
  * Assignment payload (WA1.): { v, id, t, due, cls, ids:[itemIds], n }
  * Result payload   (WR1.): { v, aid, n, c, d, r:[[itemId, 1|0, pick?]] }
  */
-import { rng } from "./aggregate.js";
+import { rng, isCurrentKey } from "./aggregate.js";
 
 export function newAssignmentId() {
   const a = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -111,11 +111,13 @@ export function aggregateResults(results, itemById = {}) {
   for (const g of q.values()) {
     const item = itemById[g.itemId];
     const options = (item && item.options) || [];
-    const picks = [...g.picks.values()].map((pg) => ({
-      pick: pg.pick,
-      n: pg.n,
-      text: Array.isArray(pg.pick) ? pg.pick.map((i) => options[i]).filter(Boolean).join(" + ") : options[pg.pick],
-    })).sort((a, b) => b.n - a.n);
+    const picks = [...g.picks.values()]
+      .filter((pg) => !isCurrentKey(item, pg.pick)) // a stale index may now point at the current key; never show it as "most chose"
+      .map((pg) => ({
+        pick: pg.pick,
+        n: pg.n,
+        text: Array.isArray(pg.pick) ? pg.pick.map((i) => options[i]).filter(Boolean).join(" + ") : options[pg.pick],
+      })).sort((a, b) => b.n - a.n);
     questions.push({
       itemId: g.itemId,
       stem: item ? item.q : g.itemId,

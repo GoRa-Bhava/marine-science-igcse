@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createTeacherStore } from "./teacherStore.js";
 import { decodeReport, decodeResult, readHash, encodeAssignment, assignmentUrl } from "./reportCodec.js";
-import { heatmap, classWeakestTopics, topMisconceptions, writingInsight, lessonStarterItems, studentsToCsv, cellState } from "./aggregate.js";
+import { heatmap, classWeakestTopics, topMisconceptions, writingInsight, lessonStarterItems, studentsToCsv, cellState, isCurrentKey } from "./aggregate.js";
 import { pickAssignmentItems, buildAssignment, aggregateResults } from "./assignment.js";
 import { qrSvg } from "./qr.js";
 
@@ -10,6 +10,8 @@ import { qrSvg } from "./qr.js";
  * Set work (phase E). Adds students from pasted #r= codes/links or a QR scan.
  */
 const BAND = { green: "#2Fae6a", amber: "#E7A42E", red: "#E2553D", grey: "#9aa" };
+// Strip HTML tags for the one-line, truncated places (stems/options can carry <i>…</i>). Strip first, then slice.
+const plain = (s) => String(s == null ? "" : s).replace(/<[^>]*>/g, "");
 
 export default function TeacherView({
   C, theme, itemById = {}, topicMeta = {}, topicUnit = {}, writingById = {}, unitNames = {},
@@ -582,7 +584,7 @@ export default function TeacherView({
                     <div style={{ ...hint, color: C.foam, fontWeight: 700 }}>Most got wrong</div>
                     <ul style={{ ...hint, paddingLeft: 18, marginTop: 4 }}>
                       {agg.questions.filter((q) => q.wrong > 0).slice(0, 6).map((q) => (
-                        <li key={q.itemId}>{(q.stem || q.itemId).slice(0, 80)}: {q.wrong}/{q.total} wrong{q.picks[0] && q.picks[0].text ? ` · most chose “${q.picks[0].text}”` : ""}</li>
+                        <li key={q.itemId}>{plain(q.stem || q.itemId).slice(0, 80)}: {q.wrong}/{q.total} wrong{q.picks[0] && q.picks[0].text ? ` · most chose “${plain(q.picks[0].text)}”` : ""}</li>
                       ))}
                     </ul>
                   </div>
@@ -603,15 +605,17 @@ export default function TeacherView({
   }
   function renderLesson() {
     const it = lesson.items[lesson.i];
-    const correct = it.options && typeof it.a === "number" ? it.options[it.a] : null;
+    const isTF = it.type === "truefalse";
+    const correct = isTF ? (it.answer ? "True" : "False") : (it.options && typeof it.a === "number" ? it.options[it.a] : null);
     return (
       <div role="dialog" aria-modal="true" style={{ position: "fixed", inset: 0, background: C.abyss, zIndex: 50, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
         <div style={{ fontFamily: F_UI, fontSize: 13, color: "#4FD8C4", marginBottom: 12 }}>Lesson starter · {lesson.i + 1} of {lesson.items.length}</div>
-        <div style={{ fontFamily: F_D, fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 800, color: "#EAF6F5", maxWidth: 900, lineHeight: 1.3 }}>{it.qRecall || it.q}</div>
+        <div style={{ fontFamily: F_D, fontSize: "clamp(22px, 4vw, 40px)", fontWeight: 800, color: "#EAF6F5", maxWidth: 900, lineHeight: 1.3, whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: it.qRecall || it.q }} />
+        {isTF && <div style={{ fontFamily: F_UI, fontSize: "clamp(14px,2vw,18px)", color: "#4FD8C4", marginTop: 12 }}>True or false?</div>}
         {lesson.revealed && (
           <div style={{ marginTop: 24, maxWidth: 820 }}>
             {correct && <div style={{ fontFamily: F_D, fontSize: "clamp(18px,3vw,30px)", fontWeight: 800, color: "#4FD8C4" }}>{correct}</div>}
-            {it.why && <p style={{ fontFamily: F_UI, fontSize: "clamp(14px,2vw,18px)", color: "#A9C7D2", marginTop: 12, lineHeight: 1.6 }}>{it.why}</p>}
+            {it.why && <p style={{ fontFamily: F_UI, fontSize: "clamp(14px,2vw,18px)", color: "#A9C7D2", marginTop: 12, lineHeight: 1.6, whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: it.why }} />}
           </div>
         )}
         <div style={{ display: "flex", gap: 10, marginTop: 32 }}>
@@ -654,8 +658,9 @@ export default function TeacherView({
       if (sw.length) html += `<p><strong>Work on:</strong> ${sw.map((w) => esc(w.name) + " (" + Math.round(w.accuracy * 100) + "%)").join(", ")}</p>`;
       const wrong = (s.report?.mp || []).map(([id, pick]) => {
         const item = itemById[id]; if (!item) return null;
+        if (isCurrentKey(item, pick)) return null; // don't print the current correct answer as a wrong idea
         const opt = Array.isArray(pick) ? pick.map((i) => (item.options || [])[i]).filter(Boolean).join(" + ") : (item.options || [])[pick];
-        return opt ? `${esc((item.q || "").slice(0, 70))} → chose “${esc(opt)}”` : null;
+        return opt ? `${esc(plain(item.q).slice(0, 70))} → chose “${esc(plain(opt))}”` : null;
       }).filter(Boolean).slice(0, 8);
       if (wrong.length) html += `<p><strong>Recent wrong ideas:</strong></p><ul>${wrong.map((w) => `<li>${w}</li>`).join("")}</ul>`;
       const wr = Object.entries(s.report?.w || {});
@@ -671,8 +676,8 @@ function MistakeRow({ m, C, light, F_UI }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ borderLeft: `3px solid ${BAND.red}`, paddingLeft: 10 }}>
-      <div style={{ fontFamily: F_UI, fontSize: 13.5, color: C.foam, fontWeight: 600 }}>{(m.stem || "").slice(0, 110)}{(m.stem || "").length > 110 ? "…" : ""}</div>
-      <div style={{ fontFamily: F_UI, fontSize: 13, color: C.coral, marginTop: 2 }}>✗ “{m.optionText}”</div>
+      <div style={{ fontFamily: F_UI, fontSize: 13.5, color: C.foam, fontWeight: 600 }}>{plain(m.stem).slice(0, 110)}{plain(m.stem).length > 110 ? "…" : ""}</div>
+      <div style={{ fontFamily: F_UI, fontSize: 13, color: C.coral, marginTop: 2 }}>✗ “{plain(m.optionText)}”</div>
       <div style={{ fontFamily: F_UI, fontSize: 12, color: C.mist, marginTop: 2 }}>
         {m.n} of {m.total} students chose this
         {m.why && <> · <button onClick={() => setOpen((v) => !v)} style={{ background: "none", border: "none", color: light ? C.accent : C.glow, cursor: "pointer", fontSize: 12, fontWeight: 700, padding: 0 }}>{open ? "hide why" : "why"}</button></>}

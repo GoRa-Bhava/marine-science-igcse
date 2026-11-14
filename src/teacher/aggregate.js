@@ -26,6 +26,19 @@ export function cellState(pct) {
   return "red";
 }
 
+// True when a stored pick now equals the item's current answer key, so it must not be
+// shown as a mistake (an old pick index can point at the key after a bank edit).
+// choice: a is a number and the pick is that index; multi: a is an array and the pick is the same set.
+export function isCurrentKey(item, pick) {
+  if (!item) return false;
+  if (typeof item.a === "number") return !Array.isArray(pick) && pick === item.a;
+  if (Array.isArray(item.a)) {
+    const p = Array.isArray(pick) ? pick : [pick];
+    return p.length === item.a.length && p.every((x) => item.a.includes(x));
+  }
+  return false;
+}
+
 // % correct for an attempted unit = correct / attempted (null when nothing attempted).
 function unitPct(cell) {
   if (!cell) return null;
@@ -102,6 +115,7 @@ export function topMisconceptions(students, itemById = {}, topicUnit = {}, { uni
   for (const g of groups.values()) {
     const item = itemById[g.itemId];
     if (!item) continue; // item no longer in the bank → skip
+    if (isCurrentKey(item, g.pick)) continue; // never surface the current correct answer as a mistake
     const itemUnit = item.unit != null ? item.unit : topicUnit[item.topic];
     if (unit != null && String(itemUnit) !== String(unit)) continue;
     const options = item.options || [];
@@ -187,7 +201,7 @@ export function lessonStarterItems(students, itemById = {}, topicMeta = {}, { n 
   const seen = new Set();
   for (const w of weak) {
     if (picked.length >= n) break;
-    let pool = (byTopic[w.topicId] || []).filter((it) => (it.qRecall || it.q) && !seen.has(it.id));
+    let pool = (byTopic[w.topicId] || []).filter((it) => (it.qRecall || it.q) && !seen.has(it.id) && !it.fig && (it.type === "choice" || it.type === "truefalse"));
     // shuffle pool deterministically
     pool = pool
       .map((it) => [r(), it])
