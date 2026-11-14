@@ -10,7 +10,7 @@
 // session builder can surface it next to the right questions (recall → application → exam).
 
 export const INTERACTIVES = [
-  { slug: "tides",          title: "Tides — spring & neap",     unit: 1, syllabus: "1.x tides",         tierFit: ["recall", "application"], note: "Drag the Moon; spring/neap tidal-range meter." },
+  { slug: "tides",          title: "Tides: spring and neap",     unit: 1, syllabus: "1.x tides",         tierFit: ["recall", "application"], note: "Drag the Moon; spring/neap tidal-range meter." },
   { slug: "depth",          title: "The deep-sea column",       unit: 2, syllabus: "2.5/LO1–6",         tierFit: ["recall", "application"], note: "One depth slider drives light, pressure & temperature together." },
   { slug: "melt",           title: "Melting ice & sea level",   unit: 2, syllabus: "2.1/LO6 · 6.8",     tierFit: ["application"],           note: "Two tanks; only land ice raises the level. The classic trap." },
   { slug: "elnino",         title: "El Niño",                   unit: 2, syllabus: "2.6/LO2–3",         tierFit: ["application", "exam"],    note: "Normal ⇄ El Niño toggle: winds, warm water, upwelling, catch." },
