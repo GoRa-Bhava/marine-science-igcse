@@ -72,12 +72,12 @@ export const FIGURES_P13 = {
     { id: "sandbar", x: 1150, y: 640, label: "sandbar" },
     { id: "beach", x: 300, y: 965, label: "beach" },
   ] },
-  // same photo with a swimmer (red cap) and three arrows baked in (P-U1-12-swim.webp, Don 11 Nov):
+  // photorealistic rip photo with a swimmer (red cap); the three arrows were drawn in code by Claude (14 Nov 2026).
   // markers on the arrow heads: towards the beach, sideways along the shore, out to sea
-  "P-U1-12-swim": { art: { kind: "img", src: "figs-units/P-U1-12-swim.webp", w: 1200, h: 800 }, hotspots: [
-    { id: "to-beach", x: 605, y: 618, label: "straight back to the beach" },
-    { id: "sideways", x: 410, y: 430, label: "sideways, parallel to the shore" },
-    { id: "out-to-sea", x: 605, y: 242, label: "further out to sea" },
+  "P-U1-12-swim": { art: { kind: "img", src: "figs-units/P-U1-12-swim.webp", w: 1536, h: 1024 }, hotspots: [
+    { id: "to-beach", x: 765, y: 840, label: "straight back to the beach" },
+    { id: "sideways", x: 480, y: 565, label: "sideways, parallel to the shore" },
+    { id: "out-to-sea", x: 765, y: 280, label: "further out to sea" },
   ] },
 
   /* ---------------- Unit 2 ---------------- */
