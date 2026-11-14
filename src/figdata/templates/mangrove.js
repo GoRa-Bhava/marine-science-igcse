@@ -400,7 +400,7 @@ const MUD_ST = {
     ["Its eyes are small, because it finds its food by touch in the mud.", false, "the eyes are large (look at the drawing), for use out of the water"]],
   fins: [["Its pectoral fins are shaped to prop up its body on the mud.", true, "the pectoral fins prop the body up and push it across the mud"],
     ["The shape of its pectoral and pelvic fins lets it move on land.", true, "the pectoral and pelvic fins are shaped for movement on land"],
-    ["Its fins absorb oxygen from the air while they are moist.", false, "the fins are shaped for moving on land; they are not where oxygen is taken in"]],
+    ["Its fins pump water over its gills while it is out of the water.", false, "the pectoral and pelvic fins are shaped for moving on land; they do not pump water over the gills"]],
   gill: [["Its enlarged gill chambers trap water, so it can get oxygen on land.", true, "the enlarged gill chambers trap water, so the gills can still take in oxygen out of the water"],
     ["Its gill chambers are enlarged to hold food it collects on the mud.", false, "the enlarged gill chambers trap water for the gills, not food"],
     ["Its gill chambers are enlarged to help it float in deep water.", false, "the enlarged gill chambers trap water for the gills when it is out of the water"]],
@@ -428,7 +428,7 @@ function mudQs(F, r) {
     options: ["Trapping water so it can get oxygen on land", "Holding a bubble of air to help it float at high tide", "Storing food to digest while it is out of the water", "Keeping its eyes moist while it is out of the water"], a: 0,
     why: `${L.gill} is an <b>enlarged gill chamber</b>. It traps water, so the gills stay in water and can go on taking in oxygen when the mudskipper is out on the mud.` });
   else qs.push({ kind: "choice", q: `What is the shape of the fin labelled <b>${L[F.Z]}</b> adapted for?`, hl: { part: F.Z }, _leak: MUD_LEAK.fins,
-    options: ["Moving the mudskipper across the mud when it is on land", "Absorbing oxygen from the air while the fin is kept moist", "Pumping water over the gills while it is out of the water", "Splashing water over its skin to stop it drying out"], a: 0,
+    options: ["Moving the mudskipper across the mud when it is on land", "Swimming fast through open water to chase after prey", "Pumping water over the gills while it is out of the water", "Splashing water over its skin to stop it drying out"], a: 0,
     why: `${L[F.Z]} is a <b>${NAMEB[F.Z]}</b>. The pectoral and pelvic fins are shaped for <b>movement on land</b>: the mudskipper props itself up on them and pushes itself over the mud.` });
   // 4. tick the true statements (the group not tested yet, plus general statements)
   const pool = MUD_ST[F.g3].map((x) => x.concat(F.g3)).concat([pickR(r, MUD_GEN).concat("gen"), MUD_LOW.concat("low")]);
@@ -437,7 +437,7 @@ function mudQs(F, r) {
     _leak: MUD_LEAK[F.g3], why: st.map((x) => (x[1] ? `✓ ${x[0]}` : `✗ ${x[0]}: ${x[2]}.`)).join("<br>") });
   // 5. the lungs misconception: how it gets oxygen out of water
   const ds = [["They do have lungs, which take over from the gills as soon as the fish leaves the water at low tide.", null],
-    ["They have no lungs; they absorb oxygen through their moist fins as they push themselves across the mud.", "fins"],
+    ["They have no lungs; they do not need any oxygen while they are out of the water.", null],
     ["They have no lungs; their gills take in oxygen straight from the dry air, so they do not need any water.", "gill"],
     ["They have no lungs; they hold their breath on land and go back into the water every few seconds.", null]];
   const dd = shuffleR(r, ds.filter((d) => d[1] !== F.g3)).slice(0, 3).map((d) => d[0]);

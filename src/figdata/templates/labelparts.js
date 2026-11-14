@@ -172,7 +172,7 @@ function questions(F, r) {
     const sh = shuffleR(r, st);
     qs.push({ kind: "multi", q: O.cell === "plant" ? "Tick the structures in this plant cell that an animal cell does <b>not</b> have." : "Tick the structures found in plant cells that this animal cell does <b>not</b> have.",
       options: sh.map((x) => x[0]), a: sh.map((x, i) => (x[1] ? i : -1)).filter((i) => i >= 0),
-      why: "Plant cells have a <b>cell wall</b>, <b>chloroplasts</b> and a <b>large vacuole</b>; animal cells do not. Both kinds of cell have a nucleus, a cell membrane, cytoplasm and mitochondria." });
+      why: "Plant cells have a <b>cell wall</b> and a <b>large vacuole</b>, and leaf cells like this one have <b>chloroplasts</b>; animal cells have none of these. Both kinds of cell have a nucleus, a cell membrane, cytoplasm and mitochondria." });
   } else if (O.cell === "bacterium") {
     qs.push({ kind: "choice", q: "Which of these structures, found in plant and animal cells, is missing from this bacterial cell?", options: ["nucleus", "cell membrane", "cytoplasm", "cell wall"], a: 0,
       why: "A bacterial cell has a cell wall, a cell membrane and cytoplasm, but <b>no nucleus</b>: its genetic material is a loop of DNA loose in the cytoplasm." });
@@ -210,7 +210,7 @@ function selfTest(F, qs) {
 export default {
   key: KEY, group: "Diagrams", name: "Label the parts", topics: "Unit 3 (3.1, 3.4, 3.5) and Unit 5 (5.7)", thumbSeed: 2,
   blurb: "Colour diagrams of cells, a bony fish, a coral polyp, kelp, seagrass, a dinoflagellate and a diatom: find, name and explain each part.",
-  tips: ["Use Zoom to see thin structures such as the cell membrane clearly.", "Plant cells have a cell wall, chloroplasts and a large vacuole; animal cells do not. Bacterial cells have no nucleus.", "Fish: the operculum covers the gills, the lateral line detects vibrations and the nares detect chemicals. The caudal fin gives forward thrust.", "Coral polyp: tentacles catch food, stinging cells paralyse prey, the stomach digests and the calcium carbonate skeleton supports.", "Kelp is a protoctist: holdfast anchors, stipe, blades photosynthesise, gas bladders float the blades. Seagrass is a plant: roots, rhizome, leaves and flowers.", "Dinoflagellates have two flagella; diatoms have a silica skeleton. Both are single cells with chloroplasts."],
+  tips: ["Use Zoom to see thin structures such as the cell membrane clearly.", "Plant cells have a cell wall and a large vacuole, and leaf cells have chloroplasts; animal cells have none of these. Bacterial cells have no nucleus.", "Fish: the operculum covers the gills, the lateral line detects vibrations and the nares detect chemicals. The caudal fin gives forward thrust.", "Coral polyp: tentacles catch food, stinging cells paralyse prey, the stomach digests and the calcium carbonate skeleton supports.", "Kelp is a protoctist: holdfast anchors, stipe, blades photosynthesise, gas bladders float the blades. Seagrass is a plant: roots, rhizome, leaves and flowers.", "Dinoflagellates have two flagella; diatoms have a silica skeleton. Both are single cells with chloroplasts."],
   ctx: (F) => ORGS.find((o) => o.id === F.org).caption,
   make, svg, questions, selfTest, ORGS,
   css: `.fig-labelparts .lp-bg{fill:#fff;stroke:var(--line);stroke-width:1}.fig-labelparts .lp-line{stroke:#111;stroke-width:2.5}.fig-labelparts .lp-dot{fill:#111}

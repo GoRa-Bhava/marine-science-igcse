@@ -156,7 +156,7 @@ const OCEAN = [
     why: "As sea water absorbs heat, its particles move faster and further apart, so the same mass of water takes up a <b>larger volume</b>. This is <b>thermal expansion</b>, and it makes <b>sea level rise</b>. No new water is made, and evaporation does not lower sea level." },
   { q: "The ocean absorbs much of the extra heat trapped by greenhouse gases. How does this affect global temperature?",
     o: ["It slows the rise in global temperature", "It speeds up the rise in global temperature", "It cools the Earth by reflecting heat to space", "It turns the heat into dissolved carbon dioxide"],
-    why: "The ocean takes up a large share of the extra heat, so the air warms <b>more slowly</b> than it otherwise would: the ocean helps to <b>keep global temperature stable</b>. It does not reflect the heat away, and heat is not turned into a gas; the warmed water expands instead." },
+    why: "The ocean takes up a large share of the extra heat, so the air warms <b>more slowly</b> than it otherwise would: the ocean <b>slows</b> the warming but does not stop it, and the ocean itself is warming. It does not reflect the heat away, and heat is not turned into a gas; the warmed water expands instead." },
 ];
 const IMPACT = [
   { q: "Increasing greenhouse gases warm the sea. What is a likely effect on fish that need a lot of dissolved oxygen?",
