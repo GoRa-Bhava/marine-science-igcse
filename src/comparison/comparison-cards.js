@@ -159,7 +159,7 @@ export const COMPARISON_CARDS = [
     title: "Open vs Closed aquaculture",
     subtitle: "Whether the farm exchanges water (and problems) with the open sea.",
     a: { name: "Open system", accent: "teal", kicker: "Cages or nets in the open sea", visualKey: "openAquaculture" },
-    b: { name: "Closed system", accent: "coral", kicker: "Sealed tanks on land", visualKey: "closedAquaculture" },
+    b: { name: "Closed system", accent: "coral", kicker: "Tanks on land, cut off from the sea", visualKey: "closedAquaculture" },
     rows: [
       { label: "Water", a: "Flows freely between the cage and the sea.", b: "Contained, pumped and filtered." },
       { label: "Waste", a: "Food and faeces escape into the sea.", b: "Collected and treated." },
@@ -167,7 +167,7 @@ export const COMPARISON_CARDS = [
       { label: "Escapes", a: "Farmed fish can escape and interbreed or compete with wild fish.", b: "Escapes very unlikely." },
       { label: "Cost", a: "Cheaper: uses natural conditions.", b: "Expensive to build and run (pumps, filters)." },
     ],
-    memoryHook: "Open systems sit in the sea and exchange water (and waste, disease and escapes) with it; closed systems are sealed tanks that isolate the fish but cost more.",
+    memoryHook: "Open systems sit in the sea and exchange water (and waste, disease and escapes) with it; closed systems keep the fish in tanks cut off from the sea, which isolates them but costs more.",
     quickTest: {
       q: "In which system can waste and parasites pass freely to wild fish?",
       options: ["Open system", "Closed system"],
@@ -202,7 +202,7 @@ export const COMPARISON_CARDS = [
   rows: [
     { label: "Parents",    a: "Two parents.",                                       b: "One parent." },
     { label: "Sex cells",  a: "Male and female sex cells fuse (fertilisation).",    b: "No sex cells and no fertilisation." },
-    { label: "Offspring",  a: "Genetically different: variation.",                 b: "Genetically identical to the parent (clones)." },
+    { label: "Offspring",  a: "Genetically different: variation.",                 b: "Exact copies of the parent (clones)." },
     { label: "Marine example", a: "Most fish release eggs and sperm into the water.", b: "Coral budding; seagrass spreading by its rhizome." },
   ],
   memoryHook: "Sexual = two parents and sex cells → variation; asexual = one parent → identical clones.",
@@ -293,7 +293,7 @@ export const COMPARISON_CARDS = [
   a: { name: "Pneumatophores", accent: "teal", kicker: "Take in oxygen from the air", visualKey: "pneumatophore" },
   b: { name: "Prop roots", accent: "coral", kicker: "Support the tree", visualKey: "propRoot" },
   rows: [
-    { label: "In one word", a: "Adaptation of a mangrove in soft, salty, waterlogged mud.", b: "Adaptation of a mangrove in soft, salty, waterlogged mud.", shared: true },
+    { label: "Both are", a: "Adaptation of a mangrove in soft, salty, waterlogged mud.", b: "Adaptation of a mangrove in soft, salty, waterlogged mud.", shared: true },
     { label: "Shape", a: "Thin roots that grow UP out of the mud.",                  b: "Arching roots that grow DOWN from the trunk into the mud." },
     { label: "Job",   a: "Take in oxygen for the roots.",                            b: "Anchor and hold the tree up." },
     { label: "Problem solved", a: "Waterlogged mud holds little oxygen for respiration.", b: "Soft, shifting mud gives poor support." },
