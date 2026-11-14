@@ -230,10 +230,10 @@
 
     tidepct.textContent = t<0.1?'Low tide':(t>0.9?'High tide':(t<0.5?'Rising ('+tide.value+'%)':'Rising ('+tide.value+'%)'));
     if(t<0.33) cap.innerHTML='At <b>low tide</b> the river dominates: the water is nearly fresh, shallow and follows the air, so it warms and cools quickly and holds little oxygen.';
-    else if(t<0.7) cap.innerHTML='As the tide <b>rises</b>, salty sea water pushes upstream and mixes in — salinity climbs, the larger volume steadies the temperature, and oxygen-rich sea water lifts the oxygen level.';
+    else if(t<0.7) cap.innerHTML='As the tide <b>rises</b>, salty sea water pushes upstream and mixes in. Salinity climbs, the larger volume steadies the temperature, and oxygen-rich sea water lifts the oxygen level.';
     else cap.innerHTML='At <b>high tide</b> sea water fills the estuary: salinity is highest, the big volume of water keeps temperature stable, and dissolved oxygen is at its highest.';
 
-    tide.setAttribute('aria-valuetext', tidepct.textContent + ' — salinity ' + salv.textContent + ', temperature stability ' + tmpv.textContent + ', dissolved oxygen ' + oxyv.textContent);
+    tide.setAttribute('aria-valuetext', tidepct.textContent + ', salinity ' + salv.textContent + ', temperature stability ' + tmpv.textContent + ', dissolved oxygen ' + oxyv.textContent);
 
     var state = t<0.33 ? 'low' : (t<0.7 ? 'rising' : 'high');
     if(live && state!==lastState){
@@ -250,7 +250,7 @@
   var qfb=document.getElementById('qfb');
   document.querySelectorAll('#qopts .opt').forEach(function(b){
     b.addEventListener('click',function(){
-      if(b.getAttribute('data-c')==='1'){ qfb.textContent='Correct — sea water pushes in at high tide, so salinity peaks then, not at low tide.'; qfb.className='fb ok';
+      if(b.getAttribute('data-c')==='1'){ qfb.textContent='Correct. Sea water pushes in at high tide, so salinity peaks then, not at low tide.'; qfb.className='fb ok';
         tide.value=100; render(); }
       else{ qfb.textContent='That’s the common trap. Slide to high tide and watch the salinity bar.'; qfb.className='fb no'; }
     });
@@ -308,5 +308,6 @@
   if(el){var sync=function(){b.hidden=el.hasAttribute('hidden');if(b.hidden&&!ov.hidden)close();};
    new MutationObserver(sync).observe(el,{attributes:true,attributeFilter:['hidden']});sync();}}
 })();</script>
+<script>(function(){var a=document.getElementById('qopts');if(a){for(var i=a.children.length;i>=0;i--)a.appendChild(a.children[Math.random()*i|0]);}})();</script>
 </body>
 </html>
