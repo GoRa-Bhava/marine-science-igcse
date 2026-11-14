@@ -209,7 +209,7 @@ export const TRUEFALSE = [
   { id:"TF-U5-07", unit:5, topic:"5.3 Open ocean", spec:"5.3/LO11", tier:2, type:"truefalse",
     stem:"The midnight zone has little dissolved oxygen because there is no photosynthesis there.",
     answer:true,
-    why:"With no light there is no photosynthesis to add oxygen, and respiration/decomposition of sinking matter uses it up.",
+    why:"With no sunlight there is no photosynthesis to add oxygen, and the respiration and decomposition of sinking matter use it up.",
     misconception:"pressure squeezes the oxygen out / cold water can't hold oxygen" },
   { id:"TF-U5-08", unit:5, topic:"5.3 Open ocean", spec:"5.3/LO4", tier:1, type:"truefalse",
     stem:"The sunlight zone is low in dissolved oxygen.",

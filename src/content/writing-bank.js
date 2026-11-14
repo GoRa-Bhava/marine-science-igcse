@@ -847,7 +847,7 @@ export const WRITING = [
     ],
     noCredit: ["Their light is sunlight stored from the surface", "Their dark colour keeps them warm", "Sharp, outward-facing teeth for grinding shells", "Large eyes to see the sunlight"],
     model: "The midnight zone has no sunlight, so many fish produce their own light by bioluminescence to attract prey or mates. Their bodies are dark brown or black, so they are not seen in the light made by other animals, and some have large eyes to pick up this faint light. Many have large, backward-facing teeth, so prey cannot escape once caught. Their bodies are gelatinous, which suits the very high pressure. Because there is little oxygen and the temperature is very low, they move slowly and have long lifespans.",
-    tip: "For each adaptation, give the feature and link it to a condition: no light, little oxygen, very low temperature or very high pressure.",
+    tip: "For each adaptation, give the feature and link it to a condition: no sunlight, little oxygen, very low temperature or very high pressure.",
     status: "human_review" },
 
   { id: "W5-04", unit: 5, ref: "5.4/LO4", command: "Explain", marks: 5,

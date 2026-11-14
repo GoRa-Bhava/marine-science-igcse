@@ -424,14 +424,14 @@ export const FIGURE_ITEMS_P46 = [
 
   // ---- u6-plastic ----
   { id: "PQ2-U6-67", topic: "u6-plastic", type: "choice", tier: 1, ref: "6.6/LO2", fig: "P-U6-15",
-    q: "Which picture shows the plastic impact that can starve an animal, and how?",
+    q: "How can a plastic bag like the one in the right picture kill a sea turtle?",
     options: [
-      "The right: a turtle mistakes the bag for food, and it blocks its gut.",
-      "The left: the netting poisons the turtle within a few hours of touching it.",
-      "The right: the bag makes the jellyfish sink, so turtles lose their food.",
-      "The left: the netting breaks down in weeks into bits the turtle absorbs.",
+      "The turtle mistakes the bag for a jellyfish and swallows it, and the bag blocks its gut so it starves.",
+      "The turtle swallows the bag, and its gut slowly digests it, releasing toxins that poison the turtle.",
+      "The bag covers the turtle's head and stops its gills taking in oxygen, so the turtle suffocates.",
+      "The bag dissolves slowly in the sea water, and the dissolved plastic poisons the turtle as it swims.",
     ], a: 0,
-    why: "A drifting bag looks like a jellyfish, so turtles eat it; the plastic blocks the gut and the animal starves. Netting kills by entanglement, not by quick poisoning, and plastic takes a very long time to break down. A bag does not make a jellyfish sink." },
+    why: "A drifting bag looks like a jellyfish, so a turtle may swallow it as food; the plastic is not digested, so it blocks the gut and the turtle starves. The gut cannot digest plastic, so the bag stays whole. Turtles are reptiles that breathe air with lungs, not gills. And plastic does not dissolve in sea water: it breaks up into smaller and smaller pieces. 6.6/LO2." },
   { id: "PQ2-U6-68", topic: "u6-plastic", type: "choice", tier: 1, ref: "6.6/LO2", fig: "P-U6-15",
     q: "How can what is happening in the left picture kill this animal?",
     options: [
@@ -459,14 +459,14 @@ export const FIGURE_ITEMS_P46 = [
   { id: "PQ2-U6-70", topic: "u6-conservation", type: "choice", tier: 2, ref: "6.9/LO3", fig: "P-U6-20",
     q: "This fenced area on a beach is part of a conservation project. Which gives one benefit and one limitation of it?",
     options: [
-      "More eggs hatch safe from predators, but threats at sea remain.",
+      "More eggs hatch safe from predators, but guarding the nests is costly.",
       "Most hatchlings survive to adulthood, but the fence is costly.",
       "The hatchlings learn to feed from staff, but few eggs hatch.",
       "Tourists are kept away, but the hatchlings are trapped inside it.",
     ], a: 0,
-    why: "Protecting the nests from predators and disturbance lets more eggs hatch and more hatchlings reach the sea, but very few survive to adulthood, because nets, plastic and predators at sea remain, and the project is costly. Hatchlings do not learn to feed from people, and, as the picture shows, they leave the fence and crawl to the sea." },
+    why: "Protecting the nests from predators and disturbance lets more eggs hatch and more hatchlings reach the sea, but fencing, guarding and rearing cost money and need staff or volunteers (coursebook p. 301). The project also cannot protect turtles once they are at sea, where nets, plastic and predators remain, so very few hatchlings survive to adulthood. Hatchlings do not learn to feed from people, and, as the picture shows, they leave the fence and crawl to the sea. 6.9/LO3." },
   { id: "PQ2-U6-71", topic: "u6-conservation", type: "choice", tier: 1, ref: "6.9/LO1", fig: "P-U6-22",
-    q: "Which reef has the higher species richness?",
+    q: "Which reef has the higher species richness of fish?",
     options: [
       "The right, as it has more different kinds of fish.",
       "The left, as it has far more individual fish in all.",
