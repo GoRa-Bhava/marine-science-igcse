@@ -66,11 +66,11 @@ export const FIGURES_P13 = {
     { id: "sea-surface", x: 330, y: 512, label: "sea surface" },
   ] },
   // aerial rip current; waves on the left of the channel, sandbar (pale shallow sand) on the right
-  "P-U1-12": { art: { kind: "img", src: "figs-units/P-U1-12.webp", w: 1200, h: 800 }, hotspots: [
-    { id: "rip", x: 600, y: 450, label: "rip current" },
-    { id: "waves", x: 250, y: 400, label: "breaking waves" },
-    { id: "sandbar", x: 900, y: 590, label: "sandbar" },
-    { id: "beach", x: 300, y: 735, label: "beach" },
+  "P-U1-12": { art: { kind: "img", src: "figs-units/P-U1-12.webp", w: 1536, h: 1024 }, hotspots: [
+    { id: "rip", x: 765, y: 640, label: "rip current" },
+    { id: "waves", x: 330, y: 470, label: "breaking waves" },
+    { id: "sandbar", x: 1150, y: 640, label: "sandbar" },
+    { id: "beach", x: 300, y: 965, label: "beach" },
   ] },
   // same photo with a swimmer (red cap) and three arrows baked in (P-U1-12-swim.webp, Don 11 Nov):
   // markers on the arrow heads: towards the beach, sideways along the shore, out to sea

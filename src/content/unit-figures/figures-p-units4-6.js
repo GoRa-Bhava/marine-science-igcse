@@ -406,7 +406,7 @@ export const FIGURE_ITEMS_P46 = [
     q: "This animal is farmed for food in aquaculture. To which group does it belong?",
     options: ["Echinoderm", "Mollusc", "Crustacean", "Macroalga"], a: 0,
     why: "A sea cucumber is an echinoderm: it has rows of tube feet on its underside and a thick, bumpy skin. Molluscs such as mussels have a shell, crustaceans such as shrimp have jointed legs and a hard exoskeleton, and macroalgae such as kelp are not animals." },
-  { id: "PQ2-U6-64", topic: "u6-aquaculture", type: "choice", tier: 2, ref: "6.4/LO6", fig: "P-U6-10",
+  { id: "PQ2-U6-64", topic: "u6-aquaculture", type: "choice", tier: 1, ref: "6.4/LO6", fig: "P-U6-10",
     q: "These mangrove seedlings will be planted out on a coast where the forest was destroyed. Why is raising them like this a type of aquaculture?",
     options: [
       "They are raised in controlled, protected conditions.",
