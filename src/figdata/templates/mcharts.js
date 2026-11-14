@@ -6,6 +6,7 @@
 import { rng, pickR, shuffleR, fmt } from "../core.js";
 
 const KEY = "mcharts";
+const Cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const HIST = [
   { id: "fish", what: "the lengths of mackerel caught by a fishing boat", animal: "mackerel", var: "length", unit: "cm", w: 2, start: 20, k: 7, xl: "length / cm", minSize: true },
   { id: "crab", what: "the carapace widths of shore crabs found on a rocky shore", animal: "crabs", var: "carapace width", unit: "mm", w: 5, start: 20, k: 7, xl: "carapace width / mm" },
@@ -129,7 +130,7 @@ function questions(F, r) {
       why: `Add the plastic sectors: ${cats.map((c, i) => (pl.includes(c) ? `${P[i]}%` : null)).filter(Boolean).join(" + ")} = <b>${sum}%</b>. (Small reading differences in each sector are accepted.)` }); return qs; }
   }
   const big = so[0], small = so[so.length - 1], ratio = P[big] / P[small];
-  qs.push({ kind: "choice", q: `Which statement about the pie chart is correct?`, options: [`${cats[big]} made up a larger share than any other category.`, `${cats[small]} made up the largest share of the total.`, `Every category made up the same share of the total.`, P[big] === 50 ? `${cats[big]} made up exactly a quarter of the total.` : `${cats[big]} made up exactly half of the total.`], a: 0,
+  qs.push({ kind: "choice", q: `Which statement about the pie chart is correct?`, options: [`${Cap(cats[big])} made up the largest share of the total.`, `${Cap(cats[small])} made up the largest share of the total.`, `Every category made up the same share of the total.`, P[big] === 50 ? `${Cap(cats[big])} made up exactly a quarter of the total.` : `${Cap(cats[big])} made up exactly half of the total.`], a: 0,
     why: `${L(big)} is the biggest sector at ${P[big]}%, and ${L(small)} the smallest at ${P[small]}%, so it is about ${fmt(Math.round(ratio * 10) / 10)} times as large (${P[big] - P[small]} percentage points more).` });
   return qs;
 }

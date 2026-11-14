@@ -86,7 +86,9 @@ function make(seed) {
     const rangeRows = rows.map((x, i) => i).filter((i) => i !== ar && Math.max(...rows[i].vals) - Math.min(...rows[i].vals) >= 2 * unit - 1e-9);
     if (!rangeRows.length) continue;
     const F = { kind: KEY, seed, C, rows, ar, aj, trend, pk, rangeRow: pickR(r, rangeRows) };
-    const ev = evidence(F); if (!ev.some((x) => x[1]) || !ev.some((x) => !x[1])) continue;
+    const ev = evidence(F);
+    if (!ev.some((x) => x[1])) continue;
+    if (trend !== "mono" && !ev.some((x) => !x[1])) continue;
     return F;
   }
   return make(seed + 1);
@@ -132,6 +134,9 @@ function evidence(F) {
     const ja = C.dir > 0 ? A.vals.indexOf(Math.max(...A.vals)) : A.vals.indexOf(Math.min(...A.vals)), jb = C.dir > 0 ? B.vals.indexOf(Math.min(...B.vals)) : B.vals.indexOf(Math.max(...B.vals));
     if ((A.vals[ja] - B.vals[jb]) * C.dir >= tolD) st.push([`${cap(C.rep)} ${ja + 1} at ${A.short} gave a ${C.dir > 0 ? "higher" : "lower"} result than ${C.rep} ${jb + 1} at ${B.short}.`, false, `${fx(A.vals[ja], C.dp)} against ${fx(B.vals[jb], C.dp)}, even though ${A.short} is the smaller ${C.iv}, so this does not support the conclusion.`]);
   }
+  // the anomalous repeat itself is never evidence, because it is left out of the means
+  { const A = rows[ar], av = A.vals[F.aj], ref = rows[ar - 1];
+    st.push([`${cap(C.rep)} ${F.aj + 1} at ${A.short} (${fx(av, C.dp)}) was ${av > ref.dmean ? "higher" : "lower"} than the mean at ${ref.short}.`, false, `This is the anomalous result, which is left out of the means, so it is not evidence for the conclusion.`]); }
   return st;
 }
 
