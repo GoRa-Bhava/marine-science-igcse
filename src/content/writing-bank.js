@@ -230,7 +230,7 @@ export const WRITING = [
     q: "Explain why cold seawater can hold more dissolved oxygen than warm seawater, and why this matters for marine animals.",
     points: [
       { t: "When water is warmed, the dissolved gas particles gain kinetic energy", accept: "oxygen particles move faster" },
-      { t: "So more oxygen particles escape from the water into the air", accept: "oxygen comes out of solution" },
+      { t: "More oxygen particles escape from the water into the air", accept: "oxygen comes out of solution" },
       { t: "Oxygen has a low solubility in water, so there is little to spare", accept: "only a small amount of oxygen can dissolve" },
       { t: "Marine animals need dissolved oxygen for respiration", accept: "fish take in dissolved oxygen through their gills" },
       { t: "In warm water there may not be enough oxygen, so animals may die or move to cooler water", accept: "fish suffocate or leave the area" },
@@ -1104,7 +1104,7 @@ export const WRITING = [
     q: "Explain how overfishing can cause a fish stock to collapse, and suggest one way it could be prevented.",
     points: [
       { t: "Fish are caught faster than they can reproduce and replace themselves", accept: "taken more quickly than they breed" },
-      { t: "So the number of adult, breeding fish falls", accept: "the breeding stock decreases" },
+      { t: "The number of adult, breeding fish falls", accept: "the breeding stock decreases" },
       { t: "Fewer adults breed, so fewer young are produced", accept: "less reproduction" },
       { t: "Young fish are caught before they are old enough to breed", accept: "immature fish are taken" },
       { t: "A growing human population increases demand, and sonar, GPS and large nets let fleets find and catch whole shoals", accept: "more demand / better technology" },
@@ -1130,7 +1130,8 @@ export const WRITING = [
     ],
     noCredit: ["Fish farming has only benefits and no drawbacks", "Aquaculture removes all pollution from the sea", "Fish farms cannot spread disease"],
     model: "Marine aquaculture produces a large, reliable supply of fish protein and provides jobs and income for coastal communities. Because farmed fish meet some of the demand, fewer wild fish need to be caught, so wild stocks can recover. However, waste food and faeces from crowded cages add nutrients to the water, which can cause eutrophication and lower the oxygen level. Diseases and parasites spread easily in the cages and can pass to wild fish, and escaped farmed fish can compete or interbreed with wild fish. Mangroves may be cleared to build shrimp farms, and wild fish are caught to make feed for farmed fish. The benefits must be weighed against these costs.",
-    tip: "Discuss means give both sides. Give at least two advantages and two disadvantages, then you can finish with a short judgement.",
+    tip: "Discuss means give both sides. Give at least two advantages and two disadvantages, then you can finish with a short judgement. Marking cap: count at most four Disadvantage ticks, so full marks needs at least one Advantage.",
+    caps: [{ labels: ["Disadvantage"], max: 4 }],
     status: "human_review" },
 
   { id: "W6-04", unit: 6, ref: "6.6/LO2", command: "Explain", marks: 4,
@@ -1212,7 +1213,8 @@ export const WRITING = [
     ],
     noCredit: ["Every turtle that is released will survive to become an adult", "The sex of a turtle is fixed when the egg is fertilised, so moving the eggs has no effect", "The adult turtles stay to guard the nest, so protection is not needed", "It is a good project (with no reason given)"],
     model: "Guarding or fencing the nests stops predators and poachers taking the eggs, so more eggs hatch. Protected nests are also not trampled or disturbed by people and lights on the beach. Rearing the young turtles protects them at the stage when most would be eaten, so more survive to be released. However, the project is expensive and needs trained staff for many years. In a hatchery the incubation temperature may be different, which can change the proportion of males and females. Threats at sea, such as fishing nets and plastic, still remain, so many released turtles die before they breed. Turtles also take many years to mature, so the benefit is slow to show. Overall, the project can help by increasing early survival, but its success should be judged by how many released turtles survive to breed. Reducing threats at sea would make it more effective.",
-    tip: "Evaluate means give strengths, then weaknesses, then finish with a judgement and the reason for it. A judgement with no reason scores nothing.",
+    tip: "Evaluate means give strengths, then weaknesses, then finish with a judgement and the reason for it. A judgement with no reason scores nothing. Marking cap: count at most three Strength ticks and three Weakness ticks, and at most four of the two together, so full marks needs the Judgement.",
+    caps: [{ labels: ["Strength"], max: 3 }, { labels: ["Weakness"], max: 3 }, { labels: ["Strength","Weakness"], max: 4 }],
     status: "human_review" },
 
   { id: "W6-09", unit: 6, ref: "6.5/LO8", command: "Discuss", marks: 6,
@@ -1232,7 +1234,8 @@ export const WRITING = [
     ],
     noCredit: ["Turbines in the sea are cheap to build", "The turbines release carbon dioxide as they spin", "Turbines can be put anywhere along the coast", "Renewable energy has no effect on marine life"],
     model: "Wind and tides are renewable, so they will never run out. Generating electricity from them releases no carbon dioxide, which reduces global warming, and the country will rely less on oil. However, the turbines are expensive to build, and there are only a few places with strong enough winds or fast enough tidal currents. Underwater cables are needed to carry the electricity to land, and building the turbines and laying the cables damages the seabed. Storms can damage the turbines, and repairing them at sea is expensive. Fish and marine mammals can be injured by tidal turbine blades. Turbines that can be seen from the coast may also put tourists off.",
-    tip: "Discuss means both sides. Give at least two advantages and two disadvantages, and try to cover environmental, economic and social points. Link each disadvantage to its cause, for example cables lead to seabed damage.",
+    tip: "Discuss means both sides. Give at least two advantages and two disadvantages, and try to cover environmental, economic and social points. Link each disadvantage to its cause, for example cables lead to seabed damage. Marking cap: count at most four Disadvantage ticks, so full marks needs at least two Advantage points.",
+    caps: [{ labels: ["Disadvantage"], max: 4 }],
     status: "human_review" },
 
   { id: "W6-10", unit: 6, ref: "6.1/LO1", command: "Outline", marks: 5,
@@ -1334,7 +1337,7 @@ export const WRITING = [
     q: "A plastic bottle top lost from a beach in California is found years later in the Great Pacific Garbage Patch, far out in the North Pacific Ocean. Explain how ocean gyres cause plastic to collect in garbage patches such as this one.",
     points: [
       { t: "Floating plastic is carried away from the coast by surface ocean currents", accept: "currents move the plastic out to sea" },
-      { t: "The ocean currents are driven by winds and the spinning of the Earth", accept: "winds / the Earth's rotation / tides / differences in density" },
+      { t: "The ocean currents are driven by winds and the spinning of the Earth", accept: "prevailing winds / the Earth's rotation" },
       { t: "In the North Pacific the currents form a gyre, a large system of currents moving in a circle", accept: "the currents circulate / rotate around the ocean" },
       { t: "The circulating currents gradually move the plastic towards the centre of the gyre", accept: "plastic is carried into the middle" },
       { t: "Water at the centre of the gyre hardly moves, so plastic that reaches it is not carried away again and builds up", accept: "plastic is trapped in the calm centre / accumulates in the centre" },
