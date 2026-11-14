@@ -34,7 +34,7 @@ export const MARKTRUE = [
       "Earthquakes occur when locked plates suddenly slip and release energy.",
       "Friction between the plates melts the rock to form magma." ],
     answer:[0,2,3,6],
-    why:"Divergent = apart, convergent = together (one subducted → melts → magma → volcano), transform = slide past. Earthquakes cluster at boundaries where locked plates slip." },
+    why:"At a divergent boundary the plates move apart. At a convergent boundary they move towards each other, and one plate can be subducted beneath the other. At a transform boundary they slide past each other sideways, so sliding sideways is not convergent, and moving apart is not transform. The subducted plate sinks into the hot mantle and melts, and the magma rises to form volcanoes; friction between the plates does not melt the rock. Earthquakes happen mainly at plate boundaries, not at random: locked plates build up tension, then suddenly slip and release energy." },
   { id:"MT-U1-03", unit:1, topic:"1.4 Tides & currents", spec:"1.4/LO1", tier:2, type:"multi",
     stem:"Tick the statements that are true about spring and neap tides.",
     options:[
@@ -148,7 +148,7 @@ export const MARKTRUE = [
       "Coral larvae are produced by budding from the parent polyp." ],
     answer:[0,1,3,5],
     why:"Asexual reproduction needs only one parent and gives offspring that are exact copies of that parent, for example coral polyps budding. In sexual reproduction, male and female sex cells fuse, so the offspring get a mix of characteristics from both parents and are not exact copies of either. New seagrass plants that grow from rhizomes are made asexually, not sexually. Seagrass flowers are for sexual reproduction, not asexual. Coral larvae come from sexual reproduction, when eggs and sperm are released into the water. They are not made by budding." },
-  { id:"MT-U3-04", unit:3, topic:"3.7 Migration", spec:"3.7", tier:2, type:"multi",
+  { id:"MT-U3-04", unit:3, topic:"3.7 Migration", spec:"3.7/LO1, 3.7/LO3", tier:2, type:"multi",
     stem:"Tick the statements that are true about animal migration.",
     options:[
       "Animals migrate to find food.",
@@ -160,7 +160,7 @@ export const MARKTRUE = [
       "Lanternfish migrate towards the surface by day to feed in the sunlight.",
       "Animals migrate by drifting wherever the ocean currents take them." ],
     answer:[0,1,3,5],
-    why:"Animals migrate to find food, to reach breeding grounds and to avoid predators. Lanternfish rise to the surface at night to feed, hidden by the dark, and go back down by day so that predators cannot see them. Animals find their way using the Earth's magnetic field, the Sun, Moon and stars, smell, and mental maps of landmarks, not the clouds, which keep moving and changing. Migration is a regular journey in a definite direction from one place to another, so it is not the everyday movements within a home area, and it is not drifting wherever the currents go. 3.7." },
+    why:"Animals migrate to find food, to reach breeding grounds and to avoid predators. Lanternfish rise to the surface at night to feed, hidden by the dark, and go back down by day so that predators cannot see them. Animals find their way using the Earth's magnetic field, the Sun, Moon and stars, smell, and mental maps of landmarks, not the clouds, which keep moving and changing. Migration is a regular journey in a definite direction from one place to another, so it is not the everyday movements within a home area, and it is not drifting wherever the currents go." },
 
   // ============================ UNIT 4 ============================
   { id:"MT-U4-01", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO2-4", tier:2, type:"multi",
@@ -255,7 +255,7 @@ export const MARKTRUE = [
       "The leaves absorb salt from the sea spray.",
       "The pneumatophores secrete the tree's excess salt." ],
     answer:[0,1,3,5],
-    why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Pneumatophores take in oxygen, not water vapour. Prop roots support the tree; they do not store fresh water. The leaves get rid of salt rather than absorbing it, and salt is secreted by the leaves, not by the pneumatophores. 5.6/LO3." },
+    why:"Waterlogged mud is low in oxygen, so pneumatophores (aerial roots) stick up into the air and take in oxygen for the roots to respire. Prop roots support the tree in soft mud. The leaves can secrete excess salt. Pneumatophores take in oxygen, not water vapour. Prop roots support the tree; they do not store fresh water. The leaves get rid of salt rather than absorbing it, and salt is secreted by the leaves, not by the pneumatophores." },
   { id:"MT-U5-04", unit:5, topic:"5.7 Coral reef", spec:"5.7/LO1-5", tier:2, type:"multi",
     stem:"Tick the statements that are true about coral reefs.",
     options:[
@@ -268,7 +268,7 @@ export const MARKTRUE = [
       "Corals grow best in deep water where little light reaches.",
       "The zooxanthellae get their food by eating the polyp's tissues." ],
     answer:[0,1,3,4],
-    why:"Coral polyps are animals. They build a skeleton of calcium carbonate and have photosynthetic algae, called zooxanthellae, in their tissues. Both partners benefit, so this is mutualism, not parasitism. When the water is too warm, the polyps expel their zooxanthellae and turn white; this is bleaching. The zooxanthellae make their own food by photosynthesis and give sugars to the polyp, so they do not feed on its tissues. Crown-of-thorns starfish eat the living polyps, and it is parrot fish that grind coral. Corals need shallow, clear water, because their zooxanthellae need light. 5.7." },
+    why:"Coral polyps are animals. They build a skeleton of calcium carbonate and have photosynthetic algae, called zooxanthellae, in their tissues. Both partners benefit, so this is mutualism, not parasitism. When the water is too warm, the polyps expel their zooxanthellae and turn white; this is bleaching. The zooxanthellae make their own food by photosynthesis and give sugars to the polyp, so they do not feed on its tissues. Crown-of-thorns starfish eat the living polyps, and it is parrot fish that grind coral. Corals need shallow, clear water, because their zooxanthellae need light." },
 
   // ============================ UNIT 6 ============================
   { id:"MT-U6-01", unit:6, topic:"6.7 Eutrophication", spec:"6.7/LO5", tier:2, type:"multi",
@@ -322,7 +322,7 @@ export const MARKTRUE = [
       "A catch that rises each year shows the fish stock is healthy.",
       "In a protected area, coral recovers because the water becomes calmer." ],
     answer:[0,1,3,4],
-    why:"A sustainable activity can carry on without damaging the environment or making the resource run out. For harvesting, that means taking no more than is replaced. A marine protected area lets habitats such as coral recover, so fish species recover too. Species richness is the number of different species in an area. In a protected area, fish increase because the habitat recovers, not because people feed them. Fish are renewable, but a stock is sustainable only if it is not harvested faster than it is replaced. A rising catch can come from more fishing effort, not a healthy stock. Coral in a protected area recovers because damage from fishing stops, not because the water gets calmer." },
+    why:"A sustainable activity can carry on without damaging the environment or making the resource run out. For harvesting, that means taking no more than is replaced. A marine protected area bans or limits fishing and other damaging activities, so fish stocks and habitats such as coral can recover. Species richness is the number of different species in an area. In a protected area, fish increase because fewer are caught and the habitat recovers, not because people feed them. Fish are renewable, but a stock is sustainable only if it is not harvested faster than it is replaced. A rising catch can come from more fishing effort, not a healthy stock. Coral in a protected area recovers because damaging activities such as anchoring and destructive fishing are banned or controlled, not because the water gets calmer." },
 ];
 
 export const marktrueByUnit = (u) => MARKTRUE.filter((i) => i.unit === u);
