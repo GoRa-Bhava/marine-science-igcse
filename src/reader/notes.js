@@ -631,7 +631,7 @@ export const NOTES = {
      {
       "h": "Animal and plant cells",
       "ref": "3.1/LO1",
-      "body": "Animal cells have a <b>cell membrane</b>, a <b>nucleus</b>, <b>cytoplasm</b> and <b>mitochondria</b>. Plant cells have all of those too. Plant cells also have three extra parts: a <b>cell wall</b> on the outside of the membrane, <b>chloroplasts</b>, and one large permanent <b>vacuole</b>."
+      "body": "Animal cells have a <b>cell membrane</b>, a <b>nucleus</b>, <b>cytoplasm</b> and <b>mitochondria</b>. Plant cells have all of those too. Plant cells also have a <b>cell wall</b> on the outside of the membrane and one large permanent <b>vacuole</b>, and leaf cells have <b>chloroplasts</b>."
      },
      {
       "h": "Bacterial cells",
@@ -1443,7 +1443,7 @@ export const NOTES = {
      {
       "h": "Twilight and midnight conditions",
       "ref": "5.3/LO9-11",
-      "body": "The <b>twilight zone</b> has low light, some dissolved oxygen, stable temperature and higher pressure. The <b>midnight zone</b> has no light, little dissolved oxygen, a very stable low temperature and very high pressure. Oxygen is low there because there is no photosynthesis and respiration uses up what sinks from above."
+      "body": "The <b>twilight zone</b> has low light, some dissolved oxygen, stable temperature and higher pressure. The <b>midnight zone</b> has no sunlight, little dissolved oxygen, a very stable low temperature and very high pressure. Oxygen is low there because there is no photosynthesis and respiration uses up what sinks from above."
      },
      {
       "h": "Adaptations near the surface",
@@ -1869,7 +1869,7 @@ export const NOTES = {
      {
       "h": "Net fishing methods",
       "ref": "6.3/LO2",
-      "body": "A <b>cast net</b> is small-scale and bycatch can be released. <b>Pelagic trawling</b> takes big catches of shoaling fish. A <b>beam trawl</b> is dragged along the seabed, destroys habitat and catches everything, so it is the most damaging. A <b>purse seine</b> takes very large catches and can trap dolphins and turtles."
+      "body": "A <b>cast net</b> is small-scale and bycatch can be released. <b>Pelagic trawling</b> takes big catches of shoaling fish. A <b>beam trawl</b> is dragged along the seabed, destroys habitat and catches almost everything in its path, so it is the most damaging. A <b>purse seine</b> takes very large catches and can trap dolphins and turtles."
      },
      {
       "h": "Nets, traps and lines",
@@ -2008,7 +2008,7 @@ export const NOTES = {
      {
       "h": "A fossil fuel with many uses",
       "ref": "6.5/LO2",
-      "body": "Oil is a <b>fossil fuel</b>, formed from organisms that died millions of years ago, and it is <b>non-renewable</b> so cannot be replaced. Burning (combusting) it releases <b>carbon dioxide</b>. It is also used to make plastics."
+      "body": "Oil is a <b>fossil fuel</b>, formed from organisms that died millions of years ago, and it is <b>non-renewable</b>: it took millions of years to form, so it cannot be replaced in a human lifetime. Burning (combusting) it releases <b>carbon dioxide</b>. It is also used to make plastics."
      },
      {
       "h": "Spill risk from transport",
@@ -2212,7 +2212,7 @@ export const NOTES = {
      {
       "h": "The ocean absorbs heat",
       "ref": "6.8/LO4",
-      "body": "Water needs a lot of energy to warm up, so the oceans absorb and store a great deal of heat with only a small rise in temperature. This reduces some of the warming and keeps global temperatures more <b>stable</b> (it is also why coasts have milder winters and cooler summers). But the oceans are slowly warming: the water undergoes <b>thermal expansion</b> (the particles move faster and further apart, so the same mass takes up a larger volume), ice melts and less oxygen dissolves."
+      "body": "Water needs a lot of energy to warm up, so the oceans absorb and store a great deal of heat with only a small rise in temperature. This <b>slows</b> the warming of the air but does not stop it (it is also why coasts have milder winters and cooler summers). But the oceans are slowly warming: the water undergoes <b>thermal expansion</b> (the particles move faster and further apart, so the same mass takes up a larger volume), ice melts and less oxygen dissolves."
      },
      {
       "h": "Two causes of sea-level rise",
