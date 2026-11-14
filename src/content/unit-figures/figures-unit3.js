@@ -80,7 +80,7 @@ export const FIGURE_ITEMS_U3 = [
     why: "Chloroplasts, like the cell wall and the large vacuole, are found in plant cells only. The nucleus, the cell membrane and the mitochondria are found in both plant and animal cells." },
   { id: "U3-D20", topic: "u3-cells", type: "tap", tier: 1, ref: "3.1/LO2", fig: "G-U3-cells3",
     q: "Tap the cell that has a cell wall, a cell membrane and cytoplasm but no nucleus.", target: "bacterial-cell",
-    why: "The bottom cell has a cell wall, a cell membrane and cytoplasm but no nucleus: it is a bacterial cell. The plant cell also has a wall, but it has a nucleus. The animal cell has a nucleus and no wall." },
+    why: "The bottom cell has a cell wall, a cell membrane and cytoplasm but no nucleus: its DNA lies loose in the cytoplasm, so it is a bacterial cell. The plant cell also has a wall, but it has a nucleus. The animal cell has a nucleus and no wall." },
   { id: "U3-D21", topic: "u3-cells", type: "choice", tier: 2, ref: "3.1/LO1", fig: "G-U3-cells3",
     q: "Which of these cells has a nucleus but no cell wall and no chloroplasts?", qRecall: "Which cell in the picture has a nucleus but no cell wall and no chloroplasts?",
     options: ["the top-right cell", "the top-left cell", "the bottom cell", "none of these three cells"], a: 0,
@@ -105,7 +105,7 @@ export const FIGURE_ITEMS_U3 = [
     why: "Seagrass is a true plant, with roots, leaves and flowers. Kelp is a seaweed and the diatom is a single cell; both photosynthesise, but they are protoctists, not plants. The fish is an animal." },
   { id: "PQ-U3-05", topic: "u3-classify", type: "tap", tier: 1, ref: "3.3/LO3", fig: "G-U3-domains",
     q: "Each picture shows a single cell. Tap the cell that is not in the domain Eukarya.", target: "bacterial-cell",
-    why: "The top cell has a cell wall, a cell membrane and cytoplasm but no nucleus, so it is a bacterium, in the domain Bacteria. The dinoflagellate (bottom left, a protoctist) and the animal cell (bottom right, with its nucleus) both belong to kingdoms within the domain Eukarya. The dinoflagellate's nucleus is hidden by its outer covering in this picture, but it does have one." },
+    why: "The top cell has a cell wall, a cell membrane and cytoplasm but no nucleus (its DNA lies loose in the cytoplasm), so it is a bacterium, in the domain Bacteria. The dinoflagellate (bottom left, a protoctist) and the animal cell (bottom right, with its nucleus) both belong to kingdoms within the domain Eukarya. The dinoflagellate's nucleus is hidden by its outer covering in this picture, but it does have one." },
 
   /* ---------------- u3-animals ---------------- */
   { id: "U3-D01", topic: "u3-animals", type: "label", tier: 1, ref: "3.4/LO3", fig: "R-U3-05",

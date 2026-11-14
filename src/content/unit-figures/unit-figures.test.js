@@ -27,10 +27,10 @@ const typeCounts = (items) => {
   return t;
 };
 
-test("batch 1 (on existing + new art, after Don's removals): 62 figures, 133 items (tap 58, choice 60, label 14, multi 1)", () => {
+test("batch 1 (on existing + new art, after Don's removals): 62 figures, 133 items (tap 57, choice 61, label 14, multi 1)", () => {
   assert.equal(Object.keys(UNIT_FIGURES).length, 62);
   assert.equal(UNIT_FIGURE_ITEMS.length, 133);
-  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS), { tap: 58, choice: 60, label: 14, multi: 1 });
+  assert.deepEqual(typeCounts(UNIT_FIGURE_ITEMS), { tap: 57, choice: 61, label: 14, multi: 1 });
 });
 
 test("batch 2C (code-drawn, after Don's vetting round 1): 20 figures, 46 items (tap 20, choice 21, label 5)", () => {

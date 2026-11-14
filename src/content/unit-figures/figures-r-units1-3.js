@@ -114,9 +114,9 @@ export const FIGURE_ITEMS_R13 = [
   { id: "PQ2-U3-92", topic: "u3-cells", type: "label", tier: 1, ref: "3.1/LO2 · 3.1/LO3", fig: "R-U3-03",
     q: "Label the three marked structures of this bacterial cell.",
     extra: ["nucleus", "chloroplast"],
-    why: "The thick violet outer layer is the cell wall, which supports the cell, and the thin dark-blue line just inside it is the cell membrane, which controls what enters and leaves. The cytoplasm fills the cell, and most of the cell's reactions happen there. A bacterial cell has no nucleus and no chloroplasts." },
+    why: "The thick violet outer layer is the cell wall, which supports the cell, and the thin dark-blue line just inside it is the cell membrane, which controls what enters and leaves. The cytoplasm fills the cell, and most of the cell's reactions happen there. A bacterial cell has no nucleus and no chloroplasts: its DNA is the loose, coiled loop lying in the cytoplasm." },
   { id: "PQ2-U3-93", topic: "u3-cells", type: "choice", tier: 2, ref: "3.1/LO1 · 3.1/LO2", fig: "R-U3-03",
     q: "This cell has a cell wall, like a plant cell. Which feature shows that it is a bacterial cell?",
     options: ["It has no nucleus.", "It has no cell membrane.", "It has a cell wall.", "It has cytoplasm."], a: 0,
-    why: "A bacterial cell has no nucleus, and this cell has none. It does have a cell membrane, the thin dark-blue line just inside the wall, as every cell does; a bacterium has a wall as well as a membrane, not instead of one. A cell wall does not show it is a bacterium, because plant cells have one too, and every cell has cytoplasm." },
+    why: "A bacterial cell has no nucleus, and this cell has none: its DNA is the loose loop lying in the cytoplasm. It does have a cell membrane, the thin dark-blue line just inside the wall, as every cell does; a bacterium has a wall as well as a membrane, not instead of one. A cell wall does not show it is a bacterium, because plant cells have one too, and every cell has cytoplasm." },
 ];
