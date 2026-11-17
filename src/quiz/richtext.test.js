@@ -14,6 +14,18 @@ test("<i>Fucus</i> in an option renders as a real italic element", () => {
   assert.match(out, /A rockweed such as <i>Fucus<\/i> grows on the shore\./);
 });
 
+test("italicize returns ONE span wrapping the pieces, not an array (so flex boxes don't split the line)", () => {
+  const el = italicize("A rockweed such as <i>Fucus</i> grows on the shore.");
+  assert.equal(React.isValidElement(el), true, "must be a single React element, not an array");
+  assert.equal(el.type, "span");
+  const kids = el.props.children;
+  assert.ok(Array.isArray(kids) && kids.length === 3, "children: text, <i> element, text");
+  assert.equal(kids[0], "A rockweed such as ");
+  assert.equal(React.isValidElement(kids[1]) && kids[1].type, "i");
+  assert.equal(kids[1].props.children, "Fucus");
+  assert.equal(kids[2], " grows on the shore.");
+});
+
 test("other tags in a stem are shown escaped, not rendered", () => {
   const out = html("Tick the <b>true</b> statements.");
   assert.ok(!/<b>/.test(out), "a literal <b> tag must not reach the DOM");
