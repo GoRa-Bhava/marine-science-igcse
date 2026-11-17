@@ -23,5 +23,5 @@ export function italicize(s) {
     last = m.index + m[0].length;
   }
   if (last < s.length) out.push(s.slice(last));
-  return out;
+  return React.createElement("span", null, ...out);
 }
