@@ -99,12 +99,12 @@ export const FIGURE_ITEMS_U1 = [
   "q": "What are the coordinates of point P?",
   "options": [
    "20° S, 70° E",
-   "20° N, 70° E",
-   "20° S, 70° W",
-   "70° S, 20° E"
+   "20° N, 70° W",
+   "70° S, 20° E",
+   "70° N, 20° W"
   ],
   "a": 0,
-  "why": "Give latitude first, read from the side of the map: P is two 10° lines below the equator, so it is at 20° S, not 20° N. Then give longitude, read from the bottom: P is one 10° line east of 60° E, so it is at 70° E, not 70° W. The option 70° S, 20° E swaps the two readings round."
+  "why": "Give latitude first, read from the side of the map: P is two 10° lines below the equator, so it is at 20° S, not 20° N. Then give longitude, read from the bottom: P is one 10° line east of 60° E, so it is at 70° E, not 70° W. The options that start with 70° swap the two readings round."
  },
  {
   "id": "PQ-U1-08",

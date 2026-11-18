@@ -97,7 +97,7 @@ export const FIGURE_ITEMS_U3 = [
   { id: "PQ-U3-03", topic: "u3-repro", type: "choice", tier: 1, ref: "3.2/LO1 · 3.2/LO2", fig: "G-U3-budding",
     q: "This sea anemone is reproducing. Which type of reproduction does the picture show, and why?",
     options: ["asexual, as a new anemone buds from one parent", "sexual, as the new anemone grows from one parent", "asexual, as sex cells from two parents fuse", "sexual, as sex cells from two parents fuse"], a: 0,
-    why: "The small anemone growing out of the side of the large one is a bud: a single parent is producing an exact copy of itself, which is asexual reproduction. Growing from one parent is never sexual. Sexual reproduction needs male and female sex cells from two parents to fuse, and no sex cells or second parent are shown here." },
+    why: "The small anemone growing out of the side of the large one is a bud: a single parent is producing an exact copy of itself, which is asexual reproduction. Here only one parent is involved and no sex cells fuse, so it is not sexual reproduction. Sexual reproduction needs male and female sex cells from two parents to fuse, and no sex cells or second parent are shown here." },
 
   /* ---------------- u3-classify ---------------- */
   { id: "PQ-U3-04", topic: "u3-classify", type: "tap", tier: 1, ref: "3.3/LO4", fig: "G-U3-kingdoms",
