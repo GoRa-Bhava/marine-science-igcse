@@ -19,9 +19,9 @@ export const MARKTRUE = [
       "The iron core creates the Earth's magnetic field.",
       "From the centre outwards, the layers are core, crust, mantle.",
       "The mantle is solid rock that can melt to form magma.",
-      "The atmosphere is usually counted as one of the Earth's structural layers." ],
+      "The mantle is made mainly of iron, like the core." ],
     answer:[0,2,4,6],
-    why:"From the centre out, the Earth has a solid iron inner core, a liquid iron outer core, a mantle of solid rock and a thin crust of solid rock. The iron core creates the Earth's magnetic field. Mantle rock can melt to form magma. Magma is melted mantle rock, not melted iron from the core. The crust is the thin outer layer, not a thick inner one. The order from the centre is core, mantle, crust, so the crust is on the outside. The atmosphere surrounds the Earth but is not one of its structural layers." },
+    why:"From the centre out, the Earth has a solid iron inner core, a liquid iron outer core, a mantle of solid rock and a thin crust of solid rock. The iron core creates the Earth's magnetic field. Mantle rock can melt to form magma. Magma is melted mantle rock, not melted iron from the core. The crust is the thin outer layer, not a thick inner one. The order from the centre is core, mantle, crust, so the crust is on the outside. The mantle is made of rock, not iron; only the core is iron." },
   { id:"MT-U1-02", unit:1, topic:"1.2 Plate tectonics", spec:"1.2/LO4-5", tier:2, type:"multi",
     stem:"Tick the statements that are true about plate boundaries, earthquakes and volcanoes.",
     options:[
