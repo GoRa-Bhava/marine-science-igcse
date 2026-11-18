@@ -469,7 +469,7 @@ export const FIGURE_ITEMS_P46 = [
     q: "Which reef has the higher species richness of fish?",
     options: [
       "The right, as it has more different kinds of fish.",
-      "The left, as it has far more individual fish in all.",
+      "The left, as it has far more individual fish.",
       "The left, as its single shoal has the most biomass.",
       "The right, as its fish come in more different sizes.",
     ], a: 0,

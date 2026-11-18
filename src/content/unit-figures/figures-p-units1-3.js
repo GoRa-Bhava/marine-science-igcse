@@ -237,10 +237,10 @@ export const FIGURE_ITEMS_P13 = [
     options: [
       "It is denser than the upper layers but less dense than the bottom layer.",
       "It is less dense than the upper layers but denser than the bottom layer.",
-      "It has the same density as all three layers, so it can rest at any level.",
+      "It has the same density as the middle layer, so it rests inside that layer.",
       "The salt in the bottom layer pushes it upwards, whatever its density is.",
     ], a: 0,
-    why: "An object sinks through a liquid that is less dense than itself and floats on one that is denser. The egg has sunk through the two upper layers, so it is denser than they are, and it floats on the bottom layer, so it is less dense than that. If it matched the density of all three it would not settle at one boundary. Salt raises the density of the water; it does not push objects up whatever their density." },
+    why: "An object sinks through a liquid that is less dense than itself and floats on one that is denser. The egg has sunk through the two upper layers, so it is denser than they are, and it floats on the bottom layer, so it is less dense than that. If it had the same density as the middle layer, it would hang inside that layer rather than resting on the layer below. Salt raises the density of the water; it does not push objects up whatever their density." },
 
   /* ---------------- u2-depth ---------------- */
   { id: "PQ2-U2-13", topic: "u2-depth", type: "choice", tier: 2, ref: "2.5/LO3 · 2.5/LO2", fig: "P-U2-12",
