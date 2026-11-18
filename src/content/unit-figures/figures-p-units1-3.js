@@ -161,7 +161,7 @@ export const FIGURE_ITEMS_P13 = [
       "The plates moved apart, magma rose from the mantle into the gap between them, and it built up.",
       "The plates pushed together and squeezed the land upwards, folding it into a tall mountain of rock.",
     ], a: 0,
-    why: "At this convergent boundary, one plate is subducted beneath the other. Magma forms in the mantle above the sinking plate, rises through the crust and erupts. Friction between the plates does not melt the rock: the magma forms in the mantle above the sinking plate. Plates moving apart happens at a divergent boundary, and land folded into mountains has no magma, so neither matches this cross-section." },
+    why: "At this convergent boundary, one plate is subducted beneath the other. Magma forms in the mantle above the sinking plate, rises through the crust and erupts. Friction between the plates is not what makes this magma: it forms in the mantle above the sinking plate. Plates moving apart happens at a divergent boundary, and folding land into mountains does not by itself make magma, so neither matches this cross-section." },
 
   /* ---------------- quakes ---------------- */
   { id: "PQ2-U1-07", topic: "quakes", type: "tap", tier: 2, ref: "1.2/LO5", fig: "P-U1-06",
@@ -174,8 +174,8 @@ export const FIGURE_ITEMS_P13 = [
     extra: ["coral reef", "estuary"],
     why: "Going out from the right-hand coast: the continental shelf is the shallow, gently sloping platform, the continental slope is the steep drop to the deep floor, and the abyssal plain is the flat deep floor. The mid-ocean ridge is the underwater mountain chain where plates move apart. The ocean trench is the deep, narrow dip where one plate is forced beneath another, here beside the left-hand continent. The volcanic island rises from the sea floor to above sea level." },
   { id: "PQ2-U1-13", topic: "floor", type: "tap", tier: 1, ref: "1.3/LO6 · 1.2/LO4", fig: "P-U1-10",
-    q: "Tap the feature that forms where two plates are moving apart.", target: "ridge",
-    why: "A mid-ocean ridge forms at a divergent boundary: the plates move apart and magma rises into the gap, building an underwater mountain chain. A trench forms where one plate is forced beneath another, the opposite movement. A volcanic island is a volcano grown above sea level; islands can form in several settings, so it is not the feature that marks plates moving apart. The slope and shelf are the edge of a continent." },
+    q: "Tap the feature that marks the line where two plates are moving apart.", target: "ridge",
+    why: "A mid-ocean ridge forms at a divergent boundary: the plates move apart and magma rises into the gap, building an underwater mountain chain. A trench forms where one plate is forced beneath another, the opposite movement. A volcanic island is a volcano grown above sea level; islands can form in several settings, so an island does not mark the line where plates move apart. The slope and shelf are the edge of a continent." },
 
   /* ---------------- tides ---------------- */
   { id: "PQ2-U1-14", topic: "tides", type: "tap", tier: 1, ref: "1.4/LO2", fig: "P-U1-11",
@@ -238,9 +238,9 @@ export const FIGURE_ITEMS_P13 = [
       "It is denser than the upper layers but less dense than the bottom layer.",
       "It is less dense than the upper layers but denser than the bottom layer.",
       "It has the same density as the middle layer, so it rests inside that layer.",
-      "The salt in the bottom layer pushes it upwards, whatever its density is.",
+      "The salt in the bottom layer pushes the egg upwards and holds it at the boundary.",
     ], a: 0,
-    why: "An object sinks through a liquid that is less dense than itself and floats on one that is denser. The egg has sunk through the two upper layers, so it is denser than they are, and it floats on the bottom layer, so it is less dense than that. If it had the same density as the middle layer, it would hang inside that layer rather than resting on the layer below. Salt raises the density of the water; it does not push objects up whatever their density." },
+    why: "An object sinks through a liquid that is less dense than itself and floats on one that is denser. The egg has sunk through the two upper layers, so it is denser than they are, and it floats on the bottom layer, so it is less dense than that. If it had the same density as the middle layer, it would hang inside that layer rather than resting on the layer below. Salt raises the density of the water; it does not push objects upwards by itself." },
 
   /* ---------------- u2-depth ---------------- */
   { id: "PQ2-U2-13", topic: "u2-depth", type: "choice", tier: 2, ref: "2.5/LO3 · 2.5/LO2", fig: "P-U2-12",
