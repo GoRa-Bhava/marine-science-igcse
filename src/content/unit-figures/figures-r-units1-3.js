@@ -92,7 +92,7 @@ export const FIGURES_R13 = {
   // photo-real young kelp on one boulder: claw-like holdfast, one stipe, bladders where the blades join it
   "R-U3-06": { art: IMG("R-U3-06", 800, 800), hotspots: [
     { id: "blade", x: 190, y: 95, label: "blade" },
-    { id: "gas-bladder", x: 533, y: 390, label: "gas bladder" },
+    { id: "gas-bladder", x: 490, y: 298, label: "gas bladder" },
     { id: "stipe", x: 493, y: 510, label: "stipe" },
     { id: "holdfast", x: 450, y: 695, label: "holdfast" },
   ] },
