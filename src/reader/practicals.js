@@ -89,7 +89,7 @@ export const PRACTICALS = [
       "Judge each colour against an untested (control) sample.",
       "The white emulsion in the lipid test is lipid, not protein.",
       "In the exam, give BOTH colours: the starting colour and the positive one (e.g. 'orange-brown → blue-black', 'blue → brick-red'), not just the final colour.",
-      "Use a separate sample of the food for each test, with equal volumes of sample and reagent, so the tests don't interfere and comparisons are fair.",
+      "Use a separate sample of the food for each test, and clean apparatus, so the tests don't interfere.",
     ],
 
     // Auto-graded run — recall (tier 1) → application (tier 2).
@@ -555,14 +555,14 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     result: "Sea water is slightly alkaline, fresh water about neutral, rain water slightly acidic.",
     swatches: [
       { label: "Sea water: slightly alkaline", color: "#2f8f9d" },
-      { label: "Fresh water: neutral", color: "#4aa84a" },
+      { label: "Fresh water: about neutral", color: "#4aa84a" },
       { label: "Rain water: slightly acidic", color: "#e8a13a" },
     ],
     controls: ["Same volume of each water sample", "Same number of drops of indicator", "Clean the equipment between samples"],
-    safety: ["Universal indicator solution contains ethanol, which is flammable: keep it away from flames.", "Wear eye protection in case of splashes.", "Do not drink or taste any of the water samples."],
+    safety: ["Universal indicator solution may contain ethanol, which is flammable: keep it away from flames.", "Wear eye protection in case of splashes.", "Do not drink or taste any of the water samples."],
     technique: [
       "Universal indicator shows pH by its colour: match it to the chart.",
-      "The amount of indicator doesn't change the pH; only the sample does.",
+      "A few drops of indicator show the pH without noticeably changing it.",
       "Rain water is slightly acidic, not neutral.",
     ],
     items: [
@@ -637,7 +637,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     ],
     result: "The pH falls (the water becomes more acidic) as carbon dioxide dissolves.",
     controls: ["Same volume of sea water", "Same amount of indicator", "Compare with a sample that has no CO₂ added"],
-    safety: ["Blow out gently through the straw, and never suck the liquid up.", "Use your own clean straw and do not share it.", "Wear eye protection in case of splashes. Universal indicator solution contains ethanol, which is flammable: keep it away from flames."],
+    safety: ["Blow out gently through the straw, and never suck the liquid up.", "Use your own clean straw and do not share it.", "Wear eye protection in case of splashes. Universal indicator solution may contain ethanol, which is flammable: keep it away from flames."],
     technique: [
       "Dissolving CO₂ makes the water more acidic: the pH goes down.",
       "This is a lab model of ocean acidification (links to 6.8).",
@@ -724,7 +724,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     technique: [
       "Solids dissolve MORE as temperature rises: the opposite of gases.",
       "'Saturated' means no more will dissolve, not 'full of water'.",
-      "Stirring changes the rate of dissolving, not the total amount that dissolves.",
+      "Stirring changes the rate of dissolving, not the maximum amount that can dissolve.",
     ],
     items: [
       { id: "P2.2c-01", type: "choice", tier: 1, ref: "2.2/LO6", family: "solid-trend",
@@ -800,7 +800,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Hot water and heaters can scald or burn: use tongs or heat-proof gloves.", "Keep electrical meters and probes away from spilt water.", "Wear eye protection when heating water."],
     technique: [
       "Gases dissolve LESS as temperature rises: the opposite of solids.",
-      "Bubbles forming on gentle warming are dissolved gas escaping, not the water boiling.",
+      "Bubbles forming on gentle warming are mainly dissolved gas escaping, not the water boiling.",
       "Warmer sea water therefore holds less oxygen for organisms.",
       "Another method: weigh a flask of carbonated water, keep it at one temperature for a fixed time and weigh it again. A bigger loss in mass at a higher temperature shows less carbon dioxide stays dissolved. A flask of plain water at each temperature shows how much of the loss is just evaporation.",
     ],
@@ -873,12 +873,12 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Stand the boiling tube in a warmer water bath and wait for the temperature to stop changing",
       "Mark the new level, repeat at several temperatures, and compare: a higher level means the same mass of water now fills a bigger volume",
     ],
-    result: "Colder water is denser; density falls as temperature rises.",
+    result: "Between 10 °C and 40 °C, colder water is denser; density falls as temperature rises.",
     controls: ["The same tube of water throughout, so the mass does not change", "No air bubbles trapped in the boiling tube", "Wait until the temperature is steady before each reading"],
     safety: ["Hold the glass tube in a cloth and push it into the bung gently: glass tubing can snap and cut.", "Take care with hot water baths, and let the tube cool before you handle it."],
     technique: [
       "The volume change is small (only about 1–1.5 cm³ for 100 cm³ of water warmed by 40 °C, roughly 1 %), too small to read reliably on a measuring cylinder, so a narrow tube is used to make it visible.",
-      "Colder water is denser, so it sinks below warmer water.",
+      "Over the temperatures used here, colder water is denser, so it sinks below warmer water.",
       "Heating spreads the particles out, so the same mass fills a bigger volume → lower density.",
       "Mass does not change on heating: the volume does.",
     ],
@@ -961,7 +961,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     technique: [
       "Adding salt adds mass to the same volume, so density rises.",
       "Salt doesn't disappear when it dissolves: its mass is still there.",
-      "An object floats higher in saltier (denser) water.",
+      "An object that floats in both floats higher in the saltier (denser) water.",
       "To make a range of salinities, mix a stock solution with distilled water to the same total volume, e.g. 8 cm³ of 50 ppt stock + 2 cm³ of water = 40 ppt.",
     ],
     items: [
@@ -1122,7 +1122,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     technique: [
       "Hand lens or photo for whole organisms; light microscope for cells.",
       "Compare by classification features (body plan, symmetry, appendages), not colour or size.",
-      "A hand lens cannot show individual cells.",
+      "A hand lens is not powerful enough to show the structures inside small cells.",
     ],
     items: [
       { id: "P3.4a-01", type: "match", tier: 1, ref: "3.4/LO5", family: "view-tool",
@@ -1457,8 +1457,8 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Keep the lamp and its cable away from the water, and dry your hands before touching it.", "The lamp gets hot: do not touch the bulb or the shade.", "Wash your hands after handling the pondweed."],
     technique: [
       "Moving the lamp away lowers the light intensity, which slows photosynthesis.",
-      "A water bath keeps temperature constant so light is the only variable.",
-      "The bubbles are oxygen from photosynthesis, not respiration.",
+      "A water bath keeps the temperature steady, so the change in rate can be put down to the light.",
+      "The bubbles are mainly oxygen from photosynthesis, not carbon dioxide from respiration.",
     ],
     items: [
       { id: "P4.3-01", type: "choice", tier: 1, ref: "4.3/LO6", family: "photo-measure",
@@ -1472,7 +1472,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       { id: "P4.3-03", type: "choice", tier: 2, ref: "4.3/LO6", family: "photo-waterbath",
         q: "Why stand the tube in a water bath?",
         options: ["To keep the temperature constant, since the lamp heats the water", "To add carbon dioxide", "To warm the plant so it gives off more bubbles", "To give the plant the extra water it needs to photosynthesise"],
-        a: 0, why: "The lamp warms the water, and temperature also changes the rate. A water bath holds the temperature steady, so light is the only variable changing. It isn't there to warm the plant up. It doesn't add carbon dioxide. It doesn't give the plant extra water: the plant is already sitting in water. (4.3/LO6)", status: "human_review" },
+        a: 0, why: "The lamp warms the water, and temperature also changes the rate. A water bath holds the temperature steady, so the change in rate can be put down to the light. It isn't there to warm the plant up. It doesn't add carbon dioxide. It doesn't give the plant extra water: the plant is already sitting in water. (4.3/LO6)", status: "human_review" },
       { id: "P4.3-04", type: "truefalse", tier: 2, ref: "4.3/LO6", family: "photo-oxygen",
         q: "The bubbles collected in this experiment are oxygen from photosynthesis.",
         answer: true, why: "True. In the light, the plant photosynthesises and releases oxygen as the bubbles. (4.3/LO6)", status: "human_review" },
@@ -1546,7 +1546,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     technique: [
       "'Random' means chosen by random numbers, not spread out evenly by eye: that is what removes the sampler's bias.",
       "Species richness = the number of different species, not the total count.",
-      "More quadrats → a more reliable estimate, because the mean of many is closer to the true average.",
+      "More quadrats → a more reliable estimate, because the mean of many is likely to be closer to the true average.",
     ],
     items: [
       { id: "P5.2a-01", type: "choice", tier: 1, ref: "5.2/LO1", family: "quad-random",
@@ -1789,7 +1789,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     steps: [
       "Dry the sediment first so the particles do not clump",
       "Pour a known mass into the top of a stack of sieves (largest mesh at the top, smallest at the bottom) and shake it for a set time",
-      "Weigh the sediment caught on each sieve",
+      "Weigh the sediment caught on each sieve and in the pan below",
       "Measure any very large particles with a ruler or callipers",
     ],
     result: "The size distribution of the particles: which sizes make up the sample, and how much of each.",
@@ -1797,7 +1797,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Tip the dried sediment gently, and avoid breathing in the dust.", "Wash your hands after handling shore sediment, which can contain bacteria."],
     technique: [
       "Dry the sediment first so particles don't clump together.",
-      "The mass caught on each sieve shows the size distribution.",
+      "The mass caught on each sieve and in the pan shows the size distribution.",
       "Sieving measures particle size, not moisture.",
     ],
     items: [
@@ -1874,7 +1874,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same mass, depth and tide/time for each sample", "Random sampling of each site", "Repeat and take a mean", "Seal each sample in a bag when it is collected, so no water evaporates before it is weighed"],
     safety: ["Use heat-proof gloves or tongs to move samples in and out of the oven.", "Let the hot sediment cool before you weigh it.", "Wash your hands after handling shore sediment."],
     technique: [
-      "Heat until the mass stops changing, not for a fixed time: a constant mass is how you know all the water has gone.",
+      "Heat until the mass stops changing, not for a fixed time: a constant mass shows that the water has been driven off.",
       "% water = water lost ÷ starting mass × 100.",
       "Heat gently so organic matter isn't burned away.",
     ],
