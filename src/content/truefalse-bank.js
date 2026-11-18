@@ -34,7 +34,7 @@ export const TRUEFALSE = [
     why:"The iron core has a solid inner core and a liquid outer core; the mantle and crust are solid rock.",
     misconception:"the whole core is solid, or the whole core is liquid" },
   { id:"TF-U1-06", unit:1, topic:"1.2 Plate tectonics", spec:"1.2/LO4", tier:1, type:"truefalse",
-    stem:"At a divergent (constructive) boundary the plates move apart.",
+    stem:"At a divergent boundary the plates move apart.",
     answer:true,
     why:"Divergent = plates move apart; convergent = towards each other; transform = slide past.",
     misconception:"divergent means plates collide" },
