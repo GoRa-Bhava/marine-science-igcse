@@ -677,7 +677,7 @@ export function ReaderApp({
     if (locked) { next(); return; }
     if (!canSubmit(item, answer)) return;
     const right = grade(item, answer);
-    setWasRight(right); setLocked(true);
+    setWasRight(right); setLocked(true); setResetDoneId(null);
     if (mode === "assign") {
       const pick = right ? undefined : lastPickOf(item.type, answer);
       assignResultsRef.current.push({ itemId: item.id, right, pick });
