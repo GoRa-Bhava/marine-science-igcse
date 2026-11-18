@@ -31,6 +31,8 @@ const WHY_POS = [
   /\bthe last two\b/i,
   /\bthe first two\b/i,
   /\bthe remaining (option|answer)s?\b/i,
+  /\b[A-H] and [A-H]\b/,
+  /\b[A-H], [A-H]\b/,
 ];
 // a bare letter label at the start of a clause, e.g. "B (120):" or "C: ..." (rule why-position)
 const WHY_LETTER_LABEL = /(^|[.;:]\s+)[A-H]\s*[(:]/;
