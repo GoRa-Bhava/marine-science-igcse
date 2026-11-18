@@ -100,7 +100,7 @@ export const MARKTRUE = [
       "In a normal year the trade winds blow from east to west.",
       "In a normal year, cold nutrient-rich water upwells off South America, supporting a rich fishery.",
       "In a normal year, the trade winds push warm surface water towards South America.",
-      "An El Niño happens every year during the Southern Hemisphere summer.",
+      "An El Niño happens once a year, during the Southern Hemisphere summer.",
       "In an El Niño the trade winds weaken or reverse.",
       "In an El Niño, warm surface water shifts east and the fish catch off South America falls.",
       "During an El Niño, upwelling in the eastern Pacific increases.",
@@ -153,14 +153,14 @@ export const MARKTRUE = [
     options:[
       "Animals migrate to find food.",
       "Animals migrate to reach breeding grounds.",
-      "Migrating animals find their way by following the shape of the clouds.",
+      "Whales migrate to polar waters in winter to give birth.",
       "Some fish migrate to avoid predators.",
       "Migration means the everyday movements an animal makes around its home area.",
       "Lanternfish migrate towards the surface at night to feed.",
       "Lanternfish migrate towards the surface by day to feed in the sunlight.",
       "Animals migrate by drifting wherever the ocean currents take them." ],
     answer:[0,1,3,5],
-    why:"Animals migrate to find food, to reach breeding grounds and to avoid predators. Lanternfish rise to the surface at night to feed, hidden by the dark, and go back down by day so that predators cannot see them. Animals find their way using the Earth's magnetic field, the Sun, Moon and stars, smell, and mental maps of landmarks, not the clouds, which keep moving and changing. Migration is a regular journey in a definite direction from one place to another, so it is not the everyday movements within a home area, and it is not drifting wherever the currents go." },
+    why:"Animals migrate to find food, to reach breeding grounds and to avoid predators. Lanternfish rise to the surface at night to feed, hidden by the dark, and go back down by day so that predators cannot see them. Animals find their way using the Earth's magnetic field, the Sun, Moon and stars, smell, and mental maps of landmarks. Whales give birth in warm tropical waters in winter and feed in polar waters in summer. Migration is a regular journey in a definite direction from one place to another, so it is not the everyday movements within a home area, and it is not drifting wherever the currents go." },
 
   // ============================ UNIT 4 ============================
   { id:"MT-U4-01", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO2-4", tier:2, type:"multi",
@@ -229,7 +229,7 @@ export const MARKTRUE = [
       "Temperature increases with depth.",
       "The midnight zone has little oxygen because the high pressure squeezes it out." ],
     answer:[0,1,3,5],
-    why:"The sunlight zone runs from 0 to 200 m, the twilight zone from 200 to 1000 m, and the midnight zone lies below 1000 m. The sunlight zone is high in dissolved oxygen. Going deeper, light fades, pressure rises and temperature falls. The twilight zone is too dim for photosynthesis. The midnight zone has low biomass, because no food is made there. Temperature falls with depth; it does not rise. The midnight zone has little oxygen because there is no photosynthesis and respiration uses it up. Pressure does not squeeze the oxygen out." },
+    why:"The sunlight zone runs from 0 to 200 m, the twilight zone from 200 to 1000 m, and the midnight zone lies below 1000 m. The sunlight zone is high in dissolved oxygen. Going deeper, light fades, pressure rises and temperature falls. The twilight zone is too dim for photosynthesis. The midnight zone has low biomass, because no photosynthesis happens there and most of its food sinks from above. Temperature falls with depth; it does not rise. The midnight zone has little oxygen because there is no photosynthesis and respiration uses it up. Pressure does not squeeze the oxygen out." },
   { id:"MT-U5-02", unit:5, topic:"5.5 Sedimentary shore", spec:"5.5/LO2", tier:2, type:"multi",
     stem:"Tick the statements that are true about sandy and muddy shores.",
     options:[
@@ -276,14 +276,14 @@ export const MARKTRUE = [
     options:[
       "Extra nutrients cause an algal bloom.",
       "When the algal bloom dies, decomposers break it down.",
-      "The bloom lowers oxygen immediately because the algae use it up.",
+      "The algal bloom lowers oxygen because photosynthesis takes oxygen out of the water.",
       "The decomposers' respiration lowers the dissolved oxygen.",
       "Oxygen that falls too low kills organisms that need it.",
       "Eutrophication raises the sea's salinity.",
       "The algal bloom kills fish by making the water warmer.",
       "Fish die because the algae take the nutrients the fish need as food." ],
     answer:[0,1,3,4],
-    why:"Extra nutrients cause an algal bloom. When the algae die, decomposers break them down, and the decomposers' respiration uses up the dissolved oxygen. Organisms that need oxygen then die. Living algae release oxygen when they photosynthesise; the oxygen crash comes later, when the dead bloom is decomposed. Eutrophication is caused by nutrients, not salt, so it does not raise salinity. The bloom does not kill fish by warming the water. Fish die from lack of oxygen, not from starving because the algae took their nutrients." },
+    why:"Extra nutrients cause an algal bloom. When the algae die, decomposers break them down, and the decomposers' respiration uses up the dissolved oxygen. Organisms that need oxygen then die. Photosynthesis releases oxygen rather than using it; the big oxygen crash comes when the dead bloom is decomposed, although living algae also respire and can lower oxygen at night. Eutrophication is caused by nutrients, not salt, so it does not raise salinity. The bloom does not kill fish by warming the water. Fish die from lack of oxygen, not from starving because the algae took their nutrients." },
   { id:"MT-U6-02", unit:6, topic:"6.8 Climate", spec:"6.8/LO5-6", tier:2, type:"multi",
     stem:"Tick the statements that are true about climate change and the oceans.",
     options:[

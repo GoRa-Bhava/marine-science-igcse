@@ -219,9 +219,9 @@ export const TRUEFALSE = [
 
   // ============================ UNIT 6 — Human influences ============================
   { id:"TF-U6-01", unit:6, topic:"6.7 Eutrophication", spec:"6.7/LO5", tier:2, type:"truefalse",
-    stem:"During eutrophication the algal bloom lowers the oxygen straight away, because the algae use it up.",
+    stem:"During eutrophication, dissolved oxygen falls mainly because the algae take in oxygen when they photosynthesise.",
     answer:false,
-    why:"Living algae photosynthesise and release oxygen; the oxygen falls later, when the dead bloom is decomposed and the decomposers' respiration uses up the oxygen.",
+    why:"Photosynthesis releases oxygen; it does not take it in. In eutrophication the oxygen falls mainly when the dead bloom is decomposed and the decomposers' respiration uses it up. Living algae also respire, so oxygen can dip at night too.",
     misconception:"'more algae = less oxygen immediately' (the O2 paradox)" },
   { id:"TF-U6-02", unit:6, topic:"6.8 Climate", spec:"6.8/LO6", tier:2, type:"truefalse",
     stem:"As the ocean warms, sea water holds less dissolved oxygen.",
