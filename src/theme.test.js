@@ -7,6 +7,8 @@ test("light and dark palettes expose the same token keys", () => {
   const lt = Object.keys(PALETTES.light).sort();
   assert.deepEqual(lt, dk, "same keys in both themes");
   assert.ok(dk.includes("bg0") && dk.includes("foam") && dk.includes("accent"));
+  // overlay backdrops must exist in both palettes (else an overlay goes dark-on-dark in one theme)
+  assert.ok(dk.includes("scrim") && dk.includes("scrimStrong"), "both palettes define scrim + scrimStrong");
 });
 
 test("toggling theme actually switches the tokens", () => {

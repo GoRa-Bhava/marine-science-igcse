@@ -234,7 +234,7 @@ function FigureStage(props) {
       )}
       {big && (
         <div style={{
-          position: "fixed", inset: 0, zIndex: 40, background: "rgba(4,20,31,.97)",
+          position: "fixed", inset: 0, zIndex: 40, background: C.scrimStrong,
           display: "flex", flexDirection: "column", padding: "16px 0",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 16px 10px" }}>
