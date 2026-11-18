@@ -122,14 +122,14 @@ export const FIGURE_ITEMS_P46 = [
     options: ["A rocky shore", "A muddy shore", "A kelp forest", "A seagrass bed"], a: 0,
     why: "Boulders and rock platforms covered in brown seaweed, with rock pools left by the falling tide, make a rocky shore. A muddy shore is flat, fine sediment with no rock. A kelp forest is underwater, with tall kelp rising from the seabed, and a seagrass bed is a flowering plant rooted in sand or mud." },
   { id: "PQ2-U5-55", topic: "u5-components", type: "choice", tier: 2, ref: "5.1/LO1", fig: "P-U5-02",
-    q: "Which of these is the community in this rock pool?", qRecall: "What makes up the community in this rock pool?",
+    q: "Which of these is the community in the rock-pool area shown?", qRecall: "What makes up the community in the rock-pool area shown?",
     options: [
       "The limpets, anemones and seaweed living there together",
       "The group of limpets clamped onto the rock above the water",
       "The water, the rock and all the organisms, interacting",
       "The rock and the water that the organisms live in",
     ], a: 0,
-    why: "A community is all the populations of different species living in an area, so it is every organism in the pool together. The limpets alone are one population. Adding the water and the rock gives the ecosystem, and the water and rock on their own are the abiotic part of the environment." },
+    why: "A community is all the populations of different species living in an area, so it is every organism in the area together. The limpets alone are one population. Adding the water and the rock gives the ecosystem, and the water and rock on their own are the abiotic part of the environment." },
 
   // ---- u5-investigating ----
   { id: "PQ2-U5-52", topic: "u5-investigating", type: "choice", tier: 2, ref: "5.2/LO3", fig: "P-U5-01",
@@ -162,8 +162,8 @@ export const FIGURE_ITEMS_P46 = [
   // ---- u5-openocean (September ports, deep-sea fish) ----
   { id: "U5-D05", topic: "u5-openocean", type: "label", tier: 1, ref: "5.3/LO12", fig: "P-U5-05",
     q: "Label the deep-sea adaptations of this fish.",
-    extra: ["countershading (dark back, pale belly)", "streamlined body for fast swimming"],
-    why: "Photophores make light by bioluminescence, large backward-facing teeth stop prey escaping, and a dark body cannot be seen in the faint light that other animals make. Countershading and a streamlined body for fast swimming belong to fish of the sunlight and twilight zones, and are not shown here." },
+    extra: ["countershading (dark back, pale belly)", "fin spines that inject venom"],
+    why: "Photophores make light by bioluminescence, large backward-facing teeth stop prey escaping, and a dark body cannot be seen in the faint light that other animals make. This fish has no pale belly for countershading and no venomous fin spines." },
   { id: "U5-D06", topic: "u5-openocean", type: "tap", tier: 1, ref: "5.3/LO12", fig: "P-U5-05",
     q: "Tap the organs that produce light by bioluminescence.",
     target: "photophores",
@@ -173,14 +173,9 @@ export const FIGURE_ITEMS_P46 = [
     target: "teeth",
     why: "Large teeth that point backwards let prey slide into the mouth but stop it pulling free. Food is scarce in the midnight zone, so losing a catch is costly. The photophores make light, and the dark body hides the fish." },
   { id: "U5-D08", topic: "u5-openocean", type: "choice", tier: 2, ref: "5.3/LO12", fig: "P-U5-05",
-    q: "This fish makes its own light and has large backward-facing teeth. In which zone does it live, and why are these features useful?",
-    options: [
-      "The midnight zone: there is no sunlight, so its light helps it find prey and its teeth stop prey escaping.",
-      "The sunlight zone: its light attracts the plankton it eats and its teeth grind hard-shelled prey.",
-      "The twilight zone: its light warms the cold water around it and its teeth scrape algae off rocks.",
-      "The midnight zone: its light is stored sunlight it lets out later and its teeth dig in the seabed.",
-    ], a: 0,
-    why: "Making light is most useful where no sunlight reaches, in the midnight zone, where it helps the fish find or attract prey, and backward-facing teeth stop the prey escaping. The light is made by the fish, not stored sunlight, and it gives no useful heat. Teeth that grind shells or scrape algae belong to fish with quite different diets." },
+    q: "This deep-sea fish makes its own light and has large backward-facing teeth. How do these features help it to feed?",
+    "options": ["Its light attracts prey in the dark, and its teeth stop the prey escaping.", "Its light attracts the plankton it eats, and its teeth strain them from the water.", "Its light lets it see algae on the rocks, and its teeth scrape them off.", "Its light shows up hard-shelled prey, and its teeth grind up the shells."], a: 0,
+    why: "The fish makes its own light (bioluminescence), and in the dark deep water this can lure prey close; long backward-facing teeth then stop the prey pulling free. A fish that strains plankton has fine filters, not long teeth, and teeth that scrape algae or grind shells belong to fish with quite different diets. Algae need light, so they cannot grow in the dark deep sea." },
   { id: "PQ2-U5-59", topic: "u5-openocean", type: "choice", tier: 2, ref: "5.3/LO10", fig: "P-U5-06",
     q: "Both pictures show the same fish in open water. The left picture looks down on it from above, and the right picture looks up at it from below. Why is it hard to see in both?",
     options: [
@@ -213,7 +208,7 @@ export const FIGURE_ITEMS_P46 = [
   { id: "U5-D11", topic: "u5-rockyshore", type: "tap", tier: 1, ref: "5.4/LO4", fig: "P-U5-02",
     q: "Tap the organism that shelters in a rock pool or under seaweed to avoid drying out at low tide.",
     target: "anemone",
-    why: "A sea anemone has a soft body that loses water quickly in air, so at low tide it survives only where water remains, in a rock pool or under damp seaweed. Limpets survive out of the water by clamping their shells to the rock, and the seaweed has thick, leathery fronds." },
+    why: "A sea anemone has a soft body that loses water quickly in air, so at low tide it shelters where water remains, in a rock pool or under damp seaweed, or pulls in its tentacles to hold water in. Limpets survive out of the water by clamping their shells to the rock, and the seaweed has thick, leathery fronds." },
   { id: "PQ2-U5-62", topic: "u5-rockyshore", type: "choice", tier: 1, ref: "5.4/LO4", fig: "P-U5-09",
     q: "Both pictures show the same species of sea anemone. One was taken while the tide was out. Which one, and why has it changed shape?",
     options: [
@@ -226,27 +221,27 @@ export const FIGURE_ITEMS_P46 = [
   { id: "PQ2-U5-63", topic: "u5-rockyshore", type: "tap", tier: 1, ref: "5.4/LO4", fig: "P-U5-10",
     q: "Waves break over this seaweed at high tide. Tap the part that stops it being washed off the rock.",
     target: "holdfast",
-    why: "The holdfast grips the rock firmly, so wave action and currents do not tear the seaweed away. It only holds on: it is not a root and takes in no water. The stipe and the fronds are the parts the waves push against." },
+    why: "The holdfast grips the rock firmly, so wave action and currents do not tear the seaweed away. It holds on: it is not a root, and the seaweed takes in water and nutrients over its whole surface instead. The stipe and the fronds are the parts the waves push against." },
   { id: "PQ2-U5-64", topic: "u5-rockyshore", type: "choice", tier: 2, ref: "5.4/LO4", fig: "P-U5-10",
-    q: "This seaweed grows in the intertidal zone of a rocky shore, so it is uncovered at every low tide. Which feature, visible in the picture, helps it survive there?",
+    q: "This seaweed grows in the intertidal zone of a rocky shore, so it is uncovered at low tide. Which feature, visible in the picture, helps it survive there?",
     options: [
       "Thick, leathery fronds that slow down the loss of water to the air",
       "A holdfast that soaks up water from the rock while the tide is out",
       "Roots that grow into cracks in the rock to reach the water below",
       "Thin, delicate fronds that dry out quickly and recover just as fast",
     ], a: 0,
-    why: "At low tide the seaweed is exposed to the air, and its thick, leathery fronds slow down drying out. The holdfast only anchors it and takes up no water, and seaweeds have no roots. Thin, delicate fronds would lose water faster, not survive better." },
+    why: "At low tide the seaweed is exposed to the air, and its thick, leathery fronds slow down drying out. The holdfast anchors it rather than soaking up water from the rock, and seaweeds have no roots. Thin, delicate fronds would lose water faster, not survive better." },
 
   // ---- u5-sediment ----
   { id: "PQ2-U5-53", topic: "u5-sediment", type: "choice", tier: 2, ref: "5.5/LO3", fig: "P-U5-01-cmp",
-    q: "Seaweeds such as <i>Fucus</i> grow on only one of these shores. Which shore, and why?",
+    q: "Seaweeds such as <i>Fucus</i> are common on one of these shores and rare on the other. Which shore suits them, and why?",
     options: [
       "The left shore, because the solid rock gives the holdfast a stable surface to grip.",
       "The right shore, because the loose sand lets the seaweed's roots grow down deeply.",
       "The left shore, because the seaweed takes in mineral nutrients from inside the rock.",
       "The right shore, because the sand holds more oxygen than the water round the rocks.",
     ], a: 0,
-    why: "A seaweed has no roots: its holdfast grips a hard surface. Rock is stable, but sand is loose and keeps shifting, so seaweed cannot stay attached on a sandy shore; any seaweed seen on a sandy beach has been washed up there. The holdfast only holds on and takes no nutrients from the rock, and oxygen in the sand is not what limits seaweed." },
+    why: "A seaweed has no roots: its holdfast grips a hard surface. Rock is stable, but sand is loose and keeps shifting, so few seaweeds can stay attached on a sandy shore, and much of the seaweed seen on a sandy beach has been washed up there. The holdfast only holds on and takes no nutrients from the rock, and oxygen in the sand is not what limits seaweed." },
   { id: "PQ2-U5-54", topic: "u5-sediment", type: "choice", tier: 1, ref: "5.5/LO4", fig: "P-U5-01-cmp",
     q: "A lugworm lives in a U-shaped burrow and swallows sediment to feed. On which shore is it adapted to live?",
     options: [
@@ -301,12 +296,12 @@ export const FIGURE_ITEMS_P46 = [
   { id: "U5-D27", topic: "u5-coral", type: "choice", tier: 2, ref: "5.7/LO5", fig: "P-U5-15",
     q: "The coral in the last panel has turned white. What has happened?",
     options: [
-      "Warmer water stressed the polyps, so they expelled their zooxanthellae.",
+      "The stressed polyps expelled their zooxanthellae, so the white skeleton shows through.",
       "The warm water dissolved the coloured outer layer of the coral's skeleton.",
       "The polyps grew a thick white skeleton to shade themselves from sunlight.",
       "The coral grew so quickly that its colour was spread too thinly to be seen.",
     ], a: 0,
-    why: "When the water becomes too warm the polyps are stressed and expel their zooxanthellae, so the coral loses its colour and the white skeleton shows through; acidification can add to this stress. The skeleton has no coloured layer and is not dissolved by the heat, and bleaching is not a kind of growth. A bleached coral has lost its main food supply." },
+    why: "When corals are stressed, most often by water that is too warm, the polyps expel their zooxanthellae, so the coral loses its colour and the white skeleton shows through; acidification can add to this stress. The skeleton has no coloured layer and is not dissolved by the heat, and bleaching is not a kind of growth. A bleached coral has lost its main food supply." },
   { id: "PQ2-U5-67", topic: "u5-coral", type: "tap", tier: 1, ref: "5.7/LO8", fig: "P-U5-16",
     q: "At night this fish wedges itself into a crack in the reef. Tap the feature it uses to lock itself in place.",
     target: "spine",
@@ -343,12 +338,12 @@ export const FIGURE_ITEMS_P46 = [
   { id: "PQ2-U6-53", topic: "u6-overview", type: "choice", tier: 2, ref: "6.1/LO2", fig: "P-U6-01",
     q: "Which pair of impacts does the change shown in the photo have?", qRecall: "Describe two impacts of the change shown in the photo.",
     options: [
-      "The coast loses its protection from waves, and pond waste pollutes the sea.",
+      "The coast has less protection from waves, and pond waste pollutes the sea.",
       "Nursery areas for young fish increase, and the ponds add oxygen to the sea.",
       "Erosion of the coast is reduced, and the ponds filter waste out of the sea.",
       "Fish catches nearby rise, and the ponds stop sediment reaching the reefs.",
     ], a: 0,
-    why: "Mangrove roots reduce wave energy and erosion, so clearing them leaves the coast unprotected, and waste food and faeces from the ponds are released into the coastal water. The ponds replace the mangrove nursery areas, so young fish lose their shelter, and the ponds neither add oxygen to the sea nor clean it." },
+    why: "Mangrove roots reduce wave energy and erosion, so clearing them leaves the coast less protected, and waste food and faeces from the ponds are released into the coastal water. The ponds replace the mangrove nursery areas, so young fish lose their shelter, and the ponds neither add oxygen to the sea nor clean it." },
 
   // ---- u6-tourism ----
   { id: "PQ2-U6-55", topic: "u6-tourism", type: "tap", tier: 1, ref: "6.2/LO3", fig: "P-U6-03",
@@ -360,14 +355,14 @@ export const FIGURE_ITEMS_P46 = [
     target: "standing",
     why: "Standing on coral crushes the living polyps, and coral grows back very slowly. The other snorkeller floats at the surface without touching anything, which is how visitors are taught to behave on a reef." },
   { id: "PQ2-U6-57", topic: "u6-tourism", type: "choice", tier: 2, ref: "6.2/LO2", fig: "P-U6-04",
-    q: "Which picture shows ecotourism, and which feature in it shows this?",
+    q: "Which picture shows a feature of ecotourism, and what is the feature?",
     options: [
       "The right: its electricity comes from solar panels on the roofs.",
       "The left: its guests can see the reef from their hotel windows.",
       "The left: it stands on reclaimed land, so no one walks on the reef.",
       "The right: its boardwalk lets guests collect shells to take home.",
     ], a: 0,
-    why: "Ecotourism is ecologically sustainable tourism that helps to conserve the natural area, and renewable energy from solar panels is one of its strategies. Seeing wildlife does not by itself make a holiday ecotourism, reclaiming land buries the habitat under it, and collecting shells removes organisms from the ecosystem." },
+    why: "Ecotourism is ecologically sustainable tourism that helps to conserve the natural area, and renewable energy from solar panels is one of its strategies, although on its own it does not prove that a resort is ecotourism. Seeing wildlife does not by itself make a holiday ecotourism, reclaiming land buries the habitat under it, and collecting shells removes organisms from the ecosystem." },
 
   // ---- u6-fisheries ----
   { id: "PQ2-U6-59", topic: "u6-fisheries", type: "choice", tier: 1, ref: "6.3/LO2", fig: "P-U6-05",
@@ -395,11 +390,11 @@ export const FIGURE_ITEMS_P46 = [
     q: "Which pair of statements describes ecological impacts of this device?", qRecall: "Describe two ecological impacts of using this device.",
     options: [
       "Huge tuna catches are easy, and turtles and sharks are caught too.",
-      "Tuna alone are drawn in, and the device keeps other fish away.",
+      "Tuna are drawn in, but other species avoid the shade it gives.",
       "The device is dragged over the seabed, and it destroys the coral there.",
-      "The tuna are held inside the raft, and they are set free to breed later.",
+      "It releases food for the tuna, so the fish grow faster around it.",
     ], a: 0,
-    why: "The device gathers tuna in one place, so very large catches are easy and stocks can be overfished; turtles, sharks and dolphins are drawn in as well and are caught or tangled in the lines. Many species, not only tuna, gather at the device. It floats at the surface and is not dragged, and it does not hold the fish." },
+    why: "The device gathers tuna in one place, so very large catches are easy and stocks can be overfished; turtles, sharks and dolphins are drawn in as well and are caught or tangled in the lines. Many species, not only tuna, gather at the device. It floats at the surface and is not dragged, and it does not feed the fish: they gather around it." },
 
   // ---- u6-aquaculture ----
   { id: "PQ2-U6-63", topic: "u6-aquaculture", type: "choice", tier: 1, ref: "6.4/LO3", fig: "P-U6-09",
@@ -431,16 +426,11 @@ export const FIGURE_ITEMS_P46 = [
       "The bag covers the turtle's head and stops its gills taking in oxygen, so the turtle suffocates.",
       "The bag dissolves slowly in the sea water, and the dissolved plastic poisons the turtle as it swims.",
     ], a: 0,
-    why: "A drifting bag looks like a jellyfish, so a turtle may swallow it as food; the plastic is not digested, so it blocks the gut and the turtle starves. The gut cannot digest plastic, so the bag stays whole. Turtles are reptiles that breathe air with lungs, not gills. And plastic does not dissolve in sea water: it breaks up into smaller and smaller pieces. 6.6/LO2." },
+    why: "A drifting bag looks like a jellyfish, so a turtle may swallow it as food; the plastic is not digested, so it can block the gut and the turtle starves. The gut cannot digest plastic, so it is not broken down there. Turtles are reptiles that breathe air with lungs, not gills. And plastic does not dissolve in sea water: it breaks up into smaller and smaller pieces. 6.6/LO2." },
   { id: "PQ2-U6-68", topic: "u6-plastic", type: "choice", tier: 1, ref: "6.6/LO2", fig: "P-U6-15",
-    q: "How can what is happening in the left picture kill this animal?",
-    options: [
-      "It cannot reach the surface to breathe, so it drowns.",
-      "The netting gives off toxins that dissolve its shell.",
-      "The netting blocks sunlight, so its food cannot grow.",
-      "It cannot use its gills while it is held in the net.",
-    ], a: 0,
-    why: "An animal tangled in lost netting or line cannot swim freely and may be held below the surface, so an air-breather such as a turtle drowns. Plastic does not dissolve a shell, netting does not stop its food growing, and a turtle is a reptile that breathes with lungs, not gills." },
+    q: "If this netting holds the turtle under water, why can it drown?",
+    "options": ["Its lungs take oxygen from the air, so it must reach the surface to breathe.", "Its gills take oxygen from the air, so it must reach the surface to breathe.", "Its lungs take oxygen from the water, so it needs water flowing over them.", "Its gills take oxygen from the water, so it needs water flowing over them."], a: 0,
+    why: "A sea turtle is a reptile: it breathes air with lungs, so it must come to the surface to breathe, and it drowns if a net holds it under. It has no gills and cannot take oxygen from the water." },
 
   // ---- u6-eutrophication ----
 
@@ -450,10 +440,10 @@ export const FIGURE_ITEMS_P46 = [
     options: [
       "Its temperature rose above what the coral tolerates.",
       "Its pH rose as more carbon dioxide dissolved in it.",
-      "Its depth increased, so less light reached the coral.",
+      "Its depth increased, so the water pressure on the coral rose.",
       "Its oxygen rose as the zooxanthellae made more of it.",
     ], a: 0,
-    why: "Rising sea temperature is the main cause of bleaching: heat-stressed polyps expel their zooxanthellae. Extra dissolved carbon dioxide lowers the pH rather than raising it, and that acidification can add to the stress. Coral does not bleach because the water gets deeper, and more oxygen would not turn it white." },
+    why: "Rising sea temperature is the main cause of bleaching: heat-stressed polyps expel their zooxanthellae. Extra dissolved carbon dioxide lowers the pH rather than raising it, and that acidification can add to the stress. Coral does not bleach because the water pressure rises, and more oxygen would not turn it white." },
 
   // ---- u6-conservation ----
   { id: "PQ2-U6-70", topic: "u6-conservation", type: "choice", tier: 2, ref: "6.9/LO3", fig: "P-U6-20",

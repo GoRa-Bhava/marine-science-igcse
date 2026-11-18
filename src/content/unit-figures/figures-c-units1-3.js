@@ -598,7 +598,7 @@ export const FIGURE_ITEMS_C13 = [
    "the left one: its short, sketchy lines show more of the detail"
   ],
   "a": 0,
-  "why": "A biological drawing should be large, with clear, unbroken lines, no shading or colour, and correct proportions, and the right drawing does all of this. It does not show the fine bumps and hairs, and it should not, because realistic detail earns no credit. The left drawing breaks the rules: it is small, its lines are sketchy and broken, and its shell is shaded."
+  "why": "A biological drawing should be large, with clear, unbroken lines, no shading or colour, and correct proportions, and the right drawing does all of this. It does not show the fine bumps and hairs, so that is not why it is better. The left drawing breaks the rules: it is small, its lines are sketchy and broken, and its shell is shaded."
  },
  {
   "id": "PQ2-U3-52",
