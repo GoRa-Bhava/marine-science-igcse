@@ -8,6 +8,9 @@ export const PALETTES = {
     coral: "#FF7A5C", sand: "#F2D9A8", gold: "#F3C34E", ok: "#4FD8C4", no: "#FF9E7D",
     amber: "#F0A63C",
     bg0: "#0A2A3D", bg1: "#04141F", inset: "#04141F",
+    // full-screen overlay backdrop (behind palette-coloured text). scrimStrong is
+    // the slightly more opaque variant used by the figure Enlarge view.
+    scrim: "rgba(4,20,31,.94)", scrimStrong: "rgba(4,20,31,.97)",
   },
   // Independent light palette (not the dark one lightened). Text is near-black /
   // dark slate at full strength; accents deepened to read on white; surfaces are
@@ -22,6 +25,8 @@ export const PALETTES = {
     coral: "#C2502E", sand: "#8A6410", gold: "#8A6410", ok: "#0C7C6F", no: "#C2502E",
     amber: "#9A5B12",
     bg0: "#F4FBFB", bg1: "#E4F1F2", inset: "#FFFFFF",
+    // light backdrop (near-opaque bg0) so palette-dark overlay text stays readable.
+    scrim: "rgba(244,251,251,.97)", scrimStrong: "rgba(244,251,251,.97)",
   },
 };
 

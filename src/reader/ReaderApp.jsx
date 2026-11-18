@@ -2337,7 +2337,7 @@ const entryBtn = (C) => ({ flex: 1, padding: "16px 8px", borderRadius: 14, borde
 const linkBtn = (C) => ({ background: "none", border: "none", color: C.accent, fontFamily: FONT_UI, fontSize: 14, cursor: "pointer", padding: 4 });
 const tierPill = (C, tier) => ({ display: "inline-block", padding: "6px 12px", borderRadius: 999, background: "rgba(15,120,110,.9)", color: "#eafffb", fontFamily: FONT_UI, fontSize: 12, fontWeight: 700, letterSpacing: ".05em" });
 const refChip = (C) => ({ flex: "0 0 auto", padding: "3px 9px", borderRadius: 999, background: "rgba(79,216,196,.12)", color: C.accent, fontFamily: FONT_UI, fontSize: 11, fontWeight: 700, letterSpacing: ".03em", whiteSpace: "nowrap" });
-const overlay = (C) => ({ position: "fixed", inset: 0, background: "rgba(4,20,31,.94)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, padding: 30, zIndex: 50 });
+const overlay = (C) => ({ position: "fixed", inset: 0, background: C.scrim, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, padding: 30, zIndex: 50 });
 function Stat({ C, n, label }) {
   return <div style={{ textAlign: "center" }}><div style={{ fontFamily: FONT_DISPLAY, fontSize: 30, fontWeight: 600, color: C.foam }}>{n}</div><div style={{ fontFamily: FONT_UI, fontSize: 11, letterSpacing: ".08em", color: C.mist }}>{label}</div></div>;
 }
