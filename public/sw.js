@@ -1,6 +1,6 @@
 /* Offline support for Earth and Oceans.
    Bump CACHE when you deploy a new version. */
-const CACHE = "marine-v205";
+const CACHE = "marine-v206";
 
 /* Figures & data photos: cached on install so they also work offline before
    they have been seen once. Relative to this file, like the rest of the app. */
