@@ -4,7 +4,7 @@ import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, 
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
-import { answer as schedAnswer } from "../engine/scheduler.js";
+import { applyMixedAnswer } from "./mixedSession.js";
 import { buildMixedSession, MIXED_SESSION_SIZE } from "../engine/mixed.js";
 import { EXPLORE_ENTRIES, DISCOVERIES_ENTRY, WRITING_ENTRY } from "./exploreEntries.js";
 import { WRITING } from "../content/writing-bank.js";
@@ -525,8 +525,12 @@ export function ReaderApp({
     // Spaced repetition — Mixed Practice ONLY. Additive and isolated: the unit
     // flow never reads or writes the SR map. scheduler.answer handles first-attempt
     // rules (early-correct is a no-op; early-wrong is a lapse).
+    // Mixed Practice is one answer per item per run: applyMixedAnswer writes the SR
+    // entry once and is a no-op if the item was already answered this run (Back shows
+    // it read-only, so this never fires twice). See mixedSession.js. Skipping never
+    // reaches record(), so a skipped item keeps no SR entry and stays due.
     if (mode === "smart") {
-      const nextSr = { ...srMap, [it.id]: schedAnswer(srMap[it.id], right) };
+      const nextSr = applyMixedAnswer(srMap, session.answered, it.id, right);
       setSrMap(nextSr);
       if (s) await s.putSRMap(nextSr);
     }
@@ -1034,14 +1038,17 @@ export function ReaderApp({
     // Free back/forward navigation. A question shows its read-only answer only if
     // it was actually ANSWERED this run (reviewed); a question that was skipped
     // (moved past without answering) stays attemptable when you come back to it.
-    const behind = mode !== "smart" && pos < maxPos;
+    const behind = pos < maxPos;
     // Answered = answered this run, OR (Read mode) answered in an earlier session.
     // It stays answered (read-only, never re-scored) until the student resets it.
-    // Revise/retry/practical runs exist to RE-answer, so only this run counts there.
+    // Revise/retry/practical/mixed runs exist to answer ONCE, so only this run counts
+    // there; answeredBefore is Read-mode only, so an earlier session never counts in
+    // Mixed Practice. A Mixed-Practice item answered this run and reached again with
+    // Back shows read-only (no Check), so record()'s SR write can't run twice.
     const answeredThisRun = session.answered.includes(it.id);
     const answeredBefore = mode === "read" && isAttempted(it.id);
-    const reviewed = mode !== "smart" && !locked && (answeredThisRun || answeredBefore);
-    const atEnd = mode !== "smart" && pos >= total - 1;
+    const reviewed = !locked && (answeredThisRun || answeredBefore);
+    const atEnd = pos >= total - 1;
     return (
       <div style={pad} className="rl-pad rl-pad--reader rl-two-pane">
         <div className="rl-reader-col">
@@ -1049,7 +1056,7 @@ export function ReaderApp({
         <p style={kicker(C)}>{mode === "smart" ? `MIXED PRACTICE · UNIT ${loc?.unitId} · ${index.sections[loc?.sectionId]?.title?.toUpperCase() || ""}` : mode === "practical" ? `PRACTICAL · ${it.ref || ""}` : `UNIT ${loc?.unitId} · ${loc?.sectionId} ${index.sections[loc?.sectionId]?.title?.toUpperCase()}`}</p>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "8px 0 6px" }}>
           <span style={tierPill(C, it.tier)}>{TIER[it.tier] || "RECALL"}</span>
-          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{mode === "smart" ? "Interleaved" : `Question ${pos + 1} of ${total}${reviewed ? " · answered" : (behind && !locked ? " · skipped" : "")}`}</span>
+          <span style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 14 }}>{`Question ${pos + 1} of ${total}${reviewed ? " · answered" : (behind && !locked ? " · skipped" : "")}`}</span>
         </div>
         {mode === "smart" && wrongFlag && !locked && (
           <div style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.no, marginBottom: 8 }}>↻ you missed this last time</div>
@@ -1113,7 +1120,7 @@ export function ReaderApp({
           </>
         )}
         <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-          {mode !== "smart" && pos > 0 && (
+          {pos > 0 && (
             <button onClick={goBack} style={ghostBtn(C)} aria-label="Previous question">‹ Back</button>
           )}
           {reviewed ? (
@@ -1130,9 +1137,7 @@ export function ReaderApp({
           ) : (
             <>
               <button onClick={() => setView("summary")} style={ghostBtn(C)}>Stop</button>
-              {mode !== "smart" && (
-                <button onClick={next} style={ghostBtn(C)} aria-label="Skip this question">Skip ›</button>
-              )}
+              <button onClick={next} style={ghostBtn(C)} aria-label="Skip this question">Skip ›</button>
               <button onClick={onPrimary} disabled={!canSubmit(item, answer)}
                 style={{ ...primaryBtn(C), flex: 1, opacity: !canSubmit(item, answer) ? 0.5 : 1 }}>
                 Check
