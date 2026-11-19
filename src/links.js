@@ -2,7 +2,9 @@
  * in-app Printables screen. Keep the free-sheet list in step with the website's
  * /printables.html. No question-bank content lives here. */
 
-// The website's printables index. The £30 standalone bundle is bought from here.
+// The website's printables index — linked only from the free-downloads list
+// ("see the full list on the website"). Never used for a price or a buy button:
+// in the app the bundle is only ever the £20 add-on (or the unlock-first CTA).
 export const PRINTABLES_PAGE = "https://www.wildcateducation.co.uk/printables.html";
 
 // The £20 add-on checkout (printables bought together with the app). Don pastes
@@ -57,14 +59,20 @@ export const FREE_PRINTABLES = [
 // Total number of free sheets, for tests and copy.
 export const FREE_PRINTABLES_COUNT = FREE_PRINTABLES.reduce((n, g) => n + g.items.length, 0);
 
-/* Which "full bundle" control the Printables screen shows.
- *   - The £20 add-on button ONLY when the app is activated (any paid or school
- *     licence) AND the add-on checkout link has been set.
- *   - Otherwise the £30 link to the website's printables page.
- * Keeping this pure makes both branches testable without a React renderer. */
+/* Which "full bundle" control the Printables screen shows. App users only ever
+ * see £20 — the standalone price lives on the website, never in the app.
+ *   - "addon":  activated (any paid or school licence) AND the add-on link is
+ *               set → the "Add the printables for £20" button → the checkout.
+ *   - "unlock": not activated → the "Unlock the full app, then add the
+ *               printables for £20" line; its button opens the app's own unlock
+ *               screen (never the website), so no checkout link is shown.
+ *   - "none":   activated but the add-on link is not set yet → description only,
+ *               no £20 button (hidden, not broken).
+ * Pure, so every branch is testable without a React renderer. */
 export function bundleOffer({ activated, addonUrl = PRINTABLES_ADDON_URL }) {
-  if (activated && addonUrl) return { kind: "addon", price: "£20", url: addonUrl, label: "Add the printables for £20" };
-  return { kind: "bundle", price: "£30", url: PRINTABLES_PAGE, label: "See the printables bundle (£30)" };
+  if (!activated) return { kind: "unlock", label: "Unlock the full app, then add the printables for £20." };
+  if (addonUrl) return { kind: "addon", price: "£20", url: addonUrl, label: "Add the printables for £20" };
+  return { kind: "none" };
 }
 
 /* Whether the one-time, dismissible post-activation offer card should show.

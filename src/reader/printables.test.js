@@ -2,20 +2,17 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  PRINTABLES_PAGE, PRINTABLES_ADDON_URL, FREE_PRINTABLES, FREE_PRINTABLES_COUNT,
+  PRINTABLES_ADDON_URL, FREE_PRINTABLES, FREE_PRINTABLES_COUNT,
   bundleOffer, showActivationOffer,
 } from "../links.js";
 
 const SET_URL = "https://wildcateducation.lemonsqueezy.com/checkout/buy/printables-addon";
 
-test("with the add-on link empty, no £20 control is offered — the £30 bundle shows instead", () => {
+test("with the add-on link empty and the app activated, no £20 button renders (hidden, not broken)", () => {
   assert.equal(PRINTABLES_ADDON_URL, "", "ships empty until the owner pastes the checkout link");
-  // Even for an activated device, an empty add-on link falls back to the £30 bundle.
   const o = bundleOffer({ activated: true, addonUrl: "" });
-  assert.equal(o.kind, "bundle");
-  assert.equal(o.price, "£30");
-  assert.equal(o.url, PRINTABLES_PAGE);
-  assert.doesNotMatch(o.label, /£20/);
+  assert.equal(o.kind, "none", "no bundle button at all while the add-on link is unset");
+  assert.equal(o.url, undefined);
 });
 
 test("when the add-on link is set and the app is activated, the £20 add-on button renders", () => {
@@ -26,11 +23,16 @@ test("when the add-on link is set and the app is activated, the £20 add-on butt
   assert.match(o.label, /£20/);
 });
 
-test("when the app is not activated, the £30 link renders even if the add-on link is set", () => {
-  const o = bundleOffer({ activated: false, addonUrl: SET_URL });
-  assert.equal(o.kind, "bundle");
-  assert.equal(o.price, "£30");
-  assert.equal(o.url, PRINTABLES_PAGE);
+test("when the app is not activated, the unlock-first line renders — no checkout link, no price button", () => {
+  // Whether or not the add-on link is set, a free user is sent to the unlock
+  // screen first; the bundle carries no £20 or £30 checkout URL here.
+  for (const addonUrl of ["", SET_URL]) {
+    const o = bundleOffer({ activated: false, addonUrl });
+    assert.equal(o.kind, "unlock");
+    assert.equal(o.url, undefined, "no checkout link for a not-activated user");
+    assert.match(o.label, /Unlock the full app/i);
+    assert.doesNotMatch(o.label, /£30/);
+  }
 });
 
 test("the post-activation offer shows once only, and only when the add-on link is set", () => {
@@ -49,6 +51,16 @@ test("there are 17 free sheets, all hosted on the website over https", () => {
   for (const it of all) {
     assert.match(it.href, /^https:\/\/www\.wildcateducation\.co\.uk\/printables\/free\//, `${it.file} is a website URL`);
     assert.match(it.file, /\.pdf$/);
+  }
+});
+
+test("the string £30 appears nowhere in the app source — app users only ever see £20", () => {
+  const files = [
+    new URL("../links.js", import.meta.url),
+    new URL("./ReaderApp.jsx", import.meta.url),
+  ];
+  for (const f of files) {
+    assert.doesNotMatch(readFileSync(f, "utf8"), /£30/, `${f.pathname} must not mention £30`);
   }
 });
 

@@ -1973,6 +1973,8 @@ export function ReaderApp({
         <p style={{ ...sub(C), marginTop: 4 }}>Download and print to revise on paper. The Unit 1 sheets and the general sheets are free; the full bundle covers all six units.</p>
 
         <p style={{ ...kicker(C), marginTop: 22 }}>FREE TO DOWNLOAD</p>
+        <a href={PRINTABLES_PAGE} target="_blank" rel="noopener noreferrer"
+          style={{ display: "inline-block", fontFamily: FONT_UI, fontSize: 13, color: C.accent, textDecoration: "none", marginTop: 2 }}>See the full list on the website ↗</a>
         {FREE_PRINTABLES.map((g) => (
           <div key={g.group} style={{ marginTop: 14 }}>
             <div style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.mist, marginBottom: 6 }}>{g.group}</div>
@@ -1994,8 +1996,17 @@ export function ReaderApp({
           <div style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, lineHeight: 1.5 }}>
             Practical cards, worksheets with answers, knowledge organisers and comparison sheets for all six units.
           </div>
-          <a href={offer.url} target="_blank" rel="noopener noreferrer"
-            style={{ ...primaryBtn(C), textDecoration: "none", textAlign: "center", marginTop: 4 }}>{offer.label}</a>
+          {offer.kind === "addon" && (
+            <a href={offer.url} target="_blank" rel="noopener noreferrer"
+              style={{ ...primaryBtn(C), textDecoration: "none", textAlign: "center", marginTop: 4 }}>{offer.label}</a>
+          )}
+          {offer.kind === "unlock" && (
+            <>
+              <div style={{ fontFamily: FONT_UI, fontSize: 13.5, color: C.foam, lineHeight: 1.5 }}>{offer.label}</div>
+              <button onClick={() => setView("unlock")}
+                style={{ ...primaryBtn(C), textAlign: "center", marginTop: 4 }}>Unlock the full app →</button>
+            </>
+          )}
         </div>
         <div style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, marginTop: 16, lineHeight: 1.5 }}>{COPYRIGHT}</div>
       </div>
