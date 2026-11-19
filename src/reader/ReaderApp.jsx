@@ -3,6 +3,7 @@ import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
 import { COPYRIGHT, TRADEMARK, LICENCE_USE } from "../legal.js";
+import { PRINTABLES_PAGE, PRINTABLES_ADDON_URL, FREE_PRINTABLES, bundleOffer, showActivationOffer } from "../links.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
 import { applyMixedAnswer } from "./mixedSession.js";
@@ -209,6 +210,8 @@ export function ReaderApp({
   const [keyInput, setKeyInput] = useState("");
   const [licenceMsg, setLicenceMsg] = useState("");
   const [licenceBusy, setLicenceBusy] = useState(false);
+  // One-time, dismissible printables offer shown on Home right after activation.
+  const [showPrintablesOffer, setShowPrintablesOffer] = useState(false);
 
   // ---- load persisted state (also re-run after restore / reset) ----
   async function loadAll() {
@@ -661,11 +664,20 @@ export function ReaderApp({
       setMaxProfiles(maxProfilesOf(r.entitlement));
       setKeyInput(""); setLicenceBusy(false);
       setLicenceMsg("Unlocked: thank you! All six units are now available.");
+      // One-time, dismissible printables add-on offer on Home (hidden while the
+      // add-on link is unset, and only ever shown once per device).
+      if (showActivationOffer({ seen: settings.printablesOfferSeen })) setShowPrintablesOffer(true);
       setView("library");
     } else {
       setLicenceMsg(r.code === "limit" ? `${r.error} You can remove a device in Settings, or email ${LICENCE_CONFIG.supportEmail}.` : r.error);
       setLicenceBusy(false);
     }
+  }
+  // Close the one-time printables offer and remember it so it never returns.
+  async function dismissPrintablesOffer() {
+    setShowPrintablesOffer(false);
+    setSettings((s) => ({ ...s, printablesOfferSeen: true }));
+    if (store()) await store().putSettings({ printablesOfferSeen: true });
   }
   async function removeDevice() {
     const s = store();
@@ -729,6 +741,7 @@ export function ReaderApp({
   else if (view === "flashcards") viewContent = renderFlashcards();
   else if (view === "practicals") viewContent = renderPracticals();
   else if (view === "figdata") viewContent = renderFigData();
+  else if (view === "printables") viewContent = renderPrintables();
   else if (view === "writing") viewContent = renderWriting();
   else if (view === "sendprogress") viewContent = renderSendProgress();
   else if (view === "teacher") viewContent = renderTeacher();
@@ -776,7 +789,7 @@ export function ReaderApp({
     );
   }
   function renderTopBar() {
-    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", figdata: "Figures & data", writing: "Writing practice", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
+    const TITLES = { library: "Your revision", reader: mode === "smart" ? "Mixed Practice" : "Revision", notes: "Syllabus Notes", browse: "Answers", interactives: "Interactive Lab", concepts: "Concept Cards", flashcards: "Flashcards", practicals: "Practicals", figdata: "Figures & data", printables: "Printables", writing: "Writing practice", collection: "Ocean Discoveries", settings: "Settings", checkpoint: "Section end", summary: "Session summary" };
     return (
       <header className="rl-topbar">
         <div className="rl-topbar-title">{TITLES[view] || "Marine Science"}</div>
@@ -817,6 +830,19 @@ export function ReaderApp({
       <div style={pad} className="rl-pad rl-pad--home">
         <TopBar C={C} left="Library" />
         <UpdateBanner C={C} notice={updateNotice} onDownload={onUpdateDownload} onUpdate={onUpdateNow} onLater={onUpdateLater} />
+        {showPrintablesOffer && PRINTABLES_ADDON_URL && (
+          <div style={{ ...card(C), marginTop: 14, border: `1px solid ${C.glow}`, background: `color-mix(in srgb, ${C.accent} 8%, ${C.shelf})` }}>
+            <div style={{ fontFamily: FONT_UI, fontSize: 14, color: C.foam, lineHeight: 1.5 }}>
+              Teaching or revising on paper? Add the printables bundle for £20.
+            </div>
+            <div style={{ display: "flex", gap: 10, marginTop: 12, flexWrap: "wrap" }}>
+              <a href={PRINTABLES_ADDON_URL} target="_blank" rel="noopener noreferrer"
+                onClick={dismissPrintablesOffer}
+                style={{ ...primaryBtn(C), textDecoration: "none", textAlign: "center" }}>Add for £20</a>
+              <button onClick={dismissPrintablesOffer} style={ghostBtn(C)}>No thanks</button>
+            </div>
+          </div>
+        )}
         <p style={kicker(C)}>MARINE SCIENCE IGCSE 0697</p>
         <h1 style={h1(C)}>Your revision</h1>
         <p style={{ ...sub(C), marginTop: 4 }}>Pick up where you left off, or choose anywhere.</p>
@@ -1931,6 +1957,47 @@ export function ReaderApp({
         {rev.length > 0 && (
           <button style={{ ...primaryBtn(C), background: C.coral, color: "#fff", marginTop: 10 }} onClick={() => startRevise(rev, `${p.title} to revise`)}>Revise these {rev.length} →</button>
         )}
+      </div>
+    );
+  }
+
+  // ---------- Printables (free sheets to download + the full bundle) ----------
+  function renderPrintables() {
+    const offer = bundleOffer({ activated: isEntitled(entitlement) });
+    return (
+      <div style={pad} className="rl-pad">
+        <TopBar C={C} left="Printables" />
+        <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
+        <p style={kicker(C)}>PRINTABLES · PAPER REVISION</p>
+        <h1 style={{ ...h1(C), marginTop: 2 }}>Printables</h1>
+        <p style={{ ...sub(C), marginTop: 4 }}>Download and print to revise on paper. The Unit 1 sheets and the general sheets are free; the full bundle covers all six units.</p>
+
+        <p style={{ ...kicker(C), marginTop: 22 }}>FREE TO DOWNLOAD</p>
+        {FREE_PRINTABLES.map((g) => (
+          <div key={g.group} style={{ marginTop: 14 }}>
+            <div style={{ fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: C.mist, marginBottom: 6 }}>{g.group}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {g.items.map((it) => (
+                <a key={it.file} href={it.href} target="_blank" rel="noopener noreferrer"
+                  style={{ ...card(C), display: "flex", alignItems: "center", gap: 12, textDecoration: "none", border: `1px solid ${C.line}55`, padding: "12px 14px" }}>
+                  <span aria-hidden="true" style={{ fontSize: 18, lineHeight: 1 }}>📄</span>
+                  <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 14, color: C.foam }}>{it.label}</span>
+                  <span aria-hidden="true" style={{ color: C.accent, fontSize: 18 }}>↗</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <p style={{ ...kicker(C), marginTop: 26 }}>THE FULL BUNDLE</p>
+        <div style={{ ...card(C), marginTop: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ fontFamily: FONT_UI, fontSize: 14, color: C.mist, lineHeight: 1.5 }}>
+            Practical cards, worksheets with answers, knowledge organisers and comparison sheets for all six units.
+          </div>
+          <a href={offer.url} target="_blank" rel="noopener noreferrer"
+            style={{ ...primaryBtn(C), textDecoration: "none", textAlign: "center", marginTop: 4 }}>{offer.label}</a>
+        </div>
+        <div style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, marginTop: 16, lineHeight: 1.5 }}>{COPYRIGHT}</div>
       </div>
     );
   }

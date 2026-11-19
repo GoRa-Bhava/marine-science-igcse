@@ -22,6 +22,9 @@ test("Library exposes Interactive Lab and Concept Cards in the Explore group", (
   assert.ok(byKey.figdata, "Figures & data entry present");
   assert.equal(byKey.figdata.view, "figdata");
   assert.match(byKey.figdata.title, /Figures/i);
+  assert.ok(byKey.printables, "Printables entry present");
+  assert.equal(byKey.printables.view, "printables");
+  assert.match(byKey.printables.title, /Printables/i);
   assert.ok(!byKey.writing, "Writing practice is featured on its own, not in the Explore list");
 });
 
@@ -38,8 +41,8 @@ test("every Explore/Discoveries view is a distinct route that is not the library
     assert.ok(!seen.has(v), `duplicate view route: ${v}`);
     seen.add(v);
   }
-  // interactives, concepts, flashcards, writing, practicals, figdata, collection
-  assert.equal(EXPLORE_VIEWS.length, 7);
+  // interactives, concepts, flashcards, practicals, figdata, printables, writing, collection
+  assert.equal(EXPLORE_VIEWS.length, 8);
   assert.equal(LIBRARY_VIEW, "library");
 });
 

@@ -44,6 +44,13 @@ export const EXPLORE_ENTRIES = [
     blurb: "Graphs, tables and maps — new data every time",
     icon: "📊",
   },
+  {
+    key: "printables",
+    view: "printables",
+    title: "Printables",
+    blurb: "Free Unit 1 sheets to download · full bundle for all six units",
+    icon: "🖨️",
+  },
 ];
 
 // Writing practice — featured on the Library home as a full-width card directly
