@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
@@ -23,6 +23,7 @@ import { qrSvg } from "../teacher/qr.js";
 import { assignmentNeedsLicence, buildResult, scoreResult } from "../teacher/assignment.js";
 import UpdateBanner from "../updates/UpdateBanner.jsx";
 import { shuffleDeck, mixedDeck } from "../flashcards/order.js";
+import { useRestoreScroll, restoreHighlight } from "./useRestoreScroll.js";
 
 // Practical items grade + persist through the normal machinery (they're keyed in
 // itemById below), but are deliberately kept OUT of the content index, so they
@@ -188,6 +189,9 @@ export function ReaderApp({
 
   // Practicals section: null = index, or an open practical id (ephemeral UI state).
   const [practicalOpen, setPracticalOpen] = useState(null);
+  // Remember where the student was in the practicals list when they open a card,
+  // and put them back there (not the top) when they return. See useRestoreScroll.
+  const pracScroll = useRestoreScroll("practicals", view === "practicals" && practicalOpen == null);
 
   // Settings: back up / restore / reset (against this device's Reader store).
   const [backupMsg, setBackupMsg] = useState("");
@@ -271,12 +275,22 @@ export function ReaderApp({
 
   // Navigation scrolls the page back to the top. The app changes screens with
   // React state (not routes), so without this a new screen inherits the previous
-  // scroll position — e.g. opening a practical from a scrolled list landed at the
-  // bottom. Covers view switches, opening/closing a practical, each new question
-  // and each browse card.
+  // scroll position. Covers view switches, each new question and each browse card.
+  // (Opening/closing a practical is handled separately just below, so that coming
+  // back to the list can restore the student's place instead of topping.)
   useEffect(() => {
     try { window.scrollTo(0, 0); } catch (_) { /* SSR / no window */ }
-  }, [view, practicalOpen, currentId, browse.pos]);
+  }, [view, currentId, browse.pos]);
+
+  // Opening/closing a practical is handled apart from the blanket top above, in a
+  // layout effect (before paint, no flash): opening a practical reads from the top,
+  // while closing it back to the list lets useRestoreScroll put the student back
+  // where they were rather than snapping to the top.
+  useLayoutEffect(() => {
+    if (view === "practicals" && practicalOpen != null) {
+      try { window.scrollTo(0, 0); } catch (_) { /* no window */ }
+    }
+  }, [practicalOpen]);
 
   const store = () => storeRef.current;
   const item = currentId ? itemById[currentId] : null;
@@ -1772,8 +1786,9 @@ export function ReaderApp({
         const cov = coverage(ids, progressMap);
         const rev = reviseIds(ids, progressMap);
         return (
-          <div key={p.id} style={{ ...card(C), border: `1px solid ${C.line}55` }}>
-            <button onClick={() => setPracticalOpen(p.id)}
+          <div key={p.id} data-restore-item={p.id}
+            style={{ ...card(C), border: `1px solid ${C.line}55`, ...restoreHighlight(C, pracScroll.highlightId === p.id) }}>
+            <button onClick={() => { pracScroll.rememberOpen(p.id); setPracticalOpen(p.id); }}
               style={{ display: "flex", gap: 12, alignItems: "flex-start", width: "100%", textAlign: "left", background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
               <span aria-hidden="true" style={{ fontSize: 24, lineHeight: 1 }}>🔬</span>
               <span style={{ flex: 1, minWidth: 0 }}>
@@ -1798,7 +1813,7 @@ export function ReaderApp({
         );
       };
       return (
-        <div style={pad} className="rl-pad">
+        <div ref={pracScroll.listRef} style={pad} className="rl-pad">
           <TopBar C={C} left="Practicals" />
           <button onClick={backToLibrary} style={linkBtn(C)}>‹ Library</button>
           <p style={kicker(C)}>PRACTICALS · REQUIRED PROCEDURES</p>

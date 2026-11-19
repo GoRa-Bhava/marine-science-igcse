@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FIG_GROUPS, FIG_TEMPLATES, templateByKey, FIG_TEMPLATE_CSS } from "./index.js";
+import { useRestoreScroll, restoreHighlight } from "../reader/useRestoreScroll.js";
 import { makeRun, figOpt, gradeFigQuestion, answerText, shuffleR } from "./core.js";
 import { applyTap, orderAdd, orderRemove } from "./interactions.js";
 import { panelIndexAt, clampToPlot, guideLayerSVG, guideReadSVG, centreOf, answeringEnabled } from "./guide.js";
@@ -84,6 +85,12 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
   const figWrapRef = useRef(null);
   const checkedRef = useRef(false);
   checkedRef.current = checked;
+
+  // Keep the student's place in the list of figure types when they open one and
+  // come back (via "All figure types"). One shared hook, as in Practicals/Writing.
+  const { listRef, rememberOpen, highlightId } = useRestoreScroll("figdata", screen === "list");
+  // A practice run / end screen reads from the top, not the list's scroll position.
+  useLayoutEffect(() => { if (screen !== "list") window.scrollTo(0, 0); }, [screen, run]);
   const guidePtRef = useRef(null);               // the ✕ position {pi, x, y}; kept while toggling within a question
   const guideUsedRef = useRef(false);            // has the guide been turned on this session (controls the first-question tip)
 
@@ -244,7 +251,7 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
   // ================= list =================
   if (screen === "list") {
     return (
-      <div className="figroot" style={{ ...figVars(C, light), fontFamily: F_UI, color: C.foam }}>
+      <div ref={listRef} className="figroot" style={{ ...figVars(C, light), fontFamily: F_UI, color: C.foam }}>
         <style>{FIG_TEMPLATE_CSS}</style>
         <button onClick={onBack} style={linkBtn}>‹ Library</button>
         <p style={{ fontFamily: F_UI, fontSize: 11, fontWeight: 800, letterSpacing: 0.6, color: light ? C.accent : C.glow, margin: "8px 0 2px" }}>FIGURES &amp; DATA · PRACTICE</p>
@@ -262,7 +269,7 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
                   let thumb = "";
                   try { thumb = t.svg(t.make(t.thumbSeed || 7), { thumb: true }); } catch { thumb = ""; }
                   return (
-                    <div key={t.key} style={panel}>
+                    <div key={t.key} data-restore-item={t.key} style={{ ...panel, ...restoreHighlight(C, highlightId === t.key) }}>
                       <div className="figthumb" style={{ marginBottom: 12 }} dangerouslySetInnerHTML={{ __html: thumb }} />
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
                         <h3 style={{ fontFamily: F_D, margin: 0, fontSize: 18, fontWeight: 600, color: C.foam }}>{t.name}</h3>
@@ -275,7 +282,7 @@ export default function FiguresPractice({ C, theme, figData = {}, onBack, onFini
                           {t.tips.map((x, k) => <li key={k} style={{ marginBottom: 4 }} dangerouslySetInnerHTML={{ __html: x }} />)}
                         </ul>
                       </details>
-                      <button onClick={() => startFig(t.key)} style={{ ...btnP, width: "100%" }}>Practise with new data ▸</button>
+                      <button onClick={() => { rememberOpen(t.key); startFig(t.key); }} style={{ ...btnP, width: "100%" }}>Practise with new data ▸</button>
                     </div>
                   );
                 })}
