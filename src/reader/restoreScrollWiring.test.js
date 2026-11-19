@@ -10,11 +10,22 @@ const FIGS = read("../figdata/FiguresPractice.jsx");
 
 test("the hook restores after layout, consumes once, and never smooth-scrolls", () => {
   assert.match(HOOK, /useLayoutEffect/, "restores in a layout effect (after layout, before paint)");
-  assert.match(HOOK, /requestAnimationFrame/, "waits a frame so the list has rendered");
   assert.match(HOOK, /mem\.take\(listKey\)/, "consumes the saved position exactly once");
   assert.match(HOOK, /prefers-reduced-motion/, "skips the highlight under reduced motion");
   // A direct jump, not an animated scroll (brief: don't animate a long scroll).
   assert.doesNotMatch(HOOK, /behavior\s*:\s*["']smooth["']/, "no smooth-scroll animation");
+});
+
+test("the restore is synchronous, not rAF-only, so it works on a hidden/backgrounded page", () => {
+  // requestAnimationFrame never fires while a tab is hidden or an APK WebView is
+  // backgrounded, so an rAF-only restore would silently leave the list at the top.
+  // The position is taken and applied synchronously in the layout effect; rAF is
+  // only a re-assert for late layout.
+  const take = HOOK.indexOf("mem.take(listKey)");
+  const applyCall = HOOK.search(/\n\s*apply\(\);/);        // the synchronous call
+  const raf = HOOK.indexOf("requestAnimationFrame(apply)"); // the re-assert
+  assert.ok(take !== -1 && applyCall !== -1 && raf !== -1, "take + synchronous apply() + rAF re-assert all present");
+  assert.ok(take < applyCall && applyCall < raf, "apply() runs synchronously before the rAF re-assert");
 });
 
 test("the hook is shared, not copied: all three lists import the one hook", () => {
