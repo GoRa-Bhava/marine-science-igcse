@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { WRITING, scoreWritingItem, writingByUnit } from "../content/writing-bank.js";
+import { useRestoreScroll, restoreHighlight } from "../reader/useRestoreScroll.js";
 
 /* A one-line, plain-words summary of an item's marking caps, shown under the checklist,
    e.g. "Counts at most 3 Strength ticks and 3 Limitation ticks (5 together)." */
@@ -38,6 +39,12 @@ export default function WritingPractice({
   const [ticks, setTicks] = useState(() => new Set());
   const [done, setDone] = useState(false);
   const taRef = useRef(null);
+
+  // Keep the student's place in the (long) question list when they open a question
+  // and come back. One shared hook, same as Practicals and Figures & data.
+  const { listRef, rememberOpen, highlightId } = useRestoreScroll("writing", screen === "list");
+  // A question/mark screen should read from the top, not inherit the list's scroll.
+  useLayoutEffect(() => { if (screen !== "list") window.scrollTo(0, 0); }, [screen, curId]);
 
   const groups = useMemo(() => writingByUnit(WRITING), []);
   const unlockedOrder = useMemo(() => WRITING.filter((w) => isUnlocked(w.unit)).map((w) => w.id), [isUnlocked]);
@@ -92,7 +99,7 @@ export default function WritingPractice({
   // ================= LIST =================
   if (screen === "list") {
     return (
-      <div style={{ fontFamily: F_UI, color: C.foam }}>
+      <div ref={listRef} style={{ fontFamily: F_UI, color: C.foam }}>
         <button onClick={onBack} style={linkBtn}>‹ Library</button>
         <p style={{ ...kicker, margin: "8px 0 2px" }}>Writing practice · pilot</p>
         <h1 style={{ fontFamily: F_D, fontSize: 26, fontWeight: 600, color: C.foam, margin: "0 0 4px" }}>Write it, then mark it</h1>
@@ -111,8 +118,9 @@ export default function WritingPractice({
                   const rec = writingData[w.id];
                   const last = rec && rec.lastScore != null ? `Last: ${rec.lastScore}/${w.marks}` : null;
                   return (
-                    <button key={w.id} onClick={() => locked ? (onLocked && onLocked()) : openQuestion(w.id)}
-                      style={{ ...card, display: "flex", alignItems: "flex-start", gap: 12, textAlign: "left", cursor: "pointer", opacity: locked ? 0.6 : 1 }}>
+                    <button key={w.id} data-restore-item={w.id}
+                      onClick={() => locked ? (onLocked && onLocked()) : (rememberOpen(w.id), openQuestion(w.id))}
+                      style={{ ...card, display: "flex", alignItems: "flex-start", gap: 12, textAlign: "left", cursor: "pointer", opacity: locked ? 0.6 : 1, ...restoreHighlight(C, highlightId === w.id) }}>
                       <span style={{ flex: 1 }}>
                         <span style={{ display: "block", fontFamily: F_UI, fontSize: 12.5, fontWeight: 800, color: light ? C.accent : C.glow, letterSpacing: 0.3 }}>
                           {w.command} · [{w.marks} marks]
