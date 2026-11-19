@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createProgressStore, PROFILE_COLORS } from "./progressStore.js";
 import { isEntitled, isUnlocked as isUnlockedUnit, maxProfilesOf, graceExpired, activate as lsActivate, validate as lsValidate, deactivate as lsDeactivate } from "../licence/licence.js";
 import { LICENCE_CONFIG, CHECKOUT_READY } from "../licence/config.js";
+import { COPYRIGHT, TRADEMARK, LICENCE_USE } from "../legal.js";
 import { buildContentIndex, secOf } from "./contentIndex.js";
 import { boxAfter, unitReadiness, coverage, reviseIds, masteryState } from "./scoring.js";
 import { applyMixedAnswer } from "./mixedSession.js";
@@ -1024,6 +1025,7 @@ export function ReaderApp({
         <div style={{ textAlign: "center", marginTop: 24 }}>
           <button onClick={() => setView("settings")} style={linkBtn(C)}>Settings</button>
         </div>
+        <div style={{ textAlign: "center", marginTop: 16, fontFamily: FONT_UI, fontSize: 11.5, color: C.mist, lineHeight: 1.5 }}>{COPYRIGHT}</div>
       </div>
     );
   }
@@ -2065,6 +2067,8 @@ export function ReaderApp({
           {licenceMsg && <p style={{ fontFamily: FONT_UI, fontSize: 12.5, color: C.accent, marginTop: 10, lineHeight: 1.5 }}>{licenceMsg}</p>}
         </div>
         <p style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, marginTop: 14, lineHeight: 1.5 }}>Lifetime access · one payment · no subscription. Prices include tax, handled by Lemon Squeezy.</p>
+        <div style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, marginTop: 14, lineHeight: 1.5 }}>{LICENCE_USE}</div>
+        <div style={{ fontFamily: FONT_UI, fontSize: 12, color: C.mist, marginTop: 8, lineHeight: 1.5 }}>{COPYRIGHT}</div>
       </div>
     );
   }
@@ -2249,6 +2253,8 @@ export function ReaderApp({
           <div style={{ fontFamily: FONT_UI, fontWeight: 700, color: C.foam, marginBottom: 4 }}>About</div>
           <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 13, marginBottom: 8, lineHeight: 1.5 }}>Marine Science IGCSE Revision App 2026/27. A no-login revision app; your progress is saved on this device.</div>
           {UpdatesControl ? <UpdatesControl /> : null}
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 12, marginTop: 10, lineHeight: 1.5 }}>{COPYRIGHT}</div>
+          <div style={{ fontFamily: FONT_UI, color: C.mist, fontSize: 12, marginTop: 6, lineHeight: 1.5 }}>{TRADEMARK}</div>
         </div>
 
         {/* Back up */}

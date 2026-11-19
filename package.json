@@ -2,6 +2,8 @@
   "name": "marine-unit1",
   "private": true,
   "version": "1.0.0",
+  "author": "Don Simpson trading as Wildcat Education",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",
