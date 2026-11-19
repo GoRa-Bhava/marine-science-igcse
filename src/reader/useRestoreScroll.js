@@ -86,11 +86,14 @@ export function useRestoreScroll(listKey, showingList) {
 
   useLayoutEffect(() => {
     if (!showingList || !mem.peek(listKey)) return;
+    const saved = mem.take(listKey);
+    if (!saved) return;
 
-    let hlTimer = 0;
-    const raf = requestAnimationFrame(() => {
-      const saved = mem.take(listKey);       // consume now, after we actually restore
-      if (!saved) return;
+    // Put the student back where they were. This runs as a layout effect — the
+    // list is already in the DOM here — so it works even when requestAnimationFrame
+    // never fires (a hidden tab or a backgrounded APK WebView, where an rAF-only
+    // restore would silently do nothing and the list would stay at the top).
+    const apply = () => {
       const sc = scrollerOf(listRef.current);
       const plan = restorePlan(saved.top, maxTop(sc));
       if (plan.mode === "top") {
@@ -101,12 +104,18 @@ export function useRestoreScroll(listKey, showingList) {
         if (node && typeof node.scrollIntoView === "function") node.scrollIntoView({ block: "center" });
         else writeTop(sc, Math.max(0, maxTop(sc)));
       }
-      if (shouldHighlight(saved.itemId, reducedMotion())) {
-        setHighlightId(saved.itemId);
-        hlTimer = window.setTimeout(() => setHighlightId(null), HIGHLIGHT_MS);
-      }
-    });
-    return () => { cancelAnimationFrame(raf); if (hlTimer) clearTimeout(hlTimer); };
+    };
+    apply();                                 // synchronous, before paint
+    // Re-assert once more after the next frame, in case late layout (web fonts,
+    // images, a tall list painting in) shifted the scroll height under us.
+    const raf = (typeof requestAnimationFrame === "function") ? requestAnimationFrame(apply) : 0;
+
+    let hlTimer = 0;
+    if (shouldHighlight(saved.itemId, reducedMotion())) {
+      setHighlightId(saved.itemId);
+      hlTimer = window.setTimeout(() => setHighlightId(null), HIGHLIGHT_MS);
+    }
+    return () => { if (raf) cancelAnimationFrame(raf); if (hlTimer) clearTimeout(hlTimer); };
     // listKey is stable per list; showingList flipping back to true is the "Back".
   }, [showingList, listKey, mem]);
 
