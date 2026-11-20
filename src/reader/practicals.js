@@ -44,7 +44,7 @@ export const PRACTICALS = [
         why: "Iodine fits inside the long, coiled starch molecule, and this produces the blue-black colour.",
       },
       {
-        nutrient: "Reducing sugars (e.g. glucose)",
+        nutrient: "Reducing sugars (such as glucose)",
         reagent: "Benedict's solution",
         method: "Add Benedict's solution and heat the tube in a hot water bath.",
         positive: "Blue → green → yellow → orange → brick-red (redder = more sugar)",
@@ -88,7 +88,7 @@ export const PRACTICALS = [
       "Benedict's only reacts when heated; it stays blue if you test it cold.",
       "Judge each colour against an untested (control) sample.",
       "The white emulsion in the lipid test is lipid, not protein.",
-      "In the exam, give BOTH colours: the starting colour and the positive one (e.g. 'orange-brown → blue-black', 'blue → brick-red'), not just the final colour.",
+      "In the exam, give BOTH colours: the starting colour and the positive one (for example, orange-brown to blue-black, or blue to brick-red), not just the final colour.",
       "Use a separate sample of the food for each test, and clean apparatus, so that the tests do not interfere with each other.",
     ],
 
@@ -338,7 +338,7 @@ export const PRACTICALS = [
     result: "The tidal amplitude: half the difference between high water and low water.",
     controls: [
       "Take readings at regular, frequent intervals so the true high and low are not missed",
-      "Use two methods (e.g. a fixed scale and a recording gauge) to check reliability",
+      "Use two methods, such as a fixed scale and a recording gauge, to check reliability",
       "Read from the same fixed position every time",
     ],
     safety: ["Check the tide times first, and never let the rising tide cut you off from the shore.", "Wear shoes with a good grip: wet rock and seaweed are slippery.", "Work with a partner, and tell someone where you are going."],
@@ -398,14 +398,14 @@ text{fill:var(--ink);font-size:26px}.title{font-size:32px;font-weight:700}.small
 <path class="rope" d="M200 232 L 682 258"/>
 <circle class="app" cx="700" cy="262" r="18"/><path class="app" d="M700 280v34"/><rect class="app" x="690" y="314" width="20" height="16"/>
 <text class="small" x="640" y="226">weighted float</text>
-<text class="small" x="250" y="330">line of known length, e.g. 10.0 m</text>
+<text class="small" x="250" y="330">line of known length, such as 10.0 m</text>
 <path class="arrow" d="M560 400 H 760"/><text class="small accent" x="560" y="440">current</text>
 <circle class="app" cx="790" cy="110" r="44"/><path class="app" d="M790 78v64M758 110h64"/><text class="small" x="780" y="60">N</text><path class="arrow" d="M790 110 H 826"/>
 <text class="small soft" x="640" y="182">bearing 090° (east)</text>
 <rect class="app" x="380" y="86" width="150" height="80" rx="12"/><text x="408" y="138">20.0 s</text><text class="small soft" x="388" y="190">stopwatch</text>
 <text x="40" y="520">speed = distance ÷ time = 10.0 m ÷ 20.0 s = <tspan class="accent">0.50 m/s</tspan></text>
 </svg>`,
-    apparatus: ["A weighted float (it sits low in the water, so the wind has little effect on it)", "A line of known length, e.g. 10.0 m", "A stopwatch", "A compass"],
+    apparatus: ["A weighted float (it sits low in the water, so the wind has little effect on it)", "A line of known length, such as 10.0 m", "A stopwatch", "A compass"],
     steps: [
       "Tie the measured line to the float and hold the other end at a fixed point",
       "Release the float into the current and start the stopwatch",
@@ -710,7 +710,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <rect x="95" y="193" width="270" height="175" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M90 128V355Q90 373 108 373H352Q370 373 370 355V128" class="apparatus" /><path d="M95 193H365" class="rule" /><rect x="430" y="144" width="28" height="190" rx="14" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><g class="" transform="translate(439 326)"><g class="grow" ><rect x="0" y="-174" width="10" height="174" rx="5" fill="var(--coral)" /></g></g><circle cx="444" cy="334" r="22" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><circle cx="444" cy="334" r="13" fill="var(--coral)" /><text x="425" y="108" class="small">Warm</text><text x="413" y="395" class="small">Cool</text><circle cx="122" cy="341" r="5" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="341" r="5" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="341" r="5" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="341" r="5" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="341" r="5" fill="var(--deep)" class="dissolve"/><circle cx="122" cy="350" r="5" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="350" r="5" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="350" r="5" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="350" r="5" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="350" r="5" fill="var(--deep)" class="dissolve"/><circle cx="122" cy="359" r="5" fill="var(--deep)" class="dissolve"/><circle cx="169" cy="359" r="5" fill="var(--deep)" class="dissolve"/><circle cx="216" cy="359" r="5" fill="var(--deep)" class="dissolve"/><circle cx="263" cy="359" r="5" fill="var(--deep)" class="dissolve"/><circle cx="310" cy="359" r="5" fill="var(--deep)" class="dissolve"/><text x="565" y="117" class="">Mass dissolved</text><rect x="610" y="156" width="90" height="196" rx="8" fill="var(--line)" /><g class="" transform="translate(610 352)"><g class="grow" ><rect x="0" y="-196" width="90" height="196" rx="8" fill="var(--teal)" /></g></g><text x="720" y="176" class="small">More</text><text x="720" y="351" class="small">Less</text><text x="84" y="415" class="small">Most solids · opposite of gases</text><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Warmer water → MORE solid dissolves</text><text x="440" y="514" class="accent" text-anchor="middle">For most solids, solubility increases.</text></g>
 </svg>`,
-    apparatus: ["A solid solute (e.g. potassium nitrate or sugar)", "Water", "Thermometer", "Balance", "Heat source and stirrer"],
+    apparatus: ["A solid solute, such as potassium nitrate or sugar", "Water", "Thermometer", "Balance", "Heat source and stirrer"],
     steps: [
       "Measure a fixed volume of water and bring it to a set temperature in a water bath",
       "Weigh out more of the solid than will dissolve",
@@ -722,7 +722,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same volume of water", "Same solid", "Stir the same way each time", "Keep the water at the set temperature while the solid is added"],
     safety: ["Take care with hot water and heaters, and let equipment cool before you handle it.", "Wear eye protection when stirring hot solutions.", "Potassium nitrate is an oxidiser (it makes things burn more fiercely): keep it away from flames, and heat the water with a water bath or electric heater.", "Do not taste the solute, and wash your hands afterwards."],
     technique: [
-      "Solids dissolve MORE as temperature rises: the opposite of gases.",
+      "Most solids dissolve MORE as the temperature rises: the opposite of gases.",
       "'Saturated' means no more will dissolve, not 'full of water'.",
       "Stirring changes the rate of dissolving, not the maximum amount that can dissolve.",
     ],
@@ -962,7 +962,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Adding salt adds mass to the same volume, so density rises.",
       "Salt does not disappear when it dissolves: its mass is still there.",
       "An object that floats in both floats higher in the saltier (denser) water.",
-      "To make a range of salinities, mix a stock solution with distilled water to the same total volume, e.g. 8 cm³ of 50 ppt stock + 2 cm³ of water = 40 ppt.",
+      "To make a range of salinities, mix a stock solution with distilled water to the same total volume; for example, 8 cm³ of 50 ppt stock and 2 cm³ of water make 10 cm³ of 40 ppt solution.",
     ],
     items: [
       { id: "P2.4b-01", type: "choice", tier: 1, ref: "2.4/LO3", family: "saldens-trend",
@@ -1444,7 +1444,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <rect x="50" y="238" width="326" height="142" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M45 173V367Q45 385 63 385H363Q381 385 381 367V173" class="apparatus" /><path d="M50 238H376" class="rule" /><path d="M191 128V334Q191 355 221 355Q251 355 251 334V128" class="apparatus" /><rect x="196" y="177" width="50" height="174" rx="15" fill="var(--teal)" opacity=".25"/><path d="M220 321V231M220 311q-29 0-25-23q22 3 25 23M220 283q27-4 22-26q-19 6-22 26M220 264q-23-5-20-23q18 4 20 23" class="" stroke="var(--good)" stroke-width="4" fill="none"/><text x="45" y="118" class="small">Cut end up</text><path d="M170 125L217 231" class="rule" /><g class="" transform="translate(520 217)"><g class="lamp" ><path d="M0 0L-48-35V35ZM0 0H18V119M-12 120H48" class="apparatus" /><path d="M-56-27L-150-50M-56 0H-150M-56 27L-150 50" class="" stroke="var(--amber)" stroke-width="3"/></g></g><path d="M386 357H812" class="rule" /><path d="M400 351V367" class="rule" /><path d="M430 351V367" class="rule" /><path d="M460 351V367" class="rule" /><path d="M490 351V367" class="rule" /><path d="M520 351V367" class="rule" /><path d="M550 351V367" class="rule" /><path d="M580 351V367" class="rule" /><path d="M610 351V367" class="rule" /><path d="M640 351V367" class="rule" /><path d="M670 351V367" class="rule" /><path d="M700 351V367" class="rule" /><path d="M730 351V367" class="rule" /><path d="M760 351V367" class="rule" /><path d="M790 351V367" class="rule" /><text x="583" y="397" class="small" text-anchor="middle">Measured distance</text><g class="early" ><text x="446" y="99" class="small">Close lamp</text><text x="446" y="134" class="small">Many bubbles / minute</text></g><g class="late" ><text x="446" y="99" class="small">Distant lamp</text><text x="446" y="134" class="small">Fewer bubbles / minute</text></g><circle cx="220" cy="223" r="5" fill="none" stroke="var(--deep)" stroke-width="2" class="oxygen b0"/><circle cx="223" cy="223" r="5" fill="none" stroke="var(--deep)" stroke-width="2" class="oxygen b1"/><circle cx="220" cy="223" r="5" fill="none" stroke="var(--deep)" stroke-width="2" class="oxygen b2"/><circle cx="223" cy="223" r="5" fill="none" stroke="var(--deep)" stroke-width="2" class="oxygen b3"/><text x="43" y="416" class="small">Water bath: keeps temperature constant</text><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Closer lamp → more light → faster photosynthesis</text><text x="440" y="514" class="accent" text-anchor="middle">Bubbles are oxygen; control temperature.</text></g>
 </svg>`,
-    apparatus: ["An aquatic plant (e.g. pondweed) or a macroalga in a tube of water", "A lamp", "A ruler", "A timer", "A water bath"],
+    apparatus: ["An aquatic plant, such as pondweed, or a macroalga in a tube of water", "A lamp", "A ruler", "A timer", "A water bath"],
     steps: [
       "Place the aquatic plant, cut end up, in a tube of water",
       "Set the lamp a measured distance away",
@@ -1545,7 +1545,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Check the tide times, and finish before the tide comes in.", "Wear shoes with a good grip: rocks and seaweed are slippery.", "Work in a group with a teacher present, and put any organisms back where you found them."],
     technique: [
       "'Random' means chosen by random numbers, not spread out evenly by eye: that is what removes the sampler's bias.",
-      "Species richness = the number of different species, not the total count.",
+      "Species richness is the number of different species, not the total count.",
       "More quadrats give a more reliable estimate, because the mean of many is likely to be closer to the true average.",
     ],
     items: [
@@ -1875,7 +1875,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Use heat-proof gloves or tongs to move samples in and out of the oven.", "Let the hot sediment cool before you weigh it.", "Wash your hands after handling shore sediment."],
     technique: [
       "Heat until the mass stops changing, not for a fixed time: a constant mass shows that the water has been driven off.",
-      "% water = water lost ÷ starting mass × 100.",
+      "Percentage water = water lost ÷ starting mass × 100.",
       "Heat gently so that organic matter is not burned away.",
     ],
     items: [
