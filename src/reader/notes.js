@@ -712,7 +712,7 @@ export const NOTES = {
     "id": "3.3",
     "title": "Classification",
     "intro": "How scientists sort living things into groups and give each one a worldwide name.",
-    "tip": "The binomial name has two parts, genus then species (e.g. <i>Orcinus orca</i>). Classification runs domain → kingdom → … → species.",
+    "tip": "The binomial name has two parts, genus then species (for example, <i>Orcinus orca</i>). Classification runs domain → kingdom → … → species.",
     "notes": [
      {
       "h": "Grouping by shared features",

@@ -34,6 +34,11 @@ test("no note body, tip, intro or term contains an em dash", () => {
   assert.deepEqual(offenders, [], `em dash found in: ${offenders.join(", ")}`);
 });
 
+test("no note body, tip, intro or term uses the 'e.g.' shorthand", () => {
+  const offenders = [...textFields()].filter(([, v]) => v.includes("e.g.")).map(([f]) => f);
+  assert.deepEqual(offenders, [], `"e.g." found in: ${offenders.join(", ")}`);
+});
+
 test("the specific wordings fixed in the audit do not reappear", () => {
   const banned = [
     "often and back",
