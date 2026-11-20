@@ -1,6 +1,6 @@
 // Marine Science IGCSE 0697 — Read section: syllabus notes (Units 1–6).
 // Authored from the per-unit Curriculum Knowledge Models, plain English at IGCSE level,
-// every note tagged to its syllabus outcome. STATUS: human_review — vet before going live.
+// every note tagged to its syllabus outcome. STATUS: writing-quality pass 20 Nov 2026 (NOTES-quality-audit-2026-11-20.md).
 // Shape: NOTES[unit] = { title, sections:[ { id, title, intro, tip?, example?, notes:[{h, ref, body, linked?}], terms:[[term,def],...] } ] }
 //   tip     = a short EXAMINER TIP (mark-scheme/technique nugget) for the section — HTML with <b>; render as a callout.
 //   example = an optional WORKED EXAMPLE (calculation sections only) — HTML with <b>; render as a callout.
@@ -22,7 +22,7 @@ export const NOTES = {
      {
       "h": "What keeps them in orbit",
       "ref": "1.1/LO2",
-      "body": "<b>Gravity</b> (the pull between masses) keeps the Earth orbiting the Sun and the Moon orbiting the Earth. This same gravity is what raises the tides (topic 1.4)."
+      "body": "<b>Gravity</b>, the force of attraction between masses, keeps the Earth in orbit around the Sun and the Moon in orbit around the Earth. Gravity also causes the tides (topic 1.4)."
      },
      {
       "h": "Inside the Earth: four layers",
@@ -32,26 +32,26 @@ export const NOTES = {
      {
       "h": "Magma",
       "ref": "1.1/LO3",
-      "body": "The mantle is solid rock, but it can melt to form <b>magma</b>: a thick, sticky (viscous) liquid. This matters later: magma is what rises to make volcanoes."
+      "body": "The mantle is solid rock, but it can melt to form <b>magma</b>, a thick, sticky (viscous) liquid. Magma that rises through the crust erupts at volcanoes (topic 1.2)."
      },
      {
       "h": "The Earth's magnetic field",
       "ref": "1.1/LO4",
-      "body": "Because the core is made of <b>iron</b>, it creates a <b>magnetic field</b> around the whole Earth. (Some animals use this field to navigate: Unit 3.)"
+      "body": "The Earth's iron <b>core</b> produces a <b>magnetic field</b> around the whole planet. Some animals use this field to navigate (topic 3.7)."
      }
     ],
     "terms": [
      [
       "Natural satellite",
-      "a body that orbits a planet: the Moon orbiting Earth"
+      "a natural object that orbits a planet, such as the Moon orbiting the Earth"
      ],
      [
       "Gravity",
-      "the pull between masses that holds the orbits"
+      "the force of attraction between masses; it keeps planets and moons in orbit"
      ],
      [
       "Inner / outer core",
-      "solid then liquid, both iron, at the centre"
+      "the centre of the Earth: a solid iron inner core surrounded by a liquid iron outer core"
      ],
      [
       "Mantle",
@@ -67,7 +67,7 @@ export const NOTES = {
     "id": "1.2",
     "title": "Plate tectonics",
     "intro": "The crust is broken into moving plates. Where they meet, we get earthquakes, volcanoes and tsunamis.",
-    "tip": "The cause of plate movement you need is <b>convection currents in the mantle</b>. Don't write 'slab pull' or 'ridge push': they're not required for 0697.",
+    "tip": "The cause of plate movement you need is convection currents in the mantle. Slab pull and ridge push are not required for 0697, so do not use them in place of convection.",
     "notes": [
      {
       "h": "The crust is made of plates",
@@ -77,7 +77,7 @@ export const NOTES = {
      {
       "h": "What moves the plates",
       "ref": "1.2/LO2",
-      "body": "The plates rest (“float”) on the solid rock of the mantle, which flows extremely slowly. They move because of <b>convection currents</b> in the mantle: hot rock rises, cooler rock sinks, and this slow circulation drags the plates along."
+      "body": "The plates rest on the mantle. Although the mantle is solid rock, it flows extremely slowly. Heat from the core sets up <b>convection currents</b> in the mantle: hotter rock rises, cooler rock sinks, and this slow circulation moves the plates."
      },
      {
       "h": "Supercontinents",
@@ -98,12 +98,12 @@ export const NOTES = {
      {
       "h": "How a tsunami forms",
       "ref": "1.2/LO6",
-      "body": "A sudden movement of the seabed (usually an underwater earthquake) <b>displaces a huge volume of water</b>. A wave spreads across the ocean towards the coast. Underwater landslides, volcanic eruptions and, rarely, meteorite impacts can also displace the water. In deep water the wave is low and very fast; in shallow water it slows down, the waves bunch up and its height grows."
+      "body": "A sudden movement of the seabed, usually during an underwater earthquake, displaces a huge volume of water, and waves spread out across the ocean. Underwater landslides, volcanic eruptions and, rarely, meteorite impacts can also displace the water. In deep water a <b>tsunami</b> is low and travels very fast. As the water becomes shallower near the coast, friction with the seabed slows the wave down. The back of the wave catches up with the front, so the same water and energy are squeezed into a shorter length and the wave height increases greatly."
      },
      {
       "h": "Effects of a tsunami",
       "ref": "1.2/LO7",
-      "body": "On <b>marine ecosystems</b>: coral reefs broken, mangroves and seagrass uprooted, sediment stirred up and smothering life. On <b>coastal communities</b>: loss of life; homes, boats and harbours destroyed; low land flooded; fresh water and farmland contaminated with salt; livelihoods like fishing and tourism lost."
+      "body": "On marine ecosystems: coral reefs are broken, mangroves and seagrass are uprooted, and stirred-up sediment smothers organisms. On coastal communities: people are killed; homes, boats and harbours are destroyed; low-lying land is flooded; fresh water and farmland are contaminated with salt; and livelihoods such as fishing and tourism are lost."
      }
     ],
     "terms": [
@@ -117,7 +117,7 @@ export const NOTES = {
      ],
      [
       "Convergent / divergent / transform",
-      "towards / apart / sliding-past boundaries"
+      "plate boundaries where the plates move towards each other / apart / past each other"
      ],
      [
       "Subducted",
@@ -125,7 +125,7 @@ export const NOTES = {
      ],
      [
       "Tsunami",
-      "waves from seabed movement displacing water"
+      "a series of very large waves caused when a sudden movement, usually of the seabed, displaces a large volume of water"
      ]
     ]
    },
@@ -158,7 +158,7 @@ export const NOTES = {
      {
       "h": "Seas",
       "ref": "1.3/LO5",
-      "body": "A <b>sea</b> is a smaller area of water than an ocean. It may lie within an ocean (the Bering Sea in the Pacific) and is often partly enclosed by land (the Mediterranean)."
+      "body": "A <b>sea</b> is a smaller area of water than an ocean. It may lie within an ocean, for example the Bering Sea in the Pacific, and it is often partly enclosed by land, for example the Mediterranean."
      },
      {
       "h": "The shape of the sea floor",
@@ -178,7 +178,7 @@ export const NOTES = {
      ],
      [
       "Continental shelf / slope",
-      "shallow platform, then the steep drop to the deep floor"
+      "the shallow, gently sloping sea floor next to a continent / the steep slope from the edge of the shelf down to the deep ocean floor"
      ],
      [
       "Abyssal plain",
@@ -186,7 +186,7 @@ export const NOTES = {
      ],
      [
       "Mid-ocean ridge / ocean trench",
-      "where plates move apart / where one is forced under another"
+      "an underwater mountain chain where plates move apart / a deep, narrow dip where one plate is forced under another"
      ]
     ]
    },
@@ -194,7 +194,7 @@ export const NOTES = {
     "id": "1.4",
     "title": "Tides and currents",
     "intro": "Why the sea rises and falls, and how ocean water keeps moving around the planet.",
-    "tip": "Tidal amplitude = (high − low) ÷ 2: always halve. The formula is given, so the marks are for using it correctly: subtract, then ÷ 2, with the right units.",
+    "tip": "Tidal amplitude = (high water − low water) ÷ 2, so always halve the range. The formula is given in the question, so the marks are for using it correctly: subtract, divide by 2 and give the unit.",
     "example": "High water 4.8 m, low water 1.0 m → range = 3.8 m → amplitude = 3.8 ÷ 2 = <b>1.9 m</b>.",
     "notes": [
      {
@@ -206,7 +206,7 @@ export const NOTES = {
      {
       "h": "Spring and neap tides",
       "ref": "1.4/LO1",
-      "body": "<b>Spring tide</b>: when the Sun and Moon are <b>in a line</b>, their pulls combine, high tide is higher and low tide is lower (a larger <b>tidal amplitude</b>). <b>Neap tide</b>: when they are <b>at right angles</b>, their effects partly cancel, giving a smaller amplitude. (Spring tides have nothing to do with the season.)"
+      "body": "<b>Spring tide</b>: when the Sun and Moon are in line, their pulls combine, so high tide is higher and low tide is lower (a larger tidal amplitude). <b>Neap tide</b>: when the Sun and Moon are at right angles to the Earth, their pulls partly cancel, giving a smaller amplitude. Spring tides are not linked to the season of spring."
      },
      {
       "h": "Measuring tidal amplitude",
@@ -226,12 +226,12 @@ export const NOTES = {
      {
       "h": "Rip currents",
       "ref": "1.4/LO8",
-      "body": "Waves push water onto the shore; it flows back out through a narrow gap as a fast, narrow current heading away from the beach. A rip can carry a swimmer out to sea and tire them, but it does <b>not</b> pull them under: the safe response is to swim <b>parallel to the shore</b> until out of it."
+      "body": "Breaking waves push water up the beach. The water returns to the sea through a narrow channel, often a gap in a sandbar, as a fast, narrow <b>rip current</b> flowing away from the shore. A rip can carry a swimmer out to sea and tire them, but it does not pull them under. The safe response is to swim parallel to the shore until out of the current, then swim back to land."
      },
      {
       "h": "Measuring a current",
       "ref": "1.4/LO9",
-      "body": "For direction, release a <b>float</b> and take a compass bearing of the way it drifts. For speed, time the float over a known distance and use <b>speed = distance ÷ time</b>. Repeat and average for reliability."
+      "body": "For direction, release a float and take a compass bearing of the direction it drifts. For speed, time the float over a measured distance and calculate speed = distance ÷ time. Repeat the measurement and calculate a mean to improve reliability."
      }
     ],
     "terms": [
@@ -241,7 +241,7 @@ export const NOTES = {
      ],
      [
       "Spring / neap tide",
-      "Sun & Moon in a line (bigger) / at right angles (smaller)"
+      "the tide with the largest range, when the Sun and Moon are in line / the tide with the smallest range, when they are at right angles"
      ],
      [
       "Current",
@@ -253,7 +253,7 @@ export const NOTES = {
      ],
      [
       "Rip current",
-      "a fast narrow flow back out to sea: swim parallel to escape"
+      "a fast, narrow current flowing away from the shore; escape by swimming parallel to the shore"
      ]
     ]
    }
@@ -291,12 +291,12 @@ export const NOTES = {
      {
       "h": "Energy in changes of state",
       "ref": "2.1/LO5",
-      "body": "Melting and evaporation <b>take in energy</b> from the surroundings, so the particles can gain energy and break free. Freezing and condensation <b>give out energy</b> to the surroundings. During melting and boiling the temperature does not change. While ice melts or water boils, the energy taken in is used to separate the particles, so the temperature stays constant until the change is complete; a heating curve shows this as a flat section."
+      "body": "<b>Melting</b> and <b>evaporation</b> take in energy from the surroundings, and <b>freezing</b> and <b>condensation</b> give energy out to the surroundings. While ice melts or water boils, the energy taken in is used to overcome the forces holding the particles in place, not to raise the temperature. So the temperature stays constant until the change of state is complete, which a heating curve shows as a flat section."
      },
      {
       "h": "Floating ice vs land-based ice",
       "ref": "2.1/LO6",
-      "body": "When <b>floating ice</b> melts it does not raise the water level, because the ice already displaces its own mass of water. When ice held above the water on land (<b>land-based ice</b> like glaciers and ice sheets) melts, it adds water and <b>raises the level</b>, causing flooding and habitat loss. Both kinds of melting ice add fresh water, which <b>lowers salinity and density</b>. A fair test uses the same mass of ice, repeats, a narrow vessel for clearer readings, and waits until all the ice has melted."
+      "body": "When floating ice melts it does not raise the water level, because the ice already displaces its own mass of water. When <b>land-based ice</b> (glaciers and ice sheets) melts, the water runs into the sea and raises the sea level, causing flooding and habitat loss. Both kinds of melting ice add fresh water, which lowers salinity and density. In the investigation, use the same mass of ice in each container, read the level in a narrow container so that small changes are easier to see, wait until all the ice has melted, and repeat the test."
      },
      {
       "h": "The water cycle",
@@ -355,7 +355,7 @@ export const NOTES = {
      {
       "h": "Measuring pH with universal indicator",
       "ref": "2.2/LO3",
-      "body": "<b>Universal indicator</b> changes colour depending on the pH, and you match the colour to a chart to read it off. Use the same volume of each water sample, the same number of drops of indicator, and clean equipment between samples. Sea water shows slightly alkaline, fresh water about neutral, and rain water slightly acidic."
+      "body": "<b>Universal indicator</b> changes colour with pH; match the colour to the chart to read the pH. Use the same volume of each water sample, the same small number of drops of indicator, and clean equipment for each sample. Sea water gives a slightly alkaline result, fresh water about neutral, and rain water slightly acidic."
      },
      {
       "h": "Carbon dioxide and pH",
@@ -370,7 +370,7 @@ export const NOTES = {
      {
       "h": "Temperature and solubility of solids",
       "ref": "2.2/LO6",
-      "body": "For most solid solutes, such as potassium nitrate and sugar, <b>solubility increases with temperature</b>. You test this by adding solute to a fixed volume of water at set temperatures until no more dissolves (it is <b>saturated</b>), and recording the mass dissolved. Note that stirring only speeds up dissolving; it does not increase how much can dissolve."
+      "body": "For most solid solutes, such as potassium nitrate and sugar, solubility increases with temperature. To test this, add small, weighed amounts of the solute to a fixed volume of water at a set temperature, stirring after each, until no more will dissolve; add up the mass that dissolved, then repeat at a higher temperature. Stirring only speeds up dissolving; it does not change the maximum amount that can dissolve."
      },
      {
       "h": "Salinity and ppt",
@@ -433,7 +433,7 @@ export const NOTES = {
      {
       "h": "Where dissolved gases come from",
       "ref": "2.3/LO1",
-      "body": "Oxygen and carbon dioxide from the atmosphere <b>dissolve</b> into sea water at the surface. <b>Oxygen has a low solubility</b> in water, so dissolved oxygen is scarce and can limit marine life. Oxygen is also added by <b>photosynthesis</b>, while carbon dioxide is more soluble."
+      "body": "Oxygen and carbon dioxide from the atmosphere dissolve into sea water at the surface. Oxygen is also added by photosynthesis. Oxygen has a low solubility in water, so dissolved oxygen is scarce and can limit marine life; carbon dioxide is much more soluble."
      },
      {
       "h": "Oxygen and carbon dioxide compared",
@@ -448,7 +448,7 @@ export const NOTES = {
      {
       "h": "Investigating temperature and gases",
       "ref": "2.3/LO4",
-      "body": "To test this, warm water to a range of temperatures and measure the dissolved oxygen with an <b>oxygen probe or test kit</b>, or watch gas bubbles being released. Control the volume, the water source and the time, and repeat readings. Bubbles released on warming are the gas escaping, not boiling."
+      "body": "To investigate this, heat water samples to a range of temperatures and measure the dissolved oxygen with an oxygen probe or test kit, or observe the gas bubbles released. Keep the volume of water, the water source and the timing the same, and repeat the readings. The small bubbles that appear well below boiling point are mainly gas coming out of solution, not boiling."
      }
     ],
     "terms": [
@@ -462,7 +462,7 @@ export const NOTES = {
      ],
      [
       "Photosynthesis",
-      "the process in which plants and algae make oxygen in the light"
+      "the process in which plants and algae use light energy to make glucose from carbon dioxide and water, releasing oxygen"
      ]
     ]
    },
@@ -486,12 +486,12 @@ export const NOTES = {
      {
       "h": "Salinity and density",
       "ref": "2.4/LO3",
-      "body": "<b>Saltier water is denser</b>. To test this, take equal volumes of solutions of known salinity and measure their mass, or float an object such as an egg, keeping the temperature the same. The result is that density rises with salinity."
+      "body": "Saltier water is denser. To test this, make solutions of known salinity, weigh equal volumes of each and compare the masses, keeping the temperature the same. Density increases as salinity increases."
      },
      {
       "h": "Convection currents",
       "ref": "2.4/LO4",
-      "body": "When part of a liquid is heated it expands, becomes <b>less dense and rises</b>, while cooler denser liquid sinks to replace it. This continuous circulation is a <b>convection current</b>. In the ocean, warm surface water at the equator and cold dense water sinking at the poles drive deep circulation."
+      "body": "When part of a liquid is heated it expands, becomes less dense and rises, while cooler, denser liquid sinks to replace it. This continuous circulation is a <b>convection current</b>. In the ocean, cold, dense water sinking near the poles and warmer water near the equator drive a slow circulation through the deep ocean."
      },
      {
       "h": "Explaining density in particle terms",
@@ -523,7 +523,7 @@ export const NOTES = {
     "id": "2.5",
     "title": "Effects of increasing depth",
     "intro": "The conditions in the sea that change as you go deeper, and why each one changes.",
-    "tip": "Learn the five conditions that change with depth: light, pressure, temperature, salinity, dissolved oxygen. Light doesn't stop suddenly; it fades, and is gone by about 1000 m.",
+    "tip": "Learn the five conditions that change with depth: light, pressure, temperature, salinity and dissolved oxygen. Light does not stop suddenly: it fades with depth and is absent below about 1000 m.",
     "notes": [
      {
       "h": "What changes with depth",
@@ -553,7 +553,7 @@ export const NOTES = {
      {
       "h": "Dissolved oxygen",
       "ref": "2.5/LO6",
-      "body": "Dissolved oxygen is <b>high at the surface</b>, because gas dissolves from the atmosphere and photosynthesis adds oxygen in the light. It <b>falls with depth</b>, because there is no photosynthesis in the dark, oxygen is used up by respiration and decomposition, and there is little mixing from the surface. So deep water has little dissolved oxygen."
+      "body": "Dissolved oxygen is high at the surface, because oxygen dissolves from the atmosphere and photosynthesis adds oxygen in the light. It falls with depth, because there is no photosynthesis in the dark, oxygen is used up by respiration and decomposition, and only slow circulation from the surface replaces it. So dissolved oxygen is generally lower below the sunlit zone."
      }
     ],
     "terms": [
@@ -563,7 +563,7 @@ export const NOTES = {
      ],
      [
       "Pressure",
-      "the pushing force from the weight of water above"
+      "the force pressing on an area; in the sea it is caused by the weight of the water above"
      ],
      [
       "Secchi disc",
@@ -631,12 +631,12 @@ export const NOTES = {
      {
       "h": "Animal and plant cells",
       "ref": "3.1/LO1",
-      "body": "Animal cells have a <b>cell membrane</b>, a <b>nucleus</b>, <b>cytoplasm</b> and <b>mitochondria</b>. Plant cells have all of those too. Plant cells also have a <b>cell wall</b> on the outside of the membrane and one large permanent <b>vacuole</b>, and leaf cells have <b>chloroplasts</b>."
+      "body": "Animal cells have a cell membrane, a nucleus, cytoplasm and mitochondria. Plant cells have all of these as well as a <b>cell wall</b> outside the membrane and one large permanent <b>vacuole</b>; leaf cells also have <b>chloroplasts</b>."
      },
      {
       "h": "Bacterial cells",
       "ref": "3.1/LO2",
-      "body": "A <b>bacterial cell</b> has only a <b>cell wall</b>, a <b>cell membrane</b> and <b>cytoplasm</b>. It has no nucleus, no mitochondria and no chloroplasts. Its genetic material sits loose in the cytoplasm."
+      "body": "A bacterial cell has a cell wall, a cell membrane and cytoplasm, but no nucleus, no mitochondria and no chloroplasts. Its genetic material (DNA) lies free in the cytoplasm."
      },
      {
       "h": "Spotting the parts in a picture",
@@ -646,7 +646,7 @@ export const NOTES = {
      {
       "h": "What each part does",
       "ref": "3.1/LO4",
-      "body": "The <b>nucleus</b> holds the genetic material and controls the cell. The <b>membrane</b> controls what enters and leaves, and the <b>cytoplasm</b> is where the chemical reactions happen. The <b>cell wall</b> supports the cell and stops it bursting, <b>chloroplasts</b> absorb light for photosynthesis, <b>mitochondria</b> release energy by respiration, and the <b>vacuole</b> stores water and dissolved substances."
+      "body": "The <b>nucleus</b> contains the genetic material and controls the cell. The <b>cell membrane</b> controls what enters and leaves the cell, and the <b>cytoplasm</b> is where most chemical reactions take place. The <b>cell wall</b> supports the cell and stops it bursting, <b>chloroplasts</b> absorb light for photosynthesis, <b>mitochondria</b> are where aerobic respiration releases energy, and the <b>vacuole</b> stores water and dissolved substances."
      }
     ],
     "terms": [
@@ -685,18 +685,18 @@ export const NOTES = {
      {
       "h": "Asexual reproduction",
       "ref": "3.2/LO1",
-      "body": "In <b>asexual reproduction</b> one organism makes exact copies of itself. There is only one parent and no sex cells. The offspring are identical to the parent."
+      "body": "In <b>asexual reproduction</b> a single parent produces offspring without sex cells. The offspring are genetically identical to the parent."
      },
      {
       "h": "Sexual reproduction",
       "ref": "3.2/LO2",
-      "body": "In <b>sexual reproduction</b> an organism makes male and female <b>sex cells</b>. Two sex cells join, or fuse, together. The offspring get characteristics from both parents."
+      "body": "In <b>sexual reproduction</b> a male sex cell and a female sex cell fuse (fertilisation). The offspring inherit characteristics from both parents."
      }
     ],
     "terms": [
      [
       "Asexual reproduction",
-      "one parent making exact copies of itself, with no sex cells"
+      "reproduction by a single parent, without sex cells, producing genetically identical offspring"
      ],
      [
       "Sexual reproduction",
@@ -732,7 +732,7 @@ export const NOTES = {
      {
       "h": "Kingdoms of Eukarya in the sea",
       "ref": "3.3/LO4",
-      "body": "<b>Animals</b> are multicellular, have no cell wall or chloroplasts, and feed on other organisms. <b>Plants</b> are multicellular with cell walls and chloroplasts, and have true roots, leaves and flowers, such as seagrass. <b>Protoctists</b> include kelp, dinoflagellates and diatoms; many are single-celled and some are multicellular."
+      "body": "<b>Animals</b> are multicellular, have no cell walls or chloroplasts, and feed on other organisms. <b>Plants</b> are multicellular, have cell walls and chloroplasts, and have true roots, leaves and flowers; seagrass is an example. <b>Protoctists</b> include kelp, dinoflagellates and diatoms; many are single-celled and some, such as kelp, are multicellular."
      }
     ],
     "terms": [
@@ -781,7 +781,7 @@ export const NOTES = {
      {
       "h": "The outside features of a fish",
       "ref": "3.4/LO3",
-      "body": "The <b>operculum</b> is the gill cover, and <b>scales</b> give protection. The <b>lateral line</b> detects vibration and the <b>nares</b> detect chemicals. The <b>fins</b> (dorsal, pelvic, pectoral, anal and caudal) control pitching, rolling and yawing, change direction and give forward thrust; the caudal fin provides the thrust."
+      "body": "The <b>operculum</b> is the gill cover, and <b>scales</b> protect the body. The <b>lateral line</b> detects vibrations in the water and the <b>nares</b> detect chemicals. The dorsal, pelvic, pectoral and anal fins control pitching, rolling and yawing and allow the fish to change direction, and the caudal (tail) fin provides forward thrust."
      },
      {
       "h": "Sorting invertebrates into groups",
@@ -791,12 +791,12 @@ export const NOTES = {
      {
       "h": "Comparing specimens (practical)",
       "ref": "3.4/LO5",
-      "body": "Choose the viewing tool to match the size of the specimen. Use a <b>hand lens</b> or a photograph for whole organisms and outside features, and a <b>light microscope</b> with a thin slide for cells. Compare specimens by their classification features, not by colour, size or where they were found."
+      "body": "Choose the viewing method to suit the specimen. A hand lens or a photograph shows the external features of a whole organism. A light microscope is used for small specimens, such as plankton, and for thin sections on a slide to show the structures inside cells. Compare specimens by their classification features, not by colour, size or where they were found."
      },
      {
       "h": "Drawing specimens (practical)",
       "ref": "3.4/LO6",
-      "body": "A good biological drawing is <b>large</b> and uses clear, unbroken pencil lines with <b>no shading and no colour</b>. Keep the proportions and positions correct and draw only what you see, not every scale. Use straight ruled label lines that touch the feature."
+      "body": "A good biological drawing is large and uses clear, single, unbroken pencil lines, with no shading and no colour. Show the parts in their correct proportions and positions, and draw only what you can actually see on the specimen. Label lines are ruled and touch the feature they label."
      },
      {
       "h": "Working out magnification",
@@ -844,12 +844,12 @@ export const NOTES = {
     "id": "3.5",
     "title": "Plant and protoctist kingdoms",
     "intro": "The one true marine plant, and the protoctists: kelp, dinoflagellates and diatoms.",
-    "tip": "Kelp and other seaweeds are <b>protoctists</b>, not plants. Don't call algae 'plants' in an answer.",
+    "tip": "Kelp and other seaweeds are protoctists, not plants. Do not call algae 'plants' in an answer.",
     "notes": [
      {
       "h": "Seagrass, a true plant",
       "ref": "3.5/LO1",
-      "body": "<b>Seagrass</b> is a real plant with roots, leaves and flowers. Its <b>leaves</b> carry out photosynthesis and its <b>roots</b> anchor it in the sediment and take up minerals. Its <b>rhizomes</b> are underground stems that connect plants and are used for asexual reproduction, while its <b>flowers</b> are for sexual reproduction."
+      "body": "<b>Seagrass</b> is a true plant, with roots, leaves and flowers. Its leaves carry out photosynthesis, and its roots anchor it in the sediment and absorb minerals. Its <b>rhizomes</b> are underground stems that connect the plants and are used for asexual reproduction; its flowers are used for sexual reproduction."
      },
      {
       "h": "Kelp, a protoctist",
@@ -859,7 +859,7 @@ export const NOTES = {
      {
       "h": "Dinoflagellates",
       "ref": "3.5/LO3",
-      "body": "<b>Dinoflagellates</b> are microscopic, single-celled protoctists. They have <b>chloroplasts</b> for photosynthesis and <b>two flagella</b> for movement. Like a plant cell they photosynthesise, but they differ because they have flagella and are a whole single-celled organism."
+      "body": "<b>Dinoflagellates</b> are microscopic, single-celled protoctists. They have chloroplasts for photosynthesis and two <b>flagella</b> for movement. Like plant cells they photosynthesise, but unlike plant cells they can move using their flagella, and each one is a whole organism."
      },
      {
       "h": "Diatoms",
@@ -959,13 +959,13 @@ export const NOTES = {
      {
       "h": "How animals navigate",
       "ref": "3.7/LO5",
-      "body": "Animals find their way using the <b>magnetic field</b> of the Earth, and the position of the <b>Sun, Moon and stars</b>. They also use <b>olfaction</b>, which means detecting chemicals such as the scent of a river. And they build <b>mental maps</b> from remembered landmarks."
+      "body": "Animals navigate using the Earth's <b>magnetic field</b> and the positions of the Sun, Moon and stars. They also use <b>olfaction</b>, the detection of chemicals such as the scent of their home river, and they remember landmarks to build a mental map."
      }
     ],
     "terms": [
      [
       "Migration",
-      "the movement of organisms from one place to another, often and back"
+      "the movement of organisms from one place to another, often returning later"
      ],
      [
       "Vertical migration",
@@ -994,7 +994,7 @@ export const NOTES = {
     "id": "4.1",
     "title": "Nutrients",
     "intro": "What nutrients are, how you test for them, what each type does, the key elements organisms need, and how nutrients are recycled in the sea.",
-    "tip": "The food-test colours cross-wire easily: iodine → blue-black (starch), heated Benedict's → brick-red (reducing sugar), biuret → purple (protein), ethanol emulsion → white (lipid). State BOTH the starting and the result colour.",
+    "tip": "The food-test colours are easily confused: iodine turns blue-black (starch), heated Benedict's solution turns brick-red (reducing sugar), biuret solution turns purple (protein), and the ethanol emulsion test gives a cloudy white emulsion (lipid). State both the starting colour and the result colour.",
     "notes": [
      {
       "h": "What a nutrient is",
@@ -1004,7 +1004,7 @@ export const NOTES = {
      {
       "h": "The organic compounds",
       "ref": "4.1/LO1",
-      "body": "There are three groups of organic compounds. <b>Carbohydrates</b> include starch and sugars such as glucose. <b>Lipids</b> are fats and oils. <b>Proteins</b> are the third group. Sugars and starch are both carbohydrates, not separate nutrient groups."
+      "body": "There are three groups of organic compounds: <b>carbohydrates</b>, including starch and sugars such as glucose; <b>lipids</b>, which are fats and oils; and <b>proteins</b>. Sugars and starch are both carbohydrates, not separate nutrient groups."
      },
      {
       "h": "Testing foods for nutrients",
@@ -1014,7 +1014,7 @@ export const NOTES = {
      {
       "h": "Testing for lipids",
       "ref": "4.1/LO2",
-      "body": "For the <b>ethanol emulsion test</b> for <b>lipids</b>, dissolve the sample in ethanol, then add water: a cloudy white emulsion shows lipid is present. If the colour or clearness does not change, that is a negative result, not a failed test. Ethanol is flammable, so use no naked flame, and wear eye protection as the reagents are irritants."
+      "body": "For the <b>ethanol emulsion test</b>, shake the sample with ethanol, then pour the liquid into water: a cloudy white <b>emulsion</b> shows that lipid is present. If the mixture stays clear, the result is negative, not a failed test. Ethanol is flammable, so keep it away from naked flames, and wear eye protection because the reagents are irritants."
      },
      {
       "h": "What each nutrient group does",
@@ -1069,12 +1069,12 @@ export const NOTES = {
     "id": "4.2",
     "title": "Respiration",
     "intro": "How every living cell releases energy from nutrients, why this differs from gas exchange, and how you can measure the energy in food.",
-    "tip": "All living cells respire all the time: including plants at night, which is why dissolved oxygen falls and CO₂ rises after dark. Respiration <b>releases</b> energy, it doesn't make it.",
+    "tip": "All living cells respire all the time, including plant and algal cells at night, which is why dissolved oxygen falls and carbon dioxide rises after dark. Respiration releases energy; it does not make it.",
     "notes": [
      {
       "h": "What respiration is",
       "ref": "4.2/LO1",
-      "body": "<b>Respiration</b> is the chemical reactions in cells that break down nutrient molecules, mainly <b>glucose</b>, and release usable energy. It is not the same as breathing. Respiration does not make energy, it releases the energy already stored in the nutrient."
+      "body": "<b>Respiration</b> is the set of chemical reactions in cells that break down nutrient molecules, mainly glucose, to release usable energy. It is not the same as breathing. Respiration does not make energy: it releases energy that is already stored in the nutrient."
      },
      {
       "h": "All cells respire",
@@ -1139,7 +1139,7 @@ export const NOTES = {
      {
       "h": "What photosynthesis is",
       "ref": "4.3/LO1",
-      "body": "In <b>photosynthesis</b>, some organisms make <b>glucose</b> from carbon dioxide and water using energy from light. <b>Oxygen</b> is released as a by-product. In daylight, in lit water with producers, the dissolved oxygen rises."
+      "body": "In <b>photosynthesis</b>, producers use energy from light to make glucose from carbon dioxide and water. Oxygen is released as a by-product, so in daylight the dissolved oxygen in water containing producers rises."
      },
      {
       "h": "The role of chlorophyll",
@@ -1154,7 +1154,7 @@ export const NOTES = {
      {
       "h": "Which marine organisms photosynthesise",
       "ref": "4.3/LO4",
-      "body": "Three groups photosynthesise in the sea. <b>Marine plants</b>, such as seagrasses. Some <b>marine protoctists</b>, such as microalgae, macroalgae, diatoms and some dinoflagellates. Some <b>marine bacteria</b>, such as cyanobacteria. Not all plankton and not all bacteria photosynthesise."
+      "body": "Three groups of marine organisms photosynthesise: marine <b>plants</b>, such as seagrasses; some marine <b>protoctists</b>, such as microalgae, macroalgae, diatoms and some dinoflagellates; and some marine <b>bacteria</b>, such as cyanobacteria. Not all plankton and not all bacteria photosynthesise."
      },
      {
       "h": "Word equation for photosynthesis",
@@ -1164,7 +1164,7 @@ export const NOTES = {
      {
       "h": "Light intensity and photosynthesis",
       "ref": "4.3/LO6",
-      "body": "To study how light affects photosynthesis, place an aquatic plant cut-end-up in a tube of water and move a lamp to set distances, since distance changes the <b>light intensity</b>. Measure the <b>rate</b> by counting bubbles of gas per set time. Keep the tube in a water bath so the lamp does not change the temperature, and repeat for a mean. As the lamp is moved away, fewer bubbles are produced."
+      "body": "To investigate how light intensity affects photosynthesis, place an aquatic plant cut end up in a tube of water and set a lamp at a measured distance; changing the distance changes the light intensity. Wait a few minutes for the plant to adjust, then count the bubbles of gas given off in a set time. Stand the tube in a water bath so the lamp does not change the temperature, and repeat to calculate a mean. Over the distances used, fewer bubbles are produced as the lamp is moved further away."
      },
      {
       "h": "Productivity",
@@ -1204,7 +1204,7 @@ export const NOTES = {
     "id": "4.4",
     "title": "Feeding relationships",
     "intro": "How energy moves from the Sun through producers and consumers, the words used to describe who eats what, why energy is lost along the way, and how pyramids show it.",
-    "tip": "Food-chain arrows point the way energy flows (prey → predator). Only a small fraction passes to the next level, so give a reason for the loss: respiration, movement, excretion, harvesting, not all of it eaten.",
+    "tip": "Food-chain arrows point in the direction energy flows, from the organism eaten to the organism that eats it. Only a small fraction of the energy passes to the next level, so give reasons for the loss: respiration, movement, excretion, and parts that are not eaten.",
     "example": "Biomass at one level 5.000 kg, the next 0.052 kg → transfer = 0.052 ÷ 5.000 × 100 = <b>1.04%</b>.",
     "notes": [
      {
@@ -1240,7 +1240,7 @@ export const NOTES = {
      {
       "h": "Biomass and energy loss",
       "ref": "4.4/LO11-12",
-      "body": "<b>Biomass</b> is the mass of living matter. Energy is lost between trophic levels through <b>respiration</b>, <b>movement</b>, <b>removal or harvesting</b>, and <b>excretion</b>. Some food is also not eaten, or passes out as faeces. Because so much energy is lost, only a fraction reaches the next level, so food chains are short."
+      "body": "<b>Biomass</b> is the mass of living material. Energy is lost at each transfer between trophic levels, for example in respiration (as heat), in movement and in excretion, and some material is not eaten or passes out as faeces; harvesting by people also removes biomass. Because so much energy is lost at each step, only a fraction reaches the next level, so food chains are short."
      },
      {
       "h": "Ecological pyramids",
@@ -1299,7 +1299,7 @@ export const NOTES = {
      {
       "h": "What changes population growth",
       "ref": "5.1/LO2",
-      "body": "Four things speed up or slow down how fast a population grows. More <b>food supply</b> means faster growth; <b>disease</b> causes deaths and slows it; <b>competition</b> for food or space slows it; and <b>predation</b> kills members and slows it. These are always described for one named organism. Disease spreads faster, and kills a larger share, in a dense population."
+      "body": "Four factors affect how fast a population grows. A larger food supply allows faster growth; <b>disease</b> causes deaths and slows growth; <b>competition</b> for food or space slows growth; and <b>predation</b> kills individuals and slows growth. In an exam answer, apply each factor to the named organism in the question. Disease spreads faster, and kills a larger proportion, in a dense population."
      },
      {
       "h": "Types of marine ecosystem",
@@ -1307,9 +1307,9 @@ export const NOTES = {
       "body": "The <b>open ocean</b> is one type. <b>Coastal ecosystems</b> sit on the continental shelf or slope and are affected by tides: wetlands, coral reefs, sandy shores, muddy shores, rocky shores, kelp forests, seagrass beds and mangrove forests."
      },
      {
-      "h": "Why coasts are hit first by people",
+      "h": "Why coastal ecosystems are most affected by people",
       "ref": "5.1/LO4",
-      "body": "Coastal ecosystems are close to where people live and work. They receive run-off, sewage and waste first, and are used directly for fishing, building, ports and tourism. Being shallow and small in volume, they cannot dilute pollution well."
+      "body": "Coastal ecosystems are close to where people live and work. They are the first to receive run-off, sewage and waste, and they are used directly for fishing, building, ports and tourism. Because they are shallow and hold a small volume of water, they cannot dilute pollution as well as the open ocean."
      },
      {
       "h": "Coasts are more productive",
@@ -1354,12 +1354,12 @@ export const NOTES = {
      {
       "h": "Random sampling with quadrats",
       "ref": "5.2/LO1",
-      "body": "A <b>quadrat</b> is a square frame placed on the ground to count what is inside. Lay two tapes to make a grid, then use random numbers to pick coordinates so placement is fair and free of bias. Count the individuals (or percentage cover) in each quadrat, repeat many times, and find the mean. Scale up to the whole area, and count the number of different species present to give <b>species richness</b>."
+      "body": "A <b>quadrat</b> is a square frame used to sample the organisms inside it. Lay two tapes at right angles to make a grid, and use random numbers to choose the coordinates of each quadrat, so that the sampler's choice cannot bias where the quadrats go. Count the individuals (or estimate the percentage cover) in each quadrat, sample many quadrats and calculate the mean, then scale up to estimate the population of the whole area. Recording the number of different species present gives the <b>species richness</b>."
      },
      {
       "h": "More quadrats, more reliable",
       "ref": "5.2/LO1",
-      "body": "Random placement removes the sampler’s bias in choosing where to look. Taking many quadrats gives a more reliable estimate than one large count. Species richness is the number of different species, not the total number of individuals. Count organisms touching two sides of the frame (for example the top and left) but not the other two. To decide how many quadrats are enough, keep a running mean: once it barely changes as more quadrats are added, the sample is big enough."
+      "body": "Random placement removes the sampler's bias in choosing where to sample. Taking many quadrats gives a more reliable estimate than a single quadrat. Count organisms touching two sides of the frame (for example the top and left) but not the other two. To decide how many quadrats are enough, keep a running mean: once it barely changes as more quadrats are added, the sample is large enough."
      },
      {
       "h": "Transects for distribution",
@@ -1372,14 +1372,14 @@ export const NOTES = {
       "body": "The <b>profile</b> is the shape of the slope. Run a tape from the low-water mark up the shore, and place two ranging poles at the ends of each section where the slope changes. Measure the distance between the poles, then use a <b>clinometer</b> sighted between the same marks on the poles to read the angle. Repeat for each section and draw the result to scale."
      },
      {
-      "h": "Measuring particle profiles",
+      "h": "Measuring particle size",
       "ref": "5.2/LO4",
-      "body": "Pass dried sediment of known mass through a stack of <b>sieves</b> with mesh getting smaller down the stack. Weigh the mass caught on each sieve to show the range of particle sizes, and measure large particles with a ruler or callipers. Compare sites, and dry the sample first so particles do not clump together."
+      "body": "Dry the sediment first so that the particles do not clump together. Pour a known mass of dry sediment into a stack of sieves with the mesh size decreasing down the stack, and shake it. Weigh the sediment caught on each sieve and in the pan below the finest sieve, and measure any very large particles with a ruler or callipers. Work out each mass as a percentage of the starting mass to show the particle-size distribution, and compare sites."
      },
      {
       "h": "Measuring moisture content",
       "ref": "5.2/LO5",
-      "body": "Weigh a sample of known mass, then heat it gently to constant mass and reweigh it. The water lost equals the start mass minus the end mass, and the <b>percentage water</b> is that water divided by the start mass, times 100. Keep controls the same (same mass, depth, tide and time, with random sampling and repeats), wear eye protection, and heat gently so organic matter is not burned."
+      "body": "Weigh a sediment sample, heat it gently in an oven, and reweigh it until the mass stops changing. Water lost = starting mass − final mass, and percentage water = water lost ÷ starting mass × 100. Take samples of the same mass from the same depth, at the same state of the tide and time of day, at randomly chosen positions, and repeat. Heat gently so that organic matter is not burned off, and wear eye protection."
      }
     ],
     "terms": [
@@ -1413,12 +1413,12 @@ export const NOTES = {
     "id": "5.3",
     "title": "Open-ocean zones, plankton, adaptations",
     "intro": "How the open ocean is divided by depth, the drifting plankton, and how animals are suited to each zone.",
-    "tip": "Learn the zone depths (sunlight 0–200 m, twilight 200–1000 m, midnight below 1000 m), and don't use 'photic/aphotic' as the required terms.",
+    "tip": "Learn the zone depths: sunlight zone 0–200 m, twilight zone 200–1000 m, midnight zone below 1000 m. Use these names; 'photic' and 'aphotic' are not the terms required.",
     "notes": [
      {
       "h": "Pelagic and benthic zones",
       "ref": "5.3/LO1-2",
-      "body": "The <b>pelagic zone</b> is the whole column of water from the surface down. The <b>benthic zone</b> is the seabed and the organisms living on or in it, at any depth."
+      "body": "The <b>pelagic zone</b> is the open water, from the surface down to just above the seabed. The <b>benthic zone</b> is the seabed and the organisms living on or in it, at any depth."
      },
      {
       "h": "The three depth zones",
@@ -1443,17 +1443,17 @@ export const NOTES = {
      {
       "h": "Twilight and midnight conditions",
       "ref": "5.3/LO9-11",
-      "body": "The <b>twilight zone</b> has low light, some dissolved oxygen, stable temperature and higher pressure. The <b>midnight zone</b> has no sunlight, little dissolved oxygen, a very stable low temperature and very high pressure. Oxygen is low there because there is no photosynthesis and respiration uses up what sinks from above."
+      "body": "The <b>twilight zone</b> has low light, some dissolved oxygen, a stable temperature and higher pressure. The <b>midnight zone</b> has no sunlight, little dissolved oxygen, a stable low temperature and very high pressure. Oxygen is low in the deep ocean because there is no photosynthesis, respiration by organisms and decomposers uses oxygen up, and only slow circulation from the surface replaces it."
      },
      {
       "h": "Adaptations near the surface",
       "ref": "5.3/LO10",
-      "body": "Animals of the sunlight and twilight zones are often <b>migratory</b>, moving to food or breeding grounds. They eat a wide range of food and are fast swimmers because there is no shelter. <b>Countershading</b> means a dark back and pale belly so the animal blends with the background when seen from above or below."
+      "body": "Animals of the sunlight and twilight zones are often <b>migratory</b>, moving to feeding or breeding grounds. They eat a wide range of food, and many are fast swimmers, because the open water offers nowhere to hide from predators. <b>Countershading</b>, a dark back and a pale belly, camouflages an animal against the dark depths when seen from above and against the bright surface when seen from below."
      },
      {
       "h": "Deep-sea adaptations",
       "ref": "5.3/LO12",
-      "body": "Deep-sea animals use <b>bioluminescence</b> (making their own light) to attract mates or prey and to reveal predators. They are slow-moving with long lifespans to cope with low oxygen and cold, are dark brown or black so they are invisible in this light, and have gelatinous bodies to withstand pressure. Large <b>backward-facing teeth</b> stop caught prey escaping."
+      "body": "Deep-sea animals use <b>bioluminescence</b> (light made by the organism) to attract mates or prey and to see or startle predators. Many are slow-moving with long lifespans, which suits the cold, low-oxygen conditions. They are dark brown or black, so they are hard to see, and gelatinous bodies help them withstand the pressure. Large, backward-facing teeth stop captured prey escaping."
      },
      {
       "h": "Benthic adaptations",
@@ -1556,7 +1556,7 @@ export const NOTES = {
      {
       "h": "Comparing sand and mud",
       "ref": "5.5/LO2",
-      "body": "<b>Sand</b> has larger particles, sits in higher-energy water, is loose and unstable, has a steeper gradient and holds more oxygen in its air spaces. <b>Mud</b> has very small particles in sheltered calm water where deposition beats erosion, sticks together when wet so it is stable, is almost flat and is waterlogged with little oxygen."
+      "body": "<b>Sand</b> has larger particles, is found where water has more energy, is loose and unstable, has a steeper gradient, and holds more oxygen in the spaces between the particles. <b>Mud</b> has very small particles and is found in sheltered, calm water where deposition is greater than erosion; it sticks together when wet, so it is stable, is almost flat, and is waterlogged with little oxygen."
      },
      {
       "h": "Distribution on a sandy shore",
@@ -1611,7 +1611,7 @@ export const NOTES = {
      {
       "h": "Mangrove tree adaptations",
       "ref": "5.6/LO3",
-      "body": "Waterlogged mud holds little oxygen, so mangroves have aerial roots called <b>pneumatophores</b> that stick up into the air to take in oxygen for respiration and energy. <b>Prop roots</b> support the tree in soft mud against the tidal flow. The leaves can secrete excess salt."
+      "body": "Waterlogged mud holds little oxygen, so mangroves have aerial roots called <b>pneumatophores</b> that grow up into the air and take in oxygen for respiration. <b>Prop roots</b> support the tree in soft mud against the tidal flow. The leaves can secrete excess salt."
      },
      {
       "h": "Animal adaptations in mangroves",
@@ -1666,7 +1666,7 @@ export const NOTES = {
      {
       "h": "What controls coral distribution",
       "ref": "5.7/LO5",
-      "body": "Corals need light for their zooxanthellae, so they grow in shallow, clear water, and larvae need a hard surface to settle on, so reefs are found in warm, shallow, clear tropical water. Sediment blocks light and smothers the coral, and if water gets too warm the polyps expel their zooxanthellae and turn white (bleaching). <b>Parrot fish</b> graze on coral and <b>crown-of-thorns starfish</b> eat the polyps, destroying reefs in outbreaks."
+      "body": "Corals need light for their zooxanthellae to photosynthesise, so they grow in shallow, clear water; their larvae need a hard surface to settle on; so reefs are found in warm, shallow, clear tropical water. Sediment blocks light and smothers coral, and if the water becomes too warm the polyps expel their zooxanthellae and turn white (<b>bleaching</b>). Parrot fish graze on coral, and crown-of-thorns starfish eat the polyps and can destroy large areas of reef when their numbers rise sharply (outbreaks)."
      },
      {
       "h": "Why reef water is clear",
@@ -1724,53 +1724,53 @@ export const NOTES = {
    {
     "id": "6.1",
     "title": "Human interactions with marine ecosystems",
-    "intro": "Why the sea matters to people, how our activities damage it, and what it means for a species or a way of using the sea to be safe for the future.",
-    "tip": "When a question says 'evaluate' or 'discuss', give a benefit AND a drawback, then a judgement: don't argue only one side.",
+    "intro": "Why marine ecosystems are important to people, how human activities damage them, and what makes the use of a resource sustainable.",
+    "tip": "When you explain how an activity damages an ecosystem, link three steps: the activity, the change it causes and the effect on organisms. For example: dredging stirs up sediment, which reduces light, so seagrass photosynthesises less.",
     "notes": [
      {
-      "h": "What the sea gives us",
+      "h": "Why marine ecosystems matter",
       "ref": "6.1/LO1",
-      "body": "The sea provides many <b>services</b>: recreation and tourism, food, and fisheries that people can catch and sell. It gives wood and building material, and medicines made from marine invertebrates and mangrove plants. Habitats like mangroves, seagrass, reefs and sand banks give <b>coastal protection</b> by reducing wave energy and erosion."
+      "body": "Marine ecosystems provide people with <b>food</b> and support <b>fisheries</b>, which provide jobs and income. They are used for <b>recreation and tourism</b>. <b>Mangrove forests</b> supply wood for building and fuel, and some <b>medicines</b> are made from marine invertebrates and from mangrove plants. Mangroves, seagrass meadows, coral reefs and sand banks provide <b>coastal protection</b>: they absorb wave energy and so reduce erosion of the shore."
      },
      {
       "h": "Nursery areas",
       "ref": "6.1/LO1",
-      "body": "Some habitats act as <b>nursery areas</b> where the young (juveniles) of many species grow up safely. These young fish are important both for food chains and for fisheries. Keeping nurseries healthy keeps adult stocks up."
+      "body": "Mangroves, seagrass meadows and coral reefs are <b>nursery areas</b>, where the juveniles of many species feed and shelter from predators until they become adults. Protecting nursery areas maintains the adult populations of commercially and ecologically important species, so fisheries and food chains both depend on them."
      },
      {
-      "h": "How we damage marine habitats",
+      "h": "Damage from recreation and tourism",
       "ref": "6.1/LO2",
-      "body": "Recreation causes noise and light pollution, litter and plastics, trampling and souvenir collection. Boats anchor on coral and divers touch it. <b>Dredging</b> (removing sand or mud) and logging mangroves remove habitat and cloud the water."
+      "body": "Visitors cause noise and light pollution, leave litter and plastics, trample shore habitats and collect souvenirs such as shells and coral. Tourist boats break coral when they drop anchor on a reef, and divers damage coral when they touch or knock against it."
      },
      {
-      "h": "More damaging activities",
+      "h": "Damage from development and industry",
       "ref": "6.1/LO2",
-      "body": "<b>Land reclamation</b> (making new land from the sea) buries habitat and stirs up sediment. <b>Blast fishing</b> uses explosions that kill all nearby species and turn reef into rubble. <b>Shrimp farms</b> clear mangroves and release waste, and <b>oil spills</b> harm marine life."
+      "body": "<b>Dredging</b> (removing sand or mud from the seabed) and logging mangroves destroy habitats and stir up sediment, which reduces the light reaching seagrass and corals for photosynthesis. <b>Land reclamation</b> (creating new land from the sea) buries habitats. <b>Blast fishing</b> uses explosives that kill most organisms nearby, including species that are not being targeted, and reduces coral reef to rubble. <b>Shrimp farms</b> are built by clearing mangrove forests, and they release waste into the water. <b>Oil spills</b> coat marine organisms and are toxic to them."
      },
      {
       "h": "Building infrastructure",
       "ref": "6.1/LO2",
-      "body": "When a coast is developed for a resort, port or fishing industry, it needs <b>infrastructure</b>: roads, airports, harbours, fresh water and power, sewers and housing. Building it destroys coastal habitats and adds air pollution. More people produce more <b>sewage</b> and waste, need more fresh water (sometimes from <b>desalination</b> plants, which return very salty water to the sea) and more food, so farming spreads and fishing pressure rises. Resorts can come into conflict with local people and farms over water."
+      "body": "Developing a coast for resorts, ports or the fishing industry requires <b>infrastructure</b>: roads, airports, harbours, water and power supplies, sewage systems and housing. Construction destroys coastal habitats and causes air pollution. A larger population produces more sewage and waste and needs more fresh water and food. Fresh water may come from <b>desalination</b> plants, which return very salty water (brine) to the sea, and the demand for food increases farming and fishing pressure. Resorts can compete with local people and farmers for water."
      },
      {
       "h": "Endangered species",
       "ref": "6.1/LO3",
-      "body": "An <b>endangered</b> species has a population that is falling and may become extinct. This happens when animals are removed faster than breeding can replace them. Fewer breeders left means the population falls even faster."
+      "body": "An <b>endangered</b> species is one whose population is falling and which is at risk of extinction. A population falls when individuals die or are removed faster than reproduction replaces them, for example through overfishing, habitat loss or pollution. As numbers fall, fewer adults are left to breed, so the population can fall faster still."
      },
      {
-      "h": "What sustainable means",
+      "h": "Sustainable use",
       "ref": "6.1/LO4",
-      "body": "A resource or activity is <b>sustainable</b> if it can be used at the current rate, without damaging the environment, and without the resource running out. All three things must be true. The sign it is working is that the stock stays stable over time."
+      "body": "A resource or activity is <b>sustainable</b> if it can continue at its current rate without damaging the environment and without the resource running out. All three conditions must be met. For a fish stock, one sign of sustainable use is a population that stays stable over time."
      }
     ],
     "terms": [
      [
       "Nursery area",
-      "a habitat where juvenile (young) animals grow up in safety"
+      "a habitat where juveniles feed and shelter until they become adults"
      ],
      [
       "Coastal protection",
-      "reducing wave energy and erosion of the shore"
+      "the reduction of wave energy and erosion along a shore"
      ],
      [
       "Dredging",
@@ -1778,15 +1778,15 @@ export const NOTES = {
      ],
      [
       "Endangered",
-      "having a falling population that may become extinct"
+      "having a falling population and at risk of extinction"
      ],
      [
       "Sustainable",
-      "usable at the current rate, without harm, and without running out"
+      "able to continue at the current rate without damaging the environment or using up the resource"
      ],
      [
       "Infrastructure",
-      "the basic facilities an area needs, such as roads, harbours, water supply and sewers"
+      "the basic facilities an area needs, such as roads, harbours, water supply and sewage systems"
      ]
     ]
    },
@@ -1794,32 +1794,32 @@ export const NOTES = {
     "id": "6.2",
     "title": "Tourism",
     "intro": "How tourism brings money and jobs to coastal areas, the harm it can do, and the ways this harm can be reduced.",
-    "tip": "For reducing tourist impact, name the method (education / legislation / planning) AND its limitation (cost, relies on cooperation, needs enforcement).",
+    "tip": "For reducing the impact of tourists, name the method (education, legislation or strategic planning) and its limitation (cost, reliance on cooperation, or the need for enforcement).",
     "notes": [
      {
       "h": "Why tourism matters to people",
       "ref": "6.2/LO1",
-      "body": "Tourism brings <b>employment</b> and <b>income</b> to local communities. This money can pay for better <b>infrastructure</b> such as roads, ports, airports, water, sewage and schools. So tourism helps people, not just wildlife."
+      "body": "Tourism brings <b>employment</b> and <b>income</b> to local communities. This money can pay for better <b>infrastructure</b>, such as roads, ports, airports, water supplies, sewage systems and schools."
      },
      {
       "h": "Ecotourism",
       "ref": "6.2/LO2",
-      "body": "<b>Ecotourism</b> is tourism that is ecologically sustainable and focused on experiencing natural areas. It encourages people to understand, appreciate and conserve the environment and local culture. You can spot it by guest education, local staff, renewable energy, conservation funding, and no sensitive habitat being lost."
+      "body": "<b>Ecotourism</b> is ecologically sustainable tourism focused on experiencing natural areas. It encourages visitors to understand, appreciate and conserve the environment and the local culture. Features of ecotourism include educating guests, employing local staff, using renewable energy, funding conservation, and not destroying sensitive habitats."
      },
      {
-      "h": "Good and bad sides of tourism",
+      "h": "Positive and negative impacts of tourism",
       "ref": "6.2/LO3",
-      "body": "Positives: tourists come to appreciate nature and want to preserve it, which helps set up <b>MPAs</b> and involves conservation groups. Negatives: competition for land or resources, pollution, and damage to sensitive ecosystems. Removing organisms to sell, and interacting with animals, are also problems."
+      "body": "Positive impacts: visitors come to appreciate marine life and want to preserve it, which supports the setting up of marine protected areas (MPAs) and the involvement of conservation organisations. Negative impacts: competition for land and resources, pollution, damage to sensitive ecosystems, the removal of organisms to sell, and interactions with animals that change their behaviour."
      },
      {
       "h": "Feeding wild animals",
       "ref": "6.2/LO3",
-      "body": "Interacting with wild animals can cause <b>behavioural consequences</b>. Fed animals change how they feed, become dependent on people or aggressive, and approach boats. Feeding does not help the population."
+      "body": "Interacting with wild animals can change their behaviour. Animals that are fed change how they feed, become dependent on people or aggressive, and approach boats. Even if it adds food, feeding changes natural behaviour and makes animals depend on people."
      },
      {
       "h": "A named example",
       "ref": "6.2/LO4",
-      "body": "In the <b>Galapagos Islands</b>, tourists can carry species in on boats and footwear, trample nests and plants, fish illegally, and create resort waste. This is managed by marked paths, small guided groups, restricted islands and fees. At the <b>Great Barrier Reef</b>, anchors, hulls, divers and resort sediment block light to the coral."
+      "body": "In the <b>Galapagos Islands</b>, visitors can carry new species in on boats and footwear, trample nests and plants, fish illegally and add to the waste from resorts. These impacts are managed with marked paths, small guided groups, islands closed to visitors, and entry fees. On the <b>Great Barrier Reef</b>, anchors, boat hulls and divers damage coral, and sediment from resort building reduces the light reaching it."
      },
      {
       "h": "Reducing the harm",
@@ -1835,7 +1835,7 @@ export const NOTES = {
     "terms": [
      [
       "Infrastructure",
-      "built services like roads, ports, water and sewage"
+      "the basic facilities an area needs, such as roads, ports, water supplies and sewage systems"
      ],
      [
       "Ecotourism",
@@ -1943,7 +1943,7 @@ export const NOTES = {
      {
       "h": "Helping wild fish, but with impacts",
       "ref": "6.4/LO2",
-      "body": "Farmed fish meet part of the demand, so fewer wild fish are caught. But waste food and faeces lower the oxygen in the water, and parasites and disease can reach wild fish. Escaped fish compete or interbreed with wild ones, mangroves are cleared for farms, and wild fish are caught to make feed."
+      "body": "Farmed fish meet part of the demand, so fewer wild fish need to be caught. However, uneaten food and faeces lower the oxygen in the water as they decompose, and parasites and disease can spread to wild fish. Escaped fish compete or interbreed with wild fish, mangroves are cleared to build farms, and wild fish are caught to make feed."
      },
      {
       "h": "What is farmed",
@@ -2003,7 +2003,7 @@ export const NOTES = {
      {
       "h": "Oil under the seabed",
       "ref": "6.5/LO1",
-      "body": "Oil lies in rocks beneath the seabed. It is reached by <b>drilling</b> down from platforms. It does not float on the seabed or dissolve in the water."
+      "body": "Oil is found in rocks beneath the seabed and is reached by drilling down from platforms. It is trapped in the rock, not lying on the seabed or in the water."
      },
      {
       "h": "A fossil fuel with many uses",
@@ -2018,7 +2018,7 @@ export const NOTES = {
      {
       "h": "MARPOL rules",
       "ref": "6.5/LO4",
-      "body": "<b>MARPOL</b> is a set of rules to reduce pollution from ships. It requires <b>double hulls</b>, holds washed only at special collection sites, and controls on sewage and garbage. A double hull means the inner hull stays intact if the outer one is punctured, so oil is not released."
+      "body": "<b>MARPOL</b> is an international set of rules to reduce pollution from ships. It requires double hulls on oil tankers, washing of holds only at special collection sites, and controls on sewage and garbage. If only the outer hull is punctured, the inner hull still holds the oil in, so a spill is less likely."
      },
      {
       "h": "Impacts of oil spills",
@@ -2038,7 +2038,7 @@ export const NOTES = {
      {
       "h": "Ocean renewables weighed up",
       "ref": "6.5/LO8",
-      "body": "<b>Renewable</b> ocean energy is from an infinite source, reduces CO₂, and reduces reliance on fossil fuels. But it has high initial costs and limited locations, and needs underwater cables that damage the seabed. Turbines can be damaged by weather, can catch marine life, cost money to maintain, and may spoil views for tourism."
+      "body": "Renewable ocean energy comes from a source that will not run out, reduces carbon dioxide emissions and reduces reliance on fossil fuels. However, it has high initial costs and can only be used in suitable locations, and the underwater cables can damage the seabed. Turbines can be damaged by storms, can harm marine life, are costly to maintain, and may spoil the view for tourism."
      }
     ],
     "terms": [
@@ -2152,7 +2152,7 @@ export const NOTES = {
      {
       "h": "The eutrophication process",
       "ref": "6.7/LO5",
-      "body": "More nutrients cause producer growth and an algal bloom. When the algae die, <b>decomposers</b> break them down and use oxygen in <b>aerobic respiration</b>. Dissolved oxygen falls, so organisms that need oxygen die. The key point is that living algae make oxygen, but the dead bloom is decomposed faster than oxygen is replaced."
+      "body": "Extra nutrients cause producers to grow rapidly, forming an <b>algal bloom</b>. When the algae die, <b>decomposers</b> break them down and use oxygen in aerobic respiration. Decomposers use oxygen faster than photosynthesis and the air can replace it, and living algae and decomposers continue to respire at night, when photosynthesis stops. Dissolved oxygen falls, so organisms that need oxygen die."
      }
     ],
     "terms": [
@@ -2170,7 +2170,7 @@ export const NOTES = {
      ],
      [
       "Decomposer",
-      "an organism that breaks down dead matter, using oxygen"
+      "an organism that breaks down dead material; in water, decomposers use oxygen as they respire"
      ],
      [
       "Eutrophication",
@@ -2187,7 +2187,7 @@ export const NOTES = {
      {
       "h": "Climate has changed before",
       "ref": "6.8/LO1",
-      "body": "Over the last 335 million years the climate of different regions has changed significantly. The <b>carbon dioxide</b> level and the average temperature have risen and fallen many times, generally together. So the climate was not constant until humans arrived."
+      "body": "Over the last 335 million years the climate of different regions has changed significantly. The carbon dioxide level and the average temperature have risen and fallen many times, generally together. This shows that the climate has also changed naturally in the past."
      },
      {
       "h": "The greenhouse effect",
@@ -2278,7 +2278,7 @@ export const NOTES = {
      {
       "h": "Sustainable harvesting",
       "ref": "6.9/LO2",
-      "body": "Harvesting of wild macroalgae, plants and animals is kept <b>sustainable</b> with quotas, limits on fishing days, closed seasons and areas, gear rules, and licences. For example, around the Maldives tuna may only be caught by pole and line, with quotas and licences. For: people keep their income and traditional work, so they support the rules, and stocks survive. Against: the rules are hard to monitor and enforce, so some overfishing continues."
+      "body": "Harvesting of wild macroalgae, plants and animals is kept sustainable with quotas, limits on fishing days, closed seasons and closed areas, rules on fishing gear, and licences. For example, some island fisheries allow tuna to be caught only by pole and line, with quotas and licences. For: people keep their income and traditional work, so they support the rules, and stocks survive. Against: the rules are hard to monitor and enforce, so some overfishing continues."
      },
      {
       "h": "Aquaculture for conservation",
@@ -2322,7 +2322,7 @@ export const NOTES = {
      ],
      [
       "Zooxanthellae",
-      "algae living in coral that photosynthesise for it"
+      "photosynthetic algae living inside coral tissue"
      ],
      [
       "Niche",
