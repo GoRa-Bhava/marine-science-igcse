@@ -1453,7 +1453,7 @@ export const NOTES = {
      {
       "h": "Deep-sea adaptations",
       "ref": "5.3/LO12",
-      "body": "Deep-sea animals use <b>bioluminescence</b> (light made by the organism) to attract mates or prey and to see or startle predators. Many are slow-moving with long lifespans, which suits the cold, low-oxygen conditions. They are dark brown or black, so they are hard to see, and gelatinous bodies help them withstand the pressure. Large, backward-facing teeth stop captured prey escaping."
+      "body": "Deep-sea animals use <b>bioluminescence</b> (light made by the organism) to attract mates or prey and to see or startle predators. Many are slow-moving and have long lifespans because of the low oxygen and low temperature; moving slowly also saves energy, which helps them survive where food is scarce. They are dark brown or black, so they are hard to see, and gelatinous bodies help them withstand the pressure. Large, backward-facing teeth stop captured prey escaping."
      },
      {
       "h": "Benthic adaptations",
