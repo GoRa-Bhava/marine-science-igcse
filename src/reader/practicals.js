@@ -12,7 +12,7 @@
  *
  * Content ceiling (per outcome's knowledge model): NO chemistry/equations beyond the
  * plain-English "why", NO forbidden extensions (see each entry). "why" lines are plain
- * rationale only. ALL content status: human_review (Don/Kiran vet).
+ * rationale only. STATUS: writing-quality pass 20 Nov 2026 (CARDS-quality-audit-2026-11-20.md).
  *
  * PROCEDURE-CARD SHAPE (two forms, renderPracticals handles both):
  *   Reagent form (food tests):  tests: [{ nutrient, reagent, method, positive, posColor,
@@ -41,7 +41,7 @@ export const PRACTICALS = [
         posColor: "#16233f",
         negative: "Stays orange-brown",
         negColor: "#b5651d",
-        why: "Iodine gets trapped inside the long, coiled starch molecule, and that makes it look blue-black.",
+        why: "Iodine fits inside the long, coiled starch molecule, and this produces the blue-black colour.",
       },
       {
         nutrient: "Reducing sugars (e.g. glucose)",
@@ -72,7 +72,7 @@ export const PRACTICALS = [
         posColor: "#e9eef2",
         negative: "Stays clear",
         negColor: "#cfdae0",
-        why: "Lipids don't dissolve in water, so when the ethanol mixture meets water the tiny lipid droplets separate out and turn it cloudy.",
+        why: "Lipids do not dissolve in water, so when the ethanol mixture is added to water the tiny lipid droplets separate out and make it cloudy.",
       },
     ],
 
@@ -89,7 +89,7 @@ export const PRACTICALS = [
       "Judge each colour against an untested (control) sample.",
       "The white emulsion in the lipid test is lipid, not protein.",
       "In the exam, give BOTH colours: the starting colour and the positive one (e.g. 'orange-brown → blue-black', 'blue → brick-red'), not just the final colour.",
-      "Use a separate sample of the food for each test, and clean apparatus, so the tests don't interfere.",
+      "Use a separate sample of the food for each test, and clean apparatus, so that the tests do not interfere with each other.",
     ],
 
     // Auto-graded run — recall (tier 1) → application (tier 2).
@@ -345,7 +345,7 @@ export const PRACTICALS = [
     technique: [
       "Amplitude = (high − low) ÷ 2, not high − low.",
       "More frequent readings capture the true high and low more accurately.",
-      "The formula is given in the question: you don't need to recall it.",
+      "The formula is given in the question, so you do not need to recall it.",
     ],
     items: [
       { id: "P1.4-01", type: "choice", tier: 1, ref: "1.4/LO2", family: "tide-formula",
@@ -424,7 +424,7 @@ text{fill:var(--ink);font-size:26px}.title{font-size:32px;font-weight:700}.small
       "Speed = distance ÷ time; give the unit (m/s).",
       "A float that sits low in the water is moved mainly by the current, not the wind.",
       "Direction is the way the float moves, taken as a compass bearing, which is not always the wind direction.",
-      "Three readings on one afternoon don't tell you what the current always does: it can change with the tide and the weather.",
+      "Three readings on one afternoon do not show what the current always does: it can change with the tide and the weather.",
     ],
     items: [
       { id: "P1.4b-01", type: "choice", tier: 1, ref: "1.4/LO9", family: "current-calc",
@@ -628,10 +628,10 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <rect x="91" y="193" width="275" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M86 128V350Q86 368 104 368H353Q371 368 371 350V128" class="apparatus" /><path d="M91 193H366" class="rule" /><rect x="91" y="193" width="275" height="170" rx="10" fill="#259a9d" class="ph-water" opacity=".65"/><path d="M198 77H237V314" class="apparatus" /><text x="78" y="97" class="">CO₂</text><text x="78" y="402" class="small">Sea water + indicator</text><circle cx="231" cy="312" r="5" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.0s"/><circle cx="245" cy="327" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.18s"/><circle cx="259" cy="312" r="7" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.36s"/><circle cx="231" cy="327" r="5" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.54s"/><circle cx="245" cy="312" r="6" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.72s"/><circle cx="259" cy="327" r="7" fill="none" stroke="var(--deep)" stroke-width="2" class="bubble" style="animation-delay:0.8999999999999999s"/><rect x="452" y="100" width="352" height="124" rx="10" fill="var(--panel)" /><text x="480" y="141" class="small">Illustrative pH readings</text><g class="reveal" style="--delay:3s"><text x="626" y="191" class="big" text-anchor="middle">8 → 7 → 6</text></g><text x="470" y="271" class="accent">pH falls ↓</text><text x="470" y="311" class="accent">More acidic</text><rect x="472" y="338" width="90" height="26" rx="4" fill="#d6c341" /><text x="517" y="396" class="" text-anchor="middle">6</text><rect x="570" y="338" width="90" height="26" rx="4" fill="#45a76b" /><text x="615" y="396" class="" text-anchor="middle">7</text><rect x="668" y="338" width="90" height="26" rx="4" fill="#259a9d" /><text x="713" y="396" class="" text-anchor="middle">8</text><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">More CO₂ dissolves → lower pH → more acidic</text><text x="440" y="514" class="accent" text-anchor="middle">Models ocean acidification</text></g>
 </svg>`,
-    apparatus: ["A sample of sea water", "Universal indicator", "A source of carbon dioxide (e.g. a straw to breathe through)", "Containers"],
+    apparatus: ["A sample of sea water", "Universal indicator", "A source of carbon dioxide, for example a straw to breathe out through", "Containers"],
     steps: [
-      "Put the same volume of sea water into two containers and add the same number of drops of universal indicator to each; note the colour/pH",
-      "Bubble carbon dioxide through one sample for a set time (e.g. breathe out gently through a straw for 1 minute); leave the other as the control",
+      "Put the same volume of sea water into two containers, add the same number of drops of universal indicator to each, and note the colour and pH",
+      "Bubble carbon dioxide through one sample for a set time, for example by breathing out gently through a straw for 1 minute; leave the other as the control",
       "Watch the indicator colour change, comparing it with the control",
       "Record the new pH",
     ],
@@ -879,7 +879,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     technique: [
       "The volume change is small (only about 1–1.5 cm³ for 100 cm³ of water warmed by 40 °C, roughly 1 %), too small to read reliably on a measuring cylinder, so a narrow tube is used to make it visible.",
       "Over the temperatures used here, colder water is denser, so it sinks below warmer water.",
-      "Heating spreads the particles out, so the same mass fills a bigger volume → lower density.",
+      "Heating spreads the particles out, so the same mass fills a bigger volume and the density is lower.",
       "Mass does not change on heating: the volume does.",
     ],
     items: [
@@ -948,19 +948,19 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <text x="239" y="105" class="" text-anchor="middle">Fresh water</text><text x="626" y="105" class="" text-anchor="middle">Salty water</text><rect x="118" y="200" width="240" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M113 135V357Q113 375 131 375H345Q363 375 363 357V135" class="apparatus" /><path d="M118 200H358" class="rule" /><rect x="506" y="200" width="240" height="170" rx="12" fill="var(--teal)" class="" opacity=".28"/><path d="M501 135V357Q501 375 519 375H733Q751 375 751 357V135" class="apparatus" /><path d="M506 200H746" class="rule" /><g class="" transform="translate(238 331)"><ellipse cx="0" cy="0" rx="28" ry="39" fill="var(--panel)" stroke="var(--soft)" stroke-width="3"/></g><g class="" transform="translate(626 331)"><g class="floating-egg" ><ellipse cx="0" cy="0" rx="28" ry="39" fill="var(--panel)" stroke="var(--soft)" stroke-width="3"/></g></g><text x="557" y="407" class="accent">Density rises ↑</text><text x="100" y="407" class="small">Egg sinks</text><rect x="785" y="209" width="24" height="158" rx="8" fill="var(--line)" /><g class="" transform="translate(785 367)"><g class="grow" ><rect x="0" y="-158" width="24" height="158" rx="8" fill="var(--teal)" /></g></g><circle cx="567" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.0s"/><circle cx="582" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.09s"/><circle cx="597" cy="183" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.18s"/><circle cx="612" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.27s"/><circle cx="627" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.36s"/><circle cx="642" cy="183" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.44999999999999996s"/><circle cx="657" cy="157" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.54s"/><circle cx="672" cy="170" r="3" fill="var(--ink)" class="salt" style="animation-delay:0.63s"/><path d="M567 116l70 10-24 27-60-20Z" class="rule" fill="var(--panel)"/><g class="reveal" style="--delay:5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">More salt → denser water → egg floats higher</text><text x="440" y="514" class="accent" text-anchor="middle">Dissolved salt adds mass to the water.</text></g>
 </svg>`,
-    apparatus: ["Solutions of different known salinity", "Measuring cylinder (fixed volume)", "Balance (or float an egg/object; or layer coloured solutions)"],
+    apparatus: ["Solutions of different known salinity", "Measuring cylinder (fixed volume)", "A balance"],
     steps: [
       "Make up solutions of different salinity",
       "Measure an equal volume of each in a measuring cylinder and find its mass (zero the balance with the empty cylinder on it first)",
-      "Compare the masses (or see which one an object floats highest in)",
+      "Compare the masses of the equal volumes",
       "Record how density changes with salinity",
     ],
     result: "Saltier water is denser; density rises with salinity.",
-    controls: ["Equal volumes", "Same temperature", "Same test object, if floating one", "Repeat each measurement and calculate a mean"],
-    safety: ["Wipe up spilt salt solution straight away, so nobody slips.", "If eggs are used, wash your hands after handling them."],
+    controls: ["Equal volumes", "Same temperature", "Make every solution with the same water", "Repeat each measurement and calculate a mean"],
+    safety: ["Wipe up spilt salt solution straight away, so nobody slips.", "Wear eye protection when making up and pouring the solutions."],
     technique: [
       "Adding salt adds mass to the same volume, so density rises.",
-      "Salt doesn't disappear when it dissolves: its mass is still there.",
+      "Salt does not disappear when it dissolves: its mass is still there.",
       "An object that floats in both floats higher in the saltier (denser) water.",
       "To make a range of salinities, mix a stock solution with distilled water to the same total volume, e.g. 8 cm³ of 50 ppt stock + 2 cm³ of water = 40 ppt.",
     ],
@@ -1034,7 +1034,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Repeat and record the Secchi depth",
     ],
     result: "The Secchi depth: a greater depth means clearer water and deeper light penetration.",
-    controls: ["Same observer each time", "Same shaded side of the boat/shore, away from glare", "Same time of day; repeat and average"],
+    controls: ["Same observer each time", "The same shaded side of the boat or jetty, away from glare", "The same time of day; repeat the reading and calculate a mean"],
     safety: ["Work from a stable boat or jetty, and wear a life jacket.", "Do not lean far out over deep water; always work with a partner or an adult.", "Keep the line tidy so it cannot tangle around hands or feet."],
     technique: [
       "A bigger Secchi depth means clearer water (more light penetration), not murkier.",
@@ -1113,14 +1113,14 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     apparatus: ["Hand lens", "Light microscope with a prepared slide", "Photographs"],
     steps: [
       "Use a hand lens or a photograph for whole organisms and external features",
-      "Use a light microscope with a thin section on a slide to see cells",
+      "Use a light microscope for small specimens, such as plankton, and for thin sections on a slide to see the structures inside cells",
       "Compare specimens using classification features, not colour, size or where they were found",
     ],
     result: "The specimen identified or compared using suitable equipment and classification features.",
     controls: ["Match the instrument to the scale of what you want to see"],
     safety: ["Carry a microscope with two hands, one under the base.", "Never point a microscope mirror at direct sunlight: it can damage your eyes.", "Handle glass slides and cover slips carefully, and report any breakages."],
     technique: [
-      "Hand lens or photo for whole organisms; light microscope for cells.",
+      "Use a hand lens or a photograph for whole organisms, and a light microscope for small specimens and the structures inside cells.",
       "Compare by classification features (body plan, symmetry, appendages), not colour or size.",
       "A hand lens is not powerful enough to show the structures inside small cells.",
     ],
@@ -1198,7 +1198,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Draw only what is actually seen", "Keep proportions and positions correct"],
     technique: [
       "No shading and no colour in a biological drawing.",
-      "Draw only what is seen, not extra detail like every scale.",
+      "Draw only what you can actually see on the specimen, not features you expect to be there.",
       "Label lines are ruled straight and touch the feature.",
     ],
     items: [
@@ -1284,7 +1284,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Use clear, observable features at each step"],
     technique: [
       "A dichotomous key is a series of paired either/or questions.",
-      "Use clear, observable features (present/absent), not opinions like 'pretty' or 'big'.",
+      "Use clear, observable features, such as whether a part is present or absent, not opinions like 'pretty' or 'big'.",
       "Each step splits the remaining group into two.",
       "To construct a key, list the visible features of all the organisms, choose one that splits the group into two, and keep splitting each smaller group until every organism is on its own. Then test the key on each organism.",
     ],
@@ -1368,7 +1368,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     improvements: ["Shield the apparatus to cut heat loss", "Relight the food if it goes out", "Repeat and take a mean"],
     safety: ["Tie back long hair and keep loose clothing away from the flame.", "Check for food allergies (for example, to nuts) before choosing the foods.", "Wear eye protection, and let the hot needle and boiling tube cool before touching them.", "Keep flammable materials away, and stand up while you work."],
     technique: [
-      "The energy from the burning food heats the water, so the temperature rise measures the energy released: burning transfers energy, it doesn't destroy it.",
+      "The energy from the burning food heats the water, so the temperature rise measures the energy released: burning transfers energy; it does not destroy it.",
       "Compare foods per gram, not per piece.",
       "Heat lost to the air and the glass means the water warms less than it should, so the energy you calculate from the temperature rise is an underestimate (too low).",
     ],
@@ -1452,7 +1452,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
       "Move the lamp further away and repeat at each distance, letting the plant adjust each time",
     ],
     result: "Fewer bubbles as the lamp moves away: lower light intensity gives a slower rate.",
-    controls: ["Temperature (stand the tube in a water bath, since the lamp heats it)", "Same plant and same length of time", "Same CO₂ supply", "Let the plant adjust after moving the lamp; repeat and mean"],
+    controls: ["Temperature (stand the tube in a water bath, since the lamp heats it)", "Same plant and same length of time", "Same CO₂ supply", "Let the plant adjust after moving the lamp; repeat the count and calculate a mean"],
     improvements: ["Collect the gas and measure its volume, since bubble size varies"],
     safety: ["Keep the lamp and its cable away from the water, and dry your hands before touching it.", "The lamp gets hot: do not touch the bulb or the shade.", "Wash your hands after handling the pondweed."],
     technique: [
@@ -1537,7 +1537,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     steps: [
       "Lay two tapes at right angles to make a grid over the area",
       "Use random numbers to pick coordinates for each quadrat",
-      "Count the organisms (or % cover) in each quadrat",
+      "Count the organisms (or estimate the percentage cover) in each quadrat",
       "Repeat many times, find the mean, then scale up to the whole area",
     ],
     result: "An estimate of population size (mean number per quadrat × total area ÷ quadrat area) and species richness (the number of different species).",
@@ -1546,7 +1546,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     technique: [
       "'Random' means chosen by random numbers, not spread out evenly by eye: that is what removes the sampler's bias.",
       "Species richness = the number of different species, not the total count.",
-      "More quadrats → a more reliable estimate, because the mean of many is likely to be closer to the true average.",
+      "More quadrats give a more reliable estimate, because the mean of many is likely to be closer to the true average.",
     ],
     items: [
       { id: "P5.2a-01", type: "choice", tier: 1, ref: "5.2/LO1", family: "quad-random",
@@ -1620,7 +1620,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 </svg>`,
     apparatus: ["A tape measure (the transect line)", "A quadrat (for a belt transect)", "An identification chart"],
     steps: [
-      "Lay a tape in a straight line down the gradient (e.g. top of the shore to the sea)",
+      "Lay a tape in a straight line down the gradient, for example from the top of the shore to the sea",
       "For a line transect, record the organisms touching the tape at set intervals",
       "For a belt transect, place a quadrat at set intervals and count inside it",
       "Record how the organisms change along the transect",
@@ -1630,7 +1630,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     safety: ["Check the tide times, and finish before the tide comes in.", "Wear shoes with a good grip: rocks and seaweed are slippery.", "Work in a group with a teacher present, and put any organisms back where you found them."],
     technique: [
       "Transects are placed systematically (set intervals), not randomly.",
-      "A transect shows distribution/change along a gradient, not the total population.",
+      "A transect shows how organisms change along a gradient (their distribution), not the total population.",
       "Use random quadrats for population size; use transects for distribution.",
     ],
     items: [
@@ -1796,7 +1796,7 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
     controls: ["Same mass of dried sediment", "Same set of sieves", "Dry each sample the same way", "Shake for the same length of time"],
     safety: ["Tip the dried sediment gently, and avoid breathing in the dust.", "Wash your hands after handling shore sediment, which can contain bacteria."],
     technique: [
-      "Dry the sediment first so particles don't clump together.",
+      "Dry the sediment first so that the particles do not clump together.",
       "The mass caught on each sieve and in the pan shows the size distribution.",
       "Sieving measures particle size, not moisture.",
     ],
@@ -1862,21 +1862,21 @@ text{fill:var(--ink);font-family:system-ui,"Segoe UI",Arial,sans-serif;font-size
 <!-- Apparatus and observations; final result remains visible after its reveal. -->
 <rect x="34" y="133" width="273" height="239" rx="10" fill="var(--panel)" /><path d="M57 277H279M166 277V314" class="apparatus" /><rect x="75" y="311" width="196" height="48" rx="7" fill="var(--line)" /><g class="" transform="translate(115 277)"><path d="M0 0Q25-24 55-13Q72-25 101 0Z" class="" fill="var(--soft)"/></g><text x="171" y="112" class="" text-anchor="middle">Weigh</text><g class="early" ><text x="173" y="346" class="big" text-anchor="middle">100 g</text></g><g class="late" ><text x="173" y="346" class="big" text-anchor="middle">82 g</text></g><rect x="348" y="150" width="212" height="195" rx="12" fill="var(--panel)" stroke="var(--deep)" stroke-width="3"/><rect x="370" y="179" width="168" height="124" rx="6" fill="var(--bg)" /><g class="" transform="translate(406 274)"><path d="M0 0Q25-24 55-13Q72-25 101 0Z" class="" fill="var(--soft)"/></g><path d="M383 291H526" class="apparatus" /><text x="454" y="112" class="" text-anchor="middle">Heat gently</text><path d="M305 240H343" class="arrow" /><path d="M454 353Q448 414 281 390" class="arrow" /><text x="319" y="426" class="small">Reweigh; repeat</text><path d="M407 220q-12-17 0-30q12-14 0-30"  class="rule vapour v0"/><path d="M450 220q-12-17 0-30q12-14 0-30"  class="rule vapour v1"/><path d="M493 220q-12-17 0-30q12-14 0-30"  class="rule vapour v2"/><text x="592" y="118" class="small">Heat and reweigh:</text><text x="592" y="153" class="small">1st: 100 g → 86 g</text><text x="592" y="188" class="small">2nd: 86 g → 82 g</text><text x="592" y="223" class="small">3rd: 82 g → 82 g</text><g class="reveal" style="--delay:5s"><text x="590" y="272" class="small">Constant mass</text><text x="590" y="309" class="small">Water lost:</text><text x="590" y="346" class="small">100 − 82 = 18 g</text></g><g class="reveal" style="--delay:5.5s"><rect x="22" y="441" width="836" height="103" rx="14" fill="var(--panel)" stroke="var(--coral)" stroke-width="2"/><text x="440" y="478" class="accent" text-anchor="middle">Water lost ÷ starting mass × 100</text><text x="440" y="514" class="accent" text-anchor="middle">18 ÷ 100 × 100 = 18% water</text></g><text x="440" y="80" class="small" text-anchor="middle">Heat gently: do not burn organic matter.</text>
 </svg>`,
-    apparatus: ["A sediment sample", "A balance", "An oven or gentle heat source (~105 °C)"],
+    apparatus: ["A sediment sample", "A balance", "An oven or gentle heat source (about 105 °C)"],
     steps: [
       "Weigh a known mass of the fresh sediment in a dish, as soon as possible after collecting it",
       "Heat it gently, reweighing it at intervals, until its mass stops changing",
       "Weigh the dried sediment",
-      "Water content = start mass − end mass; % water = water ÷ start × 100",
+      "Water lost = starting mass − final mass; percentage water = water lost ÷ starting mass × 100",
       "Repeat the whole measurement with several samples and calculate a mean",
     ],
     result: "The mass (and percentage) of water the sediment contained.",
-    controls: ["Same mass, depth and tide/time for each sample", "Random sampling of each site", "Repeat and take a mean", "Seal each sample in a bag when it is collected, so no water evaporates before it is weighed"],
+    controls: ["The same mass, depth, state of the tide and time of day for each sample", "Random sampling of each site", "Repeat and take a mean", "Seal each sample in a bag when it is collected, so no water evaporates before it is weighed"],
     safety: ["Use heat-proof gloves or tongs to move samples in and out of the oven.", "Let the hot sediment cool before you weigh it.", "Wash your hands after handling shore sediment."],
     technique: [
       "Heat until the mass stops changing, not for a fixed time: a constant mass shows that the water has been driven off.",
       "% water = water lost ÷ starting mass × 100.",
-      "Heat gently so organic matter isn't burned away.",
+      "Heat gently so that organic matter is not burned away.",
     ],
     items: [
       { id: "P5.2e-01", type: "chain", tier: 2, ref: "5.2/LO5", family: "moist-method",

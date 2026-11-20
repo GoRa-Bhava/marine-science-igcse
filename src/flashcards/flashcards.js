@@ -4,7 +4,7 @@
 // No self-test / graded retrieval: the flip itself is the recall act, and the auto-graded
 // question types (true/false, "mark which are true", MCQ, gap-fill) live in the Unit 1–6 banks.
 // Definitions sit at each outcome's depth ceiling (from the unit knowledge models).
-// STATUS: human_review — vet (Don/Kiran) before going live.
+// STATUS: writing-quality pass 20 Nov 2026 (CARDS-quality-audit-2026-11-20.md).
 
 export const FLASHCARDS = [
   // ================= UNIT 1 — The Earth and its oceans =================
@@ -15,7 +15,7 @@ export const FLASHCARDS = [
   { id:"FC-U1-03", unit:1, topic:"1.1 Earth structure", spec:"1.1/LO3",
     front:"Mantle", back:"The thick layer of solid rock between the crust and the core, which can melt to form magma." },
   { id:"FC-U1-04", unit:1, topic:"1.2 Plate tectonics", spec:"1.2/LO5",
-    front:"Earthquake", back:"A sudden shaking of the ground. Plates that are stuck together build up pressure, then suddenly slip and release energy." },
+    front:"Earthquake", back:"A sudden shaking of the ground, caused when plates that have locked together suddenly slip and release a burst of energy." },
   { id:"FC-U1-05", unit:1, topic:"1.4 Tides & currents", spec:"1.4/LO1",
     front:"Spring tide", back:"A tide with the largest tidal amplitude, when the Sun and Moon are in line so their pulls combine." },
   { id:"FC-U1-06", unit:1, topic:"1.2 Plate tectonics", spec:"1.2/LO6",
@@ -25,13 +25,13 @@ export const FLASHCARDS = [
   { id:"FC-U2-01", unit:2, topic:"2.2 pH & salinity", spec:"2.2/LO7",
     front:"Salinity", back:"The concentration of dissolved salts in sea water, in parts per thousand (ppt)." },
   { id:"FC-U2-02", unit:2, topic:"2.4 Density", spec:"2.4/LO1",
-    front:"Density", back:"Mass per unit volume (mass ÷ volume); units g/cm³." },
+    front:"Density", back:"The mass per unit volume of a substance: density = mass ÷ volume, measured in g/cm³." },
   { id:"FC-U2-03", unit:2, topic:"2.6 Upwelling", spec:"2.6/LO1",
     front:"Upwelling", back:"The rising of cold, nutrient-rich deep water to the surface as wind moves surface water away." },
   { id:"FC-U2-04", unit:2, topic:"2.2 pH & salinity", spec:"2.2/LO10",
     front:"Estuary", back:"A partly enclosed body of water where a river flows into the sea." },
   { id:"FC-U2-05", unit:2, topic:"2.2 pH & salinity", spec:"2.2/LO5",
-    front:"Solute", back:"A substance that dissolves in a solvent (e.g. salt dissolving in water to make sea water)." },
+    front:"Solute", back:"A substance that dissolves in a solvent. In sea water, the dissolved salts are the solutes and water is the solvent." },
   { id:"FC-U2-06", unit:2, topic:"2.6 Upwelling", spec:"2.6/LO2",
     front:"El Niño", back:"A period when the Pacific trade winds weaken or reverse, warming the eastern Pacific and reducing its upwelling." },
 
@@ -45,15 +45,15 @@ export const FLASHCARDS = [
   { id:"FC-U3-04", unit:3, topic:"3.3 Classification", spec:"3.3/LO3",
     front:"Domain", back:"The largest grouping in classification: Bacteria, Archaea or Eukarya." },
   { id:"FC-U3-05", unit:3, topic:"3.2 Reproduction", spec:"3.2/LO1",
-    front:"Asexual reproduction", back:"A single organism producing exact copies of itself." },
+    front:"Asexual reproduction", back:"Reproduction by a single parent, without sex cells, producing genetically identical offspring." },
   { id:"FC-U3-06", unit:3, topic:"3.7 Migration", spec:"3.7/LO1",
-    front:"Migration", back:"The regular movement of animals from one place to another, e.g. to feed or breed." },
+    front:"Migration", back:"The movement of animals from one place to another, often returning later, for example to feed or to breed." },
 
   // ================= UNIT 4 — Nutrients and energy =================
   { id:"FC-U4-01", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO5",
-    front:"Trophic level", back:"The position of an organism in a food chain, web or pyramid (producers = level 1)." },
+    front:"Trophic level", back:"The position of an organism in a food chain, food web or pyramid; producers are at trophic level 1." },
   { id:"FC-U4-02", unit:4, topic:"4.4 Feeding relationships", spec:"4.4/LO9",
-    front:"Decomposer", back:"An organism (e.g. bacteria) that gets energy by breaking down dead or waste organic material." },
+    front:"Decomposer", back:"An organism, usually a bacterium, that gets its energy by breaking down dead or waste organic material." },
   { id:"FC-U4-03", unit:4, topic:"4.3 Photosynthesis", spec:"4.3/LO1",
     front:"Photosynthesis", back:"The process in which some organisms make glucose from carbon dioxide and water using energy from light, releasing oxygen as a by-product." },
   { id:"FC-U4-04", unit:4, topic:"4.2 Respiration", spec:"4.2/LO1",
@@ -65,13 +65,13 @@ export const FLASHCARDS = [
 
   // ================= UNIT 5 — Marine ecosystems =================
   { id:"FC-U5-01", unit:5, topic:"5.3 Open ocean", spec:"5.3/LO6",
-    front:"Phytoplankton", back:"Microscopic producers that drift in ocean currents (diatoms, dinoflagellates, cyanobacteria)." },
+    front:"Phytoplankton", back:"Microscopic producers that drift in the ocean currents, such as diatoms, dinoflagellates and cyanobacteria." },
   { id:"FC-U5-02", unit:5, topic:"5.1 Ecosystems", spec:"5.1/LO1",
     front:"Species", back:"A group of organisms that can reproduce to produce fertile offspring." },
   { id:"FC-U5-03", unit:5, topic:"5.1 Ecosystems", spec:"5.1/LO1",
     front:"Population", back:"A group of organisms of one species, living in the same area, at the same time." },
   { id:"FC-U5-04", unit:5, topic:"5.7 Coral reef", spec:"5.7/LO4",
-    front:"Zooxanthellae", back:"The photosynthetic algae that live in coral polyp tissues in a mutualism." },
+    front:"Zooxanthellae", back:"Photosynthetic algae that live inside the tissues of coral polyps; the coral and the algae both benefit (mutualism)." },
   { id:"FC-U5-05", unit:5, topic:"5.1 Ecosystems", spec:"5.1/LO1",
     front:"Community", back:"All of the populations of different species in an area." },
   { id:"FC-U5-06", unit:5, topic:"5.4 Rocky shore", spec:"5.4/LO1",
@@ -79,7 +79,7 @@ export const FLASHCARDS = [
 
   // ================= UNIT 6 — Human influences =================
   { id:"FC-U6-01", unit:6, topic:"6.7 Eutrophication", spec:"6.7/LO5",
-    front:"Eutrophication", back:"Extra nutrients cause an algal bloom whose decomposition lowers dissolved oxygen, killing organisms." },
+    front:"Eutrophication", back:"The process in which extra nutrients cause an algal bloom; when the algae die, decomposers use up dissolved oxygen, so organisms that need oxygen die." },
   { id:"FC-U6-02", unit:6, topic:"6.1 Overview", spec:"6.1/LO4",
     front:"Sustainable use", back:"Using a resource or carrying out an activity at the current rate, without damaging the environment and without the resource running out." },
   { id:"FC-U6-03", unit:6, topic:"6.6 Plastic", spec:"6.6/LO1",
