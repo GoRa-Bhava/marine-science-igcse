@@ -470,7 +470,7 @@ export const NOTES = {
     "id": "2.4",
     "title": "Density",
     "intro": "What density means, how to calculate it, and how differences in density make sea water move and form layers.",
-    "tip": "You must recall density = mass ÷ volume (it isn't given). Colder water and saltier water are both denser.",
+    "tip": "You must recall density = mass ÷ volume (it is not given). Colder water and saltier water are both denser.",
     "example": "A 1000 cm³ sample of sea water has a mass of 1030 g → density = 1030 ÷ 1000 = <b>1.03 g/cm³</b> (fresh water is 1.00).",
     "notes": [
      {
