@@ -19,7 +19,7 @@ export const WRITING = [
     ],
     noCredit: ["Earthquakes pushed the continents into their present places", "The Moon's gravity pulled the land apart", "The continents have always been where they are now"],
     model: "The continents were once joined together in a supercontinent; the most recent was Pangaea. The Earth's crust is made of tectonic plates that float on the mantle, and convection currents in the mantle slowly move them. The supercontinent broke apart and the pieces moved away from each other, forming today's continents with oceans between them. This took hundreds of millions of years.",
-    tip: "Outline means give the main points, in a sensible order. One clear point per mark; you don't need long explanations.",
+    tip: "Outline means give the main points, in a sensible order. One clear point per mark; you do not need long explanations.",
     status: "human_review" },
 
   { id: "W1-02", unit: 1, ref: "1.2/LO6", command: "Describe", marks: 4,
@@ -307,7 +307,7 @@ export const WRITING = [
     ],
     noCredit: ["Salinity rises at low tide because there is less water", "The salinity stays the same throughout the tidal cycle", "River water is saltier than sea water", "Salinity is highest at neap tides and lowest at spring tides"],
     model: "At low tide the salinity is lowest, because the estuary is filled mostly by fresh river water. As the tide comes in, salty sea water flows into the estuary, so the salinity rises. At high tide the salinity is highest, because the most sea water has entered. As the tide goes out, the salinity falls again. There are usually two high tides a day, so this rise and fall happens about twice.",
-    tip: "Follow the tide through the day: low tide, rising tide, high tide, falling tide, then again. Give the salinity at each stage with its reason. Don't confuse high and low tides with spring and neap tides.",
+    tip: "Follow the tide through the day: low tide, rising tide, high tide, falling tide, then again. Give the salinity at each stage with its reason. Do not confuse high and low tides with spring and neap tides.",
     status: "human_review" },
 
   { id: "W2-09", unit: 2, ref: "2.6/LO2", command: "Outline", marks: 4,
@@ -483,7 +483,7 @@ export const WRITING = [
     ],
     noCredit: ["Fish have lungs to breathe air from the water", "The lateral line is a stripe for camouflage", "The nares are used for breathing", "The operculum is a fin used for steering"],
     model: "A bony fish has an operculum, a flap that covers and protects the gills. Its body is covered in scales for protection. The dorsal, pectoral, pelvic and anal fins control pitching, rolling and yawing, so the fish stays stable and can change direction. The caudal fin gives forward thrust. The lateral line detects vibrations in the water, and the nares detect chemicals.",
-    tip: "Name each feature and give its function in the same sentence. Don't swap the lateral line (vibrations) and the nares (chemicals).",
+    tip: "Name each feature and give its function in the same sentence. Do not swap the lateral line (vibrations) and the nares (chemicals).",
     status: "human_review" },
 
   { id: "W3-05", unit: 3, ref: "3.5/LO1", command: "Describe", marks: 4,
@@ -498,7 +498,7 @@ export const WRITING = [
     ],
     noCredit: ["The rhizomes keep the leaves floating", "The roots are for protection", "Seagrass is a seaweed, so it has a holdfast instead of roots", "The flowers are for asexual reproduction"],
     model: "Seagrass is a true plant. Its leaves are the organs of photosynthesis. Its roots secure it in the sediment and obtain minerals. Rhizomes are underground stems that connect individual plants and are used for asexual reproduction. Flowers are used for sexual reproduction.",
-    tip: "Give a feature and its function in each sentence. Seagrass has roots, rhizomes, leaves and flowers. Don't give it a holdfast: that is kelp.",
+    tip: "Give a feature and its function in each sentence. Seagrass has roots, rhizomes, leaves and flowers. Do not give it a holdfast: that is kelp.",
     status: "human_review" },
 
   { id: "W3-06", unit: 3, ref: "3.7/LO4", command: "Explain", marks: 4,
@@ -620,7 +620,7 @@ export const WRITING = [
     ],
     noCredit: ["Iodine turns purple when starch is present", "Benedict's solution works without heating", "Use Benedict's solution to test for starch", "A blue-black colour shows there is no starch"],
     model: "Crush the food and mix it with a little water. To test for starch, add a few drops of iodine solution. If starch is present the orange-brown iodine turns blue-black; if not, it stays orange-brown. To test for reducing sugar, add Benedict's solution and heat the tube in a hot water bath for a few minutes. If reducing sugar is present the blue solution turns green, yellow, orange or brick-red; if not, it stays blue.",
-    tip: "For each test give the reagent, any step such as heating, and the colour for a positive and a negative result. Don't swap them: iodine is for starch, Benedict's is for sugar.",
+    tip: "For each test give the reagent, any step such as heating, and the colour for a positive and a negative result. Do not swap them: iodine is for starch, Benedict's is for sugar.",
     status: "human_review" },
 
   { id: "W4-02", unit: 4, ref: "4.2/LO4", command: "Describe", marks: 4,
