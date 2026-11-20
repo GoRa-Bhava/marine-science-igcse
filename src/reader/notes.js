@@ -11,7 +11,7 @@ export const NOTES = {
    {
     "id": "1.1",
     "title": "Earth in space and structure",
-    "intro": "Where the Earth and Moon sit in space, what holds them there, and what the Earth is made of inside.",
+    "intro": "The Earth's place in space, the force that keeps the Earth and Moon in orbit, and the layers inside the Earth.",
     "tip": "Get the layer order right from the centre out: inner core (solid iron), outer core (liquid iron), mantle (solid rock), crust. Some textbooks call the mantle semi-molten; in the exam, write that it is solid rock that can melt to form magma.",
     "notes": [
      {
@@ -27,7 +27,7 @@ export const NOTES = {
      {
       "h": "Inside the Earth: four layers",
       "ref": "1.1/LO3",
-      "body": "From the centre outwards: a <b>solid inner core</b> and a <b>liquid outer core</b>, both made of iron; then the <b>mantle</b>, made of solid rock; then the <b>crust</b>, the thin solid rocky layer we live on."
+      "body": "From the centre outwards: a solid <b>inner core</b> and a liquid <b>outer core</b>, both made of iron; then the <b>mantle</b>, made of solid rock; then the <b>crust</b>, the thin, solid, rocky outer layer."
      },
      {
       "h": "Magma",
@@ -55,18 +55,18 @@ export const NOTES = {
      ],
      [
       "Mantle",
-      "the thick layer of solid rock that can melt to magma"
+      "the thick layer of solid rock between the crust and the core, which can melt to form magma"
      ],
      [
       "Crust",
-      "the thin solid rocky outer layer"
+      "the thin, solid, rocky outer layer of the Earth"
      ]
     ]
    },
    {
     "id": "1.2",
     "title": "Plate tectonics",
-    "intro": "The crust is broken into moving plates. Where they meet, we get earthquakes, volcanoes and tsunamis.",
+    "intro": "The Earth's crust is broken into moving plates. Earthquakes, volcanoes and tsunamis happen where the plates meet.",
     "tip": "The cause of plate movement you need is convection currents in the mantle. Slab pull and ridge push are not required for 0697, so do not use them in place of convection.",
     "notes": [
      {
@@ -82,7 +82,7 @@ export const NOTES = {
      {
       "h": "Supercontinents",
       "ref": "1.2/LO3",
-      "body": "The continents were once joined in <b>supercontinents</b>. Over hundreds of millions of years the plates moved and the pieces drifted apart, giving today's continents and oceans, and they are still moving."
+      "body": "The continents were once joined together as <b>supercontinents</b>. Over hundreds of millions of years, plate movement split them apart and carried them to their present positions, forming today's continents and oceans. The plates are still moving."
      },
      {
       "h": "Three types of plate boundary",
@@ -113,7 +113,7 @@ export const NOTES = {
      ],
      [
       "Convection current",
-      "slow circulation in the mantle that moves the plates"
+      "a circulation in which hotter material rises and cooler material sinks; in the mantle, it moves the plates"
      ],
      [
       "Convergent / divergent / transform",
@@ -143,7 +143,7 @@ export const NOTES = {
      {
       "h": "Finding places on a map",
       "ref": "1.3/LO2",
-      "body": "Lines of <b>latitude</b> run east–west, parallel to the <b>equator</b> (0° latitude). Lines of <b>longitude</b> run north–south and meet at the poles. A position is given as <b>coordinates</b>: its latitude (°N/°S) and longitude (°E/°W). The <b>tropical</b> zone is near the equator, the <b>polar</b> zones near the poles, and the <b>temperate</b> zones lie between. The boundaries are the Tropics of Cancer and Capricorn (about 23.5° N and S) and the Arctic and Antarctic Circles (about 66.5° N and S). The Prime Meridian is 0° longitude."
+      "body": "Lines of <b>latitude</b> run east–west, parallel to the equator (0° latitude). Lines of <b>longitude</b> run north–south and meet at the poles; the Prime Meridian is 0° longitude. A position is given as <b>coordinates</b>: its latitude (°N or °S) and its longitude (°E or °W). The tropical zone lies on either side of the equator, between the Tropic of Cancer and the Tropic of Capricorn (about 23.5° N and S). The polar zones lie beyond the Arctic and Antarctic Circles (about 66.5° N and S), and the temperate zones lie between the tropical and polar zones."
      },
      {
       "h": "One World Ocean",
@@ -151,7 +151,7 @@ export const NOTES = {
       "body": "The five oceans are all connected, so water can flow between them. Together they encircle the Earth as one continuous <b>World Ocean</b>."
      },
      {
-      "h": "How much, how deep",
+      "h": "Size and depth of the oceans",
       "ref": "1.3/LO4",
       "body": "The oceans cover <b>71% of the Earth's surface</b> and hold <b>97% of the Earth's water</b>. The <b>Pacific</b> is the largest ocean. The deepest point is the <b>Mariana Trench</b>, about <b>11 000 metres</b> deep."
      },
@@ -170,11 +170,11 @@ export const NOTES = {
     "terms": [
      [
       "World Ocean",
-      "the five connected oceans as one continuous body"
+      "the five oceans, connected to form one continuous body of water"
      ],
      [
       "Coordinates",
-      "a position as latitude (°N/S) and longitude (°E/W)"
+      "a position given as its latitude (°N or °S) and its longitude (°E or °W)"
      ],
      [
       "Continental shelf / slope",
@@ -200,7 +200,7 @@ export const NOTES = {
      {
       "h": "High and low tides",
       "ref": "1.4/LO1",
-      "body": "The Moon's gravity (and the Sun's) pulls on the ocean water, so the sea rises to a <b>high tide</b> and falls to a <b>low tide</b> about twice a day. The Moon's effect is about twice the Sun's because the Moon is much closer.",
+      "body": "The gravitational pull of the Moon, and to a lesser extent the Sun, on the ocean water makes the sea rise to a <b>high tide</b> and fall to a <b>low tide</b> about twice a day. The Moon's effect is about twice the Sun's because the Moon is much closer to the Earth.",
       "linked": "Interactive · Tides: drag the Moon"
      },
      {
@@ -211,17 +211,17 @@ export const NOTES = {
      {
       "h": "Measuring tidal amplitude",
       "ref": "1.4/LO2",
-      "body": "Measure the water height against a fixed vertical scale (or use a recording <b>tide gauge</b>) at regular times through a full tidal cycle, and note the highest and lowest readings. More frequent readings are less likely to miss the true high or low. <b>Tidal amplitude = (high tide − low tide) ÷ 2.</b>"
+      "body": "Measure the water height against a fixed vertical scale, or use a recording tide gauge, at regular times through a full tidal cycle, and note the highest and lowest readings. More frequent readings are less likely to miss the true high or low water. <b>Tidal amplitude</b> = (high water − low water) ÷ 2."
      },
      {
       "h": "Ocean currents",
       "ref": "1.4/LO3–4",
-      "body": "A <b>current</b> is the continuous movement of sea water in a particular direction. Currents are caused by <b>prevailing winds</b>, the <b>spinning of the Earth</b>, <b>tides</b>, and <b>changes in water density</b> (colder, saltier water sinks). A <b>tidal current</b> reverses direction as the tide rises and falls, and is strongest in narrow channels. Cold, salty polar water is dense, so it sinks and flows along the deep ocean floor."
+      "body": "A <b>current</b> is a continuous movement of sea water in a particular direction. Currents are caused by prevailing winds, the rotation of the Earth, tides, and differences in water density: cold, salty polar water is dense, so it sinks and flows along the deep ocean floor. A <b>tidal current</b> reverses direction as the tide rises and falls, and is strongest in narrow channels."
      },
      {
       "h": "Gyres",
       "ref": "1.4/LO5–7",
-      "body": "A <b>gyre</b> is a large system of circular currents. There are five main gyres: North and South Atlantic, North and South Pacific, and the Indian Ocean. Together, currents and gyres circulate water around the whole World Ocean. They form as prevailing winds and the spinning of the Earth drive surface currents round in huge circular paths."
+      "body": "A <b>gyre</b> is a large system of circular ocean currents. Prevailing winds and the rotation of the Earth drive surface currents round in these huge circular paths. There are five main gyres: the North Atlantic, South Atlantic, North Pacific, South Pacific and Indian Ocean gyres. Together, currents and gyres circulate water around the whole World Ocean."
      },
      {
       "h": "Rip currents",
@@ -237,7 +237,7 @@ export const NOTES = {
     "terms": [
      [
       "Tidal amplitude",
-      "(high tide − low tide) ÷ 2"
+      "half the difference between high water and low water: (high water − low water) ÷ 2"
      ],
      [
       "Spring / neap tide",
@@ -245,11 +245,11 @@ export const NOTES = {
      ],
      [
       "Current",
-      "continuous movement of sea water in one direction"
+      "a continuous movement of sea water in a particular direction"
      ],
      [
       "Gyre",
-      "a large system of circular currents (five main ones)"
+      "a large system of circular ocean currents; there are five main gyres"
      ],
      [
       "Rip current",
