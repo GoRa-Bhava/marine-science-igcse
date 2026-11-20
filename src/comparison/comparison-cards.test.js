@@ -54,3 +54,23 @@ test("getComparisonCard finds by id and returns undefined otherwise", () => {
   assert.equal(getComparisonCard("cmp-resp-photo")?.id, "cmp-resp-photo");
   assert.equal(getComparisonCard("nope"), undefined);
 });
+
+// Writing-standard guards (CARDS-quality follow-up, 20 Nov 2026): no "e.g."
+// shorthand anywhere in card text, and no bare " = " inside a memoryHook.
+function collectStrings(v, path, out) {
+  if (typeof v === "string") { out.push([path, v]); return; }
+  if (Array.isArray(v)) { v.forEach((x, i) => collectStrings(x, `${path}[${i}]`, out)); return; }
+  if (v && typeof v === "object") { for (const k of Object.keys(v)) collectStrings(v[k], `${path}.${k}`, out); }
+}
+
+test("no comparison-card text uses the 'e.g.' shorthand", () => {
+  const out = [];
+  for (const c of COMPARISON_CARDS) collectStrings(c, c.id, out);
+  const bad = out.filter(([, s]) => s.includes("e.g."));
+  assert.equal(bad.length, 0, `found "e.g." in: ${bad.map(([p]) => p).join(", ")}`);
+});
+
+test("no memoryHook contains a bare ' = '", () => {
+  const bad = COMPARISON_CARDS.filter((c) => typeof c.memoryHook === "string" && c.memoryHook.includes(" = "));
+  assert.equal(bad.length, 0, `found ' = ' in memoryHook of: ${bad.map((c) => c.id).join(", ")}`);
+});

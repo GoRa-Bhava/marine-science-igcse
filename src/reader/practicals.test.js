@@ -128,3 +128,24 @@ test("every practicals item obeys the standing invariants", () => {
     }
   }
 });
+
+// Writing-standard guard (CARDS-quality follow-up, 20 Nov 2026): no "e.g."
+// shorthand in practical-card text, including the diagram SVGs. The question
+// `items` are excluded — this guards the card copy, not the questions.
+function collectCardStrings(v, path, out) {
+  if (typeof v === "string") { out.push([path, v]); return; }
+  if (Array.isArray(v)) { v.forEach((x, i) => collectCardStrings(x, `${path}[${i}]`, out)); return; }
+  if (v && typeof v === "object") {
+    for (const k of Object.keys(v)) {
+      if (k === "items") continue; // questions, vetted separately
+      collectCardStrings(v[k], `${path}.${k}`, out);
+    }
+  }
+}
+
+test("no practical-card text (including diagram SVGs) uses the 'e.g.' shorthand", () => {
+  const out = [];
+  for (const p of PRACTICALS) collectCardStrings(p, p.id, out);
+  const bad = out.filter(([, s]) => s.includes("e.g."));
+  assert.equal(bad.length, 0, `found "e.g." in: ${bad.map(([p]) => p).join(", ")}`);
+});
